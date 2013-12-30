@@ -1,0 +1,90 @@
+﻿@model TechiesWeb.TeamBins.ViewModels.CreateBug
+@{
+    ViewBag.Title = "Add";
+}
+
+<div class="centralHead">Add New Bug</div>
+<div class="divPageContent">
+<div class="divForm">
+    @using (Html.BeginForm("Add", "Issue", FormMethod.Post, new { enctype="multipart/form-data" }))
+    {
+    <table class="tblform">
+        <tr>
+            <th>Title</th>
+            </tr>
+        <tr>
+            <td>
+                @Html.TextBoxFor(x => x.Title)
+            </td>
+        </tr>
+          <tr>
+            <td>
+                <table class="tblSub">
+                    <tr>
+                        <th>Project</th>
+                        <td>
+                            @Html.DropDownListFor(x => x.SelectedProject, Model.Projects, "select")
+                        </td>
+                        <th>Cycle</th>
+                        <td>
+                            @Html.DropDownListFor(x => x.SelectedCycle, Model.Cycles, "select")
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Priority</th>
+                        <td>
+                            @Html.DropDownListFor(x => x.SelectedPriority, Model.Priorities, "select")
+                        </td>
+                        <th>Category</th>
+                        <td>
+                            @Html.DropDownListFor(x => x.SelectedCategory, Model.Categories, "select")
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Show stopper ?</th>
+                        <td>
+                           @Html.CheckBoxFor(x => x.IsShowStopper)
+                        </td>
+                        <th>Status</th>
+                        <td>
+                            <span class="spanDefault">
+                                New
+                            </span>                            
+                        </td>
+                    </tr>
+                </table>
+
+            </td>
+
+        </tr>
+        <tr>
+            <th>Description</th>
+            </tr>
+        <tr>
+            <td>
+                 @Html.TextAreaFor(x => x.Description, new { @class="DescrTxtArea" })
+            </td>
+        </tr>
+        <tr>
+
+            <td>
+                 <div class="divAttach">
+                   Add a file
+                     <input type="file" name="files" id="files" />
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="submit" value="Save" />
+               
+            </td>
+
+        </tr>
+    </table>
+    }
+
+
+</div>
+
+    </div>

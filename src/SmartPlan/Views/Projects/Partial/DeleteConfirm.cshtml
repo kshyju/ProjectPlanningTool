@@ -1,0 +1,32 @@
+﻿@model TechiesWeb.TeamBins.ViewModels.DeleteProjectConfirmVM
+
+<div class="model">
+    <div id="msg" style="display:none;"></div>
+@using(Html.BeginForm("DeleteConfirm","Projects"))
+{
+    <table class="tblform sleek modelTblFull">
+    
+        @if (Model.DependableItemsCount > 0)
+        {
+        <tr>
+            <td>
+                <div class="deleteMeta">You cannot delete this project because <b> @Model.DependableItemsCount</b> issues are associated to this project.</div>
+            </td>
+        </tr>   
+        }   
+        else
+        {
+        <tr>
+            <th>Are you sure to delete this project</th>
+        </tr>    
+        <tr>
+            <td>
+                <input type="submit" id="delproj" value="Yes" />
+                <input type="button" id="cancelDelproj" class="closeModel" value="Cancel" />
+            </td>
+        </tr>
+        }
+    </table>
+    @Html.HiddenFor(x=>x.ID)
+}
+</div>

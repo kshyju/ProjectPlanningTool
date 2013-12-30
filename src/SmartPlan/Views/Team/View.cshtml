@@ -1,0 +1,56 @@
+﻿@model TechiesWeb.TeamBins.ViewModels.TeamVM
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>@Model.Name</h2>
+<ul class="breadcrumb">
+  <li><a href="#">Home</a> <span class="divider">/</span></li>
+  <li>@Html.ActionLink("Teams","Index") <span class="divider">/</span></li>
+  <li class="active">@Model.Name</li>
+</ul>
+@Html.ActionLink("Edit","Edit",new { id=Model.ID})
+<h3>Team Members</h3>
+<div class="navbar">
+                    <div class="navbar-inner toolbar">
+                        <ul class="nav">
+                          <li class="toolbaritem"><a href="#"><i class="icon-th-large"></i> Card View</a></li>
+                          <li class="toolbaritem active"><a href="#"><i class="icon-align-justify"></i> List View</a></li>
+                          <li class="toolbaritem">
+                              
+                              <a href="@Url.Action("AddMember",new { id=Model.ID })"><i class="icon-plus"></i> Add Member</a></li>
+                        </ul>
+                        <form class="navbar-form pull-right ng-pristine ng-valid">
+                            <span class="navbarText">Filter:</span>&nbsp;&nbsp;<input type="text" class="novalidate ng-pristine ng-valid" data-ng-model="searchText">
+                        </form>
+                    </div>
+</div>
+@if(Model.Members.Count()> 0)
+{
+    <div class="cardContainer">
+        @foreach (var member in Model.Members)
+        {
+            <div class="card">
+                <div class="cardHeader">@member.Name</div>
+                
+                <div class="cardBody">
+                    <div class="clearfix">
+                    <div class="cardBodyLeft">
+                         <img src="@member.EmailHash?s=50" class="cardImage" />
+                    </div>
+                    <div class="cardBodyRight">
+                        <h4>@member.JobTitle</h4>
+                        @member.EmailAddress                       
+                    </div>
+                        </div>
+                </div>
+                </div>
+        }         
+    </div>
+}
+else
+{
+       
+    
+}
+@Html.ActionLink("Projects","Index","Project",new { id=Model.ID},null)

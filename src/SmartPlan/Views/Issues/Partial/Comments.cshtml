@@ -1,0 +1,48 @@
+﻿@model TechiesWeb.TeamBins.ViewModels.BugVM
+<h3>Comments</h3>
+<div id="commentList">
+@foreach(var item in Model.Comments)
+{  
+    <div class="commentItem">          
+        <img src="@item.AvatarHash" />         
+        <div class="commentItemBody" >
+            <span class="cmntAuthorName">@item.AuthorName</span><br>            
+            <span class="commentmetadata" title="@item.CreativeDate">@item.CreatedDateRelative</span>
+            <p>@Html.Raw(HttpUtility.HtmlDecode(item.CommentBody))</p>
+        </div>
+    </div>
+}
+
+</div>   
+<div id="addComment">
+    <p>
+     <b>Add a comment</b><br />
+    <textarea id="newComment" name="newComment" rows="4" cols="100%" maxlength="5000" style="height:70px;"  ></textarea>
+      
+        </p>
+    <p>
+        <input type="submit" id="saveComment" value="Post" />
+    </p>
+</div>    
+<script type="text/javascript">
+
+    $(function () {
+
+        $("#newComment").kendoEditor({
+            tools: [
+                "bold",
+                "italic",
+                "underline",
+                "separator",
+                "strikethrough",
+                "foreColor",
+         "backColor"
+            ],
+            encoded: false
+        });
+
+    });
+
+
+</script>    
+    

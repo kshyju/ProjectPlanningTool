@@ -1,0 +1,87 @@
+﻿@model TechiesWeb.TeamBins.ViewModels.TeamProjectListVM
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="pageContent">
+    <h2>Projects</h2>
+    @Html.ActionLink("Add New", "Add", "Projects", new { id=Model.TeamID}, new { @class = "aPopup" })
+    @if(Model.Projects.Count>0)
+    {
+        <table>
+        @foreach(var project in Model.Projects)
+        {
+            <li id="li_@project.ID" class="listItem">
+                <div class="liContent">
+                    @Html.ActionLink(project.Name, "details", "Projects",new { @id = project.ID }, new { @class = "listItem" })     
+                </div>
+                <div class="liEdit" style="display:none;">
+                    @Html.ActionLink("Edit","Edit", "Projects",new { id=@project.ID}, new { @class="popup" }) |
+                    @Html.ActionLink("Delete","DeleteConfirm", "Projects",new { id=project.ID}, new { @class="popup delete", @data_id=project.ID })
+                </div>
+                
+            </li>
+        }
+        </table>
+    }
+
+</div>
+
+<div id="modal" class="modal fade"></div>
+
+
+
+<script type="text/javascript">
+    $(function () {
+
+        $("#deleteBtn").click(function (e) {
+            e.preventDefault();
+            $('#delConfirm').modal('show');
+        });
+
+        //Show popup on clicking the link
+        $(document).on("click", "a.aPopup", function (e) {
+            e.preventDefault();
+            var _this = $(this);
+            $('#modal').modal({ remote: _this.attr("href") });           
+        });
+
+        $(document).on("click", "#btnSaveProject", function (e) {
+            e.preventDefault();
+            $.post($(this).closest("form").attr("action"), $(this).closest("form").serialize(), function (res) {
+                if (res.Status === "Success")
+                    window.location.href = "@Url.Action("Index")";
+                else
+                    $("#msg").text(res.Message).addClass("error").slideDown(); $("#Name").focus();
+            });
+        });
+
+        $(document).on("click", "#delproj", function (e) {
+            e.preventDefault();
+            var _this = $(this);
+            $.post($(this).closest("form").attr("action"), $(this).closest("form").serialize(), function (res) {
+                if (res.Status === "Success") {
+                    $("#msg").text(res.Message).addClass("success").fadeIn(100);
+                    var projId=$("div#msg").closest("div.model").find("#ID").val();
+                    $("div#msg").closest("div.model").find("table").hide();
+                    $("#li_" + projId).fadeOut(300, function () { $(this).remove(); });
+                }
+                else
+                    $("#msg").text(res.Message).addClass("error").slideDown(); $("#Name").focus();
+            });
+        });
+        $(document).on("click", "input.closeModel", function (e) {
+            e.preventDefault();
+            $("#kendoWindow").data("kendoWindow").close();
+        });
+
+       
+        $("li.listItem").hover(function () {
+            $(this).find("div.liEdit").show();
+        },function(){
+            $(this).find("div.liEdit").hide();
+        });
+
+    });
+
+</script>

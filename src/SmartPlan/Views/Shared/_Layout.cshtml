@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+   <script src="~/Scripts/jquery-2.0.3.min.js"></script>
+   
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" />
+    <script src="~/Scripts/bootstrap.min.js"></script>
+</head>
+<body>
+    <div>
+        <div class="header">
+            
+            <a class="header-logo">
+                <span class="logo"></span>
+            </a>
+        </div>
+        <div class="content">
+            <div class="central">
+                @RenderBody()
+            </div>
+        </div>
+
+    </div>
+    <div id="kendoWindow"></div>
+    
+   <script type="text/javascript">
+
+       function ShowKendoWindow(url, title, width) {
+           var w = (typeof width === "undefined") ? "800" : width;
+           w = w + "px";
+           var window = $("#kendoWindow")
+           if (!window.data("kendoWindow")) {
+               window.kendoWindow({
+                   width: w,
+                   title: title,
+                   content: url,
+                   actions: ["refresh", "close"],
+                   refresh: function () { this.center(); },
+                   modal: true
+
+               });
+           }
+           else {
+               window.data("kendoWindow").content("Loading...") // add loading message                                          
+                                         .refresh(url) // request the URL via AJAX
+                                          .title(title)
+                                         .open(); // open the window
+           }
+       }
+
+   </script>
+</body>
+</html>

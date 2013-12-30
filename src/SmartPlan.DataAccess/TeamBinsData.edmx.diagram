@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="973fff3735af4dc7b583e60c12215cd6" Name="Diagram1">
+        <EntityTypeShape EntityType="TeamBinsModel.Category" Width="1.5" PointX="3" PointY="5.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="TeamBinsModel.Issue" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="TeamBinsModel.Priority" Width="1.5" PointX="3" PointY="7.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="TeamBinsModel.Project" Width="1.5" PointX="3" PointY="1.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="TeamBinsModel.Status" Width="1.5" PointX="3" PointY="9.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="TeamBinsModel.Team" Width="1.5" PointX="5.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="TeamBinsModel.TeamMember" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="TeamBinsModel.User" Width="1.5" PointX="0.75" PointY="1.625" IsExpanded="true" />
+        <AssociationConnector Association="TeamBinsModel.FK_Issue_Category" ManuallyRouted="false" />
+        <AssociationConnector Association="TeamBinsModel.FK_Issue_Priority" ManuallyRouted="false" />
+        <AssociationConnector Association="TeamBinsModel.FK_Issue_Project" ManuallyRouted="false" />
+        <AssociationConnector Association="TeamBinsModel.FK_Issue_Status" ManuallyRouted="false" />
+        <AssociationConnector Association="TeamBinsModel.FK_Project_User" ManuallyRouted="false" />
+        <AssociationConnector Association="TeamBinsModel.FK_TeamMember_Team" />
+        <AssociationConnector Association="TeamBinsModel.FK_TeamMember_User" />
+        <EntityTypeShape EntityType="TeamBinsModel.TeamMemberRequest" Width="1.5" PointX="2.0784650007628209" PointY="25.89924561693298" />
+        <AssociationConnector Association="TeamBinsModel.FK_TeamMemberRequest_Team" />
+        <AssociationConnector Association="TeamBinsModel.FK_TeamMemberRequest_User" />
+        <AssociationConnector Association="TeamBinsModel.FK_Project_Team" />
+        <EntityTypeShape EntityType="TeamBinsModel.Task" Width="1.5" PointX="7.2978780862399741" PointY="2.3030796806808" />
+        <AssociationConnector Association="TeamBinsModel.FK_Task_Task" />
+        <AssociationConnector Association="TeamBinsModel.FK_Task_User" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,11 @@
+﻿@model TechiesWeb.TeamBins.ViewModels.ImageVM
+@{
+    ViewBag.Title = "Image";
+    
+}
+<link href="~/Content/Site.css" rel="stylesheet" />
+<body style="background-color:black;">
+<div class="imgHolder">
+    <img src="@Url.Content("~/uploads/"+Model.FileKey)" />
+</div>
+</body>

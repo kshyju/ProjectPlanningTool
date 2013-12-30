@@ -1,0 +1,33 @@
+﻿@model SmartPlan.ViewModels.DashBoardVM
+@{
+    ViewBag.Title = "Index";
+}
+<div class="dashboardItem">
+<h3>My Teams</h3>
+
+@if (Model.Teams.Count == 0)
+{
+    <p>No Teams found!</p>
+    <p>@Html.ActionLink("Create new Team","Create","Team")</p>
+}
+else
+{
+    <p>@Html.ActionLink("Add new Team","Create","Team")</p>
+    <ul>
+    @foreach (var team in Model.Teams)
+    {
+       <li id="li_@team.ID" class="listItem">
+                <div class="liContent">
+                   @Html.ActionLink(team.Name,"Index","team",new { id=team.ID},null)    
+                </div>
+                <div class="liEdit" style="display:none;">
+                    @Html.ActionLink("Edit","Edit", "Projects",new { id=@team.ID}, new { @class="popup" }) |
+                    @Html.ActionLink("Delete","DeleteConfirm", "Projects",new { id=team.ID}, new { @class="popup delete", @data_id=team.ID })
+                </div>
+                
+            </li>
+    }
+    </ul>  
+      
+}
+</div>

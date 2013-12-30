@@ -1,0 +1,53 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1269A34E-0833-4BF9-8C31-455912EE744A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{5F3185EF-3CB4-477A-8F00-789D0246C477}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{3BAD6D10-3C76-487B-9481-7B2054C7C427}"
+	ProjectSection(SolutionItems) = preProject
+		lib\SimpleCrypto.dll = lib\SimpleCrypto.dll
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamBins", "src\SmartPlan\TeamBins.csproj", "{6A01C5BD-EA5C-4255-999F-76F0971B2C36}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamBins.DataAccess", "src\SmartPlan.DataAccess\TeamBins.DataAccess.csproj", "{381CEAFA-E0C2-4D2F-8454-E8AA7A264096}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 3
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://flashra.visualstudio.com/defaultcollection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = src\\SmartPlan.DataAccess\\TeamBins.DataAccess.csproj
+		SccProjectTopLevelParentUniqueName1 = TeamBins.sln
+		SccProjectName1 = src/SmartPlan.DataAccess
+		SccLocalPath1 = src\\SmartPlan.DataAccess
+		SccProjectUniqueName2 = src\\SmartPlan\\TeamBins.csproj
+		SccProjectTopLevelParentUniqueName2 = TeamBins.sln
+		SccProjectName2 = src/SmartPlan
+		SccLocalPath2 = src\\SmartPlan
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6A01C5BD-EA5C-4255-999F-76F0971B2C36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A01C5BD-EA5C-4255-999F-76F0971B2C36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A01C5BD-EA5C-4255-999F-76F0971B2C36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A01C5BD-EA5C-4255-999F-76F0971B2C36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{381CEAFA-E0C2-4D2F-8454-E8AA7A264096}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{381CEAFA-E0C2-4D2F-8454-E8AA7A264096}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{381CEAFA-E0C2-4D2F-8454-E8AA7A264096}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{381CEAFA-E0C2-4D2F-8454-E8AA7A264096}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6A01C5BD-EA5C-4255-999F-76F0971B2C36} = {1269A34E-0833-4BF9-8C31-455912EE744A}
+		{381CEAFA-E0C2-4D2F-8454-E8AA7A264096} = {1269A34E-0833-4BF9-8C31-455912EE744A}
+	EndGlobalSection
+EndGlobal

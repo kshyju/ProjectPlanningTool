@@ -1,0 +1,96 @@
+﻿@model TechiesWeb.TeamBins.ViewModels.BugsListVM
+@{
+    ViewBag.Title = "Index";
+}
+
+<link href="~/Scripts/kendo/styles/kendo.common.min.css" rel="stylesheet" />
+<link href="~/Scripts/kendo/styles/kendo.default.min.css" rel="stylesheet" />
+<script src="~/Scripts/kendo/js/kendo.web.min.js"></script>
+<script src="~/Scripts/issue.js"></script>
+<div id="leftContentPane">
+<h2>Recent Issues</h2>
+<div class="btnBar">
+    <div id="quick_create">
+        <input type="text" name="NewItemTitle" placeholder="Create Item" id="NewItemTitle" />
+        <div id="default_items">
+            <div class="default_item">
+                <img class="default_item_img" src="~/Content/images/bug.png" />
+            </div>
+        </div>
+
+    </div>
+    <div>
+        <ul class="navtab">
+            <li>             
+                 <a href="@Url.Action("Index","Issues")" class="aIteration @(Model.CurrentTab=="Current"?"aIterationActive":"")">Current</a>
+            </li>
+            <li>               
+                <a href="@Url.Action("Backlog","Issues")" class="aIteration @(Model.CurrentTab=="Backlog"?"aIterationActive":"")">Backlog</a>
+            </li>
+            <li>               
+                <a href="@Url.Action("Completed","Issues")" class="aIteration @(Model.CurrentTab=="Completed"?"aIterationActive":"")">Completed</a>
+            </li>
+        </ul>
+    </div>
+    <div id="createEditMode">
+        <div id="changeLabel">
+     Create and Edit
+            </div>
+        <div class="onoffswitch">
+    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" @(Model.IsCreateAndEditEnabled?"checked":"") >
+          
+    <label class="onoffswitch-label" for="myonoffswitch">
+        <div class="onoffswitch-inner"></div>
+        <div class="onoffswitch-switch"></div>
+    </label>
+</div>
+    </div>
+</div>
+<table class="tblGrid" id="issueTbl">
+    <tr>
+        <th>#</th>
+        <th>Title</th>
+        <th>Opened By</th>       
+        <th>Priority</th>
+        <th>Status</th>
+        <th>Opened Date</th>
+    </tr>
+
+    @{
+        
+        bool isOdd = false;
+    }
+@foreach (var bug in Model.Bugs)
+{
+    <tr class="@(isOdd==true?@Html.Raw("trOdd"):@Html.Raw("trEven"))">
+        <td>@bug.ID</td>
+        <td>
+            @Html.ActionLink(bug.Title, "details", new { @id = bug.ID },null)            
+        </td>
+        <td>@bug.OpenedBy</td>       
+        <td>@bug.Priority</td>
+         <td>@bug.Status</td>
+        <td> @bug.CreatedDate </td>
+    </tr>
+    isOdd = !isOdd;
+}
+</table>
+</div>
+<div id="rightPanel">
+    <div id="activityStream">
+        <div>
+            Somethign happened
+        </div>
+
+        
+    </div>
+</div>
+
+
+            <!-- open button -->
+          
+<script type="text/javascript">
+    var addIssueUrl = "@Url.Action("Add","ISsues")";
+    var editIssueUrl = "@Url.Action("edit","issues")";
+    var savePrefUrl="@Url.Action("SavePreference", "Issues")";
+</script>

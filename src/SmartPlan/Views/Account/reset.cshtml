@@ -1,0 +1,46 @@
+﻿@model TechiesWeb.TeamBins.ViewModels.ResetPasswordVM
+@{
+    ViewBag.Title = "Reset password";
+    Layout = "~/Views/Shared/_SignUpLayout.cshtml";
+}
+
+<div class="signUpContainer">
+<h1>Reset Password</h1>
+<div class="divCenterMsg">Please enter the new password you would like to use to log in.</div>
+<div class="divSignUp">
+@using(Html.BeginForm())
+{
+<table class="tblEntry register">
+
+    <tr>
+        <td>
+            @Html.ValidationSummary()
+        </td>
+    </tr>   
+   <tr>
+        <th>Password</th>
+    </tr>
+    <tr>
+        <td>
+            @Html.PasswordFor(x=>x.Password)
+        </td>
+    </tr>
+     <tr>
+        <th>Confirm Password</th>
+    </tr>
+    <tr>
+        <td>
+            @Html.PasswordFor(x=>x.ConfirmPassword)
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <input type="submit" value="Reset Password" />
+        </td>
+    </tr>
+</table>
+
+}
+
+</div>
+</div>

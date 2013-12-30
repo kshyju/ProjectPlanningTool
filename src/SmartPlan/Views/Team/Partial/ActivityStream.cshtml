@@ -1,0 +1,11 @@
+﻿@model List<TechiesWeb.TeamBins.ViewModels.TeamActivityVM>
+<h3>Activity</h3>
+@foreach (var act in Model)
+{
+    <div class="activity-item">
+        <a href="#" class="activity-author">@act.UserName</a> @act.Activity <a href="@act.LinkURL" class="activity-name">@act.ItemName</a>
+        <b>@act.NewState</b>
+        <p class="activity-date" title="@act.EventDate">@act.EventDateRelative</p>
+    </div>
+
+}
