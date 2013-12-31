@@ -52,28 +52,38 @@ namespace Planner.DataAccess
         {
             return db.Projects.FirstOrDefault(s => s.Name == name && s.TeamID == teamId);
         }
+       
+        public List<Priority> GetPriorities()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public List<Status> GetStatuses()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public List<Category> GetCategories()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public OperationStatus SaveIssue(Issue issue)
+        {
+            if (issue.ID == 0)
+            {
+                issue.CreatedDate = DateTime.Now;
+                db.Issues.Add(issue);
+            }
+            else
+            {
+                db.Entry(issue).State = EntityState.Modified;
+            }
+            db.SaveChanges();
+            return new OperationStatus { Status = true, OperationID = issue.ID };
+        }
         /*
-        public List<Entities.Priority> GetPriorities()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public List<Entities.Status> GetStatuses()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public List<Entities.Category> GetCategories()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public OperationStatus SaveIssue(Entities.Issue bug)
-        {
-            throw new System.NotImplementedException();
-        }
-
-      /*  public OperationStatus SaveDocument(Document image)
+       public OperationStatus SaveDocument(Document image)
         {
            throw new System.NotImplementedException();
         }
@@ -142,17 +152,17 @@ namespace Planner.DataAccess
             db.SaveChanges();
             return teamMember;
         }
-        /*
-        public IEnumerable<Entities.Issue> GetIssues(int teamId)
+      
+        public IEnumerable<Issue> GetIssues(int teamId)
         {
-            throw new System.NotImplementedException();
+            return db.Issues.Where(s => s.Project.TeamID == teamId);
         }
 
-        public Entities.Issue GetIssue(int issueId)
+        public Issue GetIssue(int issueId)
         {
-            throw new System.NotImplementedException();
+            return db.Issues.FirstOrDefault(s => s.ID == issueId);
         }
-
+  /*
         public List<TechiesWeb.TeamBins.Entities.User> GetTeamMembers(int teamId)
         {
             throw new System.NotImplementedException();

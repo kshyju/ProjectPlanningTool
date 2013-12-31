@@ -16,7 +16,7 @@ namespace SmartPlan.DataAccess
     {
         public int ID { get; set; }
         public string Title { get; set; }
-        public string Desciption { get; set; }
+        public string Description { get; set; }
         public Nullable<System.DateTime> DueDate { get; set; }
         public Nullable<int> PriorityID { get; set; }
         public int CategoryID { get; set; }
@@ -24,10 +24,14 @@ namespace SmartPlan.DataAccess
         public int ProjectID { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public int CreatedByID { get; set; }
+        public Nullable<System.DateTime> ModifiedDate { get; set; }
+        public Nullable<int> ModifiedByID { get; set; }
     
         public virtual Category Category { get; set; }
         public virtual Priority Priority { get; set; }
         public virtual Project Project { get; set; }
         public virtual Status Status { get; set; }
+        public virtual User CreatedBy { get; set; }
+        public virtual User ModifiedBy { get; set; }
     }
 }

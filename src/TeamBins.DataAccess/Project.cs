@@ -26,8 +26,8 @@ namespace SmartPlan.DataAccess
         public int CreatedByID { get; set; }
         public int TeamID { get; set; }
     
-        public virtual ICollection<Issue> Issues { get; set; }
         public virtual User User { get; set; }
         public virtual Team Team { get; set; }
+        public virtual ICollection<Issue> Issues { get; set; }
     }
 }

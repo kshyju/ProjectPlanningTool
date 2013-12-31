@@ -26,7 +26,7 @@ namespace Planner.Services
             var projects = repo.GetPriorities();
             foreach (var pro in projects)
             {
-                projectList.Add(new SelectListItem { Value = pro.PriorityID.ToString(), Text = pro.PriorityName });
+                projectList.Add(new SelectListItem { Value = pro.ID.ToString(), Text = pro.Name });
 
             }
             return projectList;
@@ -37,7 +37,7 @@ namespace Planner.Services
             var projects = repo.GetStatuses();
             foreach (var pro in projects)
             {
-                projectList.Add(new SelectListItem { Value = pro.StatusID.ToString(), Text = pro.StatusName });
+                projectList.Add(new SelectListItem { Value = pro.ID.ToString(), Text = pro.Name });
 
             }
             return projectList;
@@ -48,9 +48,9 @@ namespace Planner.Services
             var projects = repo.GetStatuses();
             foreach (var pro in projects)
             {
-                if (itemsToShow.IndexOf(pro.StatusName)>=0)
+                if (itemsToShow.IndexOf(pro.Name)>=0)
                 {
-                    projectList.Add(new SelectListItem { Value = pro.StatusID.ToString(), Text = pro.StatusName });
+                    projectList.Add(new SelectListItem { Value = pro.ID.ToString(), Text = pro.Name });
                 }
 
             }
@@ -62,7 +62,7 @@ namespace Planner.Services
             var projects = repo.GetCategories();
             foreach (var pro in projects)
             {
-                projectList.Add(new SelectListItem { Value = pro.CategoryID.ToString(), Text = pro.CategoryName });
+                projectList.Add(new SelectListItem { Value = pro.ID.ToString(), Text = pro.Name });
 
             }
             return projectList;

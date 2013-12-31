@@ -155,6 +155,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\IssuesController.cs" />
     <Compile Include="Controllers\ProjectsController.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -166,6 +167,7 @@
     </Compile>
     <Compile Include="Helpers\ExtensionMethods\DateTimeExtensions.cs" />
     <Compile Include="Hubs\UserHub.cs" />
+    <Compile Include="Services\ProjectService.cs" />
     <Compile Include="Services\SecurityService.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="ViewModels\AccountSignupVM.cs" />

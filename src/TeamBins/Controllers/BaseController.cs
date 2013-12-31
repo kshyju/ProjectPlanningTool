@@ -24,7 +24,7 @@ namespace Planner.Controllers
                 {
                     return Convert.ToInt32(Session["TB_TeamID"]);
                 }
-                return 1;
+                return 3;
             }
         }
 

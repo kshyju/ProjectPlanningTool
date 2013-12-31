@@ -19,11 +19,11 @@ namespace Planner.DataAccess
         IEnumerable<Project> GetProjects(int teamId);
         Project GetProject(int projectId, int teamId);
         Project GetProject(string name, int teamId);
-     //   List<Priority> GetPriorities();
-     //   List<Status> GetStatuses();
-     //   List<Category> GetCategories();
+        List<Priority> GetPriorities();
+        List<Status> GetStatuses();
+        List<Category> GetCategories();
      ////   OperationStatus SaveBug(Bug bug);
-     //   OperationStatus SaveIssue(Issue bug);
+        OperationStatus SaveIssue(Issue bug);
        // OperationStatus SaveDocument(Document image);
         Project SaveProject(Project project);
 
@@ -37,9 +37,9 @@ namespace Planner.DataAccess
         Team SaveTeam(Team team);
         TeamMemberRequest AddTeamMemberRequest(TeamMemberRequest request);
         TeamMember SaveTeamMember(TeamMember teamMember);
-       /*   IEnumerable<Issue> GetIssues(int teamId);
+        IEnumerable<Issue> GetIssues(int teamId);
         Issue GetIssue(int issueId);
-
+/* 
         List<User> GetTeamMembers(int teamId);
         List<User> GetIssueMembers(int issueId);
         List<User> GetNonIssueMembers(int teamId, int issueId);

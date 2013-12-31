@@ -26,7 +26,6 @@ namespace SmartPlan.DataAccess
         }
     
         public DbSet<Category> Categories { get; set; }
-        public DbSet<Issue> Issues { get; set; }
         public DbSet<Priority> Priorities { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<Status> Status { get; set; }
@@ -35,5 +34,6 @@ namespace SmartPlan.DataAccess
         public DbSet<User> Users { get; set; }
         public DbSet<TeamMemberRequest> TeamMemberRequests { get; set; }
         public DbSet<Task> Tasks { get; set; }
+        public DbSet<Issue> Issues { get; set; }
     }
 }

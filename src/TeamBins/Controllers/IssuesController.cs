@@ -1,6 +1,6 @@
 ﻿using Planner.DataAccess;
-
 using Planner.Services;
+using SmartPlan.DataAccess;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,8 +9,6 @@ using System.Web;
 using System.Web.Mvc;
 using TechiesWeb.TeamBins.ViewModels;
 
-using System.Collections;
-using TechiesWeb.TeamBins.ExtensionMethods;
 
 
 namespace Planner.Controllers
@@ -45,14 +43,14 @@ namespace Planner.Controllers
         private BugsListVM GetBugList(string iteration)
         {
             var vm = new BugsListVM { CurrentTab = iteration };
-            var bugList = repo.GetIssues(1).Where(x=>x.Iteration.ToUpper()==iteration.ToUpper()).OrderByDescending(x => x.ID).Take(25);
+            var bugList = repo.GetIssues(1).OrderByDescending(x => x.ID).Take(25);
             foreach (var bug in bugList)
             {
-                var bugVM = new BugVM { ID = bug.ID, Title = bug.Title, Description = bug.Description };
-                bugVM.OpenedBy = bug.CreatedBy.DisplayName;
-                bugVM.Priority = bug.Priority.PriorityName;
-                bugVM.Status = bug.Status.StatusName;
-                bugVM.Category = bug.Category.CategoryName;
+               var bugVM = new BugVM { ID = bug.ID, Title = bug.Title, Description = bug.Description };
+                //bugVM.OpenedBy = bug.
+               bugVM.Priority = bug.Priority.Name;
+                bugVM.Status = bug.Status.Name;
+                bugVM.Category = bug.Category.Name;
                 bugVM.Project = bug.Project.Name;
                 bugVM.CreatedDate = bug.CreatedDate.ToShortDateString();
                 vm.Bugs.Add(bugVM);
@@ -64,7 +62,7 @@ namespace Planner.Controllers
 
             return vm;
         }
-
+        /*
         public ActionResult Add()
         {
             CreateBug vm = new CreateBug();
@@ -77,8 +75,8 @@ namespace Planner.Controllers
 
             return View(vm);
         }
-
-
+        */
+       
         private void LoadDropDownsForCreate(CreateBug viewModel)
         {
             
@@ -88,9 +86,10 @@ namespace Planner.Controllers
             viewModel.Cycles = ProjectService.GetCycles(repo);
             viewModel.Statuses = ProjectService.GetStatuses(repo);
         }
-
+        
+        
         [HttpPost]
-        public ActionResult Add(CreateBug model,LinkedList<HttpPostedFileBase> files)
+        public ActionResult Add(CreateBug model,List<HttpPostedFileBase> files)
         {
 
             try
@@ -98,26 +97,26 @@ namespace Planner.Controllers
                 if (ModelState.IsValid)
                 {
                     Issue bug = new Issue { Title = model.Title, Description = model.Description, ID = model.ID };
-                    bug.Priority.PriorityID = model.SelectedPriority;
-                    if (bug.Priority.PriorityID == 0)
-                        bug.Priority.PriorityID = 1;
+                    bug.PriorityID = model.SelectedPriority;
+                    if (bug.PriorityID == 0)
+                        bug.PriorityID = 1;
 
-                    bug.Project.ID = model.SelectedProject;
-                    if (bug.Project.ID == 0)
-                        bug.Project.ID = 3;
+                    bug.ProjectID = model.SelectedProject;
+                    if (bug.ProjectID == 0)
+                        bug.ProjectID = 3;
 
-                    bug.Status.StatusID = model.SelectedStatus;
+                    bug.StatusID = model.SelectedStatus;
                     if ((model.ID == 0) && (model.SelectedStatus==0))  // Newly created concern default status is 1
                     {
-                        bug.Status.StatusID = 1;
+                        bug.StatusID = 1;
                     }
-                    bug.IsShowStopper = model.IsShowStopper;                 
-                    bug.Category.CategoryID = model.SelectedCategory;
-                    if (bug.Category.CategoryID == 0)
-                        bug.Category.CategoryID = 1;
+                   // bug.IsShowStopper = model.IsShowStopper;                 
+                    bug.CategoryID = model.SelectedCategory;
+                    if (bug.CategoryID == 0)
+                        bug.CategoryID = 1;
 
-                    bug.Team.ID = 1;
-                    bug.ModifiedBy.ID = 1;
+                 //   bug.Team.ID = 1;
+                    bug.CreatedByID = UserID;
                     Issue existingIssue=new Issue();
                     if (model.ID != 0)
                     {
@@ -128,7 +127,7 @@ namespace Planner.Controllers
                     OperationStatus result = repo.SaveIssue(bug);
                     if (result.Status)
                     {
-                        SaveActivity(model, existingIssue, result.OperationID);
+                       // SaveActivity(model, existingIssue, result.OperationID);
                     }
                     if (Request.IsAjaxRequest())
                     {
@@ -143,9 +142,9 @@ namespace Planner.Controllers
                             {
                                 var issueVM = new BugVM { ID = result.OperationID };
                                 issueVM.Title = issue.Title;
-                                issueVM.Priority = issue.Priority.PriorityName;
-                                issueVM.Status = issue.Status.StatusName;
-                                issueVM.OpenedBy = issue.CreatedBy.DisplayName;
+                                issueVM.Priority = issue.Priority.Name;
+                                issueVM.Status = issue.Status.Name;
+                                issueVM.OpenedBy = issue.CreatedBy.FirstName;
                                 issueVM.CreatedDate = issue.CreatedDate.ToShortDateString();
 
                                 return Json(new { Status = "Success", Item = issueVM });
@@ -177,19 +176,19 @@ namespace Planner.Controllers
 
                                 string path = Path.Combine(Server.MapPath("~/uploads"), fileKey);
                                 file.SaveAs(path);
-
+                                /*
                                 Document img = new Document { UploadType = "Bug", DocName = fileName, Extension = Path.GetExtension(file.FileName) };
                                 img.DocKey = fileKey;
                                 img.CreatedByID = UserID;
-                                img.ParentID = result.OperationID;
-
+                                img.ParentID = result.OperationID;*/
+                                /*
                                 var resultForImg = repo.SaveDocument(img);
                                 {
 
 
-                                }
+                                }*/
 
-                            }
+                           }
 
 
                         }
@@ -218,7 +217,7 @@ namespace Planner.Controllers
                 return View(model);
             }
         }
-
+       /*
         private void SaveActivity(CreateBug model,Issue existingIssue, int issueId)
         {
             var activity = new Activity();
@@ -243,7 +242,8 @@ namespace Planner.Controllers
             activity.TeamID = TeamID;
 
             var r = repo.SaveActivity(activity);
-        }
+        }*/
+        /*
         private string GetStatusName(int statusId)
         {
             if (statusId == 1)
@@ -257,7 +257,7 @@ namespace Planner.Controllers
             else
                 return string.Empty;
 
-        }
+        }*//*
         public ActionResult Edit(int id)
         {
             var bug = repo.GetIssue(id);
@@ -268,15 +268,15 @@ namespace Planner.Controllers
                 editVM.Description = bug.Description;
                 LoadDropDownsForCreate(editVM);
 
-                editVM.SelectedCategory = bug.Category.CategoryID;
-                editVM.SelectedPriority = bug.Priority.PriorityID;
+                editVM.SelectedCategory = bug.Category.ID;
+                editVM.SelectedPriority = bug.Priority.ID;
                 editVM.SelectedProject = bug.Project.ID;
-                editVM.SelectedStatus = bug.Status.StatusID;
-                editVM.IsShowStopper = bug.IsShowStopper;
-                editVM.OpenedBy = bug.CreatedBy.DisplayName;
+                editVM.SelectedStatus = bug.Status.ID;
+                //editVM.IsShowStopper = bug.IsShowStopper;
+                //editVM.OpenedBy = bug.CreatedBy.DisplayName;
                 editVM.CreatedDate = bug.CreatedDate.ToShortDateString();
               
-                var allDocuments = repo.GetDocuments(id, "Bug");
+               /* var allDocuments = repo.GetDocuments(id, "Bug");
                 var images = allDocuments.Where(x => x.Extension.ToUpper() == ".JPG" || x.Extension.ToUpper() == ".PNG");
                 foreach (var img in images)
                 {
@@ -284,7 +284,7 @@ namespace Planner.Controllers
                     imgVM.FileKey = img.DocKey;
                     editVM.Images.Add(imgVM);
                 }
-
+                *//*
                 if (Request.IsAjaxRequest())
                 {
                     editVM.IsFromModalWindow = true;
@@ -295,7 +295,7 @@ namespace Planner.Controllers
             }
             return View("NotFound");
         }
-
+        *//*
 
         public ActionResult Details(int id)
         {
@@ -303,7 +303,7 @@ namespace Planner.Controllers
             BugVM bugVm = new BugVM { ID = bug.ID, Title = bug.Title };
             bugVm.Description = bug.Description;
             bugVm.CreatedDate = bug.CreatedDate.ToString("g");
-            bugVm.OpenedBy = bug.CreatedBy.DisplayName;
+           // bugVm.OpenedBy = bug.CreatedBy.DisplayName;
             bugVm.Title = bug.Title;
             bugVm.Project = bug.Project.Name;
             bugVm.Status = bug.Status.StatusName;
@@ -311,6 +311,7 @@ namespace Planner.Controllers
             bugVm.StatusCode = bug.Status.StatusCode;
             bugVm.IssueDueDate=(bug.DueDate.Year>2000?bug.DueDate.ToShortDateString():"");
 
+            /*
             var allDocuments = repo.GetDocuments(id, "Bug");
             var images = allDocuments; //;.Where(x => x.Extension.ToUpper() == ".JPG" || x.Extension.ToUpper()==".PNG"); 
             foreach (var img in images)
@@ -325,15 +326,15 @@ namespace Planner.Controllers
                     bugVm.Attachments.Add(imgVM);
 
             }
+            */
 
-
-
+        /*
             LoadComments(id, bugVm);
             //Get Members
             LoadIssueMembers(id, bugVm);
             return View(bugVm);
         }
-
+        /*
         private void LoadComments(int id, BugVM bugVm)
         {
             var commentList = repo.GetCommentsForIssue(id);
@@ -356,7 +357,7 @@ namespace Planner.Controllers
                 bugVm.Members.Add(vm);
             }
         }
-
+       
         public ActionResult Image(string id)
         {
 
@@ -376,7 +377,8 @@ namespace Planner.Controllers
             return Json(new { Status = "Success" });
 
         }
-        [HttpPost]
+         *  */
+       /* [HttpPost]
         public int SavePreference(bool CreateAndEditMode)
         {
             Session["CreateAndEditMode"] = CreateAndEditMode;
@@ -385,19 +387,19 @@ namespace Planner.Controllers
         [HttpPost]
         public int AddMember(int memberId, int issueId)
         {
-            repo.SaveIssueMember(issueId, memberId, UserID);
+          //  repo.SaveIssueMember(issueId, memberId, UserID);
             return 1;
-        }
-
+        }*/
+        /*
         public ActionResult IssueMembers(int id)
         {
             var vm = new BugVM { ID = id };
             LoadIssueMembers(id, vm);
             return PartialView("Partial/Members",vm);
         }
-
-        [HttpPost]        
-        public ActionResult Comment(NewIssueCommentVM model)
+        */
+       // [HttpPost]        
+     /*   public ActionResult Comment(NewIssueCommentVM model)
         {
             if (ModelState.IsValid)
             {
@@ -408,9 +410,9 @@ namespace Planner.Controllers
                 return Json(new { Status = "Success", NewCommentID = res.OperationID });
             }
             return Json(new { Status = "Error"});
-        }
+        }*/
 
-        public ActionResult Comment(int id)
+       /* public ActionResult Comment(int id)
         {
             var comment = repo.GetComment(id);
             if (comment != null)
@@ -421,7 +423,8 @@ namespace Planner.Controllers
                 return PartialView("Partial/Comment", commentVM);
             }
             return Content("");
-        }
+        }*/
+        /*
         [HttpPost]
         public void SaveDueDate(string issueDueDate, int issueId)
         {
@@ -445,6 +448,9 @@ namespace Planner.Controllers
 
             }
 
+        }*/
         }
-    }
 }
+        
+    
+

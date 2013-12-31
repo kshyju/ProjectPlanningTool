@@ -54,14 +54,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppConfiguration.cs" />
     <Compile Include="Category.cs">
       <DependentUpon>TeamBinsData.tt</DependentUpon>
     </Compile>
-    <Compile Include="AppConfiguration.cs" />
     <Compile Include="IRepositary.cs" />
     <Compile Include="Issue.cs">
       <DependentUpon>TeamBinsData.tt</DependentUpon>
     </Compile>
+    <Compile Include="OperationStatus.cs" />
     <Compile Include="Priority.cs">
       <DependentUpon>TeamBinsData.tt</DependentUpon>
     </Compile>
