@@ -108,7 +108,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="DBBackup\teambins-db-12-30-2013.bak" />
     <None Include="DBScript\teambins-may-10.2013.bak" />
     <None Include="DBScript\teambins-may-14.2013.bak" />
     <None Include="DBScript\teambins-may-17.2013.bak" />
