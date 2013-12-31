@@ -10,9 +10,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{3BAD6D10-3C7
 		lib\SimpleCrypto.dll = lib\SimpleCrypto.dll
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamBins", "src\SmartPlan\TeamBins.csproj", "{6A01C5BD-EA5C-4255-999F-76F0971B2C36}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamBins", "src\TeamBins\TeamBins.csproj", "{6A01C5BD-EA5C-4255-999F-76F0971B2C36}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamBins.DataAccess", "src\SmartPlan.DataAccess\TeamBins.DataAccess.csproj", "{381CEAFA-E0C2-4D2F-8454-E8AA7A264096}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamBins.DataAccess", "src\TeamBins.DataAccess\TeamBins.DataAccess.csproj", "{381CEAFA-E0C2-4D2F-8454-E8AA7A264096}"
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
@@ -20,14 +20,14 @@ Global
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://flashra.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
-		SccProjectUniqueName1 = src\\SmartPlan.DataAccess\\TeamBins.DataAccess.csproj
+		SccProjectUniqueName1 = src\\TeamBins.DataAccess\\TeamBins.DataAccess.csproj
 		SccProjectTopLevelParentUniqueName1 = TeamBins.sln
-		SccProjectName1 = src/SmartPlan.DataAccess
-		SccLocalPath1 = src\\SmartPlan.DataAccess
-		SccProjectUniqueName2 = src\\SmartPlan\\TeamBins.csproj
+		SccProjectName1 = src/TeamBins.DataAccess
+		SccLocalPath1 = src\\TeamBins.DataAccess
+		SccProjectUniqueName2 = src\\TeamBins\\TeamBins.csproj
 		SccProjectTopLevelParentUniqueName2 = TeamBins.sln
-		SccProjectName2 = src/SmartPlan
-		SccLocalPath2 = src\\SmartPlan
+		SccProjectName2 = src/TeamBins
+		SccLocalPath2 = src\\TeamBins
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
