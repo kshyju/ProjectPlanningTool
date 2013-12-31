@@ -43,7 +43,7 @@ namespace Planner.Controllers
         private BugsListVM GetBugList(string iteration)
         {
             var vm = new BugsListVM { CurrentTab = iteration };
-            var bugList = repo.GetIssues(1).OrderByDescending(x => x.ID).Take(25);
+            var bugList = repo.GetIssues(TeamID).OrderByDescending(x => x.ID).Take(25);
             foreach (var bug in bugList)
             {
                var bugVM = new BugVM { ID = bug.ID, Title = bug.Title, Description = bug.Description };
