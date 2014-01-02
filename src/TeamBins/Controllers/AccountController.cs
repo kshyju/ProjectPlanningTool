@@ -44,17 +44,19 @@ namespace SmartPlan.Controllers
                 var user = repo.GetUser(model.Email);
                 if (user == null)
                 {
-                    var newUser = new User { EmailAddress = model.Email };
-                    SecurityService.SetNewPassword(newUser, model.Password);                  
-                    /*var result = repo.SaveUser(newUser);
+                    var newUser = new User { EmailAddress = model.Email, FirstName=model.Name, Password=model.Password };
+                   // SecurityService.SetNewPassword(newUser, model.Password);                  
+                   var result = repo.SaveUser(newUser);
                     if (result.Status)
                     {
+                        var team = new Team { Name = newUser.ID.ToString() };
+                        var res = repo.SaveTeam(team);
                        /* var notificationVM = new NotificationVM { Title = "New User Joined", Message = model.Name + " joined" };
                         var context = GlobalHost.ConnectionManager.GetHubContext<UserHub>();
                         context.Clients.All.ShowNotificaion(notificationVM);*/
 
-                     //   return RedirectToAction("AccountCreated");
-                   // }*/
+                        return RedirectToAction("AccountCreated");
+                    }
                 }
                 else
                 {
@@ -79,8 +81,8 @@ namespace SmartPlan.Controllers
                 var user = repo.GetUser(model.Email);
                 if (user != null)
                 {
-                   // string hashed = SecurityService.GetPasswordHash(model.Password);
-                 //  var s= PasswordHash.ValidatePassword(model.Password, user.Password);
+                    string hashed = SecurityService.GetPasswordHash(model.Password);
+                  // var s= PasswordHash.ValidatePassword(model.Password,user.HA);
                    if (user.Password==model.Password)
                    {
                        return RedirectToAction("Index", "Dashboard");

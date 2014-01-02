@@ -21,6 +21,21 @@ namespace Planner.DataAccess
         {
             throw new System.NotImplementedException();
         }
+        public OperationStatus SaveProjectMember(ProjectMember projectMember)
+        {
+            try
+            {
+                db.ProjectMembers.Add(projectMember);
+                db.SaveChanges();
+                return new OperationStatus { Status = true, OperationID = projectMember.ID };
+            }
+            catch(Exception ex)
+            {
+                return new OperationStatus { Status = true, OperationID = projectMember.ID };
+            }
+
+          
+        }
         /*
 
       /*  public Document GetDocument(string documentKey)
@@ -38,34 +53,34 @@ namespace Planner.DataAccess
             throw new System.NotImplementedException();
         }
         */
-        public IEnumerable<Project> GetProjects(int teamId)
+        public IEnumerable<Project> GetProjects()
         {
-            return db.Projects.Where(s => s.TeamID == teamId);
+            return db.Projects;
         }
 
-        public Project GetProject(int projectId, int teamId)
+        public Project GetProject(int projectId, int createdById)
         {
-            return db.Projects.FirstOrDefault(s => s.ID == projectId && s.TeamID == teamId);
+            return db.Projects.FirstOrDefault(s => s.ID == projectId && s.CreatedByID==createdById);
         }
 
-        public Project GetProject(string name, int teamId)
+        public Project GetProject(string name, int createdById)
         {
-            return db.Projects.FirstOrDefault(s => s.Name == name && s.TeamID == teamId);
+            return db.Projects.FirstOrDefault(s => s.Name == name && s.CreatedByID == createdById);
         }
        
         public List<Priority> GetPriorities()
         {
-            throw new System.NotImplementedException();
+            return db.Priorities.ToList();
         }
 
         public List<Status> GetStatuses()
         {
-            throw new System.NotImplementedException();
+            return db.Status.ToList();
         }
 
         public List<Category> GetCategories()
         {
-            throw new System.NotImplementedException();
+            return db.Categories.ToList();
         }
 
         public OperationStatus SaveIssue(Issue issue)
@@ -100,24 +115,38 @@ namespace Planner.DataAccess
         {
             throw new System.NotImplementedException();
         }
-
-        public OperationStatus SaveUser(TechiesWeb.TeamBins.Entities.User user)
+        */
+        public OperationStatus SaveUser(User user)
         {
-            throw new System.NotImplementedException();
-        }
+            try
+            {
+                user.CreatedDate = DateTime.Now;
 
+                db.Users.Add(user);
+                db.SaveChanges();
+            }
+            catch(Exception ex)
+            {
+                var res = new OperationStatus();
+
+            }
+            return new OperationStatus { OperationID = user.ID, Status = true };
+
+        }
+        /*
         public User GetUser(string emailAddress)
         {
             return db.Users.FirstOrDefault(a => a.EmailAddress == emailAddress);
 
         }
         */
+        /*
         public IEnumerable<Team> GetTeams(int userId)
         {
            //throw new System.NotImplementedException();
            return db.TeamMembers.Where(s => s.UserID == userId).Select(s => s.Team);
         }
-       
+       */
         public Team GetTeam(int teamId)
         {
             return db.Teams.FirstOrDefault(s => s.ID == teamId);
@@ -138,7 +167,7 @@ namespace Planner.DataAccess
             return team;
         }
        
-        public TeamMemberRequest AddTeamMemberRequest(TeamMemberRequest request)
+       /* public TeamMemberRequest AddTeamMemberRequest(TeamMemberRequest request)
         {
             request.CreatedDate = DateTime.Now;
             db.TeamMemberRequests.Add(request);
@@ -151,11 +180,11 @@ namespace Planner.DataAccess
             db.TeamMembers.Add(teamMember);
             db.SaveChanges();
             return teamMember;
-        }
+        }*/
       
         public IEnumerable<Issue> GetIssues(int teamId)
         {
-            return db.Issues.Where(s => s.Project.TeamID == teamId);
+            return db.Issues;
         }
 
         public Issue GetIssue(int issueId)
@@ -187,22 +216,34 @@ namespace Planner.DataAccess
         {
             throw new System.NotImplementedException();
         }
-
+        */
         public IEnumerable<Comment> GetCommentsForIssue(int issueId)
         {
-            throw new System.NotImplementedException();
+            return db.Comments.Where(s => s.IssueID == issueId);
         }
 
         public OperationStatus SaveComment(Comment comment)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                db.Comments.Add(comment);
+                db.SaveChanges();
+            }
+            catch(Exception ex)
+            {
+                return OperationStatus.CreateFromException("Error in comment", ex);
+            }
+            
+
+            return new OperationStatus { Status = true, OperationID = comment.ID };
+
         }
 
         public Comment GetComment(int commentId)
         {
-            throw new System.NotImplementedException();
+            return db.Comments.Where(s => s.ID == commentId).FirstOrDefault();
         }
-
+/*
         public IEnumerable<Activity> GetTeamActivity(int teamId)
         {
             throw new System.NotImplementedException();
@@ -221,6 +262,12 @@ namespace Planner.DataAccess
         public User GetUser(string emailAddress)
         {
             return db.Users.FirstOrDefault(s => s.EmailAddress == emailAddress);
+        }
+
+
+        public IEnumerable<Team> GetTeams(int userId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

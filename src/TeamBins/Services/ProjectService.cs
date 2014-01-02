@@ -12,7 +12,7 @@ namespace Planner.Services
         public static List<SelectListItem> GetProjects(IRepositary repo)
         {
             List<SelectListItem> projectList = new List<SelectListItem>();
-            var projects = repo.GetProjects(1);
+            var projects = repo.GetProjects();
             foreach (var pro in projects)
             {
                 projectList.Add(new SelectListItem { Value = pro.ID.ToString(), Text = pro.Name });

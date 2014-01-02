@@ -21,10 +21,10 @@ namespace SmartPlan.Controllers
         }
 
         
-        public ActionResult Index(int id)
+        public ActionResult Index()
         {
-            var vm = new TeamProjectListVM { TeamID = id };           
-            var projectList = repo.GetProjects(id);
+            var vm = new TeamProjectListVM ();
+            var projectList = repo.GetProjects();
             foreach (var project in projectList)
             {
                 var projectVM = new ProjectVM { Name = project.Name, ID = project.ID };
@@ -42,9 +42,9 @@ namespace SmartPlan.Controllers
             }
             return View("NotFound");
         }
-        public ActionResult Add(int id)
+        public ActionResult Add()
         {
-            var vm = new CreateProjectVM { TeamID = id };
+            var vm = new CreateProjectVM ();
             return PartialView("Partial/Add",vm);
         }
 
@@ -53,17 +53,21 @@ namespace SmartPlan.Controllers
         {
             if (ModelState.IsValid)
             {
-                var existing = repo.GetProject(model.Name,model.TeamID);
+                var existing = repo.GetProject(model.Name,UserID);
                 if((existing!=null) && (existing.ID!=model.ID))
                     return Json(new { Status="Error", Message= "Project name exists"});
 
 
                 var project = new Project { Name = model.Name, ID=model.ID };
                 project.CreatedByID = UserID;
-                project.TeamID = model.TeamID;
+                //project.TeamID = model.TeamID;
                 var res=repo.SaveProject(project);
                 if (res!=null)
                 {
+                    //Add as Project member
+                    var projectMember = new ProjectMember { ProjectID = project.ID, UserID = UserID, CreatedDate = DateTime.Now };
+                    var result = repo.SaveProjectMember(projectMember);
+
                     return Json(new { Status = "Success", Message = "Project created successfully" });
                 }
             }

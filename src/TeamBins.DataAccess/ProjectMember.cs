@@ -12,15 +12,14 @@ namespace SmartPlan.DataAccess
     using System;
     using System.Collections.Generic;
     
-    public partial class TeamMember
+    public partial class ProjectMember
     {
         public int ID { get; set; }
-        public int TeamID { get; set; }
+        public int ProjectID { get; set; }
         public int UserID { get; set; }
         public System.DateTime CreatedDate { get; set; }
-        public string JobTitle { get; set; }
     
-        public virtual Team Team { get; set; }
-        public virtual User User { get; set; }
+        public virtual User Member { get; set; }
+        public virtual Project Project { get; set; }
     }
 }

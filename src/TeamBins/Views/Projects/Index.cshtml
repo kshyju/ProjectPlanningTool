@@ -3,24 +3,24 @@
     ViewBag.Title = "Index";
 }
 
-<div class="pageContent">
+<td class="pageContent">
     <h2>Projects</h2>
     @Html.ActionLink("Add New", "Add", "Projects", new { id=Model.TeamID}, new { @class = "aPopup" })
     @if(Model.Projects.Count>0)
     {
-        <table>
+        <table class="table" >
         @foreach(var project in Model.Projects)
         {
-            <li id="li_@project.ID" class="listItem">
-                <div class="liContent">
+            <tr>
+                <td>
                     @Html.ActionLink(project.Name, "details", "Projects",new { @id = project.ID }, new { @class = "listItem" })     
-                </div>
-                <div class="liEdit" style="display:none;">
+                </td>
+                <td>
                     @Html.ActionLink("Edit","Edit", "Projects",new { id=@project.ID}, new { @class="popup" }) |
                     @Html.ActionLink("Delete","DeleteConfirm", "Projects",new { id=project.ID}, new { @class="popup delete", @data_id=project.ID })
-                </div>
+                </td>
                 
-            </li>
+            </tr>
         }
         </table>
     }

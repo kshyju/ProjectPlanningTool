@@ -16,9 +16,9 @@ namespace Planner.DataAccess
       //  Document GetDocument(string documentKey);
      //   List<Document> GetDocuments(int parentId, string type);
        // List<Bug> GetBugs(int page, int size);
-        IEnumerable<Project> GetProjects(int teamId);
-        Project GetProject(int projectId, int teamId);
-        Project GetProject(string name, int teamId);
+        IEnumerable<Project> GetProjects();
+        Project GetProject(int projectId, int createdById);
+        Project GetProject(string name, int createdById);
         List<Priority> GetPriorities();
         List<Status> GetStatuses();
         List<Category> GetCategories();
@@ -26,28 +26,34 @@ namespace Planner.DataAccess
         OperationStatus SaveIssue(Issue bug);
        // OperationStatus SaveDocument(Document image);
         Project SaveProject(Project project);
-
+        OperationStatus SaveProjectMember(ProjectMember projectMember);
        // Bug GetBug(int id);
 
-      //  OperationStatus SaveUser(User user);
+        OperationStatus SaveUser(User user);
         User GetUser(string emailAddress);
 
         IEnumerable<Team> GetTeams(int userId);
         Team GetTeam(int teamId);
         Team SaveTeam(Team team);
-        TeamMemberRequest AddTeamMemberRequest(TeamMemberRequest request);
-        TeamMember SaveTeamMember(TeamMember teamMember);
+        //TeamMemberRequest AddTeamMemberRequest(TeamMemberRequest request);
+      //  TeamMember SaveTeamMember(TeamMember teamMember);
         IEnumerable<Issue> GetIssues(int teamId);
         Issue GetIssue(int issueId);
+        IEnumerable<Comment> GetCommentsForIssue(int issueId);
+        OperationStatus SaveComment(Comment comment);
+        Comment GetComment(int commentId);
 /* 
         List<User> GetTeamMembers(int teamId);
         List<User> GetIssueMembers(int issueId);
         List<User> GetNonIssueMembers(int teamId, int issueId);
         OperationStatus SaveIssueMember(int issueId, int memberId, int addedBy);
         OperationStatus DeleteIssueMember(int issueId, int memberId);
-        IEnumerable<Comment> GetCommentsForIssue(int issueId);
-        OperationStatus SaveComment(Comment comment);
-        Comment GetComment(int commentId);
+        
+ * /
+ * 
+
+ /* 
+       
 
         IEnumerable<Activity> GetTeamActivity(int teamId);
         OperationStatus SaveActivity(Activity comment);*/

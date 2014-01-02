@@ -207,7 +207,7 @@ a.toolLink {
     padding:10px;
 }
 .DescrTxtArea {
-    height:350px;
+    height:200px;
 }
 #issueStatus
 {
@@ -225,7 +225,7 @@ span.New
     background-color:#F1FB9A;
     border:1px solid #AACF39;
 }
-span.InProgress
+span.InProgress,span.Progress
 {
     background-color:#74B9EE;
     border:1px solid #3A82B5; color:white;

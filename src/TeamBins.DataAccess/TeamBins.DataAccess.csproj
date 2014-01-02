@@ -58,6 +58,9 @@
     <Compile Include="Category.cs">
       <DependentUpon>TeamBinsData.tt</DependentUpon>
     </Compile>
+    <Compile Include="Comment.cs">
+      <DependentUpon>TeamBinsData.tt</DependentUpon>
+    </Compile>
     <Compile Include="IRepositary.cs" />
     <Compile Include="Issue.cs">
       <DependentUpon>TeamBinsData.tt</DependentUpon>
@@ -67,6 +70,9 @@
       <DependentUpon>TeamBinsData.tt</DependentUpon>
     </Compile>
     <Compile Include="Project.cs">
+      <DependentUpon>TeamBinsData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProjectMember.cs">
       <DependentUpon>TeamBinsData.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -96,12 +102,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>TeamBinsData.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="TeamMember.cs">
-      <DependentUpon>TeamBinsData.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TeamMemberRequest.cs">
-      <DependentUpon>TeamBinsData.tt</DependentUpon>
     </Compile>
     <Compile Include="User.cs">
       <DependentUpon>TeamBinsData.tt</DependentUpon>

@@ -14,6 +14,11 @@ namespace SmartPlan.DataAccess
     
     public partial class Issue
     {
+        public Issue()
+        {
+            this.Comments = new HashSet<Comment>();
+        }
+    
         public int ID { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
@@ -29,9 +34,10 @@ namespace SmartPlan.DataAccess
     
         public virtual Category Category { get; set; }
         public virtual Priority Priority { get; set; }
-        public virtual Project Project { get; set; }
         public virtual Status Status { get; set; }
         public virtual User CreatedBy { get; set; }
         public virtual User ModifiedBy { get; set; }
+        public virtual Project Project { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; }
     }
 }

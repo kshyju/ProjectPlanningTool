@@ -2,12 +2,10 @@
 @{
     ViewBag.Title = "Details";
 }
-<link href="~/Scripts/kendo/styles/kendo.common.min.css" rel="stylesheet" />
-<link href="~/Scripts/kendo/styles/kendo.default.min.css" rel="stylesheet" />
-<script src="~/Scripts/kendo/js/kendo.web.min.js"></script>
+
 <script src="~/Scripts/issue.js"></script>
 <div class="divToobar">
-       @Html.ActionLink("Edit", "Edit",  new { id=Model.ID}, new { @class="toolLink popup"})    
+       @Html.ActionLink("Edit", "Edit", new { id = Model.ID }, new { @class = "toolLink aPopup" })    
 </div>
 <div class="divPageContent">
     <div class="divLeft">
@@ -16,8 +14,9 @@
         <div class="authorInfo">
             Opened by @Html.ActionLink(@Model.OpenedBy,"details","user",new{ @id=@Model.OpenedBy},null) on @Model.CreatedDate  
         </div>  
-        <div id="issueStatus">Iteration <span class="@Model.StatusCode">@Model.Status</span></div>               
-        <div id="issueStatus">Status <span class="@Model.StatusCode">@Model.Status</span></div>               
+                 
+        <div id="issueStatus">Status <span class="@Model.StatusCode">@Model.Status</span></div>  
+            <div id="issueStatus">Project <span class="">@Model.Project</span></div>                  
             </div>
         <div class="divDetail">
             <div class="divDescr">
@@ -70,41 +69,16 @@
 
     </div>
 </div>
-<div id="kendoWindow"></div>
+<div id="modal" class="modal fade"></div>
 @Html.HiddenFor(x=>x.ID)
- <script type="text/ecmascript">
-     $(document).ready(function () {
+<script type="text/javascript">
+    $(function () {
+        //Show popup on clicking the link
+        $(document).on("click", "a.aPopup", function (e) {
+            e.preventDefault();
+            var _this = $(this);
+            $('#modal').modal({ remote: _this.attr("href") });
+        });
 
-         InitializeMemberCombo();
-
-
-
-
-     });
-
-     function InitializeMemberCombo() {
-         $.getJSON("@Url.Action("NonTeamMembers","Team")?issueId=" + $("#ID").val(), function (res) {
-             if (res.Status == "Success") {
-                 $("#assignMember").kendoComboBox({
-                     filter: "startswith",
-                     dataTextField: "Name",
-                     dataValueField: "MemberID",
-                     dataSource: res.Data,
-                     template: '<div class="comboMember" data-memberid="${data.MemberID}"><img src="${data.AvatarHash}" /><h3>${data.Name}</h3><p>${data.MemberType}</p></div>',
-                     select: function (e) {
-                         
-                         var memberId = e.item.find("div.comboMember").data("memberid");
-                         $.post("@Url.Action("AddMember","Issues")", { memberId: memberId, issueId: $("#ID").val() }, function (res) {
-                             $("#assignMember").data("kendoComboBox").text("");
-                             $("#members").load("@Url.Action("IssueMembers","Issues")/" + $("#ID").val(), function () {
-                                 InitializeMemberCombo();
-                             });
-                         });
-                     }
-                 });
-             }
-          });
-         var combobox = $("#assignMember").width(300).data("kendoComboBox");
-     }
-
- </script>
+    })
+</script>

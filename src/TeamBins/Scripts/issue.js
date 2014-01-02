@@ -54,7 +54,7 @@
         });
     });
 
-
+    /*
     $("#IssueDueDate").width(300).kendoDatePicker({
         change: function (e) {
             selectedDate = $("#IssueDueDate").val();
@@ -62,7 +62,7 @@
             $("#dueDatePicker").fadeOut(50);
             $.post("../../Issues/SaveDueDate", { issueDueDate: selectedDate, issueId: $("#ID").val() });
         }
-    });
+    });*/
     $("#aChangeDueDate").click(function (e) {
         e.preventDefault();
         $("#dueDatePicker").fadeIn(50);
@@ -108,10 +108,10 @@
             }
         });*/
     });
-
+    /*
     if ($("#activityStream").length) {
-        $("#activityStream").load("../../Team/ActivityStream");
-    }
+       // $("#activityStream").load("../../Team/ActivityStream");
+    }*/
 
 
 });

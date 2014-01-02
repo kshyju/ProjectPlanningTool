@@ -17,6 +17,7 @@ namespace SmartPlan.DataAccess
         public Project()
         {
             this.Issues = new HashSet<Issue>();
+            this.ProjectMembers = new HashSet<ProjectMember>();
         }
     
         public int ID { get; set; }
@@ -24,10 +25,9 @@ namespace SmartPlan.DataAccess
         public string Description { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public int CreatedByID { get; set; }
-        public int TeamID { get; set; }
     
-        public virtual User User { get; set; }
-        public virtual Team Team { get; set; }
         public virtual ICollection<Issue> Issues { get; set; }
+        public virtual User User { get; set; }
+        public virtual ICollection<ProjectMember> ProjectMembers { get; set; }
     }
 }

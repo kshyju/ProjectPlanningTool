@@ -94,9 +94,18 @@ namespace Planner.Controllers
 
             try
             {
+                
                 if (ModelState.IsValid)
                 {
-                    Issue bug = new Issue { Title = model.Title, Description = model.Description, ID = model.ID };
+                    Issue bug = new Issue { ID = model.ID };
+                    if (model.ID != 0)
+                    {
+                        bug = repo.GetIssue(model.ID);
+                    }
+
+                    bug.Title = model.Title;
+                    bug.Description = model.Description;
+
                     bug.PriorityID = model.SelectedPriority;
                     if (bug.PriorityID == 0)
                         bug.PriorityID = 1;
@@ -117,11 +126,8 @@ namespace Planner.Controllers
 
                  //   bug.Team.ID = 1;
                     bug.CreatedByID = UserID;
-                    Issue existingIssue=new Issue();
-                    if (model.ID != 0)
-                    {
-                        existingIssue = repo.GetIssue(model.ID);
-                    }
+                   // Issue existingIssue=new Issue();
+                    
 
 
                     OperationStatus result = repo.SaveIssue(bug);
@@ -258,6 +264,7 @@ namespace Planner.Controllers
                 return string.Empty;
 
         }*//*
+            * */
         public ActionResult Edit(int id)
         {
             var bug = repo.GetIssue(id);
@@ -276,15 +283,15 @@ namespace Planner.Controllers
                 //editVM.OpenedBy = bug.CreatedBy.DisplayName;
                 editVM.CreatedDate = bug.CreatedDate.ToShortDateString();
               
-               /* var allDocuments = repo.GetDocuments(id, "Bug");
-                var images = allDocuments.Where(x => x.Extension.ToUpper() == ".JPG" || x.Extension.ToUpper() == ".PNG");
+                //var allDocuments = repo.GetDocuments(id, "Bug");
+               /* var images = allDocuments.Where(x => x.Extension.ToUpper() == ".JPG" || x.Extension.ToUpper() == ".PNG");
                 foreach (var img in images)
                 {
                     var imgVM = new DocumentVM { FileName = img.DocName };
                     imgVM.FileKey = img.DocKey;
                     editVM.Images.Add(imgVM);
-                }
-                *//*
+                }*/
+               
                 if (Request.IsAjaxRequest())
                 {
                     editVM.IsFromModalWindow = true;
@@ -295,21 +302,22 @@ namespace Planner.Controllers
             }
             return View("NotFound");
         }
+                    /*
         *//*
-
+        */
         public ActionResult Details(int id)
         {
             var bug = repo.GetIssue(id);
             BugVM bugVm = new BugVM { ID = bug.ID, Title = bug.Title };
             bugVm.Description = bug.Description;
             bugVm.CreatedDate = bug.CreatedDate.ToString("g");
-           // bugVm.OpenedBy = bug.CreatedBy.DisplayName;
+            bugVm.OpenedBy = bug.CreatedBy.FirstName;
             bugVm.Title = bug.Title;
             bugVm.Project = bug.Project.Name;
-            bugVm.Status = bug.Status.StatusName;
-            bugVm.Priority = bug.Priority.PriorityName;
-            bugVm.StatusCode = bug.Status.StatusCode;
-            bugVm.IssueDueDate=(bug.DueDate.Year>2000?bug.DueDate.ToShortDateString():"");
+            bugVm.Status = bug.Status.Name;
+            bugVm.Priority = bug.Priority.Name;
+            bugVm.StatusCode = bug.Status.Name;
+          //  bugVm.IssueDueDate=(bug.DueDate.Year>2000?bug.DueDate.ToShortDateString():"");
 
             /*
             var allDocuments = repo.GetDocuments(id, "Bug");
@@ -328,25 +336,25 @@ namespace Planner.Controllers
             }
             */
 
-        /*
+       
             LoadComments(id, bugVm);
             //Get Members
-            LoadIssueMembers(id, bugVm);
+           // LoadIssueMembers(id, bugVm);
             return View(bugVm);
         }
-        /*
+
         private void LoadComments(int id, BugVM bugVm)
         {
             var commentList = repo.GetCommentsForIssue(id);
             foreach (var item in commentList)
             {
-                var commentVM = new CommentVM { ID = item.ID, AuthorName = item.Author.DisplayName, CommentBody = item.CommentBody, CreativeDate = item.CreatedDate.ToString("g") };
-                commentVM.AvatarHash = UserService.GetImageSource(item.Author.EmailAddress, 42);
-                commentVM.CreatedDateRelative = item.CreatedDate.ToRelativeDateTime();
+                var commentVM = new CommentVM { ID = item.ID, CommentBody = item.CommentText, AuthorName=item.Author.FirstName, CreativeDate = item.CreatedDate.ToString("g") };
+                //commentVM.AvatarHash = UserService.GetImageSource(item.CreatedBy.EmailAddress, 42);
+                commentVM.CreatedDateRelative = item.CreatedDate.ToShortDateString();//.ToRelativeDateTime();
                 bugVm.Comments.Add(commentVM);
             }
         }
-
+        /*
         private void LoadIssueMembers(int id, BugVM bugVm)
         {
             var memberList = repo.GetIssueMembers(id);
@@ -398,19 +406,19 @@ namespace Planner.Controllers
             return PartialView("Partial/Members",vm);
         }
         */
-       // [HttpPost]        
-     /*   public ActionResult Comment(NewIssueCommentVM model)
+        [HttpPost]        
+       public ActionResult Comment(NewIssueCommentVM model)
         {
             if (ModelState.IsValid)
             {
                 model.CommentBody = HttpUtility.HtmlEncode(model.CommentBody);
 
-                var comment = new Comment { CommentBody = model.CommentBody, Author = new User { ID = UserID }, ParentID = model.IssueID };
+                var comment = new Comment { CommentText = model.CommentBody, CreatedByID=UserID, CreatedDate=DateTime.Now };
                 var res = repo.SaveComment(comment);
                 return Json(new { Status = "Success", NewCommentID = res.OperationID });
             }
             return Json(new { Status = "Error"});
-        }*/
+        }
 
        /* public ActionResult Comment(int id)
         {

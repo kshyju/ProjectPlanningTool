@@ -16,12 +16,12 @@ namespace SmartPlan.DataAccess
     {
         public User()
         {
-            this.Projects = new HashSet<Project>();
-            this.TeamMembers = new HashSet<TeamMember>();
-            this.TeamMemberRequests = new HashSet<TeamMemberRequest>();
             this.Tasks = new HashSet<Task>();
             this.Issues = new HashSet<Issue>();
             this.Issues1 = new HashSet<Issue>();
+            this.ProjectMembers = new HashSet<ProjectMember>();
+            this.Projects = new HashSet<Project>();
+            this.Comments = new HashSet<Comment>();
         }
     
         public int ID { get; set; }
@@ -31,11 +31,11 @@ namespace SmartPlan.DataAccess
         public string Password { get; set; }
         public System.DateTime CreatedDate { get; set; }
     
-        public virtual ICollection<Project> Projects { get; set; }
-        public virtual ICollection<TeamMember> TeamMembers { get; set; }
-        public virtual ICollection<TeamMemberRequest> TeamMemberRequests { get; set; }
         public virtual ICollection<Task> Tasks { get; set; }
         public virtual ICollection<Issue> Issues { get; set; }
         public virtual ICollection<Issue> Issues1 { get; set; }
+        public virtual ICollection<ProjectMember> ProjectMembers { get; set; }
+        public virtual ICollection<Project> Projects { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; }
     }
 }

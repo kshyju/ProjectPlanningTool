@@ -25,13 +25,13 @@ namespace SmartPlan.Controllers
         {
             var vm = new DashBoardVM();
             
-            var teams = repo.GetTeams(UserID);
+           /* var teams = repo.GetTeams(UserID);
             foreach (var item in teams)
             {
                 vm.Teams.Add(new TeamVM { ID = item.ID, Name = item.Name });
             }
 
-
+            */
 
             return View(vm);
         }

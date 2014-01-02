@@ -21,7 +21,7 @@ namespace Planner.Controllers
             var teamListVM = new TeamListVM();
             foreach (var team in teams)
             {
-                teamListVM.Teams.Add(new TeamVM { ID = team.ID, Name = team.Name  ,MemberCount=team.TeamMembers.Count});
+                teamListVM.Teams.Add(new TeamVM { ID = team.ID, Name = team.Name  });
             }
             return View(teamListVM);
         }
@@ -34,13 +34,13 @@ namespace Planner.Controllers
             {
                 var vm = new TeamVM { ID = id, Name = team.Name };
 
-                var teamMembers = team.TeamMembers;
+              /*  var teamMembers = team.TeamMembers;
                 foreach (var teamMember in teamMembers)
                 {
                    var member=new MemberVM { Name = teamMember.User.FirstName + " " + teamMember.User.LastName, EmailAddress=teamMember.User.EmailAddress, JobTitle=teamMember.JobTitle, JoinedDate = teamMember.CreatedDate.ToShortDateString() };
                    member.EmailHash = UserService.GetImageSource(member.EmailAddress);
                    vm.Members.Add(member);
-                }
+                }*/
 
                 return View(vm);
             }
@@ -122,8 +122,8 @@ namespace Planner.Controllers
                     if (isNew)
                     {
                         TeamMember req = new TeamMember { TeamID = result.ID, UserID = UserID };
-                        var res = repo.SaveTeamMember(req);
-                        TempData["TeamID"] = result.ID;
+                      //  var res = repo.SaveTeamMember(req);
+                       // TempData["TeamID"] = result.ID;
                         return RedirectToAction("created", "Team");
                     }
                     else
