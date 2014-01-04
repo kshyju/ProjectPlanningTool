@@ -43,11 +43,11 @@ namespace Planner.Controllers
         private BugsListVM GetBugList(string iteration)
         {
             var vm = new BugsListVM { CurrentTab = iteration };
-            var bugList = repo.GetIssues(TeamID).OrderByDescending(x => x.ID).Take(25);
+            var bugList = repo.GetIssues().OrderByDescending(x => x.ID).Take(25);
             foreach (var bug in bugList)
             {
                var bugVM = new BugVM { ID = bug.ID, Title = bug.Title, Description = bug.Description };
-                //bugVM.OpenedBy = bug.
+               bugVM.OpenedBy = bug.CreatedBy.FirstName;
                bugVM.Priority = bug.Priority.Name;
                 bugVM.Status = bug.Status.Name;
                 bugVM.Category = bug.Category.Name;
@@ -386,12 +386,13 @@ namespace Planner.Controllers
 
         }
          *  */
-       /* [HttpPost]
+        [HttpPost]
         public int SavePreference(bool CreateAndEditMode)
         {
             Session["CreateAndEditMode"] = CreateAndEditMode;
             return 1;
         }
+        /*
         [HttpPost]
         public int AddMember(int memberId, int issueId)
         {
@@ -406,32 +407,39 @@ namespace Planner.Controllers
             return PartialView("Partial/Members",vm);
         }
         */
-        [HttpPost]        
+       
+       [HttpPost]        
        public ActionResult Comment(NewIssueCommentVM model)
         {
-            if (ModelState.IsValid)
+            try
             {
-                model.CommentBody = HttpUtility.HtmlEncode(model.CommentBody);
-
-                var comment = new Comment { CommentText = model.CommentBody, CreatedByID=UserID, CreatedDate=DateTime.Now };
-                var res = repo.SaveComment(comment);
-                return Json(new { Status = "Success", NewCommentID = res.OperationID });
+                if (ModelState.IsValid)
+                {
+                    model.CommentBody = HttpUtility.HtmlEncode(model.CommentBody);
+                    var comment = new Comment { CommentText = model.CommentBody, IssueID = model.IssueID, CreatedByID = UserID, CreatedDate = DateTime.Now };
+                    var res = repo.SaveComment(comment);
+                    return Json(new { Status = "Success", NewCommentID = res.OperationID });
+                }
+                return Json(new { Status = "Error" });
             }
-            return Json(new { Status = "Error"});
+            catch(Exception ex)
+            {
+                return Json(new { Status = "Error" });
+            }            
         }
 
-       /* public ActionResult Comment(int id)
+        public ActionResult Comment(int id)
         {
             var comment = repo.GetComment(id);
             if (comment != null)
             {
-                var commentVM = new CommentVM { ID = comment.ID, AuthorName = comment.Author.DisplayName, CommentBody = comment.CommentBody, CreativeDate = comment.CreatedDate.ToString("g") };
-                commentVM.AvatarHash = UserService.GetImageSource(comment.Author.EmailAddress, 42);
-                commentVM.CreatedDateRelative = comment.CreatedDate.ToRelativeDateTime();
+                var commentVM = new CommentVM { ID = comment.ID, AuthorName = comment.Author.FirstName, CommentBody = comment.CommentText, CreativeDate = comment.CreatedDate.ToString("g") };
+                //commentVM.AvatarHash = UserService.GetImageSource(comment.Author.EmailAddress, 42);
+                commentVM.CreatedDateRelative = comment.CreatedDate.ToShortDateString(); //.ToRelativeDateTime();
                 return PartialView("Partial/Comment", commentVM);
             }
             return Content("");
-        }*/
+        }
         /*
         [HttpPost]
         public void SaveDueDate(string issueDueDate, int issueId)

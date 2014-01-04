@@ -105,6 +105,7 @@
           <Property Name="LastName" Type="nvarchar" MaxLength="50" />
           <Property Name="EmailAddress" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Password" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="JobTitle" Type="nvarchar" MaxLength="50" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
         </EntityType>
         <Association Name="FK_Comment_Issue">
@@ -443,6 +444,7 @@
           <NavigationProperty Name="ProjectMembers" Relationship="TeamBinsModel.FK_ProjectMember_User" FromRole="User" ToRole="ProjectMember" />
           <NavigationProperty Name="Projects" Relationship="TeamBinsModel.FK_Project_User" FromRole="User" ToRole="Project" />
           <NavigationProperty Name="Comments" Relationship="TeamBinsModel.FK_Comment_User" FromRole="User" ToRole="Comment" />
+          <Property Name="JobTitle" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           </EntityType>
         <EntityType Name="Task">
           <Key>
@@ -721,6 +723,7 @@
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="TeamBinsModel.User">
               <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="JobTitle" ColumnName="JobTitle" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="FirstName" ColumnName="FirstName" />
                 <ScalarProperty Name="LastName" ColumnName="LastName" />

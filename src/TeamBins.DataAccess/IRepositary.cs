@@ -12,11 +12,12 @@ namespace Planner.DataAccess
 {
     public interface IRepositary : IDisposable  
     {
-        bool DeleteProject(int projectId, int teamId);
+        bool DeleteProject(int projectId);
       //  Document GetDocument(string documentKey);
      //   List<Document> GetDocuments(int parentId, string type);
        // List<Bug> GetBugs(int page, int size);
         IEnumerable<Project> GetProjects();
+        Project GetProject(int projectId);
         Project GetProject(int projectId, int createdById);
         Project GetProject(string name, int createdById);
         List<Priority> GetPriorities();
@@ -37,7 +38,7 @@ namespace Planner.DataAccess
         Team SaveTeam(Team team);
         //TeamMemberRequest AddTeamMemberRequest(TeamMemberRequest request);
       //  TeamMember SaveTeamMember(TeamMember teamMember);
-        IEnumerable<Issue> GetIssues(int teamId);
+        IEnumerable<Issue> GetIssues();
         Issue GetIssue(int issueId);
         IEnumerable<Comment> GetCommentsForIssue(int issueId);
         OperationStatus SaveComment(Comment comment);

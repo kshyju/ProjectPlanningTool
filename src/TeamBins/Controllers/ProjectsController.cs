@@ -34,10 +34,17 @@ namespace SmartPlan.Controllers
         }
         public ActionResult Details(int id)
         {
-            var project = repo.GetProject(id,TeamID);
+            var project = repo.GetProject(id);
             if (project != null)
             {
-                var projectVm = new ProjectVM { ID = id, Name = project.Name };
+                var projectVm = new ProjectDetailsVM { ID = id, Name = project.Name };
+
+                var projectMembers = project.ProjectMembers.ToList();
+                foreach (var item in projectMembers)
+                {
+                    var member = new MemberVM { Name = item.Member.FirstName, JobTitle = item.Member.JobTitle };
+                    projectVm.Members.Add(member);
+                }
                 return View(projectVm);
             }
             return View("NotFound");
@@ -89,15 +96,49 @@ namespace SmartPlan.Controllers
         {
             var vm = new DeleteProjectConfirmVM();
 
-          //  vm.DependableItemsCount = repo.GetIssues(TeamID).Where(s => s.Project.ID == id).Count();
+            vm.DependableItemsCount = repo.GetIssues().Where(s => s.Project.ID == id).Count();
 
             return PartialView("Partial/DeleteConfirm",vm);
         }
         [HttpPost]
         public ActionResult DeleteConfirm(DeleteProjectConfirmVM model)
         {
-            var result = repo.DeleteProject(model.ID, TeamID);
-            return Json(new { Status = "Success", Message = "Project deleted successfully" });
+            try
+            {
+                var result = repo.DeleteProject(model.ID);
+                return Json(new { Status = "Success", Message = "Project deleted successfully" });
+            }
+            catch(Exception ex)
+            {
+                return Json(new { Status = "Error", Message = "Error deleting project" });
+            }
         }
+       
+        public ActionResult AddMember(int id)
+        {
+            var vm = new AddProjectMemberVM { ProjectID = id };
+            return PartialView("Partial/AddMember",vm);
+        }
+        [HttpPost]
+        public ActionResult AddMember(AddProjectMemberVM model)
+        {
+            try
+            {
+                var member=repo.GetUser(model.Email);
+                if(member!=null)
+                {
+                    //Existing member, So lets add him to the project
+                    var projectMember = new ProjectMember { ProjectID = model.ProjectID, UserID = member.ID, CreatedDate = DateTime.Now };
+                    var result = repo.SaveProjectMember(projectMember);
+
+                }
+                return Json(new { Status = "Success", Message = "Project member added successfully" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Status = "Error", Message = "Error adding project member" });
+            }
+        }
+
     }
 }

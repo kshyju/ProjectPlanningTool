@@ -19,12 +19,27 @@ namespace TechiesWeb.TeamBins.ViewModels
         }
 
     }
+    public class ProjectDetailsVM : ProjectVM
+    {
 
+        public List<MemberVM> Members { set; get; }
+        public ProjectDetailsVM()
+        {
+            Members = new List<MemberVM>();
+        }
+    }
     public class ProjectVM
     {
         public int ID { set; get; }
         public string Name { set; get; }
         public string Description { set; get; }
+        public bool IsProjectOwner { set; get; }
+    }
+    public class AddProjectMemberVM
+    {
+        public int ProjectID { set; get; }
+        public string ProjectName { set; get; }
+        public string Email { set; get; }
     }
     public class CreateProjectVM : ProjectVM
     {

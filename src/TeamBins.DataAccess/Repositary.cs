@@ -6,6 +6,7 @@ using SmartPlan.DataAccess;
 using System.Linq;
 using System;
 using System.Data.Entity;
+using System.Data.Objects;
 namespace Planner.DataAccess
 {
 
@@ -17,9 +18,22 @@ namespace Planner.DataAccess
         {
            db = new TeamEntities();
         }
-        public bool DeleteProject(int projectId, int teamId)
+        public bool DeleteProject(int projectId)
         {
-            throw new System.NotImplementedException();
+            
+
+            var project = db.Projects.FirstOrDefault(s => s.ID == projectId);
+
+            var projectMembers = project.ProjectMembers.ToList();
+
+            foreach(var members in projectMembers)
+            {
+                db.ProjectMembers.Remove(members);
+            }
+            db.SaveChanges();
+            db.Projects.Remove(project);
+            db.SaveChanges();
+            return true;
         }
         public OperationStatus SaveProjectMember(ProjectMember projectMember)
         {
@@ -57,7 +71,10 @@ namespace Planner.DataAccess
         {
             return db.Projects;
         }
-
+        public Project GetProject(int projectId)
+        {
+            return db.Projects.FirstOrDefault(s => s.ID == projectId);
+        }
         public Project GetProject(int projectId, int createdById)
         {
             return db.Projects.FirstOrDefault(s => s.ID == projectId && s.CreatedByID==createdById);
@@ -182,7 +199,7 @@ namespace Planner.DataAccess
             return teamMember;
         }*/
       
-        public IEnumerable<Issue> GetIssues(int teamId)
+        public IEnumerable<Issue> GetIssues()
         {
             return db.Issues;
         }

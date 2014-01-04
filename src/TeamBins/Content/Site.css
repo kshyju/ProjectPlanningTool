@@ -68,7 +68,7 @@ textarea {
 }
 .header {
     height:32px; border-bottom:1px solid #B3B3B3;
-   background-color:#373737;
+   background-color:#373737; overflow:auto;
 }
 .content {
     padding:10px; min-height:500px; height:100%;
@@ -854,4 +854,44 @@ color: green;
 }
 .navbar .nav > li {
     cursor: pointer;
+}
+.navigation {
+    padding-left:200px; float:left;
+    padding-top:6px; color:white;
+}
+.navigation a{
+    color:white; font-weight:bold; margin-right:12px;
+
+}
+.navigation a:hover{
+    color:#7cdc1c;
+
+}
+.header
+{
+    overflow:auto;
+}
+.headerLeft
+{
+    float:left;
+}
+.userInfo {
+    float:right;
+    padding-right:20px; padding-top:4px; color:white;
+}
+.aLogout
+{
+    color:wheat; font-size:12px;
+}
+.userInfo a
+{
+ color:white; 
+}
+.userInfo a:hover
+{
+ color:#9dfce5; 
+}
+.registerLinks
+{
+    width:230px; margin:0 auto;
 }

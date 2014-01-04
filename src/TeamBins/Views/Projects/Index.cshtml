@@ -6,24 +6,25 @@
 <td class="pageContent">
     <h2>Projects</h2>
     @Html.ActionLink("Add New", "Add", "Projects", new { id=Model.TeamID}, new { @class = "aPopup" })
-    @if(Model.Projects.Count>0)
-    {
-        <table class="table" >
-        @foreach(var project in Model.Projects)
+    @if (Model.Projects.Count > 0)
+{
+    <table class="table table-bordered">
+        @foreach (var project in Model.Projects)
         {
             <tr>
                 <td>
-                    @Html.ActionLink(project.Name, "details", "Projects",new { @id = project.ID }, new { @class = "listItem" })     
+                    @Html.ActionLink(project.Name, "details", "Projects", new { @id = project.ID }, new { @class = "listItem" })
                 </td>
                 <td>
-                    @Html.ActionLink("Edit","Edit", "Projects",new { id=@project.ID}, new { @class="popup" }) |
-                    @Html.ActionLink("Delete","DeleteConfirm", "Projects",new { id=project.ID}, new { @class="popup delete", @data_id=project.ID })
-                </td>
-                
+                    @Html.ActionLink("Edit", "Edit", "Projects", new { id = @project.ID }, new { @class = "aPopup" }) |
+                    @Html.ActionLink("Delete", "DeleteConfirm", "Projects", new { id = project.ID }, new { @class = "aPopup delete", @data_id = project.ID })
+               @project.IsProjectOwner.ToString()
+                 </td>
+
             </tr>
         }
-        </table>
-    }
+    </table>
+}
 
 </div>
 

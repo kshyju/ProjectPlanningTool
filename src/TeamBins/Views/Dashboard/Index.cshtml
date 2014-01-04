@@ -3,31 +3,42 @@
     ViewBag.Title = "Index";
 }
 <div class="dashboardItem">
-<h3>My Teams</h3>
+<h3>Projects</h3>
 
-@if (Model.Teams.Count == 0)
-{
-    <p>No Teams found!</p>
-    <p>@Html.ActionLink("Create new Team","Create","Team")</p>
-}
-else
-{
-    <p>@Html.ActionLink("Add new Team","Create","Team")</p>
     <ul>
-    @foreach (var team in Model.Teams)
+    @foreach (var project in Model.Projects)
     {
-       <li id="li_@team.ID" class="listItem">
+       <li id="li_@project.ID" class="listItem">
                 <div class="liContent">
-                   @Html.ActionLink(team.Name,"Index","team",new { id=team.ID},null)    
+                   @Html.ActionLink(project.Name, "Index", "Project", new { id = project.ID }, null)    
                 </div>
-                <div class="liEdit" style="display:none;">
-                    @Html.ActionLink("Edit","Edit", "Projects",new { id=@team.ID}, new { @class="popup" }) |
-                    @Html.ActionLink("Delete","DeleteConfirm", "Projects",new { id=team.ID}, new { @class="popup delete", @data_id=team.ID })
+                @if(project.IsProjectOwner)
+                {
+                <div class="liEdit">
+                    @Html.ActionLink("Edit", "Edit", "Projects", new { id = @project.ID }, new { @class = "popup" }) |
+                    @Html.ActionLink("Delete", "DeleteConfirm", "Projects", new { id = project.ID }, new { @class = "popup delete", @data_id = project.ID })
                 </div>
-                
-            </li>
+                }
+               
+       </li>
     }
     </ul>  
       
-}
+
+</div>
+
+<div class="dashboardItem">
+    <h3>Recent Issues</h3>
+        <ul>
+            @foreach (var issue in Model.RecentIssues)
+            {
+                <li id="li_@issue.ID" class="listItem">
+                    <div class="liContent">
+                        @Html.ActionLink(issue.Title, "details", "Issues", new { id = issue.ID }, null)
+                    </div>
+                </li>
+            }
+        </ul>
+
+    
 </div>

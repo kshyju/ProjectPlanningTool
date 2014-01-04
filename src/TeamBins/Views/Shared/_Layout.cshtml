@@ -13,11 +13,13 @@
 </head>
 <body>
     <div>
-        <div class="header">
-            
-            <a class="header-logo">
-                <span class="logo"></span>
-            </a>
+        <div class="header">  
+            <div class="headerLeft">
+                <a class="header-logo">
+                    <span class="logo"></span>
+                </a>
+            </div>          
+           @Html.Partial("Menu")
         </div>
         <div class="content">
             <div class="central">
@@ -26,33 +28,5 @@
         </div>
 
     </div>
-    <div id="kendoWindow"></div>
-    
-   <script type="text/javascript">
-
-       function ShowKendoWindow(url, title, width) {
-           var w = (typeof width === "undefined") ? "800" : width;
-           w = w + "px";
-           var window = $("#kendoWindow")
-           if (!window.data("kendoWindow")) {
-               window.kendoWindow({
-                   width: w,
-                   title: title,
-                   content: url,
-                   actions: ["refresh", "close"],
-                   refresh: function () { this.center(); },
-                   modal: true
-
-               });
-           }
-           else {
-               window.data("kendoWindow").content("Loading...") // add loading message                                          
-                                         .refresh(url) // request the URL via AJAX
-                                          .title(title)
-                                         .open(); // open the window
-           }
-       }
-
-   </script>
 </body>
 </html>

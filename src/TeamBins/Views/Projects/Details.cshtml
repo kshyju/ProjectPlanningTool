@@ -1,6 +1,42 @@
-﻿@model TechiesWeb.TeamBins.ViewModels.ProjectVM
+﻿@model TechiesWeb.TeamBins.ViewModels.ProjectDetailsVM
 @{
     ViewBag.Title = "Details";
 }
 
 <h2>@Model.Name</h2>
+<h4>Project Members</h4>
+@Html.ActionLink("Add New Member", "AddMember", "Projects",new { id = Model.ID }, new { @class="aPopup" })
+<div>
+@foreach(var member in Model.Members)
+{
+    <div>
+        <h4>@member.Name</h4>
+        <p>@member.JobTitle</p>
+    </div>
+}
+</div>
+<div id="modal" class="modal fade"></div>
+
+<script type="text/javascript">
+    $(function () {
+
+        //Show popup on clicking the link
+        $(document).on("click", "a.aPopup", function (e) {
+            e.preventDefault();
+            var _this = $(this);
+            $('#modal').modal({ remote: _this.attr("href") });
+        });
+        $(document).on("click", "#btnSaveProjectMember", function (e) {
+            e.preventDefault();
+            var _this = $(this);
+          
+            $.post(_this.closest("form").attr("action"), _this.closest("form").serialize(), function (res) {
+                if(res.Status=="")
+                {
+                    window.location.href = window.location.href();
+                }
+            });
+
+        });
+    });
+    </script>

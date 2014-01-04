@@ -112,5 +112,17 @@ namespace SmartPlan.Controllers
         {
             return View();
         }
+
+        public ActionResult Logout()
+        {
+            Session.Abandon();
+            return RedirectToAction("Login", "Account");
+        }
+
+        public ActionResult EditProfile()
+        {
+            return View();
+        }
+
     }
 }
