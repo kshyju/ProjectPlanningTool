@@ -23,8 +23,9 @@ namespace SmartPlan.Controllers
         
         public ActionResult Index()
         {
-            var vm = new TeamProjectListVM ();
-            var projectList = repo.GetProjects();
+            var vm = new TeamProjectListVM ();           
+            var projectList = repo.GetProjects().Where(s => s.ProjectMembers.Any(b => b.UserID == UserID)).ToList();
+
             foreach (var project in projectList)
             {
                 var projectVM = new ProjectVM { Name = project.Name, ID = project.ID };

@@ -22,7 +22,7 @@
     </tr>
     <tr>
         <td>
-            @Html.TextBoxFor(x=>x.Name)
+            @Html.TextBoxFor(x => x.Name, new { maxlength = 25 })
         </td>
     </tr>
         <tr>
@@ -30,7 +30,7 @@
     </tr>
     <tr>
         <td>
-            @Html.TextBoxFor(x=>x.Email)
+            @Html.TextBoxFor(x => x.Email, new { maxlength = 50 })
         </td>
     </tr>
     <tr>
@@ -38,7 +38,7 @@
     </tr>
     <tr>
         <td>
-            @Html.PasswordFor(x=>x.Password)
+            @Html.PasswordFor(x => x.Password, new { maxlength=20})
         </td>
     </tr>
     <tr>

@@ -3,11 +3,12 @@
     ViewBag.Title = "Index";
 }
 
-<td class="pageContent">
+<div class="pageContent">
     <h2>Projects</h2>
-    @Html.ActionLink("Add New", "Add", "Projects", new { id=Model.TeamID}, new { @class = "aPopup" })
-    @if (Model.Projects.Count > 0)
+       @if (Model.Projects.Count > 0)
 {
+     @Html.ActionLink("Add New", "Add", "Projects", new { id=Model.TeamID}, new { @class = "aPopup" })
+    
     <table class="table table-bordered">
         @foreach (var project in Model.Projects)
         {
@@ -25,7 +26,15 @@
         }
     </table>
 }
+else
+{
+  <div>
+    <p>No projects found ! </p>
+    @Html.ActionLink("Create a project now", "Add", "Projects", new { id = Model.TeamID }, new { @class = "aPopup" })
 
+
+  </div>
+}
 </div>
 
 <div id="modal" class="modal fade"></div>

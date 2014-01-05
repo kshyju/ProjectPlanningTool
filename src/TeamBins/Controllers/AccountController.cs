@@ -11,10 +11,12 @@ using SmartPlan.ViewModels;
 
 using TechiesWeb.TeamBins.ViewModels;
 using SmartPlan.DataAccess;
+using TechiesWeb.TeamBins.Infrastructure;
 
-namespace SmartPlan.Controllers
+
+namespace Planner.Controllers
 {
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
             IRepositary repo;
 
@@ -110,7 +112,14 @@ namespace SmartPlan.Controllers
         }
         public ActionResult Profile()
         {
-            return View();
+            
+            var user = repo.GetUser(UserID);
+            if(user!=null)
+            {
+                var vm = new EditProfileVM { Name = user.FirstName, Email = user.EmailAddress };
+                return View(vm);
+            }
+            return View("NotFound");
         }
 
         public ActionResult Logout()
@@ -121,8 +130,61 @@ namespace SmartPlan.Controllers
 
         public ActionResult EditProfile()
         {
-            return View();
+            var user = repo.GetUser(UserID);
+            if (user != null)
+            {
+                var vm = new EditProfileVM { Name = user.FirstName, Email = user.EmailAddress };
+                return View(vm);
+            }
+            return View("NotFound");
         }
 
+        [HttpPost]
+        public ActionResult EditProfile(EditProfileVM model)
+        {
+            if(ModelState.IsValid)
+            {
+                var user = repo.GetUser(UserID);
+                if(user!=null)
+                {
+                    user.FirstName = model.Name;
+                    var result = repo.SaveUser(user);
+                    if(result.Status)
+                    {
+                        var msg = new AlertMessageStore();
+                        msg.AddMessage("success", "Profile updated successfully");
+                        TempData["AlertMessages"] = msg;
+                    }
+                }
+            }
+            return View(model);
+        }
+
+        public ActionResult Password()
+        {
+            var vm = new ChangePasswordVM();
+            return View(vm);
+        }
+
+        [HttpPost]
+        public ActionResult Password(ChangePasswordVM model)
+        {
+            if(ModelState.IsValid)
+            {
+                var user = repo.GetUser(UserID);
+                if (user != null && user.Password==model.Password)
+                {
+                    user.Password = model.Password;
+                    var result = repo.SaveUser(user);
+                    if (result.Status)
+                    {
+                        var msg = new AlertMessageStore();
+                        msg.AddMessage("success", "Password updated successfully");
+                        TempData["AlertMessages"] = msg;
+                    }
+                }
+            }
+            return View(model);
+        }
     }
 }

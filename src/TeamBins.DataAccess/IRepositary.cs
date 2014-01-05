@@ -32,6 +32,7 @@ namespace Planner.DataAccess
 
         OperationStatus SaveUser(User user);
         User GetUser(string emailAddress);
+        User GetUser(int userId);
 
         IEnumerable<Team> GetTeams(int userId);
         Team GetTeam(int teamId);

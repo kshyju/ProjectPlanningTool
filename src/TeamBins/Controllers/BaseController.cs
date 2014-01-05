@@ -13,7 +13,7 @@ namespace Planner.Controllers
                 {
                     return Convert.ToInt32(Session["TB_UserID"]);
                 }
-                return 1;
+                return 7;
             }
         }
         protected int TeamID

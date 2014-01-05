@@ -18,6 +18,10 @@ namespace Planner.DataAccess
         {
            db = new TeamEntities();
         }
+        public User GetUser(int userId)
+        {
+            return db.Users.FirstOrDefault(s => s.ID == userId);
+        }
         public bool DeleteProject(int projectId)
         {
             
@@ -137,9 +141,15 @@ namespace Planner.DataAccess
         {
             try
             {
-                user.CreatedDate = DateTime.Now;
-
-                db.Users.Add(user);
+                if (user.ID == 0)
+                {
+                    user.CreatedDate = DateTime.Now;
+                    db.Users.Add(user);
+                }
+                else
+                {                  
+                    db.Entry(user).State = EntityState.Modified;
+                }
                 db.SaveChanges();
             }
             catch(Exception ex)
@@ -148,7 +158,6 @@ namespace Planner.DataAccess
 
             }
             return new OperationStatus { OperationID = user.ID, Status = true };
-
         }
         /*
         public User GetUser(string emailAddress)

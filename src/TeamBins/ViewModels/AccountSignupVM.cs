@@ -33,7 +33,7 @@ namespace TechiesWeb.TeamBins.ViewModels
         
         [Required]
         [DataType(DataType.Password)]
-        [StringLength(25, MinimumLength=6)]
+        [StringLength(25, MinimumLength=6,ErrorMessage="Password must have minimum of 6 characters")]
         public string Password { set; get; }
     }
     public class ForgotPasswordVM
@@ -56,4 +56,26 @@ namespace TechiesWeb.TeamBins.ViewModels
         public string ConfirmPassword { set; get; }
 
     }
+
+    public class EditProfileVM
+    {
+        [Required]
+        [StringLength(20)]
+        public string Name { set; get; }
+
+        [Required]
+        [DataType(DataType.EmailAddress)]
+        [StringLength(100)]
+        public string Email { set; get; }
+    }
+
+    public class ChangePasswordVM : ResetPasswordVM
+    {
+        [Required]
+        [DataType(DataType.Password)]
+        [StringLength(25, MinimumLength = 6)]
+        public string CurrentPassword { set; get; }
+
+    }
+      
 }

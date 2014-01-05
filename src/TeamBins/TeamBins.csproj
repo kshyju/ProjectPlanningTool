@@ -163,6 +163,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\ExtensionMethods\DateTimeExtensions.cs" />
+    <Compile Include="Helpers\HelperMethods\HTMLHelpers.cs" />
+    <Compile Include="Helpers\Infrastructure\AlertMessageStore.cs" />
     <Compile Include="Hubs\UserHub.cs" />
     <Compile Include="Services\ProjectService.cs" />
     <Compile Include="Services\SecurityService.cs" />
@@ -408,6 +410,7 @@
     <Content Include="Views\Projects\Partial\AddMember.cshtml" />
     <Content Include="Views\Shared\Menu.cshtml" />
     <Content Include="Views\Account\EditProfile.cshtml" />
+    <Content Include="Views\Account\Password.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

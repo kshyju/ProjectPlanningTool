@@ -1,5 +1,47 @@
-﻿@{
+﻿@model TechiesWeb.TeamBins.ViewModels.EditProfileVM
+@{
     ViewBag.Title = "EditProfile";
 }
+@using TechiesWeb.TeamBins.HelperMethods
+<div class="page">
+    <h2>EditProfile</h2>
+    @Html.AlertMessages()
+    <div class="tabbable tabs-left">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#">Profile</a></li>
+            <li><a href="@Url.Action("Password","Account")">Password</a></li>
+            <li><a href="#">Validation Schema</a></li>
+            <li><a href="#">Users</a></li>
+            <li><a href="#">Orders</a></li>
+            <li><a href="#">Billing Information</a></li>
+            <li><a href="#">Data Usage</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" >
+                @Html.ValidationSummary()
+                @using(Html.BeginForm())
+                {
+                <table>
+                    <tr>
+                        <th>Name</th>
+                        <td>@Html.TextBoxFor(s=>s.Name)</td>
+                    </tr>
+                    <tr>
+                        <th>Email Address</th>
+                        <td>@Html.TextBoxFor(s => s.Email, new { @readonly = "readonly" })</td>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <td>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </td>
+                    </tr>
+                </table>
+                }
+            </div>
 
-<h2>EditProfile</h2>
+               
+            </div>
+    </div>
+
+</div>

@@ -31,9 +31,9 @@
             var _this = $(this);
           
             $.post(_this.closest("form").attr("action"), _this.closest("form").serialize(), function (res) {
-                if(res.Status=="")
+                if(res.Status==="Success")
                 {
-                    window.location.href = window.location.href();
+                    window.location.href = window.location.href;
                 }
             });
 

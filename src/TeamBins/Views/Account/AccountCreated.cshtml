@@ -1,6 +1,10 @@
 ﻿@{
-    ViewBag.Title = "AccountCreated";
+    ViewBag.Title = "Account Created";
 }
-
-<h2>AccountCreated</h2>
-@Html.ActionLink("Dashboard","Index","Dashboard")
+<div class="accountcreated">
+    <h2>Bingo ! Your account is successfully created</h2>
+    <p>
+        You may now create a project and start doing cool stuff :)
+    </p>
+    @Html.ActionLink("Create a Project", "Index", "Projects")
+</div>
