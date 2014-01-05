@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using Planner.Controllers;
+﻿using Planner.Controllers;
 using Planner.DataAccess;
-
-using TechiesWeb.TeamBins.ViewModels;
+using Planner.Services;
 using SmartPlan.DataAccess;
+using System;
+using System.Linq;
+using System.Web.Mvc;
+using TechiesWeb.TeamBins.ViewModels;
 
 namespace SmartPlan.Controllers
 {
@@ -15,9 +13,11 @@ namespace SmartPlan.Controllers
     public class ProjectsController : BaseController
     {
         private IRepositary repo;
+        private UserService userService;
         public ProjectsController()
         {
             repo = new Repositary();
+            userService = new UserService(repo);
         }
 
         
@@ -67,14 +67,22 @@ namespace SmartPlan.Controllers
 
 
                 var project = new Project { Name = model.Name, ID=model.ID };
-                project.CreatedByID = UserID;
-                //project.TeamID = model.TeamID;
+                project.CreatedByID = UserID;               
                 var res=repo.SaveProject(project);
                 if (res!=null)
                 {
                     //Add as Project member
                     var projectMember = new ProjectMember { ProjectID = project.ID, UserID = UserID, CreatedDate = DateTime.Now };
                     var result = repo.SaveProjectMember(projectMember);
+
+                    var projectCount = repo.GetProjects()
+                                    .Where(s => s.ProjectMembers.Any(b => b.UserID == UserID)).Count();
+
+                    //If this is the first project, then save as the default project
+                    if (projectCount==1)
+                    {
+                        var defProjRes = userService.SaveDefaultIssueSettings(UserID, project.ID);    
+                    }
 
                     return Json(new { Status = "Success", Message = "Project created successfully" });
                 }

@@ -77,5 +77,17 @@ namespace TechiesWeb.TeamBins.ViewModels
         public string CurrentPassword { set; get; }
 
     }
-      
+    
+    public class DefaultIssueSettings
+    {
+        public List<SelectListItem> Projects { set; get; }
+        public int SelectedProject { set; get; }
+
+        public DefaultIssueSettings()
+        {
+            Projects = new List<SelectListItem>();
+        }
+    }
+
+
 }

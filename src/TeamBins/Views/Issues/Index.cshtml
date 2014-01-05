@@ -4,6 +4,8 @@
 }
 
 <script src="~/Scripts/issue.js"></script>
+@if(Model.ProjectsExist)
+{
 <div id="leftContentPane">
 <h2>Recent Issues</h2>
 <div class="btnBar">
@@ -76,13 +78,20 @@
 <div id="rightPanel">
     <div id="activityStream">
         <div>
-            Somethign happened
+            Howndy ! Nothing happened yet.
         </div>
 
         
     </div>
 </div>
-
+}
+else
+{
+    <div class="noProjects">
+        <p>No projects ! Please create one to get started</p>
+        @Html.ActionLink("Create Projects","Index","Projects")
+    </div>
+}
 
             <!-- open button -->
           

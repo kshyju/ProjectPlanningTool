@@ -18,6 +18,7 @@ namespace SmartPlan.DataAccess
         {
             this.Issues = new HashSet<Issue>();
             this.ProjectMembers = new HashSet<ProjectMember>();
+            this.Users = new HashSet<User>();
         }
     
         public int ID { get; set; }
@@ -29,5 +30,6 @@ namespace SmartPlan.DataAccess
         public virtual ICollection<Issue> Issues { get; set; }
         public virtual User User { get; set; }
         public virtual ICollection<ProjectMember> ProjectMembers { get; set; }
+        public virtual ICollection<User> Users { get; set; }
     }
 }

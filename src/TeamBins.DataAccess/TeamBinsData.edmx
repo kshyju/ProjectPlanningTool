@@ -106,6 +106,7 @@
           <Property Name="EmailAddress" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Password" Type="nvarchar" MaxLength="250" Nullable="false" />
           <Property Name="JobTitle" Type="nvarchar" MaxLength="50" />
+          <Property Name="DefaultProjectID" Type="int" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
         </EntityType>
         <Association Name="FK_Comment_Issue">
@@ -264,6 +265,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_User_Default_Project">
+          <End Role="Project" Type="Self.Project" Multiplicity="0..1" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="DefaultProjectID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="TeamBinsModelStoreContainer">
           <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Comment" EntityType="Self.Comment" Schema="dbo" store:Type="Tables" />
@@ -326,6 +339,10 @@
           <AssociationSet Name="FK_Task_User" Association="Self.FK_Task_User">
             <End Role="User" EntitySet="User" />
             <End Role="Task" EntitySet="Task" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Default_Project" Association="Self.FK_User_Default_Project">
+            <End Role="Project" EntitySet="Project" />
+            <End Role="User" EntitySet="User" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -395,6 +412,10 @@
             <End Role="User" EntitySet="Users" />
             <End Role="Comment" EntitySet="Comments" />
           </AssociationSet>
+          <AssociationSet Name="FK_User_Default_Project" Association="TeamBinsModel.FK_User_Default_Project">
+            <End Role="Project" EntitySet="Projects" />
+            <End Role="User" EntitySet="Users" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="Category">
           <Key>
@@ -445,6 +466,8 @@
           <NavigationProperty Name="Projects" Relationship="TeamBinsModel.FK_Project_User" FromRole="User" ToRole="Project" />
           <NavigationProperty Name="Comments" Relationship="TeamBinsModel.FK_Comment_User" FromRole="User" ToRole="Comment" />
           <Property Name="JobTitle" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DefaultProjectID" Type="Int32" />
+          <NavigationProperty Name="DefaultProject" Relationship="TeamBinsModel.FK_User_Default_Project" FromRole="User" ToRole="Project" />
           </EntityType>
         <EntityType Name="Task">
           <Key>
@@ -608,6 +631,7 @@
           <NavigationProperty Name="Issues" Relationship="TeamBinsModel.FK_Issue_Project" FromRole="Project" ToRole="Issue" />
           <NavigationProperty Name="User" Relationship="TeamBinsModel.FK_Project_User" FromRole="Project" ToRole="User" />
           <NavigationProperty Name="ProjectMembers" Relationship="TeamBinsModel.FK_ProjectMember_Project" FromRole="Project" ToRole="ProjectMember" />
+          <NavigationProperty Name="Users" Relationship="TeamBinsModel.FK_User_Default_Project" FromRole="Project" ToRole="User" />
         </EntityType>
         <Association Name="FK_Issue_Project">
           <End Type="TeamBinsModel.Project" Role="Project" Multiplicity="1" />
@@ -681,6 +705,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_User_Default_Project">
+          <End Type="TeamBinsModel.Project" Role="Project" Multiplicity="0..1" />
+          <End Type="TeamBinsModel.User" Role="User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="DefaultProjectID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -723,6 +759,7 @@
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="TeamBinsModel.User">
               <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="DefaultProjectID" ColumnName="DefaultProjectID" />
                 <ScalarProperty Name="JobTitle" ColumnName="JobTitle" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="FirstName" ColumnName="FirstName" />

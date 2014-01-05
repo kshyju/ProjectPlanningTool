@@ -411,6 +411,7 @@
     <Content Include="Views\Shared\Menu.cshtml" />
     <Content Include="Views\Account\EditProfile.cshtml" />
     <Content Include="Views\Account\Password.cshtml" />
+    <Content Include="Views\Account\Settings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

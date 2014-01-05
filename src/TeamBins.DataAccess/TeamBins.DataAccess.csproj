@@ -109,10 +109,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="DBScript\teambins-may-10.2013.bak" />
-    <None Include="DBScript\teambins-may-14.2013.bak" />
-    <None Include="DBScript\teambins-may-17.2013.bak" />
-    <None Include="DBScript\teambins-may-7-2013.bak" />
     <None Include="packages.config" />
     <EntityDeploy Include="TeamBinsData.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
@@ -135,10 +131,7 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Project\" />
-    <Folder Include="Team\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="DBBackup\readme.txt" />
   </ItemGroup>

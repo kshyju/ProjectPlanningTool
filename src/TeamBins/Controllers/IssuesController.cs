@@ -35,15 +35,25 @@ namespace Planner.Controllers
             return View("Index", bugListVM);
         }
         public ActionResult Index()
-        {          
-            var bugListVM = GetBugList("Current");
+        {
+            BugsListVM bugListVM=new BugsListVM();
+            var projectList = repo.GetProjects().Where(s => s.ProjectMembers.Any(b => b.UserID == UserID)).ToList();
+            if (projectList.Count > 0)
+            {
+                bugListVM = GetBugList("Current");
+                bugListVM.ProjectsExist = true;
+            }
+
             return View("Index", bugListVM);
         }
 
         private BugsListVM GetBugList(string iteration)
         {
             var vm = new BugsListVM { CurrentTab = iteration };
-            var bugList = repo.GetIssues().OrderByDescending(x => x.ID).Take(25);
+
+            var bugList = repo.GetIssues().Where(g => g.Project.ProjectMembers.Any(b => b.UserID == UserID)).ToList();
+            
+            //.OrderByDescending(x => x.ID).Take(25);
             foreach (var bug in bugList)
             {
                var bugVM = new BugVM { ID = bug.ID, Title = bug.Title, Description = bug.Description };
@@ -106,28 +116,12 @@ namespace Planner.Controllers
                     bug.Title = model.Title;
                     bug.Description = model.Description;
 
-                    bug.PriorityID = model.SelectedPriority;
-                    if (bug.PriorityID == 0)
-                        bug.PriorityID = 1;
-
-                    bug.ProjectID = model.SelectedProject;
-                    if (bug.ProjectID == 0)
-                        bug.ProjectID = 3;
-
-                    bug.StatusID = model.SelectedStatus;
-                    if ((model.ID == 0) && (model.SelectedStatus==0))  // Newly created concern default status is 1
-                    {
-                        bug.StatusID = 1;
-                    }
-                   // bug.IsShowStopper = model.IsShowStopper;                 
-                    bug.CategoryID = model.SelectedCategory;
-                    if (bug.CategoryID == 0)
-                        bug.CategoryID = 1;
+                  
 
                  //   bug.Team.ID = 1;
                     bug.CreatedByID = UserID;
                    // Issue existingIssue=new Issue();
-                    
+                    LoadDefaultIssueValues(bug, model);
 
 
                     OperationStatus result = repo.SaveIssue(bug);
@@ -222,6 +216,28 @@ namespace Planner.Controllers
             {
                 return View(model);
             }
+        }
+        private void LoadDefaultIssueValues(Issue issue,CreateBug model)
+        {
+            var user = repo.GetUser(UserID);
+            issue.PriorityID = model.SelectedPriority;
+            if (issue.PriorityID == 0)
+                issue.PriorityID = 1;
+
+            issue.ProjectID = model.SelectedProject;
+            if (issue.ProjectID == 0)
+            {
+                issue.ProjectID = user.DefaultProjectID.Value;
+            }
+            issue.StatusID = model.SelectedStatus;
+            if ((model.ID == 0) && (model.SelectedStatus == 0)) 
+            {
+                issue.StatusID = 1;
+            }                             
+            issue.CategoryID = model.SelectedCategory;
+            if (issue.CategoryID == 0)
+                issue.CategoryID = 1;
+
         }
        /*
         private void SaveActivity(CreateBug model,Issue existingIssue, int issueId)

@@ -12,6 +12,7 @@ using SmartPlan.ViewModels;
 using TechiesWeb.TeamBins.ViewModels;
 using SmartPlan.DataAccess;
 using TechiesWeb.TeamBins.Infrastructure;
+using Planner.Services;
 
 
 namespace Planner.Controllers
@@ -19,10 +20,11 @@ namespace Planner.Controllers
     public class AccountController : BaseController
     {
             IRepositary repo;
-
+            UserService userService;
             public AccountController()
         {
             repo = new Repositary();
+            userService = new UserService(repo);
         }
 
 
@@ -186,5 +188,48 @@ namespace Planner.Controllers
             }
             return View(model);
         }
+
+        public ActionResult Settings()
+        {
+            var vm = new DefaultIssueSettings { Projects = GetProjectListItem() };
+            var user = repo.GetUser(UserID);
+            if (user != null)
+            {
+                if (user.DefaultProjectID.HasValue)
+                    vm.SelectedProject = user.DefaultProjectID.Value;
+            }
+            return View(vm);
+        }
+
+        [HttpPost]
+        public ActionResult Settings(DefaultIssueSettings model)
+        {
+            if(ModelState.IsValid)
+            {
+                var result =userService.SaveDefaultIssueSettings(UserID, model.SelectedProject);                
+                if (result)
+                {
+                    var msg = new AlertMessageStore();
+                    msg.AddMessage("success", "Settings updated successfully");
+                    TempData["AlertMessages"] = msg;
+                    return RedirectToAction("Settings");
+                }
+                
+            }
+            model.Projects = GetProjectListItem();
+            return View(model);
+        }
+
+        private List<SelectListItem> GetProjectListItem()
+        {           
+            var projects = repo.GetProjects().
+                                Where(s => s.ProjectMembers.Any(b => b.UserID == UserID)).
+                                Select(c=> new SelectListItem { Value=c.ID.ToString(), Text=c.Name}).
+                                ToList();
+
+            return projects;
+        }
+
+
     }
 }

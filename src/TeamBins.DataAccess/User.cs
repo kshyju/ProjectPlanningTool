@@ -31,6 +31,7 @@ namespace SmartPlan.DataAccess
         public string Password { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public string JobTitle { get; set; }
+        public Nullable<int> DefaultProjectID { get; set; }
     
         public virtual ICollection<Task> Tasks { get; set; }
         public virtual ICollection<Issue> Issues { get; set; }
@@ -38,5 +39,6 @@ namespace SmartPlan.DataAccess
         public virtual ICollection<ProjectMember> ProjectMembers { get; set; }
         public virtual ICollection<Project> Projects { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
+        public virtual Project DefaultProject { get; set; }
     }
 }

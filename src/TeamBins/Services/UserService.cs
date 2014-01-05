@@ -10,6 +10,23 @@ namespace Planner.Services
 
     public class UserService
     {
+        IRepositary repo;
+        public UserService(IRepositary repositary)
+        {
+            repo = repositary;
+        }
+        public bool SaveDefaultIssueSettings(int userId,int defaultProjectId)
+        {
+            var user = repo.GetUser(userId);
+            if (user != null)
+            {
+                user.DefaultProjectID = defaultProjectId;
+                var result = repo.SaveUser(user);
+                return result.Status;                
+            }
+            return false;
+        }
+
         public static string GetImageSource(string email,int size=0)
         {
 

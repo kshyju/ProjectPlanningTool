@@ -28,6 +28,7 @@
         <EntityTypeShape EntityType="TeamBinsModel.Comment" Width="1.5" PointX="9.25" PointY="7.5" />
         <AssociationConnector Association="TeamBinsModel.FK_Comment_Issue" />
         <AssociationConnector Association="TeamBinsModel.FK_Comment_User" />
+        <AssociationConnector Association="TeamBinsModel.FK_User_Default_Project" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

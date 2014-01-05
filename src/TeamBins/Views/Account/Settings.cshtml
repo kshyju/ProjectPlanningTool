@@ -1,16 +1,16 @@
-﻿@model TechiesWeb.TeamBins.ViewModels.ChangePasswordVM
-@{
-    ViewBag.Title = "EditProfile";
+﻿@{
+    ViewBag.Title = "Settings";
 }
 @using TechiesWeb.TeamBins.HelperMethods
+@model TechiesWeb.TeamBins.ViewModels.DefaultIssueSettings
 <div class="page">
     <h2>EditProfile</h2>
     @Html.AlertMessages()
     <div class="tabbable tabs-left">
         <ul class="nav nav-tabs">
             <li><a href="@Url.Action("EditProfile","Account")">Profile</a></li>
-            <li class="active"><a href="#">Password</a></li>
-            <li><a href="@Url.Action("Settings","Account")">Default Issue Settings</a></li>
+            <li><a href="@Url.Action("Password","Account")">Password</a></li>
+            <li class="active"><a href="#">Default Issue Settings</a></li>
         </ul>
         <div class="tab-content">
             <div class="tab-pane active">
@@ -19,16 +19,8 @@
                 {
                     <table>
                         <tr>
-                            <th>Current Password</th>
-                            <td>@Html.TextBoxFor(s => s.CurrentPassword)</td>
-                        </tr>
-                        <tr>
-                            <th>Password</th>
-                            <td>@Html.TextBoxFor(s => s.Password)</td>
-                        </tr>
-                        <tr>
-                            <th>Confirm Password</th>
-                            <td>@Html.TextBoxFor(s => s.ConfirmPassword)</td>
+                            <th>Default Project</th>
+                            <td>@Html.DropDownListFor(s=>s.SelectedProject,Model.Projects)</td>
                         </tr>
                         <tr>
                             <th></th>
