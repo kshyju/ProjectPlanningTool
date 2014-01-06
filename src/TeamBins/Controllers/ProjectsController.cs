@@ -29,6 +29,7 @@ namespace SmartPlan.Controllers
             foreach (var project in projectList)
             {
                 var projectVM = new ProjectVM { Name = project.Name, ID = project.ID };
+               // projectVM.IsProjectOwner = true;
                 vm.Projects.Add(projectVM);
             }
             return View(vm);

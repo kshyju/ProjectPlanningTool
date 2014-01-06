@@ -215,7 +215,7 @@ namespace Planner.DataAccess
 
         public Issue GetIssue(int issueId)
         {
-            return db.Issues.FirstOrDefault(s => s.ID == issueId);
+            return db.Issues.Include(s=>s.Priority).Include(x=>x.Status).FirstOrDefault(s => s.ID == issueId);
         }
   /*
         public List<TechiesWeb.TeamBins.Entities.User> GetTeamMembers(int teamId)

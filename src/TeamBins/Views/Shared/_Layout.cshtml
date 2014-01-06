@@ -28,5 +28,14 @@
         </div>
 
     </div>
+    <div id="modal" class="modal fade"></div>
+    <script type="text/javascript">
+        $(function () {
+            function ShowModel(url, title) {
+                $('#modal').modal({ remote: url });
+            }
+        });
+    </script>
 </body>
+
 </html>

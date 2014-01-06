@@ -905,3 +905,7 @@ color: green;
     padding: 24px;
     width: 700px;
 }
+.tab-content
+{
+    padding-top:10px;
+}

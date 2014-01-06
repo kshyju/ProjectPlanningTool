@@ -22,7 +22,7 @@
 
                 secondRow.before(newRow);
                 if ($("#myonoffswitch").is(":checked")) {
-                    ShowKendoWindow(editIssueUrl +"/"+ data.Item.ID,data.Item.Title);
+                    ShowModel(editIssueUrl + "/" + data.Item.ID, data.Item.Title);
                 }
             }
         });
@@ -32,7 +32,7 @@
     $(document).on("click", "a.popup", function (e) {
         e.preventDefault();
         var _this = $(this);
-        ShowKendoWindow(_this.attr("href"),_this.text());
+        ShowModel(_this.attr("href"), _this.text());
     });
     //Save the user preference to session
     $("#myonoffswitch").click(function () {
