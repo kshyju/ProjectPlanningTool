@@ -51,7 +51,7 @@ namespace Planner.Controllers
         {
             var vm = new BugsListVM { CurrentTab = iteration };
 
-            var bugList = repo.GetIssues().Where(g => g.Project.ProjectMembers.Any(b => b.UserID == UserID)).ToList();
+            var bugList = repo.GetIssues().Where(g => g.Project.ProjectMembers.Any(b => b.UserID == UserID)).OrderByDescending(s=>s.ID).ToList();
             
             //.OrderByDescending(x => x.ID).Take(25);
             foreach (var bug in bugList)

@@ -21,8 +21,8 @@
                 var newRow = "<tr class='" + newRowClass + "'><td>" + data.Item.ID + "</td><td><a class='popup' href='" +editIssueUrl+ "/"+data.Item.ID + "'>" + data.Item.Title + "</a></td><td>" + data.Item.OpenedBy + "</td><td>" + data.Item.Priority + "</td><td>" + data.Item.Status + "</td><td>" + data.Item.CreatedDate + "</td></tr>";
 
                 secondRow.before(newRow);
-                if ($("#myonoffswitch").is(":checked")) {
-                    ShowModel(editIssueUrl + "/" + data.Item.ID, data.Item.Title);
+                if ($("#myonoffswitch").is(":checked")) {                    
+                    ShowModel(editIssueUrl + "/" + data.Item.ID, data.Item.Title);                    
                 }
             }
         });
@@ -53,7 +53,15 @@
             }
         });
     });
+    $('#IssueDueDate').datepicker({
+        changeDate: function () {
+            selectedDate = $("#IssueDueDate").val();
+            $("span#dueDate").text(selectedDate);
+            $("#dueDatePicker").fadeOut(50);
+            $.post("../../Issues/SaveDueDate", { issueDueDate: selectedDate, issueId: $("#ID").val() });
 
+        }
+    })
     /*
     $("#IssueDueDate").width(300).kendoDatePicker({
         change: function (e) {
@@ -102,11 +110,6 @@
             $("#newComment").focus();
         }
 
-       /* $.post("../../Issues/Comment", { body: $("#newComment").val(), issueId: $("#ID").val() }, function (res) {
-            if (res.Status == "Success") {
-                window.location.href = window.location.href;
-            }
-        });*/
     });
     /*
     if ($("#activityStream").length) {
