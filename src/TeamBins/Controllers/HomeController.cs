@@ -24,5 +24,13 @@ namespace Planner.Controllers
             Session["TB_TeamID"] = id;
             return RedirectToAction("Index", "Issues");
         }
+        public ActionResult About()
+        {
+            return View();
+        }
+        public ActionResult GettingStarted()
+        {
+            return View();
+        }
     }
 }

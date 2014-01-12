@@ -40,6 +40,22 @@
         $.post(savePrefUrl, { CreateAndEditMode: switchVal });
     });
 
+    //Auto complete for assign issue member
+    $("#assignMember").autocomplete({
+        source: "../../Projects/members/" + $("#ProjectID").val(),
+        minLength: 2,
+        select: function (event, ui) {
+           
+            //Save it now
+            $.post(addMemberToIssueUrl,{ memberId:ui.item.id, issueId:$("#ID").val()},function(res){
+                //Reload the member list ,function
+                $("#members").load(issueMembersUrl, function () {
+
+
+                });
+            });
+        }
+    });
  
     $(document).on("click", "a.aRemove", function (e) {
         e.preventDefault();
@@ -54,23 +70,14 @@
         });
     });
     $('#IssueDueDate').datepicker({
-        changeDate: function () {
-            selectedDate = $("#IssueDueDate").val();
+        onSelect: function (date) {
+            selectedDate = date;//$("#IssueDueDate").val();
             $("span#dueDate").text(selectedDate);
             $("#dueDatePicker").fadeOut(50);
             $.post("../../Issues/SaveDueDate", { issueDueDate: selectedDate, issueId: $("#ID").val() });
+        }
+    });
 
-        }
-    })
-    /*
-    $("#IssueDueDate").width(300).kendoDatePicker({
-        change: function (e) {
-            selectedDate = $("#IssueDueDate").val();
-            $("span#dueDate").text(selectedDate);
-            $("#dueDatePicker").fadeOut(50);
-            $.post("../../Issues/SaveDueDate", { issueDueDate: selectedDate, issueId: $("#ID").val() });
-        }
-    });*/
     $("#aChangeDueDate").click(function (e) {
         e.preventDefault();
         $("#dueDatePicker").fadeIn(50);

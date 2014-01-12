@@ -65,6 +65,9 @@
     <Compile Include="Issue.cs">
       <DependentUpon>TeamBinsData.tt</DependentUpon>
     </Compile>
+    <Compile Include="IssueMember.cs">
+      <DependentUpon>TeamBinsData.tt</DependentUpon>
+    </Compile>
     <Compile Include="OperationStatus.cs" />
     <Compile Include="Priority.cs">
       <DependentUpon>TeamBinsData.tt</DependentUpon>

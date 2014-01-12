@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="973fff3735af4dc7b583e60c12215cd6" Name="Diagram1" ZoomLevel="94">
+      <Diagram DiagramId="973fff3735af4dc7b583e60c12215cd6" Name="Diagram1" ZoomLevel="76">
         <EntityTypeShape EntityType="TeamBinsModel.Category" Width="1.5" PointX="3" PointY="5.25" IsExpanded="true" />
         <EntityTypeShape EntityType="TeamBinsModel.Priority" Width="1.5" PointX="3" PointY="7.5" IsExpanded="true" />
         <EntityTypeShape EntityType="TeamBinsModel.Status" Width="1.5" PointX="3" PointY="9.875" IsExpanded="true" />
@@ -29,6 +29,10 @@
         <AssociationConnector Association="TeamBinsModel.FK_Comment_Issue" />
         <AssociationConnector Association="TeamBinsModel.FK_Comment_User" />
         <AssociationConnector Association="TeamBinsModel.FK_User_Default_Project" />
+        <EntityTypeShape EntityType="TeamBinsModel.IssueMember" Width="1.5" PointX="9.13194611348768" PointY="3.3422567859954464" />
+        <AssociationConnector Association="TeamBinsModel.FK_IssueMember_Issue" />
+        <AssociationConnector Association="TeamBinsModel.FK_IssueMember_IssueMember" />
+        <AssociationConnector Association="TeamBinsModel.FK_IssueMember_User_CreatedBy" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

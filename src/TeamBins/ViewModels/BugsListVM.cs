@@ -44,8 +44,9 @@ namespace TechiesWeb.TeamBins.ViewModels
         public string Status { set; get; }
         public string StatusCode { set; get; }
         public string OpenedBy { set; get; }
-        public string LastModifiedBy { set; get; }  
+        public string LastModifiedBy { set; get; }
 
+        public int ProjectID { set; get; }
         public string Project { get; set; }
         public string CreatedDate { set; get; }
         public string LastModifiedDate { set; get; }

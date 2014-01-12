@@ -330,10 +330,12 @@ namespace Planner.Controllers
             bugVm.OpenedBy = bug.CreatedBy.FirstName;
             bugVm.Title = bug.Title;
             bugVm.Project = bug.Project.Name;
+            bugVm.ProjectID = bug.ProjectID;
             bugVm.Status = bug.Status.Name;
             bugVm.Priority = bug.Priority.Name;
             bugVm.StatusCode = bug.Status.Name;
-          //  bugVm.IssueDueDate=(bug.DueDate.Year>2000?bug.DueDate.ToShortDateString():"");
+            if(bug.DueDate.HasValue)
+                bugVm.IssueDueDate=(bug.DueDate.Value.Year>2000?bug.DueDate.Value.ToShortDateString():"");
 
             /*
             var allDocuments = repo.GetDocuments(id, "Bug");
@@ -355,7 +357,7 @@ namespace Planner.Controllers
        
             LoadComments(id, bugVm);
             //Get Members
-           // LoadIssueMembers(id, bugVm);
+            LoadIssueMembers(id, bugVm);
             return View(bugVm);
         }
 
@@ -370,14 +372,14 @@ namespace Planner.Controllers
                 bugVm.Comments.Add(commentVM);
             }
         }
-        /*
+        
         private void LoadIssueMembers(int id, BugVM bugVm)
         {
             var memberList = repo.GetIssueMembers(id);
             foreach (var member in memberList)
             {
-                var vm = new MemberVM { MemberType = member.JobTitle, Name = member.DisplayName, MemberID = member.ID };
-                vm.AvatarHash = UserService.GetImageSource(member.EmailAddress);
+                var vm = new MemberVM { MemberType = member.Member.JobTitle, Name = member.Member.FirstName, MemberID = member.ID };
+                vm.AvatarHash = UserService.GetImageSource(member.Member.EmailAddress);
                 bugVm.Members.Add(vm);
             }
         }
@@ -385,44 +387,44 @@ namespace Planner.Controllers
         public ActionResult Image(string id)
         {
 
-            var img = repo.GetDocument(id);
+          /*  var img = repo.GetDocument(id);
             if (img != null)
             {
                 var imgVM = new ImageVM { ID = img.DocID, FileKey = img.DocKey };
                 return PartialView(imgVM);
-            }
+            }*/
             return View("NotFound");
         }
 
         [HttpPost]
         public ActionResult RemoveMember(int id, int memberId)
         {
-            repo.DeleteIssueMember(id, memberId);
+            //repo.DeleteIssueMember(id, memberId);
             return Json(new { Status = "Success" });
 
         }
-         *  */
+       
         [HttpPost]
         public int SavePreference(bool CreateAndEditMode)
         {
             Session["CreateAndEditMode"] = CreateAndEditMode;
             return 1;
         }
-        /*
+        
         [HttpPost]
         public int AddMember(int memberId, int issueId)
         {
           //  repo.SaveIssueMember(issueId, memberId, UserID);
             return 1;
-        }*/
-        /*
+        }
+        
         public ActionResult IssueMembers(int id)
         {
             var vm = new BugVM { ID = id };
             LoadIssueMembers(id, vm);
             return PartialView("Partial/Members",vm);
         }
-        */
+        
        
        [HttpPost]        
        public ActionResult Comment(NewIssueCommentVM model)
@@ -456,7 +458,7 @@ namespace Planner.Controllers
             }
             return Content("");
         }
-        /*
+        
         [HttpPost]
         public void SaveDueDate(string issueDueDate, int issueId)
         {
@@ -477,10 +479,9 @@ namespace Planner.Controllers
                 {
 
                 }
-
             }
+        }
 
-        }*/
         }
 }
         

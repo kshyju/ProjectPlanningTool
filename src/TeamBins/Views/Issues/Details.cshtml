@@ -2,8 +2,8 @@
 @{
     ViewBag.Title = "Details";
 }
-<link href="~/Content/datepicker.css" rel="stylesheet" />
-<script src="~/Scripts/bootstrap-datepicker.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+<link href="http://code.jquery.com/ui/1.10.3/themes/ui-lightness/jquery-ui.css" rel="stylesheet" />
 <script src="~/Scripts/issue.js"></script>
 <div class="divToobar">
        @Html.ActionLink("Edit", "Edit", new { id = Model.ID }, new { @class = "toolLink aPopup" })    
@@ -72,6 +72,7 @@
 </div>
 <div id="modal" class="modal fade"></div>
 @Html.HiddenFor(x=>x.ID)
+@Html.HiddenFor(x=>x.ProjectID)
 <script type="text/javascript">
     $(function () {
         //Show popup on clicking the link

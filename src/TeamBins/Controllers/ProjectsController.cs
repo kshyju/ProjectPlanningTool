@@ -140,7 +140,6 @@ namespace SmartPlan.Controllers
                     //Existing member, So lets add him to the project
                     var projectMember = new ProjectMember { ProjectID = model.ProjectID, UserID = member.ID, CreatedDate = DateTime.Now };
                     var result = repo.SaveProjectMember(projectMember);
-
                 }
                 return Json(new { Status = "Success", Message = "Project member added successfully" });
             }
@@ -148,6 +147,18 @@ namespace SmartPlan.Controllers
             {
                 return Json(new { Status = "Error", Message = "Error adding project member" });
             }
+        }
+
+        // JSON for auto complete
+        public ActionResult Members(int id,string term)
+        {
+            //Returns project member list in JSON format
+            var project= repo.GetProject(id);
+            
+            var projectMembers=project.ProjectMembers.Select(item => new { value = item.Member.FirstName, id = item.Member.ID.ToString() }).ToList();
+            return Json( projectMembers , JsonRequestBehavior.AllowGet);
+            
+             
         }
 
     }

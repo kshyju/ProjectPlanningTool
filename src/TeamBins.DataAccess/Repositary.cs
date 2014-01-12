@@ -222,22 +222,25 @@ namespace Planner.DataAccess
         {
             throw new System.NotImplementedException();
         }
-
-        public List<TechiesWeb.TeamBins.Entities.User> GetIssueMembers(int issueId)
+        */ 
+        public List<IssueMember> GetIssueMembers(int issueId)
         {
-            throw new System.NotImplementedException();
+            return db.IssueMembers.Where(s => s.IssueID == issueId).ToList();
         }
-
+       /*
         public List<TechiesWeb.TeamBins.Entities.User> GetNonIssueMembers(int teamId, int issueId)
         {
             throw new System.NotImplementedException();
         }
-
+       */
         public OperationStatus SaveIssueMember(int issueId, int memberId, int addedBy)
         {
-            throw new System.NotImplementedException();
-        }
-
+            var issueMember = new IssueMember { IssueID = issueId, MemberID = memberId, CreatedByID = addedBy, CreatedDate = DateTime.Now };
+            db.IssueMembers.Add(issueMember);
+            db.SaveChanges();
+            return new OperationStatus { Status = true };
+        } /*
+        /*
         public OperationStatus DeleteIssueMember(int issueId, int memberId)
         {
             throw new System.NotImplementedException();
