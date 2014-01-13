@@ -329,7 +329,7 @@ div#quick_create input
     display: block;
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
     font-size: 12px;
-    height: 22px;
+   
     line-height: 20px;
    padding: 6px 6px 5px 5px;
   width: 100%;
@@ -920,4 +920,26 @@ color: green;
 }
 .important {
     font-size:22px;
+}
+
+.issue-icon-Feature {
+    background-image: url(images/feature-icon.png);
+    background-repeat: no-repeat;
+    display: block;
+    height: 24px;
+    width: 24px;
+}
+.issue-icon-Bug {
+    background-image: url(images/bug-icon.png);
+    background-repeat: no-repeat;
+    display: block;
+    height: 24px;
+    width: 24px;
+}
+.issue-icon-Idea {
+    background-image: url(images/idea-icon-16.png);
+    background-repeat: no-repeat;
+    display: block;
+    height: 24px;
+    width: 24px;
 }

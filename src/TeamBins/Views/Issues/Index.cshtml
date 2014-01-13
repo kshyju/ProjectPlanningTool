@@ -14,7 +14,7 @@
         <input type="text" name="NewItemTitle" placeholder="Create Item" id="NewItemTitle" />
         <div id="default_items">
             <div class="default_item">
-                <img class="default_item_img" src="~/Content/images/bug.png" />
+                <img class="default_item_img" src="~/Content/images/feature-icon.png" />
             </div>
         </div>
 
@@ -49,28 +49,26 @@
 <table class="tblGrid" id="issueTbl">
     <tr>
         <th>#</th>
+        <th></th>
         <th>Title</th>
         <th>Opened By</th>       
         <th>Priority</th>
         <th>Status</th>
         <th>Opened Date</th>
     </tr>
-
-    @{
-        
-        bool isOdd = false;
-    }
-@foreach (var bug in Model.Bugs)
+@{        
+    bool isOdd = false;
+}
+@foreach (var issue in Model.Bugs)
 {
     <tr class="@(isOdd==true?@Html.Raw("trOdd"):@Html.Raw("trEven"))">
-        <td>@bug.ID</td>
-        <td>
-            @Html.ActionLink(bug.Title, "details", new { @id = bug.ID },null)            
-        </td>
-        <td>@bug.OpenedBy</td>       
-        <td>@bug.Priority</td>
-         <td>@bug.Status</td>
-        <td> @bug.CreatedDate </td>
+        <td>@issue.ID</td>
+        <td><div class="issue-icon-@issue.Category" title="@issue.Category" ></div></td>
+        <td>@Html.ActionLink(issue.Title, "details", new { @id = issue.ID },null)</td>
+        <td>@issue.OpenedBy</td>       
+        <td>@issue.Priority</td>
+        <td>@issue.Status</td>
+        <td> @issue.CreatedDate </td>
     </tr>
     isOdd = !isOdd;
 }

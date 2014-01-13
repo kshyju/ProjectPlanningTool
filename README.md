@@ -4,7 +4,7 @@ TeamBins
 A Project management tool built on Microsoft technologies
 
 
-![alt text](https://f.cloud.github.com/assets/144469/1904305/0accc4d8-7c8e-11e3-959b-74f96c48f040.png "Logo Title Text 1")
+![alt text](https://f.cloud.github.com/assets/144469/1905478/cfc2bae4-7c9e-11e3-9485-0fd7737d5ac6.png "Logo Title Text 1")
 
 ###How to setup
 

@@ -9,64 +9,82 @@ using System.Web;
 using System.Web.Mvc;
 using TechiesWeb.TeamBins.ViewModels;
 
-
-
 namespace Planner.Controllers
 {
 
     public class IssuesController : BaseController
     {
         IRepositary repo;
-
         public IssuesController()
         {
             repo = new Repositary();
         }
 
-
         public ActionResult Backlog()
-        {                   
-            BugsListVM bugListVM=new BugsListVM();
-            var projectList = repo.GetProjects().Where(s => s.ProjectMembers.Any(b => b.UserID == UserID)).ToList();
-            if (projectList.Count > 0)
+        {
+            try
             {
-                bugListVM = GetBugList("BKLOG");
-                bugListVM.ProjectsExist = true;
+                BugsListVM bugListVM = new BugsListVM();
+                var projectList = repo.GetProjects().Where(s => s.ProjectMembers.Any(b => b.UserID == UserID)).ToList();
+                if (projectList.Count > 0)
+                {
+                    bugListVM = GetBugList("BKLOG");
+                    bugListVM.ProjectsExist = true;
+                }
+                return View("Index", bugListVM);
             }
-            return View("Index", bugListVM);
+            catch (Exception ex)
+            {
+                // to do : Log error
+                return View("Error");
+            }
         }
         public ActionResult Completed()
         {
-            BugsListVM bugListVM = new BugsListVM();
-            var projectList = repo.GetProjects().Where(s => s.ProjectMembers.Any(b => b.UserID == UserID)).ToList();
-            if (projectList.Count > 0)
+            try
             {
-                bugListVM = GetBugList("BKLOG");
-                bugListVM.ProjectsExist = true;
+                BugsListVM bugListVM = new BugsListVM();
+                var projectList = repo.GetProjects().Where(s => s.ProjectMembers.Any(b => b.UserID == UserID)).ToList();
+                if (projectList.Count > 0)
+                {
+                    bugListVM = GetBugList("ARCHV");
+                    bugListVM.ProjectsExist = true;
+                }
+                return View("Index", bugListVM);
             }
-            return View("Index", bugListVM);
+            catch (Exception ex)
+            {
+                // to do : Log error
+                return View("Error");
+            }
         }
         
         public ActionResult Index()
         {
-            BugsListVM bugListVM=new BugsListVM();
-            var projectList = repo.GetProjects().Where(s => s.ProjectMembers.Any(b => b.UserID == UserID)).ToList();
-            if (projectList.Count > 0)
+            try
             {
-                bugListVM = GetBugList("SPRNT");
-                bugListVM.ProjectsExist = true;
+                BugsListVM bugListVM = new BugsListVM();
+                var projectList = repo.GetProjects().Where(s => s.ProjectMembers.Any(b => b.UserID == UserID)).ToList();
+                if (projectList.Count > 0)
+                {
+                    bugListVM = GetBugList("SPRNT");
+                    bugListVM.ProjectsExist = true;
+                }
+                return View("Index", bugListVM);
             }
-
-            return View("Index", bugListVM);
+            catch (Exception ex)
+            {
+                // to do : Log error
+                return View("Error");
+            }
         }
 
-        private BugsListVM GetBugList(string iteration)
+        private BugsListVM GetBugList(string iteration,int size=25)
         {
             var vm = new BugsListVM { CurrentTab = iteration };
 
-            var bugList = repo.GetIssues().Where(g => g.Project.ProjectMembers.Any(b => b.UserID == UserID) && g.Location==iteration).OrderByDescending(s=>s.ID).ToList();
-            
-            //.OrderByDescending(x => x.ID).Take(25);
+            var bugList = repo.GetIssues().Where(g => g.Project.ProjectMembers.Any(b => b.UserID == UserID) && g.Location==iteration).OrderByDescending(s=>s.ID).Take(size).ToList();
+                        
             foreach (var bug in bugList)
             {
                var bugVM = new IssueVM { ID = bug.ID, Title = bug.Title, Description = bug.Description };
@@ -385,7 +403,7 @@ namespace Planner.Controllers
             foreach (var item in commentList)
             {
                 var commentVM = new CommentVM { ID = item.ID, CommentBody = item.CommentText, AuthorName=item.Author.FirstName, CreativeDate = item.CreatedDate.ToString("g") };
-                //commentVM.AvatarHash = UserService.GetImageSource(item.CreatedBy.EmailAddress, 42);
+                commentVM.AvatarHash = UserService.GetImageSource(item.Author.EmailAddress, 42);
                 commentVM.CreatedDateRelative = item.CreatedDate.ToShortDateString();//.ToRelativeDateTime();
                 bugVm.Comments.Add(commentVM);
             }
@@ -470,7 +488,7 @@ namespace Planner.Controllers
             if (comment != null)
             {
                 var commentVM = new CommentVM { ID = comment.ID, AuthorName = comment.Author.FirstName, CommentBody = comment.CommentText, CreativeDate = comment.CreatedDate.ToString("g") };
-                //commentVM.AvatarHash = UserService.GetImageSource(comment.Author.EmailAddress, 42);
+                commentVM.AvatarHash = UserService.GetImageSource(comment.Author.EmailAddress, 42);
                 commentVM.CreatedDateRelative = comment.CreatedDate.ToShortDateString(); //.ToRelativeDateTime();
                 return PartialView("Partial/Comment", commentVM);
             }

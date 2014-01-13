@@ -185,7 +185,10 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\datepicker.css" />
+    <Content Include="Content\images\bug-icon.png" />
     <Content Include="Content\images\bug.png" />
+    <Content Include="Content\images\feature-icon.png" />
+    <Content Include="Content\images\idea-icon-16.png" />
     <Content Include="Content\images\logo.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
