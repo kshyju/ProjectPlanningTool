@@ -25,13 +25,25 @@ namespace Planner.Controllers
 
 
         public ActionResult Backlog()
-        {        
-            var bugListVM= GetBugList("BKLOG");
+        {                   
+            BugsListVM bugListVM=new BugsListVM();
+            var projectList = repo.GetProjects().Where(s => s.ProjectMembers.Any(b => b.UserID == UserID)).ToList();
+            if (projectList.Count > 0)
+            {
+                bugListVM = GetBugList("BKLOG");
+                bugListVM.ProjectsExist = true;
+            }
             return View("Index", bugListVM);
         }
         public ActionResult Completed()
-        {           
-            var bugListVM = GetBugList("CMLTD");
+        {
+            BugsListVM bugListVM = new BugsListVM();
+            var projectList = repo.GetProjects().Where(s => s.ProjectMembers.Any(b => b.UserID == UserID)).ToList();
+            if (projectList.Count > 0)
+            {
+                bugListVM = GetBugList("BKLOG");
+                bugListVM.ProjectsExist = true;
+            }
             return View("Index", bugListVM);
         }
         
@@ -345,9 +357,8 @@ namespace Planner.Controllers
                 bugVm.IssueDueDate=(bug.DueDate.Value.Year>2000?bug.DueDate.Value.ToShortDateString():"");
 
             
-            var allDocuments = repo.GetDocuments(id);
-            var images = allDocuments; //;.Where(x => x.Extension.ToUpper() == ".JPG" || x.Extension.ToUpper()==".PNG"); 
-            foreach (var img in images)
+            var allDocuments = repo.GetDocuments(id);           
+            foreach (var img in allDocuments)
             {
 
                 var imgVM = new DocumentVM { FileName=img.FileName, FileKey=img.FileAlias};

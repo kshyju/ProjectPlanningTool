@@ -1,8 +1,9 @@
 ﻿@model TechiesWeb.TeamBins.ViewModels.BugsListVM
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Issues";
 }
-
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+<link href="http://code.jquery.com/ui/1.10.3/themes/ui-lightness/jquery-ui.css" rel="stylesheet" />
 <script src="~/Scripts/issue.js"></script>
 @if(Model.ProjectsExist)
 {
@@ -78,7 +79,7 @@
 <div id="rightPanel">
     <div id="activityStream">
         <div>
-            Howndy ! Nothing happened yet.
+            Howdy ! Nothing happened yet.
         </div>
 
         
