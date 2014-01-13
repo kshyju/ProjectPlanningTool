@@ -8,6 +8,7 @@
         <EntityContainer Name="TeamBinsModelStoreContainer">
           <EntitySet Name="Category" EntityType="TeamBinsModel.Store.Category" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Comment" EntityType="TeamBinsModel.Store.Comment" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Document" EntityType="TeamBinsModel.Store.Document" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Issue" EntityType="TeamBinsModel.Store.Issue" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="IssueMember" EntityType="TeamBinsModel.Store.IssueMember" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Priority" EntityType="TeamBinsModel.Store.Priority" store:Type="Tables" Schema="dbo" />
@@ -24,6 +25,14 @@
           <AssociationSet Name="FK_Comment_User" Association="TeamBinsModel.Store.FK_Comment_User">
             <End Role="User" EntitySet="User" />
             <End Role="Comment" EntitySet="Comment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Document_Issue" Association="TeamBinsModel.Store.FK_Document_Issue">
+            <End Role="Issue" EntitySet="Issue" />
+            <End Role="Document" EntitySet="Document" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Document_User" Association="TeamBinsModel.Store.FK_Document_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Document" EntitySet="Document" />
           </AssociationSet>
           <AssociationSet Name="FK_Issue_Category" Association="TeamBinsModel.Store.FK_Issue_Category">
             <End Role="Category" EntitySet="Category" />
@@ -100,6 +109,17 @@
           <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="CommentText" Type="nvarchar" Nullable="false" MaxLength="2000" />
           <Property Name="IssueID" Type="int" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="CreatedByID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Document">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="FileName" Type="nvarchar" Nullable="false" MaxLength="200" />
+          <Property Name="FileAlias" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="ParentID" Type="int" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="CreatedByID" Type="int" Nullable="false" />
         </EntityType>
@@ -220,6 +240,30 @@
               <PropertyRef Name="ID" />
             </Principal>
             <Dependent Role="Comment">
+              <PropertyRef Name="CreatedByID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Document_Issue">
+          <End Role="Issue" Type="TeamBinsModel.Store.Issue" Multiplicity="1" />
+          <End Role="Document" Type="TeamBinsModel.Store.Document" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Issue">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Document">
+              <PropertyRef Name="ParentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Document_User">
+          <End Role="User" Type="TeamBinsModel.Store.User" Multiplicity="1" />
+          <End Role="Document" Type="TeamBinsModel.Store.Document" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Document">
               <PropertyRef Name="CreatedByID" />
             </Dependent>
           </ReferentialConstraint>
@@ -488,6 +532,15 @@
             <End Role="User" EntitySet="Users" />
             <End Role="IssueMember" EntitySet="IssueMembers" />
           </AssociationSet>
+          <EntitySet Name="Documents" EntityType="TeamBinsModel.Document" />
+          <AssociationSet Name="FK_Document_Issue" Association="TeamBinsModel.FK_Document_Issue">
+            <End Role="Issue" EntitySet="Issues" />
+            <End Role="Document" EntitySet="Documents" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Document_User" Association="TeamBinsModel.FK_Document_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Document" EntitySet="Documents" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="Category">
           <Key>
@@ -542,6 +595,7 @@
           <NavigationProperty Name="DefaultProject" Relationship="TeamBinsModel.FK_User_Default_Project" FromRole="User" ToRole="Project" />
           <NavigationProperty Name="IssueMembers" Relationship="TeamBinsModel.FK_IssueMember_IssueMember" FromRole="User" ToRole="IssueMember" />
           <NavigationProperty Name="IssueMembers1" Relationship="TeamBinsModel.FK_IssueMember_User_CreatedBy" FromRole="User" ToRole="IssueMember" />
+          <NavigationProperty Name="Documents" Relationship="TeamBinsModel.FK_Document_User" FromRole="User" ToRole="Document" />
           </EntityType>
         <EntityType Name="Task">
           <Key>
@@ -610,6 +664,7 @@
           <NavigationProperty Name="Project" Relationship="TeamBinsModel.FK_Issue_Project" FromRole="Issue" ToRole="Project" />
           <NavigationProperty Name="Comments" Relationship="TeamBinsModel.FK_Comment_Issue" FromRole="Issue" ToRole="Comment" />
           <NavigationProperty Name="IssueMembers" Relationship="TeamBinsModel.FK_IssueMember_Issue" FromRole="Issue" ToRole="IssueMember" />
+          <NavigationProperty Name="Documents" Relationship="TeamBinsModel.FK_Document_Issue" FromRole="Issue" ToRole="Document" />
         </EntityType>
         <Association Name="FK_Issue_Category">
           <End Type="TeamBinsModel.Category" Role="Category" Multiplicity="1" />
@@ -841,6 +896,43 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Document">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="FileName" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="FileAlias" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="ParentID" Nullable="false" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="3" />
+          <Property Type="Int32" Name="CreatedByID" Nullable="false" />
+          <NavigationProperty Name="Issue" Relationship="TeamBinsModel.FK_Document_Issue" FromRole="Document" ToRole="Issue" />
+          <NavigationProperty Name="CreatedBy" Relationship="TeamBinsModel.FK_Document_User" FromRole="Document" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_Document_Issue">
+          <End Type="TeamBinsModel.Issue" Role="Issue" Multiplicity="1" />
+          <End Type="TeamBinsModel.Document" Role="Document" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Issue">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Document">
+              <PropertyRef Name="ParentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Document_User">
+          <End Type="TeamBinsModel.User" Role="User" Multiplicity="1" />
+          <End Type="TeamBinsModel.Document" Role="Document" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Document">
+              <PropertyRef Name="CreatedByID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -968,6 +1060,18 @@
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="MemberID" ColumnName="MemberID" />
                 <ScalarProperty Name="IssueID" ColumnName="IssueID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Documents">
+            <EntityTypeMapping TypeName="TeamBinsModel.Document">
+              <MappingFragment StoreEntitySet="Document">
+                <ScalarProperty Name="CreatedByID" ColumnName="CreatedByID" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+                <ScalarProperty Name="FileAlias" ColumnName="FileAlias" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

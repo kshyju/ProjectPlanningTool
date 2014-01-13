@@ -61,6 +61,9 @@
     <Compile Include="Comment.cs">
       <DependentUpon>TeamBinsData.tt</DependentUpon>
     </Compile>
+    <Compile Include="Document.cs">
+      <DependentUpon>TeamBinsData.tt</DependentUpon>
+    </Compile>
     <Compile Include="IRepositary.cs" />
     <Compile Include="Issue.cs">
       <DependentUpon>TeamBinsData.tt</DependentUpon>

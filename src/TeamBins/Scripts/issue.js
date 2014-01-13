@@ -41,7 +41,7 @@
     });
 
     //Auto complete for assign issue member
-    $("#assignMember").autocomplete({
+    $("#txtAssignMember").autocomplete({
         source: "../../Projects/members/" + $("#ProjectID").val(),
         minLength: 2,
         select: function (event, ui) {
@@ -49,7 +49,7 @@
             //Save it now
             $.post(addMemberToIssueUrl,{ memberId:ui.item.id, issueId:$("#ID").val()},function(res){
                 //Reload the member list ,function
-                $("#members").load(issueMembersUrl, function () {
+                $("#members").load(issueMembersUrl+"/"+ $("#ID").val(), function () {
 
 
                 });
@@ -63,7 +63,7 @@
         $.post(_this.attr("href"), function (res) {
             if (res.Status == "Success") {
                 $("#members").load("../../Issues/IssueMembers/" + $("#ID").val(), function () {
-                    InitializeMemberCombo();
+                    
                 });
                 
             }
@@ -104,10 +104,6 @@
                         $.get("../../Issues/Comment/" + res.NewCommentID, function (dat) {
                             $(dat).hide().appendTo("#commentList").fadeIn(350);                            
                             $("#newComment").val("");
-                            var editor = $("#newComment").data("kendoEditor");
-
-                            // set value
-                            editor.value("");
                         });
                     }
                 }

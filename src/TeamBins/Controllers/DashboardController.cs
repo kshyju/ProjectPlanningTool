@@ -35,14 +35,14 @@ namespace SmartPlan.Controllers
 
             return View(vm);
         }
-        private List<BugVM> GetRecentIssues()
+        private List<IssueVM> GetRecentIssues()
         {
-            var listIssues = new List<BugVM>();
+            var listIssues = new List<IssueVM>();
 
             var issueList = repo.GetIssues().OrderByDescending(s => s.ID).Take(5);
             foreach (var issue in issueList)
             {
-                var issueVM = new BugVM { ID = issue.ID, Title = issue.Title };
+                var issueVM = new IssueVM { ID = issue.ID, Title = issue.Title };
                 listIssues.Add(issueVM);
             }
             return listIssues;

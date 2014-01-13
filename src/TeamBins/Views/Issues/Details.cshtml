@@ -1,6 +1,6 @@
-﻿@model TechiesWeb.TeamBins.ViewModels.BugVM
+﻿@model TechiesWeb.TeamBins.ViewModels.IssueVM
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Issue #"+Model.ID;
 }
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 <link href="http://code.jquery.com/ui/1.10.3/themes/ui-lightness/jquery-ui.css" rel="stylesheet" />
@@ -57,6 +57,17 @@
         </div>         
     </div>
     <div class="divRight">
+        <div id="issue-details" class="right-detail-items ">
+             <div class="issue-detail-item important">
+            Issue # @Model.ID.ToString()
+            </div>
+            <div class="issue-detail-item">
+            Type : @Model.Category
+            </div>
+             <div class="issue-detail-item">
+                Priority: @Model.Priority
+            </div>
+        </div>
         <div id="members"  class="changableWidget">
         @Html.Partial("Partial/Members",Model)
         </div>

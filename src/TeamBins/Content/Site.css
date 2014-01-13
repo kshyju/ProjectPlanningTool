@@ -909,3 +909,15 @@ color: green;
 {
     padding-top:10px;
 }
+.right-detail-items {
+    background-color: #F7F7F7;
+    padding: 5px 10px 10px;
+     margin: 0 10px 10px;
+
+}
+.issue-detail-item {
+
+}
+.important {
+    font-size:22px;
+}

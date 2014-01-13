@@ -56,7 +56,7 @@ namespace Planner.Controllers
             //.OrderByDescending(x => x.ID).Take(25);
             foreach (var bug in bugList)
             {
-               var bugVM = new BugVM { ID = bug.ID, Title = bug.Title, Description = bug.Description };
+               var bugVM = new IssueVM { ID = bug.ID, Title = bug.Title, Description = bug.Description };
                bugVM.OpenedBy = bug.CreatedBy.FirstName;
                bugVM.Priority = bug.Priority.Name;
                 bugVM.Status = bug.Status.Name;
@@ -140,7 +140,7 @@ namespace Planner.Controllers
                             var issue = repo.GetIssue(result.OperationID);
                             if (issue != null)
                             {
-                                var issueVM = new BugVM { ID = result.OperationID };
+                                var issueVM = new IssueVM { ID = result.OperationID };
                                 issueVM.Title = issue.Title;
                                 issueVM.Priority = issue.Priority.Name;
                                 issueVM.Status = issue.Status.Name;
@@ -324,12 +324,13 @@ namespace Planner.Controllers
         public ActionResult Details(int id)
         {
             var bug = repo.GetIssue(id);
-            BugVM bugVm = new BugVM { ID = bug.ID, Title = bug.Title };
+            IssueVM bugVm = new IssueVM { ID = bug.ID, Title = bug.Title };
             bugVm.Description = bug.Description;
             bugVm.CreatedDate = bug.CreatedDate.ToString("g");
             bugVm.OpenedBy = bug.CreatedBy.FirstName;
             bugVm.Title = bug.Title;
             bugVm.Project = bug.Project.Name;
+            bugVm.Category = bug.Category.Name;
             bugVm.ProjectID = bug.ProjectID;
             bugVm.Status = bug.Status.Name;
             bugVm.Priority = bug.Priority.Name;
@@ -337,9 +338,9 @@ namespace Planner.Controllers
             if(bug.DueDate.HasValue)
                 bugVm.IssueDueDate=(bug.DueDate.Value.Year>2000?bug.DueDate.Value.ToShortDateString():"");
 
-            /*
-            var allDocuments = repo.GetDocuments(id, "Bug");
-            var images = allDocuments; //;.Where(x => x.Extension.ToUpper() == ".JPG" || x.Extension.ToUpper()==".PNG"); 
+            
+           // var allDocuments = repo.GetDocuments(id, "Bug");
+           /* var images = allDocuments; //;.Where(x => x.Extension.ToUpper() == ".JPG" || x.Extension.ToUpper()==".PNG"); 
             foreach (var img in images)
             {
 
@@ -352,7 +353,7 @@ namespace Planner.Controllers
                     bugVm.Attachments.Add(imgVM);
 
             }
-            */
+           */
 
        
             LoadComments(id, bugVm);
@@ -361,7 +362,7 @@ namespace Planner.Controllers
             return View(bugVm);
         }
 
-        private void LoadComments(int id, BugVM bugVm)
+        private void LoadComments(int id, IssueVM bugVm)
         {
             var commentList = repo.GetCommentsForIssue(id);
             foreach (var item in commentList)
@@ -373,12 +374,12 @@ namespace Planner.Controllers
             }
         }
         
-        private void LoadIssueMembers(int id, BugVM bugVm)
+        private void LoadIssueMembers(int id, IssueVM bugVm)
         {
             var memberList = repo.GetIssueMembers(id);
             foreach (var member in memberList)
             {
-                var vm = new MemberVM { MemberType = member.Member.JobTitle, Name = member.Member.FirstName, MemberID = member.ID };
+                var vm = new MemberVM { MemberType = member.Member.JobTitle, Name = member.Member.FirstName, MemberID = member.MemberID };
                 vm.AvatarHash = UserService.GetImageSource(member.Member.EmailAddress);
                 bugVm.Members.Add(vm);
             }
@@ -399,7 +400,7 @@ namespace Planner.Controllers
         [HttpPost]
         public ActionResult RemoveMember(int id, int memberId)
         {
-            //repo.DeleteIssueMember(id, memberId);
+            repo.DeleteIssueMember(id, memberId);
             return Json(new { Status = "Success" });
 
         }
@@ -414,13 +415,13 @@ namespace Planner.Controllers
         [HttpPost]
         public int AddMember(int memberId, int issueId)
         {
-          //  repo.SaveIssueMember(issueId, memberId, UserID);
+            repo.SaveIssueMember(issueId, memberId, UserID);
             return 1;
         }
         
         public ActionResult IssueMembers(int id)
         {
-            var vm = new BugVM { ID = id };
+            var vm = new IssueVM { ID = id };
             LoadIssueMembers(id, vm);
             return PartialView("Partial/Members",vm);
         }

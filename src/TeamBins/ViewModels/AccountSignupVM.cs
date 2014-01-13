@@ -15,8 +15,7 @@ namespace TechiesWeb.TeamBins.ViewModels
         public string Email { set; get; }
 
         [Required]
-        [DataType(DataType.Password)]
-        [StringLength(25, MinimumLength = 4)]
+        [DataType(DataType.Password)]        
         public string Password { set; get; }
 
     }

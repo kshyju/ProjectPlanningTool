@@ -1,4 +1,4 @@
-﻿@model TechiesWeb.TeamBins.ViewModels.BugVM
+﻿@model TechiesWeb.TeamBins.ViewModels.IssueVM
 
     <h4>Assigned To</h4>
     <div id="memberList">
@@ -22,5 +22,5 @@
     <input id="txtAssignMember" value="" />
 <script type="text/javascript">
     var addMemberToIssueUrl = "@Url.Action("AddMember","Issues")";
-    var issueMembersUrl = "@Url.Action("IssueMembers","Issue")";
+    var issueMembersUrl = "@Url.Action("IssueMembers","Issues")";
 </script>

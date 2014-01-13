@@ -17,18 +17,18 @@ namespace TechiesWeb.TeamBins.ViewModels
     }
     public class BugsListVM
     {
-        public List<BugVM> Bugs { set; get; }
+        public List<IssueVM> Bugs { set; get; }
 
         public BugsListVM()
         {
-            Bugs = new List<BugVM>();
+            Bugs = new List<IssueVM>();
         }
         public bool IsCreateAndEditEnabled { set; get; }
         public string CurrentTab { set; get; }
         public bool ProjectsExist { set; get; }
     }
 
-    public class BugVM
+    public class IssueVM
     {
         public int ID { set; get; }
 
@@ -59,7 +59,7 @@ namespace TechiesWeb.TeamBins.ViewModels
 
         public List<MemberVM> Members { set; get; }
         public List<CommentVM> Comments { set; get; }
-        public BugVM()
+        public IssueVM()
         {
             Images = new List<DocumentVM>();
             Attachments = new List<DocumentVM>();
@@ -80,7 +80,7 @@ namespace TechiesWeb.TeamBins.ViewModels
     
     }
 
-    public class CreateBug : BugVM
+    public class CreateBug : IssueVM
     {
 
         public bool IsFromModalWindow { set; get; }

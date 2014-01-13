@@ -155,7 +155,7 @@ namespace SmartPlan.Controllers
             //Returns project member list in JSON format
             var project= repo.GetProject(id);
             
-            var projectMembers=project.ProjectMembers.Select(item => new { value = item.Member.FirstName, id = item.Member.ID.ToString() }).ToList();
+            var projectMembers=project.ProjectMembers.Where(s=>s.Member.FirstName.StartsWith(term)).Select(item => new { value = item.Member.FirstName, id = item.Member.ID.ToString() }).ToList();
             return Json( projectMembers , JsonRequestBehavior.AllowGet);
             
              

@@ -33,6 +33,9 @@
         <AssociationConnector Association="TeamBinsModel.FK_IssueMember_Issue" />
         <AssociationConnector Association="TeamBinsModel.FK_IssueMember_IssueMember" />
         <AssociationConnector Association="TeamBinsModel.FK_IssueMember_User_CreatedBy" />
+        <EntityTypeShape EntityType="TeamBinsModel.Document" Width="1.5" PointX="7.2128557261139417" PointY="21.101297507575385" />
+        <AssociationConnector Association="TeamBinsModel.FK_Document_Issue" />
+        <AssociationConnector Association="TeamBinsModel.FK_Document_User" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

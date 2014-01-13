@@ -10,12 +10,12 @@ namespace SmartPlan.ViewModels
     {
         public IList<TeamVM> Teams { set; get; }
         public List<ProjectVM> Projects { set; get; }
-        public List<BugVM> RecentIssues { set; get; }
+        public List<IssueVM> RecentIssues { set; get; }
         public DashBoardVM()
         {
             Teams = new List<TeamVM>();
             Projects = new List<ProjectVM>();
-            RecentIssues = new List<BugVM>();
+            RecentIssues = new List<IssueVM>();
         }
     }
     

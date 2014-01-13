@@ -60,7 +60,7 @@ namespace Planner.DataAccess
         {
             throw new System.NotImplementedException();
         }
-
+        
         public List<Document> GetDocuments(int parentId, string type)
         {
             throw new System.NotImplementedException();
@@ -235,17 +235,39 @@ namespace Planner.DataAccess
        */
         public OperationStatus SaveIssueMember(int issueId, int memberId, int addedBy)
         {
-            var issueMember = new IssueMember { IssueID = issueId, MemberID = memberId, CreatedByID = addedBy, CreatedDate = DateTime.Now };
-            db.IssueMembers.Add(issueMember);
-            db.SaveChanges();
-            return new OperationStatus { Status = true };
-        } /*
-        /*
+            try
+            {
+                var issueMember = new IssueMember { IssueID = issueId, MemberID = memberId, CreatedByID = addedBy, CreatedDate = DateTime.Now };
+                db.IssueMembers.Add(issueMember);
+                db.SaveChanges();
+                return new OperationStatus { Status = true };
+            }
+            catch (Exception ex)
+            {
+                return OperationStatus.CreateFromException("Errorin saving issuemember", ex);
+            }
+           
+        } 
+        
         public OperationStatus DeleteIssueMember(int issueId, int memberId)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                var issueMember = db.IssueMembers.Where(s => s.IssueID == issueId && s.MemberID == memberId).FirstOrDefault();
+                if (issueMember != null)
+                {
+                    db.IssueMembers.Remove(issueMember);
+                    db.SaveChanges();
+                    return new OperationStatus { Status = true };
+                }
+            }
+            catch (Exception ex)
+            {
+                return OperationStatus.CreateFromException("Error in deleting issue member. Issue:"+issueId+", member:"+memberId, ex);
+            }
+            return new OperationStatus { Status = false, Message="No record found!" };
         }
-        */
+        
         public IEnumerable<Comment> GetCommentsForIssue(int issueId)
         {
             return db.Comments.Where(s => s.IssueID == issueId);
