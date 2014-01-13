@@ -5,9 +5,11 @@
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 <link href="http://code.jquery.com/ui/1.10.3/themes/ui-lightness/jquery-ui.css" rel="stylesheet" />
 <script src="~/Scripts/issue.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
 <div class="divToobar">
        @Html.ActionLink("Edit", "Edit", new { id = Model.ID }, new { @class = "toolLink aPopup" })    
 </div>
+
 <div class="divPageContent">
     <div class="divLeft">
         <h2>@Model.Title</h2>
@@ -27,7 +29,7 @@
                 {
 
                     <div>
-                        <a href="@Url.Action("Image",new { @name=img.FileKey})" target="_blank">
+                        <a href="@Url.Content("~/uploads/"+img.FileKey)" target="_blank">
                         <img class="detailImg" src="@Url.Content("~/uploads/"+img.FileKey)" />
                             </a>
                     </div>
@@ -67,6 +69,9 @@
              <div class="issue-detail-item">
                 Priority: @Model.Priority
             </div>
+        </div>
+        <div class="right-detail-items ">
+            In <span>@Model.Iteration</span>
         </div>
         <div id="members"  class="changableWidget">
         @Html.Partial("Partial/Members",Model)

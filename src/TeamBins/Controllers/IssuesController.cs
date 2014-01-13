@@ -26,21 +26,22 @@ namespace Planner.Controllers
 
         public ActionResult Backlog()
         {        
-            var bugListVM= GetBugList("Backlog");
+            var bugListVM= GetBugList("BKLOG");
             return View("Index", bugListVM);
         }
         public ActionResult Completed()
         {           
-            var bugListVM = GetBugList("Completed");
+            var bugListVM = GetBugList("CMLTD");
             return View("Index", bugListVM);
         }
+        
         public ActionResult Index()
         {
             BugsListVM bugListVM=new BugsListVM();
             var projectList = repo.GetProjects().Where(s => s.ProjectMembers.Any(b => b.UserID == UserID)).ToList();
             if (projectList.Count > 0)
             {
-                bugListVM = GetBugList("Current");
+                bugListVM = GetBugList("SPRNT");
                 bugListVM.ProjectsExist = true;
             }
 
@@ -51,7 +52,7 @@ namespace Planner.Controllers
         {
             var vm = new BugsListVM { CurrentTab = iteration };
 
-            var bugList = repo.GetIssues().Where(g => g.Project.ProjectMembers.Any(b => b.UserID == UserID)).OrderByDescending(s=>s.ID).ToList();
+            var bugList = repo.GetIssues().Where(g => g.Project.ProjectMembers.Any(b => b.UserID == UserID) && g.Location==iteration).OrderByDescending(s=>s.ID).ToList();
             
             //.OrderByDescending(x => x.ID).Take(25);
             foreach (var bug in bugList)
@@ -75,7 +76,7 @@ namespace Planner.Controllers
         /*
         public ActionResult Add()
         {
-            CreateBug vm = new CreateBug();
+            CreateIssue vm = new CreateIssue();
             LoadDropDownsForCreate(vm);
             vm.Statuses = ProjectService.GetStatuses(repo, new List<string> { "New" });    
         
@@ -87,7 +88,7 @@ namespace Planner.Controllers
         }
         */
        
-        private void LoadDropDownsForCreate(CreateBug viewModel)
+        private void LoadDropDownsForCreate(CreateIssue viewModel)
         {
             
             viewModel.Projects = ProjectService.GetProjects(repo);
@@ -95,11 +96,12 @@ namespace Planner.Controllers
             viewModel.Categories = ProjectService.GetCategories(repo);
             viewModel.Cycles = ProjectService.GetCycles(repo);
             viewModel.Statuses = ProjectService.GetStatuses(repo);
+            viewModel.Iterations = ProjectService.GetIterations();
         }
         
         
         [HttpPost]
-        public ActionResult Add(CreateBug model,List<HttpPostedFileBase> files)
+        public ActionResult Add(CreateIssue model,List<HttpPostedFileBase> files)
         {
 
             try
@@ -165,10 +167,10 @@ namespace Planner.Controllers
 
 
                                 string fileName = Path.GetFileName(file.FileName).ToLower();
-                                string fileKey = fileName.Replace(" ", "-");
-                                fileName = fileName.Replace("%", "-");
-
-                                fileKey = result.OperationID + "-" + fileCounter + "-" + Guid.NewGuid().ToString("n") + "-" + fileName;
+                                string fileKey = fileName;
+                                fileKey = fileKey.Replace(" ", "-").Replace("%", "-");                                 
+                                
+                                fileKey = String.Format("{0}-{1}-{2:n}-{3}", result.OperationID, fileCounter, Guid.NewGuid(), fileName);
 
                                 if (fileKey.Length > 99)
                                     fileKey = fileKey.Substring(0, 99);
@@ -176,17 +178,17 @@ namespace Planner.Controllers
 
                                 string path = Path.Combine(Server.MapPath("~/uploads"), fileKey);
                                 file.SaveAs(path);
-                                /*
-                                Document img = new Document { UploadType = "Bug", DocName = fileName, Extension = Path.GetExtension(file.FileName) };
-                                img.DocKey = fileKey;
+                               
+                                Document img = new Document {  FileName = fileName, ParentID=model.ID };
+                                img.FileAlias = fileKey;
                                 img.CreatedByID = UserID;
-                                img.ParentID = result.OperationID;*/
-                                /*
+                                img.ParentID = result.OperationID;
+                                
                                 var resultForImg = repo.SaveDocument(img);
                                 {
 
 
-                                }*/
+                                }
 
                            }
 
@@ -217,7 +219,7 @@ namespace Planner.Controllers
                 return View(model);
             }
         }
-        private void LoadDefaultIssueValues(Issue issue,CreateBug model)
+        private void LoadDefaultIssueValues(Issue issue,CreateIssue model)
         {
             var user = repo.GetUser(UserID);
             issue.PriorityID = model.SelectedPriority;
@@ -238,9 +240,11 @@ namespace Planner.Controllers
             if (issue.CategoryID == 0)
                 issue.CategoryID = 1;
 
+            issue.Location = model.SelectedIteration;
+
         }
        /*
-        private void SaveActivity(CreateBug model,Issue existingIssue, int issueId)
+        private void SaveActivity(CreateIssue model,Issue existingIssue, int issueId)
         {
             var activity = new Activity();
             activity.CreatedBy.ID = UserID;
@@ -286,7 +290,7 @@ namespace Planner.Controllers
             var bug = repo.GetIssue(id);
             if (bug != null)
             {
-                var editVM = new CreateBug();
+                var editVM = new CreateIssue();
                 editVM.Title = bug.Title;
                 editVM.Description = bug.Description;
                 LoadDropDownsForCreate(editVM);
@@ -295,6 +299,7 @@ namespace Planner.Controllers
                 editVM.SelectedPriority = bug.Priority.ID;
                 editVM.SelectedProject = bug.Project.ID;
                 editVM.SelectedStatus = bug.Status.ID;
+                editVM.SelectedIteration = bug.Location;
                 //editVM.IsShowStopper = bug.IsShowStopper;
                 //editVM.OpenedBy = bug.CreatedBy.DisplayName;
                 editVM.CreatedDate = bug.CreatedDate.ToShortDateString();
@@ -335,17 +340,18 @@ namespace Planner.Controllers
             bugVm.Status = bug.Status.Name;
             bugVm.Priority = bug.Priority.Name;
             bugVm.StatusCode = bug.Status.Name;
+            bugVm.Iteration = ProjectService.GetIterationName(bug.Location);
             if(bug.DueDate.HasValue)
                 bugVm.IssueDueDate=(bug.DueDate.Value.Year>2000?bug.DueDate.Value.ToShortDateString():"");
 
             
-           // var allDocuments = repo.GetDocuments(id, "Bug");
-           /* var images = allDocuments; //;.Where(x => x.Extension.ToUpper() == ".JPG" || x.Extension.ToUpper()==".PNG"); 
+            var allDocuments = repo.GetDocuments(id);
+            var images = allDocuments; //;.Where(x => x.Extension.ToUpper() == ".JPG" || x.Extension.ToUpper()==".PNG"); 
             foreach (var img in images)
             {
 
-                var imgVM = new DocumentVM { FileName=img.DocName, FileExtn=img.Extension };
-                imgVM.FileKey = img.DocKey;
+                var imgVM = new DocumentVM { FileName=img.FileName, FileKey=img.FileAlias};
+                imgVM.FileExtn = Path.GetExtension(img.FileName);
                
                 if(imgVM.FileExtn.ToUpper()==".JPG" || imgVM.FileExtn.ToUpper()==".PNG")
                     bugVm.Images.Add(imgVM);
@@ -353,7 +359,7 @@ namespace Planner.Controllers
                     bugVm.Attachments.Add(imgVM);
 
             }
-           */
+           
 
        
             LoadComments(id, bugVm);

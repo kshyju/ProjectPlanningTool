@@ -45,6 +45,7 @@ namespace TechiesWeb.TeamBins.ViewModels
         public string StatusCode { set; get; }
         public string OpenedBy { set; get; }
         public string LastModifiedBy { set; get; }
+        public string Iteration { set; get; }
 
         public int ProjectID { set; get; }
         public string Project { get; set; }
@@ -80,7 +81,7 @@ namespace TechiesWeb.TeamBins.ViewModels
     
     }
 
-    public class CreateBug : IssueVM
+    public class CreateIssue : IssueVM
     {
 
         public bool IsFromModalWindow { set; get; }
@@ -92,6 +93,7 @@ namespace TechiesWeb.TeamBins.ViewModels
  
         public int SelectedCategory { set; get; }
 
+        public string SelectedIteration { set; get; }
      
          public int SelectedCycle { set; get; }
 
@@ -100,12 +102,13 @@ namespace TechiesWeb.TeamBins.ViewModels
         public List<SelectListItem> Projects { set; get; }
         public List<SelectListItem> Priorities { set; get; }
         public List<SelectListItem> Cycles { set; get; }
+        public List<SelectListItem> Iterations { set; get; }
 
         public string Version { set; get; }
 
         public List<HttpPostedFileBase> files { set; get; }
 
-        public CreateBug()
+        public CreateIssue()
         {
             files = new List<HttpPostedFileBase>();
         }

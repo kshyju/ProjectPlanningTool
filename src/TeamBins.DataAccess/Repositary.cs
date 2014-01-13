@@ -1,12 +1,8 @@
-using System.Collections.Generic;
-
 using SmartPlan.DataAccess;
-
-
-using System.Linq;
 using System;
+using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Objects;
+using System.Linq;
 namespace Planner.DataAccess
 {
 
@@ -54,17 +50,17 @@ namespace Planner.DataAccess
 
           
         }
-        /*
+        
 
-      /*  public Document GetDocument(string documentKey)
+        public Document GetDocument(string fileAlias)
         {
-            throw new System.NotImplementedException();
+            return db.Documents.FirstOrDefault(s => s.FileAlias == fileAlias);            
         }
         
-        public List<Document> GetDocuments(int parentId, string type)
+        public List<Document> GetDocuments(int parentId)
         {
-            throw new System.NotImplementedException();
-        }*/
+            return db.Documents.Where(s => s.ParentID == parentId).ToList();
+        }
 /*
         public List<Bug> GetBugs(int page, int size)
         {
@@ -118,12 +114,15 @@ namespace Planner.DataAccess
             db.SaveChanges();
             return new OperationStatus { Status = true, OperationID = issue.ID };
         }
-        /*
+       
        public OperationStatus SaveDocument(Document image)
         {
-           throw new System.NotImplementedException();
+            image.CreatedDate = DateTime.Now;
+            db.Documents.Add(image);
+            db.SaveChanges();
+            return new OperationStatus { Status = true };
         }
-    */
+    
         public Project SaveProject(Project project)
         {
             project.CreatedDate = DateTime.Now;

@@ -135,6 +135,7 @@
           <Property Name="CategoryID" Type="int" Nullable="false" />
           <Property Name="StatusID" Type="int" Nullable="false" />
           <Property Name="ProjectID" Type="int" Nullable="false" />
+          <Property Name="Location" Type="varchar" MaxLength="5" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="CreatedByID" Type="int" Nullable="false" />
           <Property Name="ModifiedDate" Type="datetime" />
@@ -665,6 +666,7 @@
           <NavigationProperty Name="Comments" Relationship="TeamBinsModel.FK_Comment_Issue" FromRole="Issue" ToRole="Comment" />
           <NavigationProperty Name="IssueMembers" Relationship="TeamBinsModel.FK_IssueMember_Issue" FromRole="Issue" ToRole="IssueMember" />
           <NavigationProperty Name="Documents" Relationship="TeamBinsModel.FK_Document_Issue" FromRole="Issue" ToRole="Document" />
+          <Property Type="String" Name="Location" MaxLength="5" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_Issue_Category">
           <End Type="TeamBinsModel.Category" Role="Category" Multiplicity="1" />
@@ -1006,6 +1008,7 @@
           <EntitySetMapping Name="Issues">
             <EntityTypeMapping TypeName="TeamBinsModel.Issue">
               <MappingFragment StoreEntitySet="Issue">
+                <ScalarProperty Name="Location" ColumnName="Location" />
                 <ScalarProperty Name="ModifiedByID" ColumnName="ModifiedByID" />
                 <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
                 <ScalarProperty Name="CreatedByID" ColumnName="CreatedByID" />

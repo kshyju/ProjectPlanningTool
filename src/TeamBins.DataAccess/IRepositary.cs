@@ -13,8 +13,8 @@ namespace Planner.DataAccess
     public interface IRepositary : IDisposable  
     {
         bool DeleteProject(int projectId);
-      //  Document GetDocument(string documentKey);
-     //   List<Document> GetDocuments(int parentId, string type);
+        Document GetDocument(string documentKey);
+        List<Document> GetDocuments(int parentId);
        // List<Bug> GetBugs(int page, int size);
         IEnumerable<Project> GetProjects();
         Project GetProject(int projectId);
@@ -25,7 +25,7 @@ namespace Planner.DataAccess
         List<Category> GetCategories();
      ////   OperationStatus SaveBug(Bug bug);
         OperationStatus SaveIssue(Issue bug);
-       // OperationStatus SaveDocument(Document image);
+        OperationStatus SaveDocument(Document image);
         Project SaveProject(Project project);
         OperationStatus SaveProjectMember(ProjectMember projectMember);
        // Bug GetBug(int id);

@@ -1,4 +1,4 @@
-﻿@model TechiesWeb.TeamBins.ViewModels.CreateBug
+﻿@model TechiesWeb.TeamBins.ViewModels.CreateIssue
 
         @using (Html.BeginForm("Add", "Issues", FormMethod.Post, new { enctype = "multipart/form-data" }))
         {
@@ -39,6 +39,16 @@
                                             <th>Status</th>
                                             <td>
                                                 @Html.DropDownListFor(x => x.SelectedStatus, Model.Statuses, "Select", new { @class = "kendoDropDown" })
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Iteration</th>
+                                            <td>
+                                                @Html.DropDownListFor(x => x.SelectedIteration, Model.Iterations, "Select", new { @class = "kendoDropDown" })
+                                            </td>
+                                            <th>Status</th>
+                                            <td>
+                                               
                                             </td>
                                         </tr>
                                     </table>

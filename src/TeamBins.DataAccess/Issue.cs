@@ -33,6 +33,7 @@ namespace SmartPlan.DataAccess
         public int CreatedByID { get; set; }
         public Nullable<System.DateTime> ModifiedDate { get; set; }
         public Nullable<int> ModifiedByID { get; set; }
+        public string Location { get; set; }
     
         public virtual Category Category { get; set; }
         public virtual Priority Priority { get; set; }
