@@ -18,7 +18,7 @@
                 {
                     newRowClass="trEven";
                 }               
-                var newRow = "<tr class='" + newRowClass + "'><td>" + data.Item.ID + "</td><td><a class='popup' href='" +editIssueUrl+ "/"+data.Item.ID + "'>" + data.Item.Title + "</a></td><td>" + data.Item.OpenedBy + "</td><td>" + data.Item.Priority + "</td><td>" + data.Item.Status + "</td><td>" + data.Item.CreatedDate + "</td></tr>";
+                var newRow = "<tr class='" + newRowClass + "'><td>" + data.Item.ID + "</td><td><div class='issue-icon-" + data.Item.Category + "' title='" + data.Item.Category + "'></div></td><td><a class='popup' href='" + editIssueUrl + "/" + data.Item.ID + "'>" + data.Item.Title + "</a></td><td>" + data.Item.OpenedBy + "</td><td>" + data.Item.Priority + "</td><td>" + data.Item.Status + "</td><td>" + data.Item.CreatedDate + "</td></tr>";
 
                 secondRow.before(newRow);
                 if ($("#myonoffswitch").is(":checked")) {                    
@@ -28,12 +28,7 @@
         });
     });
 
-    //Show popup on clicking the link
-    $(document).on("click", "a.popup", function (e) {
-        e.preventDefault();
-        var _this = $(this);
-        ShowModel(_this.attr("href"), _this.text());
-    });
+   
     //Save the user preference to session
     $("#myonoffswitch").click(function () {
         var switchVal = $(this).is(":checked");
@@ -42,8 +37,8 @@
 
     //Auto complete for assign issue member
     $("#txtAssignMember").autocomplete({
-        source: "../../Projects/members/" + $("#ProjectID").val(),
-        minLength: 2,
+        source: "../../Users/TeamMembers",
+        minLength: 1,
         select: function (event, ui) {
            
             //Save it now

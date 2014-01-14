@@ -744,7 +744,7 @@ div.dashboardItem
 {
 	padding:3px;
 	border:1px solid #76a7fa;
-	overflow:auto; width:400px;border-top: 8px solid #76a7fa;border-bottom: 1px solid #76a7fa;
+	overflow:auto; border-top: 8px solid #76a7fa;border-bottom: 1px solid #76a7fa;
 	margin:10px;
 }
 	div.dashboardItem ul
@@ -942,4 +942,7 @@ color: green;
     display: block;
     height: 24px;
     width: 24px;
+}
+.dbItemContainer {
+    width: 33%; float: left;
 }

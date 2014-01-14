@@ -160,6 +160,7 @@
     <Compile Include="Controllers\ProjectsController.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -420,6 +421,8 @@
     <Content Include="Views\Account\Settings.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\GettingStarted.cshtml" />
+    <Content Include="Views\Users\Index.cshtml" />
+    <Content Include="Views\Users\Add.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

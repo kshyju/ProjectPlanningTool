@@ -33,6 +33,14 @@
         function ShowModel(url,title) {            
             $('#modal').modal({ remote: url });
         }
+        $(function () {
+            //Show popup on clicking the link
+            $(document).on("click", "a.popup", function (e) {
+                e.preventDefault();
+                var _this = $(this);
+                ShowModel(_this.attr("href"), _this.text());
+            });
+        });
     </script>
 </body>
 

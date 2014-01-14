@@ -8,7 +8,6 @@ using Planner.DataAccess;
 using SmartPlan.Hubs;
 using SmartPlan.Services;
 using SmartPlan.ViewModels;
-
 using TechiesWeb.TeamBins.ViewModels;
 using SmartPlan.DataAccess;
 using TechiesWeb.TeamBins.Infrastructure;
@@ -43,8 +42,7 @@ namespace Planner.Controllers
         public ActionResult Join(AccountSignupVM model)
         {
             if (ModelState.IsValid)
-            {
-                
+            {                
                 var user = repo.GetUser(model.Email);
                 if (user == null)
                 {
@@ -53,8 +51,19 @@ namespace Planner.Controllers
                    var result = repo.SaveUser(newUser);
                     if (result.Status)
                     {
-                        var team = new Team { Name = newUser.ID.ToString() };
+                        var team = new Team { Name = newUser.FirstName.Replace(" ","-") };
+                        if (team.Name.Length > 19)
+                            team.Name = team.Name.Substring(0, 19);
+
                         var res = repo.SaveTeam(team);
+
+                        var teamMember = new TeamMember { MemberID = result.OperationID, TeamID = team.ID, CreatedByID = result.OperationID };
+                        repo.SaveTeamMember(teamMember);
+                        if (teamMember.ID > 0)
+                        {
+                            SetUserIDToSession(result.OperationID, team.ID);
+                        }
+
                        /* var notificationVM = new NotificationVM { Title = "New User Joined", Message = model.Name + " joined" };
                         var context = GlobalHost.ConnectionManager.GetHubContext<UserHub>();
                         context.Clients.All.ShowNotificaion(notificationVM);*/
@@ -75,7 +84,7 @@ namespace Planner.Controllers
         }
         public ActionResult Login()
         {
-            return View(new LoginVM { Email = "admin@team", Password = "admin" });
+            return View(new LoginVM { Email = "shyju@softura.com", Password = "admin" });
         }
         [HttpPost]
         public ActionResult Login(LoginVM model)
@@ -89,6 +98,10 @@ namespace Planner.Controllers
                   // var s= PasswordHash.ValidatePassword(model.Password,user.HA);
                    if (user.Password==model.Password)
                    {
+                       var team=user.TeamMembers1.Where(s=>s.MemberID==user.ID).FirstOrDefault();
+                       // Assuming the user has associated with only one team.
+                       // TO DO : Get this from the user selection (like github /trello)
+                       SetUserIDToSession(user.ID, team.ID);
                        return RedirectToAction("Index", "Dashboard");
                    }
                 }
@@ -223,7 +236,7 @@ namespace Planner.Controllers
         private List<SelectListItem> GetProjectListItem()
         {           
             var projects = repo.GetProjects().
-                                Where(s => s.ProjectMembers.Any(b => b.UserID == UserID)).
+                                Where(s=>s.TeamID==TeamID).
                                 Select(c=> new SelectListItem { Value=c.ID.ToString(), Text=c.Name}).
                                 ToList();
 

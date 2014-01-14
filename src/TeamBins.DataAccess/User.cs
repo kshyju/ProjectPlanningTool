@@ -23,8 +23,11 @@ namespace SmartPlan.DataAccess
             this.Projects = new HashSet<Project>();
             this.Comments = new HashSet<Comment>();
             this.IssueMembers = new HashSet<IssueMember>();
-            this.IssueMembers1 = new HashSet<IssueMember>();
+            this.IssueMembersAddedByMe = new HashSet<IssueMember>();
             this.Documents = new HashSet<Document>();
+            this.Activities = new HashSet<Activity>();
+            this.TeamMembersCreatedByMe = new HashSet<TeamMember>();
+            this.TeamMembers1 = new HashSet<TeamMember>();
         }
     
         public int ID { get; set; }
@@ -44,7 +47,10 @@ namespace SmartPlan.DataAccess
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual Project DefaultProject { get; set; }
         public virtual ICollection<IssueMember> IssueMembers { get; set; }
-        public virtual ICollection<IssueMember> IssueMembers1 { get; set; }
+        public virtual ICollection<IssueMember> IssueMembersAddedByMe { get; set; }
         public virtual ICollection<Document> Documents { get; set; }
+        public virtual ICollection<Activity> Activities { get; set; }
+        public virtual ICollection<TeamMember> TeamMembersCreatedByMe { get; set; }
+        public virtual ICollection<TeamMember> TeamMembers1 { get; set; }
     }
 }

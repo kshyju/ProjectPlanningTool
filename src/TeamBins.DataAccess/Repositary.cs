@@ -198,14 +198,14 @@ namespace Planner.DataAccess
             db.TeamMemberRequests.Add(request);
             db.SaveChanges();
             return request;
-        }
+        }*/
         public TeamMember SaveTeamMember(TeamMember teamMember)
         {
             teamMember.CreatedDate = DateTime.Now;
             db.TeamMembers.Add(teamMember);
             db.SaveChanges();
             return teamMember;
-        }*/
+        }
       
         public IEnumerable<Issue> GetIssues()
         {
@@ -214,7 +214,7 @@ namespace Planner.DataAccess
 
         public Issue GetIssue(int issueId)
         {
-            return db.Issues.Include(s=>s.Priority).Include(x=>x.Status).FirstOrDefault(s => s.ID == issueId);
+            return db.Issues.Include(s=>s.Priority).Include(x=>x.Status).Include(s=>s.Category).FirstOrDefault(s => s.ID == issueId);
         }
   /*
         public List<TechiesWeb.TeamBins.Entities.User> GetTeamMembers(int teamId)

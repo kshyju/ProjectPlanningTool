@@ -19,12 +19,12 @@ namespace SmartPlan.Controllers
             repo = new Repositary();
             userService = new UserService(repo);
         }
-
         
         public ActionResult Index()
         {
             var vm = new TeamProjectListVM ();           
-            var projectList = repo.GetProjects().Where(s => s.ProjectMembers.Any(b => b.UserID == UserID)).ToList();
+            var projectList = repo.GetProjects().Where(s=>s.TeamID==TeamID).ToList();
+            //.Where(s => s.ProjectMembers.Any(b => b.UserID == UserID)).ToList();
 
             foreach (var project in projectList)
             {
@@ -67,15 +67,17 @@ namespace SmartPlan.Controllers
                     return Json(new { Status="Error", Message= "Project name exists"});
 
 
-                var project = new Project { Name = model.Name, ID=model.ID };
+                var project = new Project { Name = model.Name, ID=model.ID, TeamID=TeamID };
                 project.CreatedByID = UserID;               
                 var res=repo.SaveProject(project);
                 if (res!=null)
                 {
                     //Add as Project member
+                 
+                    /*
                     var projectMember = new ProjectMember { ProjectID = project.ID, UserID = UserID, CreatedDate = DateTime.Now };
                     var result = repo.SaveProjectMember(projectMember);
-
+                    */
                     var projectCount = repo.GetProjects()
                                     .Where(s => s.ProjectMembers.Any(b => b.UserID == UserID)).Count();
 
@@ -148,18 +150,18 @@ namespace SmartPlan.Controllers
                 return Json(new { Status = "Error", Message = "Error adding project member" });
             }
         }
-
+        /*
         // JSON for auto complete
         public ActionResult Members(int id,string term)
         {
             //Returns project member list in JSON format
             var project= repo.GetProject(id);
             
-            var projectMembers=project.ProjectMembers.Where(s=>s.Member.FirstName.StartsWith(term)).Select(item => new { value = item.Member.FirstName, id = item.Member.ID.ToString() }).ToList();
+            var projectMembers=project.ProjectMembers.Where(s=>s.Member.FirstName.StartsWith(term,StringComparison.OrdinalIgnoreCase)).Select(item => new { value = item.Member.FirstName, id = item.Member.ID.ToString() }).ToList();
             return Json( projectMembers , JsonRequestBehavior.AllowGet);
             
              
-        }
+        }*/
 
     }
 }

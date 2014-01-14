@@ -25,7 +25,7 @@ namespace Planner.Controllers
             try
             {
                 BugsListVM bugListVM = new BugsListVM();
-                var projectList = repo.GetProjects().Where(s => s.ProjectMembers.Any(b => b.UserID == UserID)).ToList();
+                var projectList = repo.GetProjects().Where(s => s.TeamID==TeamID).ToList();
                 if (projectList.Count > 0)
                 {
                     bugListVM = GetBugList("BKLOG");
@@ -44,7 +44,7 @@ namespace Planner.Controllers
             try
             {
                 BugsListVM bugListVM = new BugsListVM();
-                var projectList = repo.GetProjects().Where(s => s.ProjectMembers.Any(b => b.UserID == UserID)).ToList();
+                var projectList = repo.GetProjects().Where(s => s.TeamID==TeamID).ToList();
                 if (projectList.Count > 0)
                 {
                     bugListVM = GetBugList("ARCHV");
@@ -64,7 +64,8 @@ namespace Planner.Controllers
             try
             {
                 BugsListVM bugListVM = new BugsListVM();
-                var projectList = repo.GetProjects().Where(s => s.ProjectMembers.Any(b => b.UserID == UserID)).ToList();
+                var projectList = repo.GetProjects().Where(s => s.TeamID == TeamID).ToList();
+                //.Where(s => s.ProjectMembers.Any(b => b.UserID == UserID)).ToList();
                 if (projectList.Count > 0)
                 {
                     bugListVM = GetBugList("SPRNT");
@@ -83,8 +84,8 @@ namespace Planner.Controllers
         {
             var vm = new BugsListVM { CurrentTab = iteration };
 
-            var bugList = repo.GetIssues().Where(g => g.Project.ProjectMembers.Any(b => b.UserID == UserID) && g.Location==iteration).OrderByDescending(s=>s.ID).Take(size).ToList();
-                        
+            var bugList = repo.GetIssues().Where(g=>g.TeamID==TeamID && g.Location==iteration).OrderByDescending(s=>s.ID).Take(size).ToList();
+            //g => g.Project.ProjectMembers.Any(b => b.UserID == UserID)         
             foreach (var bug in bugList)
             {
                var bugVM = new IssueVM { ID = bug.ID, Title = bug.Title, Description = bug.Description };
@@ -150,7 +151,7 @@ namespace Planner.Controllers
 
                   
 
-                 //   bug.Team.ID = 1;
+                    bug.TeamID = TeamID;
                     bug.CreatedByID = UserID;
                    // Issue existingIssue=new Issue();
                     LoadDefaultIssueValues(bug, model);
@@ -177,6 +178,7 @@ namespace Planner.Controllers
                                 issueVM.Priority = issue.Priority.Name;
                                 issueVM.Status = issue.Status.Name;
                                 issueVM.OpenedBy = issue.CreatedBy.FirstName;
+                                issueVM.Category = issue.Category.Name;
                                 issueVM.CreatedDate = issue.CreatedDate.ToShortDateString();
 
                                 return Json(new { Status = "Success", Item = issueVM });
@@ -270,7 +272,7 @@ namespace Planner.Controllers
             if (issue.CategoryID == 0)
                 issue.CategoryID = 1;
 
-            issue.Location = model.SelectedIteration;
+            issue.Location = (string.IsNullOrEmpty(model.SelectedIteration)?"SPRNT":model.SelectedIteration);
 
         }
        /*

@@ -34,6 +34,7 @@ namespace SmartPlan.DataAccess
         public Nullable<System.DateTime> ModifiedDate { get; set; }
         public Nullable<int> ModifiedByID { get; set; }
         public string Location { get; set; }
+        public int TeamID { get; set; }
     
         public virtual Category Category { get; set; }
         public virtual Priority Priority { get; set; }
@@ -44,5 +45,6 @@ namespace SmartPlan.DataAccess
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<IssueMember> IssueMembers { get; set; }
         public virtual ICollection<Document> Documents { get; set; }
+        public virtual Team Team { get; set; }
     }
 }

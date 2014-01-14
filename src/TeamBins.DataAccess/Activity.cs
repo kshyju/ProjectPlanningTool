@@ -12,25 +12,18 @@ namespace SmartPlan.DataAccess
     using System;
     using System.Collections.Generic;
     
-    public partial class Project
+    public partial class Activity
     {
-        public Project()
-        {
-            this.Issues = new HashSet<Issue>();
-            this.ProjectMembers = new HashSet<ProjectMember>();
-            this.Users = new HashSet<User>();
-        }
-    
         public int ID { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public System.DateTime CreatedDate { get; set; }
+        public int ObjectID { get; set; }
+        public string ObjectType { get; set; }
+        public string Activity1 { get; set; }
+        public string OldState { get; set; }
+        public string NewState { get; set; }
         public int CreatedByID { get; set; }
-        public Nullable<int> TeamID { get; set; }
+        public System.DateTime CreatedDate { get; set; }
+        public string ActivityDesc { get; set; }
     
-        public virtual ICollection<Issue> Issues { get; set; }
         public virtual User User { get; set; }
-        public virtual ICollection<ProjectMember> ProjectMembers { get; set; }
-        public virtual ICollection<User> Users { get; set; }
     }
 }
