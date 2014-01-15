@@ -334,7 +334,7 @@ namespace Planner.DataAccess
 
         public IEnumerable<Team> GetTeams(int userId)
         {
-            throw new NotImplementedException();
+            return db.Teams.Where(s => s.TeamMembers.Any(f => f.MemberID == userId));
         }
     }
 }

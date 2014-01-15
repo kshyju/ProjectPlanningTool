@@ -20,6 +20,23 @@ namespace SmartPlan.Controllers
             repo=new Repositary();
         }
 
+        public ActionResult Teams()
+        {
+            var vm = new UsersCurrentTeamVM();
+            var teams = repo.GetTeams(UserID).ToList();
+            foreach (var team in teams)
+            {
+                var teamVM = new TeamVM { ID = team.ID, Name = team.Name };
+                vm.Teams.Add(teamVM);
+                if (team.ID == TeamID)
+                    vm.CurrentTeamName = team.Name;
+            }
+            vm.SelectedTeam = TeamID;
+
+            return PartialView(vm);
+        }
+
+
         public ActionResult Index()
         {
             var vm = new DashBoardVM();

@@ -179,6 +179,7 @@
     <Compile Include="ViewModels\DashBoardVM.cs" />
     <Compile Include="ViewModels\ProjectVM.cs" />
     <Compile Include="ViewModels\TeamVM.cs" />
+    <Compile Include="ViewModels\UsersCurrentTeamVM.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
@@ -424,6 +425,7 @@
     <Content Include="Views\Users\Index.cshtml" />
     <Content Include="Views\Users\Add.cshtml" />
     <Content Include="Views\Users\WelcomeToTeam.cshtml" />
+    <Content Include="Views\Dashboard\Teams.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
