@@ -36,8 +36,7 @@ namespace Planner.DataAccess
 
         IEnumerable<Team> GetTeams(int userId);
         Team GetTeam(int teamId);
-        Team SaveTeam(Team team);
-        //TeamMemberRequest AddTeamMemberRequest(TeamMemberRequest request);
+        Team SaveTeam(Team team);       
         TeamMember SaveTeamMember(TeamMember teamMember);
         IEnumerable<Issue> GetIssues();
         Issue GetIssue(int issueId);
@@ -50,7 +49,8 @@ namespace Planner.DataAccess
         //List<User> GetNonIssueMembers(int teamId, int issueId);
         OperationStatus SaveIssueMember(int issueId, int memberId, int addedBy);
         OperationStatus DeleteIssueMember(int issueId, int memberId);
-     
+        OperationStatus SaveTeamMemberRequest(TeamMemberRequest teamMemberRequest);
+        TeamMemberRequest GetTeamMemberRequest(string activationCode);
 
  
        

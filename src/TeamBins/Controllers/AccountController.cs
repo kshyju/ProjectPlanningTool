@@ -31,9 +31,9 @@ namespace Planner.Controllers
         {
             return View();
         }
-        public ActionResult Join()
+        public ActionResult Join(string returnurl="")
         {
-            return View(new AccountSignupVM());
+            return View(new AccountSignupVM { ReturnUrl = returnurl });
         }
 
 
@@ -61,12 +61,15 @@ namespace Planner.Controllers
                         repo.SaveTeamMember(teamMember);
                         if (teamMember.ID > 0)
                         {
-                            SetUserIDToSession(result.OperationID, team.ID);
+                            SetUserIDToSession(result.OperationID, team.ID,model.Name);
                         }
 
                        /* var notificationVM = new NotificationVM { Title = "New User Joined", Message = model.Name + " joined" };
                         var context = GlobalHost.ConnectionManager.GetHubContext<UserHub>();
                         context.Clients.All.ShowNotificaion(notificationVM);*/
+
+                        if(!String.IsNullOrEmpty(model.ReturnUrl))
+                            return RedirectToAction("JoinMyTeam", "Users", new { id = model.ReturnUrl });
 
                         return RedirectToAction("AccountCreated");
                     }
@@ -101,7 +104,7 @@ namespace Planner.Controllers
                        var team=user.TeamMembers1.Where(s=>s.MemberID==user.ID).FirstOrDefault();
                        // Assuming the user has associated with only one team.
                        // TO DO : Get this from the user selection (like github /trello)
-                       SetUserIDToSession(user.ID, team.ID);
+                       SetUserIDToSession(user.ID, team.ID, user.FirstName);
                        return RedirectToAction("Index", "Dashboard");
                    }
                 }

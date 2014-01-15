@@ -12,17 +12,16 @@ namespace SmartPlan.DataAccess
     using System;
     using System.Collections.Generic;
     
-    public partial class Activity
+    public partial class TeamMemberRequest
     {
         public int ID { get; set; }
-        public int ObjectID { get; set; }
-        public string ObjectType { get; set; }
-        public string ActivityDesc { get; set; }
-        public string OldState { get; set; }
-        public string NewState { get; set; }
+        public string EmailAddress { get; set; }
+        public int TeamID { get; set; }
+        public string ActivationCode { get; set; }
         public int CreatedByID { get; set; }
         public System.DateTime CreatedDate { get; set; }
     
+        public virtual Team Team { get; set; }
         public virtual User CreatedBy { get; set; }
     }
 }

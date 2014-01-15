@@ -423,6 +423,7 @@
     <Content Include="Views\Home\GettingStarted.cshtml" />
     <Content Include="Views\Users\Index.cshtml" />
     <Content Include="Views\Users\Add.cshtml" />
+    <Content Include="Views\Users\WelcomeToTeam.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

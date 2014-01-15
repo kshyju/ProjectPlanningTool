@@ -19,6 +19,7 @@
           <EntitySet Name="Task" EntityType="TeamBinsModel.Store.Task" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Team" EntityType="TeamBinsModel.Store.Team" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="TeamMember" EntityType="TeamBinsModel.Store.TeamMember" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="TeamMemberRequest" EntityType="TeamBinsModel.Store.TeamMemberRequest" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="User" EntityType="TeamBinsModel.Store.User" store:Type="Tables" Schema="dbo" />
           <AssociationSet Name="FK_Activity_User" Association="TeamBinsModel.Store.FK_Activity_User">
             <End Role="User" EntitySet="User" />
@@ -111,6 +112,14 @@
           <AssociationSet Name="FK_TeamMember_Team" Association="TeamBinsModel.Store.FK_TeamMember_Team">
             <End Role="Team" EntitySet="Team" />
             <End Role="TeamMember" EntitySet="TeamMember" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TeamMemberRequest_CreatedBy" Association="TeamBinsModel.Store.FK_TeamMemberRequest_CreatedBy">
+            <End Role="User" EntitySet="User" />
+            <End Role="TeamMemberRequest" EntitySet="TeamMemberRequest" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TeamMemberRequest_Team" Association="TeamBinsModel.Store.FK_TeamMemberRequest_Team">
+            <End Role="Team" EntitySet="Team" />
+            <End Role="TeamMemberRequest" EntitySet="TeamMemberRequest" />
           </AssociationSet>
           <AssociationSet Name="FK_User_Default_Project" Association="TeamBinsModel.Store.FK_User_Default_Project">
             <End Role="Project" EntitySet="Project" />
@@ -252,6 +261,17 @@
           <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="MemberID" Type="int" Nullable="false" />
           <Property Name="TeamID" Type="int" Nullable="false" />
+          <Property Name="CreatedByID" Type="int" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TeamMemberRequest">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="EmailAddress" Type="varchar" Nullable="false" MaxLength="100" />
+          <Property Name="TeamID" Type="int" Nullable="false" />
+          <Property Name="ActivationCode" Type="varchar" Nullable="false" MaxLength="50" />
           <Property Name="CreatedByID" Type="int" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
         </EntityType>
@@ -544,6 +564,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_TeamMemberRequest_CreatedBy">
+          <End Role="User" Type="TeamBinsModel.Store.User" Multiplicity="1" />
+          <End Role="TeamMemberRequest" Type="TeamBinsModel.Store.TeamMemberRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TeamMemberRequest">
+              <PropertyRef Name="CreatedByID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TeamMemberRequest_Team">
+          <End Role="Team" Type="TeamBinsModel.Store.Team" Multiplicity="1" />
+          <End Role="TeamMemberRequest" Type="TeamBinsModel.Store.TeamMemberRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Team">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TeamMemberRequest">
+              <PropertyRef Name="TeamID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_User_Default_Project">
           <End Role="Project" Type="TeamBinsModel.Store.Project" Multiplicity="0..1" />
           <End Role="User" Type="TeamBinsModel.Store.User" Multiplicity="*" />
@@ -649,11 +693,6 @@
             <End Role="User" EntitySet="Users" />
             <End Role="Document" EntitySet="Documents" />
           </AssociationSet>
-          <EntitySet Name="Activities" EntityType="TeamBinsModel.Activity" />
-          <AssociationSet Name="FK_Activity_User" Association="TeamBinsModel.FK_Activity_User">
-            <End Role="User" EntitySet="Users" />
-            <End Role="Activity" EntitySet="Activities" />
-          </AssociationSet>
           <EntitySet Name="TeamMembers" EntityType="TeamBinsModel.TeamMember" />
           <AssociationSet Name="FK_TeamMember_Team" Association="TeamBinsModel.FK_TeamMember_Team">
             <End Role="Team" EntitySet="Teams" />
@@ -670,6 +709,20 @@
           <AssociationSet Name="FK_Issue_Team" Association="TeamBinsModel.FK_Issue_Team">
             <End Role="Team" EntitySet="Teams" />
             <End Role="Issue" EntitySet="Issues" />
+          </AssociationSet>
+          <EntitySet Name="TeamMemberRequests" EntityType="TeamBinsModel.TeamMemberRequest" />
+          <AssociationSet Name="FK_TeamMemberRequest_Team" Association="TeamBinsModel.FK_TeamMemberRequest_Team">
+            <End Role="Team" EntitySet="Teams" />
+            <End Role="TeamMemberRequest" EntitySet="TeamMemberRequests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TeamMemberRequest_CreatedBy" Association="TeamBinsModel.FK_TeamMemberRequest_CreatedBy">
+            <End Role="User" EntitySet="Users" />
+            <End Role="TeamMemberRequest" EntitySet="TeamMemberRequests" />
+          </AssociationSet>
+          <EntitySet Name="Activities" EntityType="TeamBinsModel.Activity" />
+          <AssociationSet Name="FK_Activity_User" Association="TeamBinsModel.FK_Activity_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Activity" EntitySet="Activities" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="Category">
@@ -705,6 +758,7 @@
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="TeamMembers" Relationship="TeamBinsModel.FK_TeamMember_Team" FromRole="Team" ToRole="TeamMember" />
           <NavigationProperty Name="Issues" Relationship="TeamBinsModel.FK_Issue_Team" FromRole="Team" ToRole="Issue" />
+          <NavigationProperty Name="TeamMemberRequests" Relationship="TeamBinsModel.FK_TeamMemberRequest_Team" FromRole="Team" ToRole="TeamMemberRequest" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -728,9 +782,10 @@
           <NavigationProperty Name="IssueMembers" Relationship="TeamBinsModel.FK_IssueMember_IssueMember" FromRole="User" ToRole="IssueMember" />
           <NavigationProperty Name="IssueMembersAddedByMe" Relationship="TeamBinsModel.FK_IssueMember_User_CreatedBy" FromRole="User" ToRole="IssueMember" />
           <NavigationProperty Name="Documents" Relationship="TeamBinsModel.FK_Document_User" FromRole="User" ToRole="Document" />
-          <NavigationProperty Name="Activities" Relationship="TeamBinsModel.FK_Activity_User" FromRole="User" ToRole="Activity" />
           <NavigationProperty Name="TeamMembersCreatedByMe" Relationship="TeamBinsModel.FK_TeamMember_CreatedBy" FromRole="User" ToRole="TeamMember" />
           <NavigationProperty Name="TeamMembers1" Relationship="TeamBinsModel.FK_TeamMember_Member" FromRole="User" ToRole="TeamMember" />
+          <NavigationProperty Name="TeamMemberRequests" Relationship="TeamBinsModel.FK_TeamMemberRequest_CreatedBy" FromRole="User" ToRole="TeamMemberRequest" />
+          <NavigationProperty Name="Activities" Relationship="TeamBinsModel.FK_Activity_User" FromRole="User" ToRole="Activity" />
           </EntityType>
         <EntityType Name="Task">
           <Key>
@@ -1072,33 +1127,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="Activity">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="Int32" Name="ObjectID" Nullable="false" />
-          <Property Type="String" Name="ObjectType" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="Activity1" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="OldState" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="NewState" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Type="Int32" Name="CreatedByID" Nullable="false" />
-          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="3" />
-          <NavigationProperty Name="User" Relationship="TeamBinsModel.FK_Activity_User" FromRole="Activity" ToRole="User" />
-          <Property Type="String" Name="ActivityDesc" MaxLength="100" FixedLength="false" Unicode="false" />
-        </EntityType>
-        <Association Name="FK_Activity_User">
-          <End Type="TeamBinsModel.User" Role="User" Multiplicity="1" />
-          <End Type="TeamBinsModel.Activity" Role="Activity" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Activity">
-              <PropertyRef Name="CreatedByID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="TeamMember">
           <Key>
             <PropertyRef Name="ID" />
@@ -1157,6 +1185,69 @@
             </Principal>
             <Dependent Role="Issue">
               <PropertyRef Name="TeamID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="TeamMemberRequest">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="EmailAddress" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="TeamID" Nullable="false" />
+          <Property Type="String" Name="ActivationCode" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="CreatedByID" Nullable="false" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Team" Relationship="TeamBinsModel.FK_TeamMemberRequest_Team" FromRole="TeamMemberRequest" ToRole="Team" />
+          <NavigationProperty Name="CreatedBy" Relationship="TeamBinsModel.FK_TeamMemberRequest_CreatedBy" FromRole="TeamMemberRequest" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_TeamMemberRequest_Team">
+          <End Type="TeamBinsModel.Team" Role="Team" Multiplicity="1" />
+          <End Type="TeamBinsModel.TeamMemberRequest" Role="TeamMemberRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Team">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TeamMemberRequest">
+              <PropertyRef Name="TeamID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TeamMemberRequest_CreatedBy">
+          <End Type="TeamBinsModel.User" Role="User" Multiplicity="1" />
+          <End Type="TeamBinsModel.TeamMemberRequest" Role="TeamMemberRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TeamMemberRequest">
+              <PropertyRef Name="CreatedByID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Activity">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="ObjectID" Nullable="false" />
+          <Property Type="String" Name="ObjectType" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="ActivityDesc" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="OldState" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="NewState" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="CreatedByID" Nullable="false" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="3" />
+          <NavigationProperty Name="CreatedBy" Relationship="TeamBinsModel.FK_Activity_User" FromRole="Activity" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_Activity_User">
+          <End Type="TeamBinsModel.User" Role="User" Multiplicity="1" />
+          <End Type="TeamBinsModel.Activity" Role="Activity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Activity">
+              <PropertyRef Name="CreatedByID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1306,20 +1397,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Activities">
-            <EntityTypeMapping TypeName="TeamBinsModel.Activity">
-              <MappingFragment StoreEntitySet="Activity">
-                <ScalarProperty Name="ActivityDesc" ColumnName="ActivityDesc" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedByID" ColumnName="CreatedByID" />
-                <ScalarProperty Name="NewState" ColumnName="NewState" />
-                <ScalarProperty Name="OldState" ColumnName="OldState" />
-                <ScalarProperty Name="ObjectType" ColumnName="ObjectType" />
-                <ScalarProperty Name="ObjectID" ColumnName="ObjectID" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="TeamMembers">
             <EntityTypeMapping TypeName="TeamBinsModel.TeamMember">
               <MappingFragment StoreEntitySet="TeamMember">
@@ -1327,6 +1404,32 @@
                 <ScalarProperty Name="CreatedByID" ColumnName="CreatedByID" />
                 <ScalarProperty Name="TeamID" ColumnName="TeamID" />
                 <ScalarProperty Name="MemberID" ColumnName="MemberID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TeamMemberRequests">
+            <EntityTypeMapping TypeName="TeamBinsModel.TeamMemberRequest">
+              <MappingFragment StoreEntitySet="TeamMemberRequest">
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedByID" ColumnName="CreatedByID" />
+                <ScalarProperty Name="ActivationCode" ColumnName="ActivationCode" />
+                <ScalarProperty Name="TeamID" ColumnName="TeamID" />
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Activities">
+            <EntityTypeMapping TypeName="TeamBinsModel.Activity">
+              <MappingFragment StoreEntitySet="Activity">
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedByID" ColumnName="CreatedByID" />
+                <ScalarProperty Name="NewState" ColumnName="NewState" />
+                <ScalarProperty Name="OldState" ColumnName="OldState" />
+                <ScalarProperty Name="ActivityDesc" ColumnName="ActivityDesc" />
+                <ScalarProperty Name="ObjectType" ColumnName="ObjectType" />
+                <ScalarProperty Name="ObjectID" ColumnName="ObjectID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

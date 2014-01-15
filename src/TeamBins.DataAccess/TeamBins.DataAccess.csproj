@@ -115,6 +115,9 @@
     <Compile Include="TeamMember.cs">
       <DependentUpon>TeamBinsData.tt</DependentUpon>
     </Compile>
+    <Compile Include="TeamMemberRequest.cs">
+      <DependentUpon>TeamBinsData.tt</DependentUpon>
+    </Compile>
     <Compile Include="User.cs">
       <DependentUpon>TeamBinsData.tt</DependentUpon>
     </Compile>

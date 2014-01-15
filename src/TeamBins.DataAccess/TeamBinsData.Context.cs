@@ -37,7 +37,8 @@ namespace SmartPlan.DataAccess
         public DbSet<Comment> Comments { get; set; }
         public DbSet<IssueMember> IssueMembers { get; set; }
         public DbSet<Document> Documents { get; set; }
-        public DbSet<Activity> Activities { get; set; }
         public DbSet<TeamMember> TeamMembers { get; set; }
+        public DbSet<TeamMemberRequest> TeamMemberRequests { get; set; }
+        public DbSet<Activity> Activities { get; set; }
     }
 }

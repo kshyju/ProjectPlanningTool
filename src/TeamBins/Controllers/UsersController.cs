@@ -66,12 +66,39 @@ namespace Planner.Controllers
                 }
                 else
                 {
+                    var teamMemberRequest = new TeamMemberRequest { EmailAddress = model.EmailAddress, CreatedByID = UserID };
+                    teamMemberRequest.TeamID = model.TeamID;
+                    teamMemberRequest.ActivationCode = model.TeamID + "-" + Guid.NewGuid().ToString("n");
+                    var resultNew = repo.SaveTeamMemberRequest(teamMemberRequest);
+                    if (resultNew.Status)
+                    {
+                        // Send Email
+                    }
                     // to do : Save to Req table and then send email to this member with a unique link
                 }
             }           
             return View(model);
         }
 
+        public ActionResult JoinMyTeam(string id)
+        {
+            // For users who received an email with the join link to join a team.
+            // The user must have created an account by now and coming back to this lin kafter registration
+            var teamMemberRequest = repo.GetTeamMemberRequest(id);
+            if (teamMemberRequest != null)
+            {
+                var user = repo.GetUser(teamMemberRequest.EmailAddress);
+                if (user.ID == UserID)
+                {
+                    //Correct user 
+                    return View("WelcomeToTeam");
+                }
+
+            }
+            return View("NotFound"); 
+        }
+
+        //JSON
         public JsonResult TeamMembers(string term)
         {
             //Returns project member list in JSON format

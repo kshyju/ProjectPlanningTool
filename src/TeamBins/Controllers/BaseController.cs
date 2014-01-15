@@ -5,10 +5,11 @@ namespace Planner.Controllers
 {
     public class BaseController : Controller
     {        
-        protected void SetUserIDToSession(int userId,int teamId)
+        protected void SetUserIDToSession(int userId,int teamId,string nickName)
         {
             Session["TB_UserID"]=userId;
             Session["TB_TeamID"] = teamId;
+            Session["TB_NickName"] = nickName;
         }       
         protected int UserID
         {

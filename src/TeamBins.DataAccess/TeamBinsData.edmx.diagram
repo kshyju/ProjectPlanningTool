@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="973fff3735af4dc7b583e60c12215cd6" Name="Diagram1" ZoomLevel="98">
+      <Diagram DiagramId="973fff3735af4dc7b583e60c12215cd6" Name="Diagram1" ZoomLevel="56">
         <EntityTypeShape EntityType="TeamBinsModel.Category" Width="1.5" PointX="3" PointY="5.25" IsExpanded="true" />
         <EntityTypeShape EntityType="TeamBinsModel.Priority" Width="1.5" PointX="3" PointY="7.5" IsExpanded="true" />
         <EntityTypeShape EntityType="TeamBinsModel.Status" Width="1.5" PointX="3" PointY="9.875" IsExpanded="true" />
@@ -36,13 +36,16 @@
         <EntityTypeShape EntityType="TeamBinsModel.Document" Width="1.5" PointX="7.2128557261139417" PointY="21.101297507575385" />
         <AssociationConnector Association="TeamBinsModel.FK_Document_Issue" />
         <AssociationConnector Association="TeamBinsModel.FK_Document_User" />
-        <EntityTypeShape EntityType="TeamBinsModel.Activity" Width="1.5" PointX="5.3963124032115157" PointY="21.540787647264445" />
-        <AssociationConnector Association="TeamBinsModel.FK_Activity_User" />
         <EntityTypeShape EntityType="TeamBinsModel.TeamMember" Width="1.5" PointX="13.125" PointY="2.375" />
         <AssociationConnector Association="TeamBinsModel.FK_TeamMember_Team" />
         <AssociationConnector Association="TeamBinsModel.FK_TeamMember_CreatedBy" />
         <AssociationConnector Association="TeamBinsModel.FK_TeamMember_Member" />
         <AssociationConnector Association="TeamBinsModel.FK_Issue_Team" />
+        <EntityTypeShape EntityType="TeamBinsModel.TeamMemberRequest" Width="1.5" PointX="7.8014037086634911" PointY="30.891219034274677" />
+        <AssociationConnector Association="TeamBinsModel.FK_TeamMemberRequest_Team" />
+        <AssociationConnector Association="TeamBinsModel.FK_TeamMemberRequest_CreatedBy" />
+        <EntityTypeShape EntityType="TeamBinsModel.Activity" Width="1.5" PointX="6.5265542727553072" PointY="19.619954043822343" />
+        <AssociationConnector Association="TeamBinsModel.FK_Activity_User" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

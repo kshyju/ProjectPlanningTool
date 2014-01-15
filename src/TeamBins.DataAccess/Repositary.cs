@@ -35,6 +35,20 @@ namespace Planner.DataAccess
             db.SaveChanges();
             return true;
         }
+        public OperationStatus SaveTeamMemberRequest(TeamMemberRequest teamMemberRequest)
+        {
+            try
+            {
+                teamMemberRequest.CreatedDate = DateTime.Now;
+                db.TeamMemberRequests.Add(teamMemberRequest);
+                db.SaveChanges();
+                return new OperationStatus { Status = true };
+            }
+            catch (Exception ex)
+            {
+                return OperationStatus.CreateFromException("Error in saving team member" , ex);
+            }
+        }
         public OperationStatus SaveProjectMember(ProjectMember projectMember)
         {
             try
@@ -313,7 +327,10 @@ namespace Planner.DataAccess
         {
             return db.Users.FirstOrDefault(s => s.EmailAddress == emailAddress);
         }
-
+        public TeamMemberRequest GetTeamMemberRequest(string activationCode)
+        {
+            return db.TeamMemberRequests.FirstOrDefault(s => s.ActivationCode == activationCode);
+        }
 
         public IEnumerable<Team> GetTeams(int userId)
         {

@@ -5,11 +5,13 @@
     <a href="@Url.Action("Index","Users")">Members</a>   
 </div>
 <div class="userInfo">
+    @if(Session["TB_NickName"]!=null)
+    {
     <span>Howdy, 
-    <a href="@Url.Action("EditProfile","Account")">Shyju</a>
-    
+    <a href="@Url.Action("EditProfile","Account")">@Session["TB_NickName"]</a>   
     
     </span>
     <img src="http://0.gravatar.com/avatar/8faa5e8a474933dd207c86fb886a7f28?s=26" />
          @Html.ActionLink("Logout", "Logout", "Account", null, new { @class="aLogout" })
+    }
 </div>
