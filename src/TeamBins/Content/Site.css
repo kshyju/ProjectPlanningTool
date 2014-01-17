@@ -946,3 +946,47 @@ color: green;
 .dbItemContainer {
     width: 33%; float: left;
 }
+.switch-teams {
+   
+}
+.current-team {
+    padding:4px;
+    background-color: #444444;
+    display:inline-block;
+     background:#E6EFF4;
+    
+     margin:1px;
+     padding:5px;color:black; font-weight:bold;
+
+     border-radius: 3px;
+
+
+}
+.available-teams {
+    position:fixed;
+    top:40px;
+    left:100px;
+    min-height:40px;
+    background: hsl(202, 10%, 100%);
+-webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+border-top-left-radius: 0;
+border-top-right-radius: 3px;
+border-bottom-right-radius: 3px;
+border-bottom-left-radius: 0;
+
+}
+.available-team {
+     background:#E6EFF4;
+     height:30px;
+     margin:7px;
+     padding:6px;color:black; font-weight:bold;
+
+}
+
+.available-teams a:hover{
+    text-decoration:none;
+    background-color:#CFE0EA;
+}
+.current-team-icon {
+}

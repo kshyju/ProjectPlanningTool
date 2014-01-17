@@ -19,6 +19,7 @@
                     <span class="logo"></span>
                 </a>
             </div>  
+           
            @Html.Action("Teams","Dashboard")        
            @Html.Partial("Menu")
         </div>
@@ -40,6 +41,18 @@
                 e.preventDefault();
                 var _this = $(this);
                 ShowModel(_this.attr("href"), _this.text());
+            });
+            $("a.a-current-team").click(function (e) {
+                e.preventDefault();
+                var _this = $(this);
+                if (_this.data("state") == "selected") {
+                    $("#available-teams").fadeIn(100);
+                    _this.data("state", "expanded");
+                }
+                else {
+                    $("#available-teams").fadeOut(100);
+                    _this.data("state", "selected");
+                }
             });
         });
     </script>

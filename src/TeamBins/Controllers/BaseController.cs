@@ -4,7 +4,11 @@ using System.Web.Mvc;
 namespace Planner.Controllers
 {
     public class BaseController : Controller
-    {        
+    {
+        protected void UpdateTeam(int teamId)
+        {
+            Session["TB_TeamID"] = teamId;
+        }
         protected void SetUserIDToSession(int userId,int teamId,string nickName)
         {
             Session["TB_UserID"]=userId;

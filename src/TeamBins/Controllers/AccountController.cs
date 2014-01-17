@@ -1,17 +1,13 @@
-﻿using System;
+﻿using Planner.DataAccess;
+using Planner.Services;
+using SmartPlan.DataAccess;
+using SmartPlan.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using Microsoft.AspNet.SignalR;
-using Planner.DataAccess;
-using SmartPlan.Hubs;
-using SmartPlan.Services;
-using SmartPlan.ViewModels;
-using TechiesWeb.TeamBins.ViewModels;
-using SmartPlan.DataAccess;
 using TechiesWeb.TeamBins.Infrastructure;
-using Planner.Services;
+using TechiesWeb.TeamBins.ViewModels;
 
 
 namespace Planner.Controllers
@@ -87,7 +83,7 @@ namespace Planner.Controllers
         }
         public ActionResult Login()
         {
-            return View(new LoginVM { Email = "shyju@softura.com", Password = "admin" });
+            return View(new LoginVM { Email = "kshyju1@gmail.com", Password = "" });
         }
         [HttpPost]
         public ActionResult Login(LoginVM model)
@@ -101,10 +97,8 @@ namespace Planner.Controllers
                   // var s= PasswordHash.ValidatePassword(model.Password,user.HA);
                    if (user.Password==model.Password)
                    {
-                       var team=user.TeamMembers1.Where(s=>s.MemberID==user.ID).FirstOrDefault();
-                       // Assuming the user has associated with only one team.
-                       // TO DO : Get this from the user selection (like github /trello)
-                       SetUserIDToSession(user.ID, team.ID, user.FirstName);
+                       var teamMember=user.TeamMembers1.Where(s=>s.MemberID==user.ID).FirstOrDefault();
+                       SetUserIDToSession(user.ID, teamMember.TeamID, user.FirstName);
                        return RedirectToAction("Index", "Dashboard");
                    }
                 }

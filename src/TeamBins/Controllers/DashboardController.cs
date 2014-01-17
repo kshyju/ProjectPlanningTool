@@ -37,8 +37,14 @@ namespace SmartPlan.Controllers
         }
 
 
-        public ActionResult Index()
+        public ActionResult Index(int? teamid,string teamname = "")
         {
+            if (teamid.HasValue)
+            {
+                //User changed team from the header menu
+                UpdateTeam(teamid.Value);
+               
+            }
             var vm = new DashBoardVM();
 
             var projectList = repo.GetProjects().Where(s => s.TeamID==TeamID).ToList();
