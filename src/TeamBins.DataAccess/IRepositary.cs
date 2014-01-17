@@ -5,10 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TeamBins.DataAccess;
 
 
 
-namespace Planner.DataAccess
+namespace TeamBins.DataAccess
 {
     public interface IRepositary : IDisposable  
     {

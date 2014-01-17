@@ -3,10 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-namespace Planner.DataAccess
-{
-
-    
+using TeamBins.DataAccess;
+namespace TeamBins.DataAccess
+{    
     public class Repositary : IRepositary
     {
         TeamEntities db;

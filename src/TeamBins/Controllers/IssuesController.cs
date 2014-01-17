@@ -1,5 +1,4 @@
-﻿using Planner.DataAccess;
-using Planner.Services;
+﻿using Planner.Services;
 using SmartPlan.DataAccess;
 using System;
 using System.Collections.Generic;
@@ -7,11 +6,12 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using TeamBins.DataAccess;
+using TeamBins.Services;
 using TechiesWeb.TeamBins.ViewModels;
 
 namespace Planner.Controllers
 {
-
     public class IssuesController : BaseController
     {
         IRepositary repo;
@@ -83,9 +83,8 @@ namespace Planner.Controllers
         private BugsListVM GetBugList(string iteration,int size=25)
         {
             var vm = new BugsListVM { CurrentTab = iteration };
-
             var bugList = repo.GetIssues().Where(g=>g.TeamID==TeamID && g.Location==iteration).OrderByDescending(s=>s.ID).Take(size).ToList();
-            //g => g.Project.ProjectMembers.Any(b => b.UserID == UserID)         
+                    
             foreach (var bug in bugList)
             {
                var bugVM = new IssueVM { ID = bug.ID, Title = bug.Title, Description = bug.Description };
@@ -120,8 +119,7 @@ namespace Planner.Controllers
         */
        
         private void LoadDropDownsForCreate(CreateIssue viewModel)
-        {
-            
+        {            
             viewModel.Projects = ProjectService.GetProjects(repo);
             viewModel.Priorities = ProjectService.GetPriorities(repo);
             viewModel.Categories = ProjectService.GetCategories(repo);
@@ -134,10 +132,8 @@ namespace Planner.Controllers
         [HttpPost]
         public ActionResult Add(CreateIssue model,List<HttpPostedFileBase> files)
         {
-
             try
-            {
-                
+            {                
                 if (ModelState.IsValid)
                 {
                     Issue bug = new Issue { ID = model.ID };
@@ -148,28 +144,23 @@ namespace Planner.Controllers
 
                     bug.Title = model.Title;
                     bug.Description = model.Description;
-
-                  
-
                     bug.TeamID = TeamID;
-                    bug.CreatedByID = UserID;
-                   // Issue existingIssue=new Issue();
+                    bug.CreatedByID = UserID;                 
                     LoadDefaultIssueValues(bug, model);
-
 
                     OperationStatus result = repo.SaveIssue(bug);
                     if (result.Status)
                     {
-                       // SaveActivity(model, existingIssue, result.OperationID);
+                        // SaveActivity(model, existingIssue, result.OperationID);
+                    }
+                    else
+                    {
+                        log.Debug(result);
                     }
                     if (Request.IsAjaxRequest())
                     {
                         if (result.Status)
                         {
-
-                           
-                            
-
                             var issue = repo.GetIssue(result.OperationID);
                             if (issue != null)
                             {
@@ -219,27 +210,18 @@ namespace Planner.Controllers
                                 var resultForImg = repo.SaveDocument(img);
                                 {
 
-
                                 }
-
                            }
-
-
                         }
-
                     }
 
-
                     if (result.Status)
-                    {
-                       
-                  
+                    { 
                         if (model.IsFromModalWindow)
                         {
                             if (Request.UrlReferrer != null)
                                 return Redirect(Request.UrlReferrer.AbsoluteUri);
                         }
-
                         return RedirectToAction("Index");
                     }
                 }
@@ -301,22 +283,7 @@ namespace Planner.Controllers
 
             var r = repo.SaveActivity(activity);
         }*/
-        /*
-        private string GetStatusName(int statusId)
-        {
-            if (statusId == 1)
-                return "New";
-            else if (statusId == 2)
-                return "In Progress";
-            else if (statusId == 3)
-                return "Completed";
-            else if (statusId == 4)
-                 return "Closed";
-            else
-                return string.Empty;
-
-        }*//*
-            * */
+       
         public ActionResult Edit(int id)
         {
             var bug = repo.GetIssue(id);
@@ -332,8 +299,6 @@ namespace Planner.Controllers
                 editVM.SelectedProject = bug.Project.ID;
                 editVM.SelectedStatus = bug.Status.ID;
                 editVM.SelectedIteration = bug.Location;
-                //editVM.IsShowStopper = bug.IsShowStopper;
-                //editVM.OpenedBy = bug.CreatedBy.DisplayName;
                 editVM.CreatedDate = bug.CreatedDate.ToShortDateString();
               
                 //var allDocuments = repo.GetDocuments(id, "Bug");
@@ -350,14 +315,11 @@ namespace Planner.Controllers
                     editVM.IsFromModalWindow = true;
                     return PartialView("~/Views/Issues/Partial/Edit.cshtml", editVM);
                 }
-
                 return View(editVM);
             }
             return View("NotFound");
         }
-                    /*
-        *//*
-        */
+                    
         public ActionResult Details(int id)
         {
             var bug = repo.GetIssue(id);
@@ -380,7 +342,6 @@ namespace Planner.Controllers
             var allDocuments = repo.GetDocuments(id);           
             foreach (var img in allDocuments)
             {
-
                 var imgVM = new DocumentVM { FileName=img.FileName, FileKey=img.FileAlias};
                 imgVM.FileExtn = Path.GetExtension(img.FileName);
                
@@ -389,8 +350,7 @@ namespace Planner.Controllers
                 else
                     bugVm.Attachments.Add(imgVM);
 
-            }
-           
+            }          
 
        
             LoadComments(id, bugVm);
@@ -439,7 +399,6 @@ namespace Planner.Controllers
         {
             repo.DeleteIssueMember(id, memberId);
             return Json(new { Status = "Success" });
-
         }
        
         [HttpPost]
@@ -452,8 +411,16 @@ namespace Planner.Controllers
         [HttpPost]
         public int AddMember(int memberId, int issueId)
         {
-            repo.SaveIssueMember(issueId, memberId, UserID);
-            return 1;
+            try
+            {
+                repo.SaveIssueMember(issueId, memberId, UserID);
+                return 1;
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                return 0;
+            }
         }
         
         public ActionResult IssueMembers(int id)
@@ -480,6 +447,7 @@ namespace Planner.Controllers
             }
             catch(Exception ex)
             {
+                log.Error(ex);
                 return Json(new { Status = "Error" });
             }            
         }
@@ -500,27 +468,34 @@ namespace Planner.Controllers
         [HttpPost]
         public void SaveDueDate(string issueDueDate, int issueId)
         {
-            var issue = repo.GetIssue(issueId);
-            if (issue != null)
+            try
             {
-                if (!String.IsNullOrEmpty(issueDueDate))
+                var issue = repo.GetIssue(issueId);
+                if (issue != null)
                 {
-                    issue.DueDate = DateTime.Parse(issueDueDate);
-                }
-                else
-                {
-                    issue.DueDate = DateTime.Now.AddYears(-1000);
-                }
-                
-                var result=repo.SaveIssue(issue);
-                if (!result.Status)
-                {
+                    if (!String.IsNullOrEmpty(issueDueDate))
+                    {
+                        issue.DueDate = DateTime.Parse(issueDueDate);
+                    }
+                    else
+                    {
+                        issue.DueDate = DateTime.Now.AddYears(-1000);
+                    }
 
+                    var result = repo.SaveIssue(issue);
+                    if (!result.Status)
+                    {
+                        log.Error(result);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
             }
         }
 
-        }
+    }
 }
         
     

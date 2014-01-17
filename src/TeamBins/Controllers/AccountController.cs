@@ -1,11 +1,10 @@
-﻿using Planner.DataAccess;
-using Planner.Services;
-using SmartPlan.DataAccess;
+﻿using TeamBins.Services;
 using SmartPlan.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using TeamBins.DataAccess;
 using TechiesWeb.TeamBins.Infrastructure;
 using TechiesWeb.TeamBins.ViewModels;
 

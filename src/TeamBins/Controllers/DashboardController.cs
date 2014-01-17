@@ -1,15 +1,12 @@
-﻿using System;
+﻿using Planner.Controllers;
+using SmartPlan.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using Planner.Controllers;
-using Planner.DataAccess;
-using SmartPlan.ViewModels;
+using TeamBins.DataAccess;
 using TechiesWeb.TeamBins.ViewModels;
-
-
-namespace SmartPlan.Controllers
+namespace TechiesWeb.TeamBins.Controllers
 {
     public class DashboardController : BaseController
     {        
@@ -20,45 +17,58 @@ namespace SmartPlan.Controllers
             repo=new Repositary();
         }
 
+        [ChildActionOnly]
         public ActionResult Teams()
         {
             var vm = new UsersCurrentTeamVM();
-            var teams = repo.GetTeams(UserID).ToList();
-            foreach (var team in teams)
+            try
             {
-                var teamVM = new TeamVM { ID = team.ID, Name = team.Name };
-                vm.Teams.Add(teamVM);
-                if (team.ID == TeamID)
-                    vm.CurrentTeamName = team.Name;
+                var teams = repo.GetTeams(UserID).ToList();
+                foreach (var team in teams)
+                {
+                    var teamVM = new TeamVM { ID = team.ID, Name = team.Name };
+                    vm.Teams.Add(teamVM);
+                    if (team.ID == TeamID)
+                        vm.CurrentTeamName = team.Name;
+                }
+                vm.SelectedTeam = TeamID;
             }
-            vm.SelectedTeam = TeamID;
-
+            catch (Exception ex)
+            {
+                log.Error(ex);
+            }
             return PartialView(vm);
         }
 
-
         public ActionResult Index(int? teamid,string teamname = "")
         {
-            if (teamid.HasValue)
+            try
             {
-                //User changed team from the header menu
-                UpdateTeam(teamid.Value);
-               
-            }
-            var vm = new DashBoardVM();
+                if (teamid.HasValue)
+                {
+                    //User switched team from the header menu
+                    UpdateTeam(teamid.Value);
+                }
+                var vm = new DashBoardVM();
+                var projectList = repo.GetProjects().Where(s => s.TeamID == TeamID).ToList();
+                foreach (var project in projectList)
+                {
+                    var projectVM = new ProjectVM { ID = project.ID, Name = project.Name, Description = project.Description };
+                    projectVM.IsProjectOwner = (project.CreatedByID == UserID);
+                    vm.Projects.Add(projectVM);
+                }
+                vm.RecentIssues = GetRecentIssues();
+                vm.IssuesAssignedToMe = GetIssuesAssignedToMe();
 
-            var projectList = repo.GetProjects().Where(s => s.TeamID==TeamID).ToList();
-            foreach (var project in projectList)
+                return View(vm);
+            }
+            catch (Exception ex)
             {
-                var projectVM = new ProjectVM { ID = project.ID, Name = project.Name, Description = project.Description };
-                projectVM.IsProjectOwner = (project.CreatedByID == UserID);
-                vm.Projects.Add(projectVM);
+                log.Error(ex);
+                return View("Error");
             }
-            vm.RecentIssues = GetRecentIssues();
-            vm.IssuesAssignedToMe = GetIssuesAssignedToMe();
-
-            return View(vm);
         }
+
         private List<IssueVM> GetRecentIssues()
         {
             var listIssues = new List<IssueVM>();

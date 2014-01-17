@@ -7,8 +7,8 @@
     <ProjectGuid>{381CEAFA-E0C2-4D2F-8454-E8AA7A264096}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SmartPlan.DataAccess</RootNamespace>
-    <AssemblyName>SmartPlan.DataAccess</AssemblyName>
+    <RootNamespace>TeamBins.DataAccess</RootNamespace>
+    <AssemblyName>TeamBins.DataAccess</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>SAK</SccProjectName>

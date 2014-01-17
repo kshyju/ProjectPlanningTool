@@ -1,10 +1,16 @@
 using System;
 using System.Web.Mvc;
+using TechiesWeb.TeamBibs.Helpers.Logging;
 
 namespace Planner.Controllers
 {
     public class BaseController : Controller
     {
+        protected ILogger log;
+        public BaseController()
+        {
+            log = new Logger();
+        }
         protected void UpdateTeam(int teamId)
         {
             Session["TB_TeamID"] = teamId;

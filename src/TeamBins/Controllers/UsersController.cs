@@ -1,13 +1,12 @@
 ﻿using Planner.DataAccess;
 using Planner.Services;
-using SmartPlan.DataAccess;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
+using TeamBins.DataAccess;
 using TechiesWeb.TeamBins.ViewModels;
-
+using TeamBins.DataAccess;
+using TeamBins.Services;
 namespace Planner.Controllers
 {
     public class UsersController : BaseController
