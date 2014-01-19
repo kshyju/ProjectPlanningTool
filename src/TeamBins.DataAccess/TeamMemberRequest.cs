@@ -22,6 +22,6 @@ namespace TeamBins.DataAccess
         public System.DateTime CreatedDate { get; set; }
     
         public virtual Team Team { get; set; }
-        public virtual User CreatedBy { get; set; }
+        public virtual User User { get; set; }
     }
 }

@@ -15,6 +15,10 @@
             <tr>
                 <td>
                     @Html.ActionLink(project.Name, "details", "Projects", new { @id = project.ID }, new { @class = "listItem" })
+                    @if(project.IsDefaultProject)
+                    {
+                        <span>D</span>
+                    }
                 </td>
                 <td>
                     @Html.ActionLink("Edit", "Edit", "Projects", new { id = @project.ID }, new { @class = "aPopup" }) |

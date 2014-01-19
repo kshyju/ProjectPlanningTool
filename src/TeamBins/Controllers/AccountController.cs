@@ -201,11 +201,11 @@ namespace Planner.Controllers
         public ActionResult Settings()
         {
             var vm = new DefaultIssueSettings { Projects = GetProjectListItem() };
-            var user = repo.GetUser(UserID);
-            if (user != null)
+            var teamMember = repo.GetTeamMember(UserID, TeamID);            
+            if (teamMember != null)
             {
-                if (user.DefaultProjectID.HasValue)
-                    vm.SelectedProject = user.DefaultProjectID.Value;
+                if (teamMember.DefaultProjectID.HasValue)
+                    vm.SelectedProject = teamMember.DefaultProjectID.Value;
             }
             return View(vm);
         }
@@ -215,7 +215,7 @@ namespace Planner.Controllers
         {
             if(ModelState.IsValid)
             {
-                var result =userService.SaveDefaultIssueSettings(UserID, model.SelectedProject);                
+                var result =userService.SaveDefaultProjectForTeam(UserID,TeamID, model.SelectedProject);                
                 if (result)
                 {
                     var msg = new AlertMessageStore();

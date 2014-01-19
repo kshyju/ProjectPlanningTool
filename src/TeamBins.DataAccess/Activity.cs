@@ -23,6 +23,6 @@ namespace TeamBins.DataAccess
         public int CreatedByID { get; set; }
         public System.DateTime CreatedDate { get; set; }
     
-        public virtual User CreatedBy { get; set; }
+        public virtual User User { get; set; }
     }
 }

@@ -34,6 +34,8 @@ namespace TechiesWeb.TeamBins.ViewModels
         public string Name { set; get; }
         public string Description { set; get; }
         public bool IsProjectOwner { set; get; }
+
+        public bool IsDefaultProject { get; set; }
     }
     public class AddProjectMemberVM
     {

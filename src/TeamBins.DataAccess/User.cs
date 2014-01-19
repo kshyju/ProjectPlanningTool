@@ -16,19 +16,19 @@ namespace TeamBins.DataAccess
     {
         public User()
         {
-            this.Tasks = new HashSet<Task>();
+            this.Activities = new HashSet<Activity>();
+            this.Comments = new HashSet<Comment>();
+            this.Documents = new HashSet<Document>();
             this.Issues = new HashSet<Issue>();
             this.Issues1 = new HashSet<Issue>();
-            this.ProjectMembers = new HashSet<ProjectMember>();
-            this.Projects = new HashSet<Project>();
-            this.Comments = new HashSet<Comment>();
             this.IssueMembers = new HashSet<IssueMember>();
-            this.IssueMembersAddedByMe = new HashSet<IssueMember>();
-            this.Documents = new HashSet<Document>();
-            this.TeamMembersCreatedByMe = new HashSet<TeamMember>();
-            this.TeamMembers1 = new HashSet<TeamMember>();
+            this.IssueMembers1 = new HashSet<IssueMember>();
+            this.Projects = new HashSet<Project>();
+            this.ProjectMembers = new HashSet<ProjectMember>();
+            this.Tasks = new HashSet<Task>();
             this.TeamMemberRequests = new HashSet<TeamMemberRequest>();
-            this.Activities = new HashSet<Activity>();
+            this.TeamMembers = new HashSet<TeamMember>();
+            this.TeamMembers1 = new HashSet<TeamMember>();
         }
     
         public int ID { get; set; }
@@ -36,23 +36,21 @@ namespace TeamBins.DataAccess
         public string LastName { get; set; }
         public string EmailAddress { get; set; }
         public string Password { get; set; }
-        public System.DateTime CreatedDate { get; set; }
         public string JobTitle { get; set; }
-        public Nullable<int> DefaultProjectID { get; set; }
+        public System.DateTime CreatedDate { get; set; }
     
-        public virtual ICollection<Task> Tasks { get; set; }
+        public virtual ICollection<Activity> Activities { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; }
+        public virtual ICollection<Document> Documents { get; set; }
         public virtual ICollection<Issue> Issues { get; set; }
         public virtual ICollection<Issue> Issues1 { get; set; }
-        public virtual ICollection<ProjectMember> ProjectMembers { get; set; }
-        public virtual ICollection<Project> Projects { get; set; }
-        public virtual ICollection<Comment> Comments { get; set; }
-        public virtual Project DefaultProject { get; set; }
         public virtual ICollection<IssueMember> IssueMembers { get; set; }
-        public virtual ICollection<IssueMember> IssueMembersAddedByMe { get; set; }
-        public virtual ICollection<Document> Documents { get; set; }
-        public virtual ICollection<TeamMember> TeamMembersCreatedByMe { get; set; }
-        public virtual ICollection<TeamMember> TeamMembers1 { get; set; }
+        public virtual ICollection<IssueMember> IssueMembers1 { get; set; }
+        public virtual ICollection<Project> Projects { get; set; }
+        public virtual ICollection<ProjectMember> ProjectMembers { get; set; }
+        public virtual ICollection<Task> Tasks { get; set; }
         public virtual ICollection<TeamMemberRequest> TeamMemberRequests { get; set; }
-        public virtual ICollection<Activity> Activities { get; set; }
+        public virtual ICollection<TeamMember> TeamMembers { get; set; }
+        public virtual ICollection<TeamMember> TeamMembers1 { get; set; }
     }
 }

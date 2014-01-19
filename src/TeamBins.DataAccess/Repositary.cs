@@ -17,18 +17,26 @@ namespace TeamBins.DataAccess
         {
             return db.Users.FirstOrDefault(s => s.ID == userId);
         }
+        public TeamMember GetTeamMember(int userId, int teamId)
+        {
+            return db.TeamMembers.Where(s => s.TeamID == teamId && s.MemberID == userId).FirstOrDefault();
+        }
         public bool DeleteProject(int projectId)
         {
             
-
+            
             var project = db.Projects.FirstOrDefault(s => s.ID == projectId);
-
-            var projectMembers = project.ProjectMembers.ToList();
+            /*var projectMembers = project.ProjectMembers.ToList();
 
             foreach(var members in projectMembers)
             {
                 db.ProjectMembers.Remove(members);
-            }
+            }*/
+
+            // IF the this project is the default project, let's delete that association
+
+ 
+
             db.SaveChanges();
             db.Projects.Remove(project);
             db.SaveChanges();
@@ -38,8 +46,16 @@ namespace TeamBins.DataAccess
         {
             try
             {
-                teamMemberRequest.CreatedDate = DateTime.Now;
-                db.TeamMemberRequests.Add(teamMemberRequest);
+                if (teamMemberRequest.ID == 0)
+                {
+
+                    teamMemberRequest.CreatedDate = DateTime.Now;
+                    db.TeamMemberRequests.Add(teamMemberRequest);
+                }
+                else
+                {
+                    db.Entry(teamMemberRequest).State = EntityState.Modified;
+                }
                 db.SaveChanges();
                 return new OperationStatus { Status = true };
             }
@@ -214,8 +230,15 @@ namespace TeamBins.DataAccess
         }*/
         public TeamMember SaveTeamMember(TeamMember teamMember)
         {
-            teamMember.CreatedDate = DateTime.Now;
-            db.TeamMembers.Add(teamMember);
+            if (teamMember.ID == 0)
+            {
+                teamMember.CreatedDate = DateTime.Now;
+                db.TeamMembers.Add(teamMember);
+            }
+            else
+            {
+                db.Entry(teamMember).State = EntityState.Modified;
+            }
             db.SaveChanges();
             return teamMember;
         }

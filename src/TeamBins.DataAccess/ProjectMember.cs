@@ -19,7 +19,7 @@ namespace TeamBins.DataAccess
         public int UserID { get; set; }
         public System.DateTime CreatedDate { get; set; }
     
-        public virtual User Member { get; set; }
         public virtual Project Project { get; set; }
+        public virtual User Member { get; set; }
     }
 }

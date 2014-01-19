@@ -16,15 +16,15 @@ namespace TeamBins.Services
         {
             repo = repositary;
         }
-        public bool SaveDefaultIssueSettings(int userId,int defaultProjectId)
+        public bool SaveDefaultProjectForTeam(int userId,int teamId, int defaultProjectId)
         {
-            var user = repo.GetUser(userId);
-            if (user != null)
+            var teamMember = repo.GetTeamMember(userId, teamId);
+            if (teamMember != null)
             {
-                user.DefaultProjectID = defaultProjectId;
-                var result = repo.SaveUser(user);
-                return result.Status;                
-            }
+                teamMember.DefaultProjectID = defaultProjectId;
+                var res = repo.SaveTeamMember(teamMember);
+                return true;
+            }          
             return false;
         }
 

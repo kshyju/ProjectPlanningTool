@@ -983,8 +983,9 @@ border-bottom-left-radius: 0;
 .available-team {
      background:#E6EFF4;
      height:30px;
-     margin:7px; padding:4px;
+     margin:4px; padding:4px;
      color:black; font-weight:bold;
+     margin-bottom:4px;  margin-top:1px; 
 
 }
 
@@ -996,4 +997,8 @@ border-bottom-left-radius: 0;
 }
 .switch-teams {
     display:inline-block; float:left;
+}
+.available-teams p {
+   margin:12px;
+   margin-top:4px; margin-bottom:4px;
 }

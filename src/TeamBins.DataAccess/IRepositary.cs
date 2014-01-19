@@ -15,8 +15,7 @@ namespace TeamBins.DataAccess
     {
         bool DeleteProject(int projectId);
         Document GetDocument(string documentKey);
-        List<Document> GetDocuments(int parentId);
-       // List<Bug> GetBugs(int page, int size);
+        List<Document> GetDocuments(int parentId);       
         IEnumerable<Project> GetProjects();
         Project GetProject(int projectId);
         Project GetProject(int projectId, int createdById);
@@ -52,7 +51,7 @@ namespace TeamBins.DataAccess
         OperationStatus DeleteIssueMember(int issueId, int memberId);
         OperationStatus SaveTeamMemberRequest(TeamMemberRequest teamMemberRequest);
         TeamMemberRequest GetTeamMemberRequest(string activationCode);
-
+        TeamMember GetTeamMember(int userId, int teamId);
  
        
 

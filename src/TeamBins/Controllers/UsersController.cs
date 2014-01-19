@@ -1,12 +1,9 @@
-﻿using Planner.DataAccess;
-using Planner.Services;
-using System;
+﻿using System;
 using System.Linq;
 using System.Web.Mvc;
 using TeamBins.DataAccess;
-using TechiesWeb.TeamBins.ViewModels;
-using TeamBins.DataAccess;
 using TeamBins.Services;
+using TechiesWeb.TeamBins.ViewModels;
 namespace Planner.Controllers
 {
     public class UsersController : BaseController
@@ -16,7 +13,6 @@ namespace Planner.Controllers
         public UsersController()
         {
             repo = new Repositary();
-
         }
         public ActionResult Index()
         {
@@ -89,6 +85,8 @@ namespace Planner.Controllers
                 var user = repo.GetUser(teamMemberRequest.EmailAddress);
                 if (user.ID == UserID)
                 {
+                    
+
                     //Correct user 
                     return View("WelcomeToTeam");
                 }

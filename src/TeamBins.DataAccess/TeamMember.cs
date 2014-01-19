@@ -17,9 +17,11 @@ namespace TeamBins.DataAccess
         public int ID { get; set; }
         public int MemberID { get; set; }
         public int TeamID { get; set; }
+        public Nullable<int> DefaultProjectID { get; set; }
         public int CreatedByID { get; set; }
         public System.DateTime CreatedDate { get; set; }
     
+        public virtual Project DefaultProject { get; set; }
         public virtual Team Team { get; set; }
         public virtual User CreatedBy { get; set; }
         public virtual User Member { get; set; }

@@ -33,6 +33,6 @@ namespace TeamBins.DataAccess
     
         public virtual ICollection<Task> Tasks { get; set; }
         public virtual Task ParentTask { get; set; }
-        public virtual User ResponsiblePerson { get; set; }
+        public virtual User User { get; set; }
     }
 }

@@ -23,17 +23,28 @@ namespace SmartPlan.Controllers
         
         public ActionResult Index()
         {
-            var vm = new TeamProjectListVM ();           
-            var projectList = repo.GetProjects().Where(s=>s.TeamID==TeamID).ToList();
-            //.Where(s => s.ProjectMembers.Any(b => b.UserID == UserID)).ToList();
-
-            foreach (var project in projectList)
+            try
             {
-                var projectVM = new ProjectVM { Name = project.Name, ID = project.ID };
-               // projectVM.IsProjectOwner = true;
-                vm.Projects.Add(projectVM);
+                var vm = new TeamProjectListVM();
+                var projectList = repo.GetProjects().Where(s => s.TeamID == TeamID).ToList(); ;
+
+                var teamMember = repo.GetTeamMember(UserID, TeamID);
+
+                foreach (var project in projectList)
+                {
+                    var projectVM = new ProjectVM { Name = project.Name, ID = project.ID };
+                    if (teamMember.DefaultProjectID.HasValue)
+                        projectVM.IsDefaultProject = project.ID == teamMember.DefaultProjectID.Value;
+
+                    vm.Projects.Add(projectVM);
+                }
+                return View(vm);
             }
-            return View(vm);
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                return View("Error");
+            }
         }
         public ActionResult Details(int id)
         {
@@ -61,37 +72,44 @@ namespace SmartPlan.Controllers
         [HttpPost]
         public ActionResult Add(CreateProjectVM model)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var existing = repo.GetProject(model.Name,UserID);
-                if((existing!=null) && (existing.ID!=model.ID))
-                    return Json(new { Status="Error", Message= "Project name exists"});
-
-
-                var project = new Project { Name = model.Name, ID=model.ID, TeamID=TeamID };
-                project.CreatedByID = UserID;               
-                var res=repo.SaveProject(project);
-                if (res!=null)
+                if (ModelState.IsValid)
                 {
-                    //Add as Project member
-                 
-                    /*
-                    var projectMember = new ProjectMember { ProjectID = project.ID, UserID = UserID, CreatedDate = DateTime.Now };
-                    var result = repo.SaveProjectMember(projectMember);
-                    */
-                    var projectCount = repo.GetProjects()
-                                    .Where(s => s.ProjectMembers.Any(b => b.UserID == UserID)).Count();
+                    var existing = repo.GetProject(model.Name, UserID);
+                    if ((existing != null) && (existing.ID != model.ID))
+                        return Json(new { Status = "Error", Message = "Project name exists" });
 
-                    //If this is the first project, then save as the default project
-                    if (projectCount==1)
+
+                    var project = new Project { Name = model.Name, ID = model.ID, TeamID = TeamID };
+                    project.CreatedByID = UserID;
+                    var res = repo.SaveProject(project);
+                    if (res != null)
                     {
-                        var defProjRes = userService.SaveDefaultIssueSettings(UserID, project.ID);    
-                    }
+                        //Add as Project member
 
-                    return Json(new { Status = "Success", Message = "Project created successfully" });
+                        /*
+                        var projectMember = new ProjectMember { ProjectID = project.ID, UserID = UserID, CreatedDate = DateTime.Now };
+                        var result = repo.SaveProjectMember(projectMember);
+                        */
+
+                        var teamMember = repo.GetTeamMember(UserID, TeamID);
+
+                        if (teamMember != null && !teamMember.DefaultProjectID.HasValue)
+                        {
+                            var defProjRes = userService.SaveDefaultProjectForTeam(UserID, TeamID, project.ID);
+                        }
+
+                        return Json(new { Status = "Success", Message = "Project created successfully" });
+                    }
                 }
+                return Json(new { Status = "Error", Message = "Required fields are missing" });
             }
-            return Json(new { Status = "Error", Message = "Required fields are missing" });
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                return Json(new { Status = "Error", Message = "Error in saving project" });
+            }
            
         }
 

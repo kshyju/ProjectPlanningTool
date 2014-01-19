@@ -39,12 +39,12 @@ namespace TeamBins.DataAccess
         public virtual Category Category { get; set; }
         public virtual Priority Priority { get; set; }
         public virtual Status Status { get; set; }
-        public virtual User CreatedBy { get; set; }
-        public virtual User ModifiedBy { get; set; }
         public virtual Project Project { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<IssueMember> IssueMembers { get; set; }
         public virtual ICollection<Document> Documents { get; set; }
         public virtual Team Team { get; set; }
+        public virtual User CreatedBy { get; set; }
+        public virtual User ModifiedBy { get; set; }
     }
 }

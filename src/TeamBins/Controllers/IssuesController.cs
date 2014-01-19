@@ -230,8 +230,13 @@ namespace Planner.Controllers
             }
             catch (Exception ex)
             {
-                return View(model);
+                log.Error(ex);
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(new { Status = "Error" });
+                }
             }
+            return RedirectToAction("Index");
         }
         private void LoadDefaultIssueValues(Issue issue,CreateIssue model)
         {
@@ -243,7 +248,10 @@ namespace Planner.Controllers
             issue.ProjectID = model.SelectedProject;
             if (issue.ProjectID == 0)
             {
-                issue.ProjectID = user.DefaultProjectID.Value;
+                var teamMember = repo.GetTeamMember(UserID, TeamID);
+                
+                //get from team member 
+                issue.ProjectID = teamMember.DefaultProjectID.Value;
             }
             issue.StatusID = model.SelectedStatus;
             if ((model.ID == 0) && (model.SelectedStatus == 0)) 
