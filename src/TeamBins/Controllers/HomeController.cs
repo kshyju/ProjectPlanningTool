@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace Planner.Controllers
+namespace TechiesWeb.TeamBins.Controllers
 {
     public class HomeController : Controller
     {

@@ -1,10 +1,16 @@
 ﻿@{
-    ViewBag.Title = "Members";
+    ViewBag.Title = "Team Members";
 }
 @model TechiesWeb.TeamBins.ViewModels.TeamVM
 <h2>Members</h2>
 @Html.ActionLink("Add", "Add", "Users", null, new { @class="popup"})
-<table>
+<table class="table table-bordered table-condensed">
+<thead>
+    <tr>
+        <th></th><th>Name</th><th>Email</th>
+    </tr>
+</thead>
+<tbody>
 @foreach(var member in Model.Members)
 {
  <tr>
@@ -13,6 +19,7 @@
      <td>@member.EmailAddress</td>
  </tr>
 }
+</tbody>
 </table>
 <script type="text/javascript">
     $(function () {
@@ -25,9 +32,7 @@
                 else
                     $("#msg").text(res.Message).addClass("error").slideDown(); $("#Name").focus();
             });
-                });
+        });
 
     });
-
-
 </script>

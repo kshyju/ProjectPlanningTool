@@ -9,7 +9,7 @@ using TechiesWeb.TeamBins.Infrastructure;
 using TechiesWeb.TeamBins.ViewModels;
 
 
-namespace Planner.Controllers
+namespace TechiesWeb.TeamBins.Controllers
 {
     public class AccountController : BaseController
     {
@@ -222,8 +222,7 @@ namespace Planner.Controllers
                     msg.AddMessage("success", "Settings updated successfully");
                     TempData["AlertMessages"] = msg;
                     return RedirectToAction("Settings");
-                }
-                
+                }                
             }
             model.Projects = GetProjectListItem();
             return View(model);

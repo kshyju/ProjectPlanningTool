@@ -1,14 +1,11 @@
-﻿using Planner.Controllers;
-using Planner.DataAccess;
-using TeamBins.Services;
-using SmartPlan.DataAccess;
-using System;
+﻿using System;
 using System.Linq;
 using System.Web.Mvc;
 using TeamBins.DataAccess;
+using TeamBins.Services;
 using TechiesWeb.TeamBins.ViewModels;
 
-namespace SmartPlan.Controllers
+namespace TechiesWeb.TeamBins.Controllers
 {
 
     public class ProjectsController : BaseController
@@ -109,26 +106,31 @@ namespace SmartPlan.Controllers
             {
                 log.Error(ex);
                 return Json(new { Status = "Error", Message = "Error in saving project" });
-            }
-           
+            }           
         }
 
         public ActionResult Edit(int id)
         {
-            var project = repo.GetProject(id,TeamID);
-            if (project != null)
+            try
             {
-                var vm = new CreateProjectVM { ID = id, Name = project.Name };
-                return PartialView("Partial/Add", vm);
+                var project = repo.GetProject(id, TeamID);
+                if (project != null)
+                {
+                    var vm = new CreateProjectVM { ID = id, Name = project.Name };
+                    return PartialView("Partial/Add", vm);
+                }
+                return View("NotFound");
             }
-            return View("NotFound");    
+            catch (Exception ex)
+            {
+                log.Error("id : "+id,ex);
+                return View("Error");
+            }
         }
         public ActionResult DeleteConfirm(int id)
         {
             var vm = new DeleteProjectConfirmVM();
-
             vm.DependableItemsCount = repo.GetIssues().Where(s => s.Project.ID == id).Count();
-
             return PartialView("Partial/DeleteConfirm",vm);
         }
         [HttpPost]
@@ -141,6 +143,7 @@ namespace SmartPlan.Controllers
             }
             catch(Exception ex)
             {
+                log.Error(ex);
                 return Json(new { Status = "Error", Message = "Error deleting project" });
             }
         }

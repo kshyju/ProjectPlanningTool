@@ -1,5 +1,4 @@
-﻿using Planner.Controllers;
-using SmartPlan.ViewModels;
+﻿using SmartPlan.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;

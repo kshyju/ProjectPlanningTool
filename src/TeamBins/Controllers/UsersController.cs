@@ -4,7 +4,7 @@ using System.Web.Mvc;
 using TeamBins.DataAccess;
 using TeamBins.Services;
 using TechiesWeb.TeamBins.ViewModels;
-namespace Planner.Controllers
+namespace TechiesWeb.TeamBins.Controllers
 {
     public class UsersController : BaseController
     {
@@ -16,21 +16,28 @@ namespace Planner.Controllers
         }
         public ActionResult Index()
         {
-            
-            var team=repo.GetTeam(TeamID);
-            var teamVM = new TeamVM { Name = team.Name, ID = team.ID };
-
-            var teamMembers = team.TeamMembers.ToList();
-            foreach (var member in teamMembers)
+            try
             {
-                var memberVM = new MemberVM();
-                memberVM.Name=member.Member.FirstName;
-                memberVM.EmailAddress = member.Member.EmailAddress;
-                memberVM.AvatarHash = UserService.GetImageSource(memberVM.EmailAddress, 30);
-                memberVM.JoinedDate = member.CreatedDate.ToShortDateString();
-                teamVM.Members.Add(memberVM);
+                var team = repo.GetTeam(TeamID);
+                var teamVM = new TeamVM { Name = team.Name, ID = team.ID };
+
+                var teamMembers = team.TeamMembers.ToList();
+                foreach (var member in teamMembers)
+                {
+                    var memberVM = new MemberVM();
+                    memberVM.Name = member.Member.FirstName;
+                    memberVM.EmailAddress = member.Member.EmailAddress;
+                    memberVM.AvatarHash = UserService.GetImageSource(memberVM.EmailAddress, 30);
+                    memberVM.JoinedDate = member.CreatedDate.ToShortDateString();
+                    teamVM.Members.Add(memberVM);
+                }
+                return View(teamVM);
             }
-            return View(teamVM);
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                return View("Error");
+            }
         }
 
         public ActionResult Add()
@@ -41,38 +48,47 @@ namespace Planner.Controllers
         [HttpPost]
         public ActionResult Add(AddTeamMemberRequestVM model)
         {
-            // We are now allowing only existing members to be added to a team. 
-            // TO DO : Save the add member to team request in a table and email the new user with a link to login & join
-
-            if (ModelState.IsValid)
+            // This method adds a user to the team
+            // If user is new to the system, sends an email to user to signup and join, else add him to the team
+            try
             {
-                var existingUser = repo.GetUser(model.EmailAddress);
-                if (existingUser != null)
+                if (ModelState.IsValid)
                 {
-                    TeamMember teamMember = new TeamMember { MemberID = existingUser.ID, TeamID = TeamID, CreatedByID = UserID };
-                    var result = repo.SaveTeamMember(teamMember);
-                    if (result.ID > 0)
+                    var existingUser = repo.GetUser(model.EmailAddress);
+                    if (existingUser != null)
                     {
-                        //Save to Activity stream
-                       // var activityStream=new Activity { ObjectType="TeamMember",Activity1="Added", CreatedByID=UserID, NewState= 
-
-                        return Json(new { Status = "Success" });
+                        TeamMember teamMember = new TeamMember { MemberID = existingUser.ID, TeamID = TeamID, CreatedByID = UserID };
+                        var result = repo.SaveTeamMember(teamMember);
+                        if (result.ID > 0)
+                        {
+                            // TO DO : Save a record to Activity stream
+                            return Json(new { Status = "Success",Message="Successfully added user to team" });
+                        }
+                    }
+                    else
+                    {
+                        var teamMemberRequest = new TeamMemberRequest { EmailAddress = model.EmailAddress, CreatedByID = UserID };
+                        teamMemberRequest.TeamID = model.TeamID;
+                        teamMemberRequest.ActivationCode = model.TeamID + "-" + Guid.NewGuid().ToString("n");
+                        var resultNew = repo.SaveTeamMemberRequest(teamMemberRequest);
+                        if (resultNew.Status)
+                        {
+                            // TO DO : Send Email to user with the activation link                      
+                            return Json(new { Status = "Success" });
+                        }
+                        else
+                        {
+                            log.Debug(resultNew);
+                        }                        
                     }
                 }
-                else
-                {
-                    var teamMemberRequest = new TeamMemberRequest { EmailAddress = model.EmailAddress, CreatedByID = UserID };
-                    teamMemberRequest.TeamID = model.TeamID;
-                    teamMemberRequest.ActivationCode = model.TeamID + "-" + Guid.NewGuid().ToString("n");
-                    var resultNew = repo.SaveTeamMemberRequest(teamMemberRequest);
-                    if (resultNew.Status)
-                    {
-                        // Send Email
-                    }
-                    // to do : Save to Req table and then send email to this member with a unique link
-                }
-            }           
-            return View(model);
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                
+            }
+            return Json(new { Status = "Error", Message = "Error adding user to team" });
         }
 
         public ActionResult JoinMyTeam(string id)

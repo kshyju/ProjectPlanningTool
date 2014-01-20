@@ -10,7 +10,7 @@ using TeamBins.DataAccess;
 using TeamBins.Services;
 using TechiesWeb.TeamBins.ViewModels;
 
-namespace Planner.Controllers
+namespace TechiesWeb.TeamBins.Controllers
 {
     public class IssuesController : BaseController
     {

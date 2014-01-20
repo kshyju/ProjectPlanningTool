@@ -1,6 +1,6 @@
 ﻿@model TechiesWeb.TeamBins.ViewModels.TeamProjectListVM
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Projects";
 }
 
 <div class="pageContent">
@@ -10,6 +10,10 @@
      @Html.ActionLink("Add New", "Add", "Projects", new { id=Model.TeamID}, new { @class = "aPopup" })
     
     <table class="table table-bordered">
+        <thead>
+            <tr><th>Name</th><th></th></tr>
+        </thead>
+        <tbody>
         @foreach (var project in Model.Projects)
         {
             <tr>
@@ -17,18 +21,16 @@
                     @Html.ActionLink(project.Name, "details", "Projects", new { @id = project.ID }, new { @class = "listItem" })
                     @if(project.IsDefaultProject)
                     {
-                        <span>D</span>
+                        <span>Default project</span>
                     }
                 </td>
                 <td>
                     @Html.ActionLink("Edit", "Edit", "Projects", new { id = @project.ID }, new { @class = "aPopup" }) |
                     @Html.ActionLink("Delete", "DeleteConfirm", "Projects", new { id = project.ID }, new { @class = "aPopup delete", @data_id = project.ID })
-              
-                  
-                 </td>
-
+              </td>
             </tr>
         }
+       </tbody>
     </table>
 }
 else

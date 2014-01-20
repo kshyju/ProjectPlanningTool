@@ -2,7 +2,7 @@ using System;
 using System.Web.Mvc;
 using TechiesWeb.TeamBibs.Helpers.Logging;
 
-namespace Planner.Controllers
+namespace TechiesWeb.TeamBins.Controllers
 {
     public class BaseController : Controller
     {

@@ -22,18 +22,14 @@ namespace TeamBins.DataAccess
         Project GetProject(string name, int createdById);
         List<Priority> GetPriorities();
         List<Status> GetStatuses();
-        List<Category> GetCategories();
-     ////   OperationStatus SaveBug(Bug bug);
+        List<Category> GetCategories();    
         OperationStatus SaveIssue(Issue bug);
         OperationStatus SaveDocument(Document image);
         Project SaveProject(Project project);
-        OperationStatus SaveProjectMember(ProjectMember projectMember);
-       // Bug GetBug(int id);
-
+        OperationStatus SaveProjectMember(ProjectMember projectMember);      
         OperationStatus SaveUser(User user);
         User GetUser(string emailAddress);
         User GetUser(int userId);
-
         IEnumerable<Team> GetTeams(int userId);
         Team GetTeam(int teamId);
         Team SaveTeam(Team team);       

@@ -104,9 +104,9 @@ namespace TeamBins.DataAccess
         {
             return db.Projects.FirstOrDefault(s => s.ID == projectId);
         }
-        public Project GetProject(int projectId, int createdById)
+        public Project GetProject(int projectId, int teamId)
         {
-            return db.Projects.FirstOrDefault(s => s.ID == projectId && s.CreatedByID==createdById);
+            return db.Projects.FirstOrDefault(s => s.ID == projectId && s.TeamID == teamId);
         }
 
         public Project GetProject(string name, int createdById)
@@ -154,17 +154,19 @@ namespace TeamBins.DataAccess
     
         public Project SaveProject(Project project)
         {
-            project.CreatedDate = DateTime.Now;
-            db.Projects.Add(project);
+            if (project.ID == 0)
+            {
+                project.CreatedDate = DateTime.Now;
+                db.Projects.Add(project);
+            }
+            else
+            {
+                db.Entry(project).State = EntityState.Modified;
+            }
             db.SaveChanges();
             return project;
         }
-/*
-        public Bug GetBug(int id)
-        {
-            throw new System.NotImplementedException();
-        }
-        */
+
         public OperationStatus SaveUser(User user)
         {
             try
