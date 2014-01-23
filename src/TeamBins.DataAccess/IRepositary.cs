@@ -48,7 +48,7 @@ namespace TeamBins.DataAccess
         OperationStatus SaveTeamMemberRequest(TeamMemberRequest teamMemberRequest);
         TeamMemberRequest GetTeamMemberRequest(string activationCode);
         TeamMember GetTeamMember(int userId, int teamId);
- 
+        EmailTemplate GetEmailTemplate(string templateName);
        
 
        // IEnumerable<Activity> GetTeamActivity(int teamId);

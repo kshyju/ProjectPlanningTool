@@ -67,6 +67,9 @@
     <Compile Include="Document.cs">
       <DependentUpon>TeamBinsData.tt</DependentUpon>
     </Compile>
+    <Compile Include="EmailTemplate.cs">
+      <DependentUpon>TeamBinsData.tt</DependentUpon>
+    </Compile>
     <Compile Include="IRepositary.cs" />
     <Compile Include="Issue.cs">
       <DependentUpon>TeamBinsData.tt</DependentUpon>

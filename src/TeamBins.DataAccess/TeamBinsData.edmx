@@ -10,6 +10,7 @@
           <EntitySet Name="Category" EntityType="TeamBinsModel.Store.Category" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Comment" EntityType="TeamBinsModel.Store.Comment" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Document" EntityType="TeamBinsModel.Store.Document" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="EmailTemplate" EntityType="TeamBinsModel.Store.EmailTemplate" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Issue" EntityType="TeamBinsModel.Store.Issue" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="IssueMember" EntityType="TeamBinsModel.Store.IssueMember" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Priority" EntityType="TeamBinsModel.Store.Priority" store:Type="Tables" Schema="dbo" />
@@ -166,6 +167,15 @@
           <Property Name="ParentID" Type="int" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="CreatedByID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EmailTemplate">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="EmailBody" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="EmailSubject" Type="nvarchar" Nullable="false" MaxLength="500" />
         </EntityType>
         <EntityType Name="Issue">
           <Key>
@@ -724,6 +734,7 @@
             <End Role="User" EntitySet="Users" />
             <End Role="TeamMember" EntitySet="TeamMembers" />
           </AssociationSet>
+          <EntitySet Name="EmailTemplates" EntityType="TeamBinsModel.EmailTemplate" />
           </EntityContainer>
         <EntityType Name="Category">
           <Key>
@@ -1003,7 +1014,7 @@
           <Property Type="Int32" Name="CreatedByID" Nullable="false" />
           <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="3" />
           <NavigationProperty Name="Team" Relationship="TeamBinsModel.FK_TeamMemberRequest_Team" FromRole="TeamMemberRequest" ToRole="Team" />
-          <NavigationProperty Name="User" Relationship="TeamBinsModel.FK_TeamMemberRequest_CreatedBy" FromRole="TeamMemberRequest" ToRole="User" />
+          <NavigationProperty Name="CreatedBy" Relationship="TeamBinsModel.FK_TeamMemberRequest_CreatedBy" FromRole="TeamMemberRequest" ToRole="User" />
         </EntityType>
         <Association Name="FK_TeamMemberRequest_Team">
           <End Type="TeamBinsModel.Team" Role="Team" Multiplicity="1" />
@@ -1251,6 +1262,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="EmailTemplate">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="EmailBody" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="EmailSubject" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1430,6 +1450,16 @@
                 <ScalarProperty Name="DefaultProjectID" ColumnName="DefaultProjectID" />
                 <ScalarProperty Name="TeamID" ColumnName="TeamID" />
                 <ScalarProperty Name="MemberID" ColumnName="MemberID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EmailTemplates">
+            <EntityTypeMapping TypeName="TeamBinsModel.EmailTemplate">
+              <MappingFragment StoreEntitySet="EmailTemplate">
+                <ScalarProperty Name="EmailSubject" ColumnName="EmailSubject" />
+                <ScalarProperty Name="EmailBody" ColumnName="EmailBody" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

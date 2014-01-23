@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Web.Mvc;
 using TechiesWeb.TeamBibs.Helpers.Logging;
 
@@ -43,6 +44,35 @@ namespace TechiesWeb.TeamBins.Controllers
                 return 0;
             }
         }
+        /// <summary>
+        /// Returns a view's HTML markup in string format  
+        /// </summary>
+        /// <param name="viewName">Name of the view</param>
+        /// <param name="model">The Model/ViewModel object which is strongly typed to the view</param>
+        /// <param name="dictionary">Optional dictionary object</param>
+        /// <returns></returns>
+        protected string RenderPartialView(string viewName, object model, ViewDataDictionary dictionary = null)
+        {
+            if (string.IsNullOrEmpty(viewName))
+                viewName = this.ControllerContext.RouteData.GetRequiredString("action");
+
+            this.ViewData.Model = model;
+            if (dictionary != null)
+            {
+                foreach (var item in dictionary.Keys)
+                {
+                    this.ViewData.Add(item, dictionary[item]);
+                }
+            }
+            using (var sw = new StringWriter())
+            {
+                ViewEngineResult viewResult = ViewEngines.Engines.FindPartialView(this.ControllerContext, viewName);
+                var viewContext = new ViewContext(this.ControllerContext, viewResult.View, this.ViewData, this.TempData, sw);
+                viewResult.View.Render(viewContext, sw);
+                return sw.GetStringBuilder().ToString();
+            }
+        }
+       
 
     }
 

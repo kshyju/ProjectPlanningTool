@@ -73,6 +73,9 @@ namespace TechiesWeb.TeamBins.Controllers
                         var resultNew = repo.SaveTeamMemberRequest(teamMemberRequest);
                         if (resultNew.Status)
                         {
+
+
+
                             // TO DO : Send Email to user with the activation link                      
                             return Json(new { Status = "Success" });
                         }

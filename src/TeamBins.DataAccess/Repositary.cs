@@ -360,5 +360,9 @@ namespace TeamBins.DataAccess
         {
             return db.Teams.Where(s => s.TeamMembers.Any(f => f.MemberID == userId));
         }
+        public EmailTemplate GetEmailTemplate(string templateName)
+        {
+            return db.EmailTemplates.FirstOrDefault(s => s.Name == templateName);
+        }
     }
 }

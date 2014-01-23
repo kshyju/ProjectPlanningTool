@@ -46,6 +46,7 @@
         <AssociationConnector Association="TeamBinsModel.FK_TeamMember_Team" />
         <AssociationConnector Association="TeamBinsModel.FK_TeamMember_CreatedBy" />
         <AssociationConnector Association="TeamBinsModel.FK_TeamMember_Member" />
+        <EntityTypeShape EntityType="TeamBinsModel.EmailTemplate" Width="1.5" PointX="0.49741583526945476" PointY="17.022941507875426" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -171,15 +171,18 @@
     <Compile Include="Helpers\ExtensionMethods\DateTimeExtensions.cs" />
     <Compile Include="Helpers\HelperMethods\HTMLHelpers.cs" />
     <Compile Include="Helpers\Infrastructure\AlertMessageStore.cs" />
+    <Compile Include="Helpers\Infrastructure\Email.cs" />
     <Compile Include="Helpers\Logging\ILogger.cs" />
     <Compile Include="Helpers\Logging\Logger.cs" />
     <Compile Include="Hubs\UserHub.cs" />
+    <Compile Include="Services\EmailService.cs" />
     <Compile Include="Services\ProjectService.cs" />
     <Compile Include="Services\SecurityService.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="ViewModels\AccountSignupVM.cs" />
     <Compile Include="ViewModels\BugsListVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\EmailTemplate\JoinMyTeamEmail.cs" />
     <Compile Include="ViewModels\JSON ViewModels\IssueJsonVM.cs" />
     <Compile Include="ViewModels\NotificationVM.cs" />
     <Compile Include="ViewModels\DashBoardVM.cs" />
@@ -432,6 +435,7 @@
     <Content Include="Views\Users\Add.cshtml" />
     <Content Include="Views\Users\WelcomeToTeam.cshtml" />
     <Content Include="Views\Dashboard\Teams.cshtml" />
+    <Content Include="Views\EmailTemplates\JoinMyTeam.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
