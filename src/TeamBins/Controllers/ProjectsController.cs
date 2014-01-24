@@ -23,7 +23,7 @@ namespace TechiesWeb.TeamBins.Controllers
             try
             {
                 var vm = new TeamProjectListVM();
-                var projectList = repo.GetProjects().Where(s => s.TeamID == TeamID).ToList(); ;
+                var projectList = repo.GetProjects(TeamID).Where(s => s.TeamID == TeamID).ToList(); ;
 
                 var teamMember = repo.GetTeamMember(UserID, TeamID);
 

@@ -15,11 +15,11 @@ namespace TechiesWeb.TeamBins.ViewModels
         [Required]
         public int IssueID { set; get; }
     }
-    public class BugsListVM
+    public class IssueListVM
     {
         public List<IssueVM> Bugs { set; get; }
 
-        public BugsListVM()
+        public IssueListVM()
         {
             Bugs = new List<IssueVM>();
         }

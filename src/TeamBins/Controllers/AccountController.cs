@@ -230,7 +230,7 @@ namespace TechiesWeb.TeamBins.Controllers
 
         private List<SelectListItem> GetProjectListItem()
         {           
-            var projects = repo.GetProjects().
+            var projects = repo.GetProjects(TeamID).
                                 Where(s=>s.TeamID==TeamID).
                                 Select(c=> new SelectListItem { Value=c.ID.ToString(), Text=c.Name}).
                                 ToList();

@@ -1,32 +1,54 @@
 using System;
 using System.IO;
 using System.Web.Mvc;
+using TeamBins.DataAccess;
 using TechiesWeb.TeamBibs.Helpers.Logging;
 
 namespace TechiesWeb.TeamBins.Controllers
 {
     public class BaseController : Controller
     {
+        protected IRepositary repo;
         protected ILogger log;
         public BaseController()
         {
             log = new Logger();
+            repo = new Repositary();
+        }
+        public BaseController(IRepositary repositary)
+        {
+            log = new Logger();
+            repo = repositary;
         }
         protected void UpdateTeam(int teamId)
         {
             Session["TB_TeamID"] = teamId;
+        }
+        protected void SetCreateAndEditMode(bool mode)
+        {
+            Session["CreateAndEditMode"] = mode;
         }
         protected void SetUserIDToSession(int userId,int teamId,string nickName)
         {
             Session["TB_UserID"]=userId;
             Session["TB_TeamID"] = teamId;
             Session["TB_NickName"] = nickName;
-        }       
+        }
+        protected bool CreateAndEditMode
+        {
+            get
+            {
+                if (Session != null && Session["CreateAndEditMode"] != null)
+                    return (bool)Session["CreateAndEditMode"];
+
+                return false;
+            }
+        }
         protected int UserID
         {
             get 
             {
-                if (Session["TB_UserID"] != null)
+                if (Session != null && Session["TB_UserID"] != null)
                 {
                     return Convert.ToInt32(Session["TB_UserID"]);
                 }
@@ -37,7 +59,7 @@ namespace TechiesWeb.TeamBins.Controllers
         {
             get
             {
-                if (Session["TB_TeamID"] != null)
+                if ( Session!=null &&  Session["TB_TeamID"] != null)
                 {
                     return Convert.ToInt32(Session["TB_TeamID"]);
                 }

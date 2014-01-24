@@ -10,10 +10,10 @@ namespace Planner.Services
 {
     public class ProjectService
     {
-        public static List<SelectListItem> GetProjects(IRepositary repo)
+        public static List<SelectListItem> GetProjects(IRepositary repo, int teamId)
         {
             List<SelectListItem> projectList = new List<SelectListItem>();
-            var projects = repo.GetProjects();
+            var projects = repo.GetProjects(teamId);
             foreach (var pro in projects)
             {
                 projectList.Add(new SelectListItem { Value = pro.ID.ToString(), Text = pro.Name });

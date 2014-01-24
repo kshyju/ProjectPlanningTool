@@ -33,8 +33,13 @@
     <Reference Include="nunit.framework">
       <HintPath>..\..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="Rhino.Mocks">
+      <HintPath>..\..\packages\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -43,13 +48,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="AccountControllerTest.cs" />
+    <Compile Include="FakeDataStore.cs" />
+    <Compile Include="FakeRepositary.cs" />
+    <Compile Include="IssueControllerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\TeamBins.DataAccess\TeamBins.DataAccess.csproj">
+      <Project>{381ceafa-e0c2-4d2f-8454-e8aa7a264096}</Project>
+      <Name>TeamBins.DataAccess</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\src\TeamBins\TeamBins.csproj">
       <Project>{6a01c5bd-ea5c-4255-999f-76f0971b2c36}</Project>
       <Name>TeamBins</Name>

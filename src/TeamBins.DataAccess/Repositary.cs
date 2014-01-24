@@ -96,9 +96,9 @@ namespace TeamBins.DataAccess
             throw new System.NotImplementedException();
         }
         */
-        public IEnumerable<Project> GetProjects()
+        public IEnumerable<Project> GetProjects(int teamId)
         {
-            return db.Projects;
+            return db.Projects.Where(s=>s.TeamID==teamId);
         }
         public Project GetProject(int projectId)
         {
@@ -249,7 +249,10 @@ namespace TeamBins.DataAccess
         {
             return db.Issues;
         }
-
+        public IEnumerable<Issue> GetIssues(int teamId)
+        {
+            return db.Issues.Where(s => s.TeamID == teamId);
+        }
         public Issue GetIssue(int issueId)
         {
             return db.Issues.Include(s=>s.Priority).Include(x=>x.Status).Include(s=>s.Category).FirstOrDefault(s => s.ID == issueId);

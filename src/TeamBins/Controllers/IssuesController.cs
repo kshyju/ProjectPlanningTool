@@ -14,18 +14,16 @@ namespace TechiesWeb.TeamBins.Controllers
 {
     public class IssuesController : BaseController
     {
-        IRepositary repo;
-        public IssuesController()
-        {
-            repo = new Repositary();
+        public IssuesController(IRepositary repositary) :base(repositary)
+        {            
         }
 
         public ActionResult Backlog()
         {
             try
             {
-                BugsListVM bugListVM = new BugsListVM();
-                var projectList = repo.GetProjects().Where(s => s.TeamID==TeamID).ToList();
+                IssueListVM bugListVM = new IssueListVM();
+                var projectList = repo.GetProjects(TeamID).Where(s => s.TeamID==TeamID).ToList();
                 if (projectList.Count > 0)
                 {
                     bugListVM = GetBugList("BKLOG");
@@ -43,8 +41,8 @@ namespace TechiesWeb.TeamBins.Controllers
         {
             try
             {
-                BugsListVM bugListVM = new BugsListVM();
-                var projectList = repo.GetProjects().Where(s => s.TeamID==TeamID).ToList();
+                IssueListVM bugListVM = new IssueListVM();
+                var projectList = repo.GetProjects(TeamID).Where(s => s.TeamID==TeamID).ToList();
                 if (projectList.Count > 0)
                 {
                     bugListVM = GetBugList("ARCHV");
@@ -63,9 +61,9 @@ namespace TechiesWeb.TeamBins.Controllers
         {
             try
             {
-                BugsListVM bugListVM = new BugsListVM();
-                var projectList = repo.GetProjects().Where(s => s.TeamID == TeamID).ToList();
-                //.Where(s => s.ProjectMembers.Any(b => b.UserID == UserID)).ToList();
+                IssueListVM bugListVM = new IssueListVM();
+                var projectList = repo.GetProjects(TeamID).Where(s => s.TeamID == TeamID).ToList();
+               
                 if (projectList.Count > 0)
                 {
                     bugListVM = GetBugList("SPRNT");
@@ -80,27 +78,25 @@ namespace TechiesWeb.TeamBins.Controllers
             }
         }
 
-        private BugsListVM GetBugList(string iteration,int size=25)
+        private IssueListVM GetBugList(string iteration,int size=25)
         {
-            var vm = new BugsListVM { CurrentTab = iteration };
+            var vm = new IssueListVM { CurrentTab = iteration };
             var bugList = repo.GetIssues().Where(g=>g.TeamID==TeamID && g.Location==iteration).OrderByDescending(s=>s.ID).Take(size).ToList();
                     
             foreach (var bug in bugList)
             {
-               var bugVM = new IssueVM { ID = bug.ID, Title = bug.Title, Description = bug.Description };
-               bugVM.OpenedBy = bug.CreatedBy.FirstName;
-               bugVM.Priority = bug.Priority.Name;
-                bugVM.Status = bug.Status.Name;
-                bugVM.Category = bug.Category.Name;
-                bugVM.Project = bug.Project.Name;
-                bugVM.CreatedDate = bug.CreatedDate.ToShortDateString();
-                vm.Bugs.Add(bugVM);
+                var issueVM = new IssueVM { ID = bug.ID, Title = bug.Title, Description = bug.Description };
+                issueVM.OpenedBy = bug.CreatedBy.FirstName;
+                issueVM.Priority = bug.Priority.Name;
+                issueVM.Status = bug.Status.Name;
+                issueVM.Category = bug.Category.Name;
+                issueVM.Project = bug.Project.Name;
+                issueVM.CreatedDate = bug.CreatedDate.ToShortDateString();
+                vm.Bugs.Add(issueVM);
             }
 
             // Set the user preference
-            if (Session["CreateAndEditMode"] != null)
-                vm.IsCreateAndEditEnabled = (bool)Session["CreateAndEditMode"];
-
+            vm.IsCreateAndEditEnabled = CreateAndEditMode;
             return vm;
         }
         /*
@@ -120,7 +116,7 @@ namespace TechiesWeb.TeamBins.Controllers
        
         private void LoadDropDownsForCreate(CreateIssue viewModel)
         {            
-            viewModel.Projects = ProjectService.GetProjects(repo);
+            viewModel.Projects = ProjectService.GetProjects(repo,TeamID);
             viewModel.Priorities = ProjectService.GetPriorities(repo);
             viewModel.Categories = ProjectService.GetCategories(repo);
             viewModel.Cycles = ProjectService.GetCycles(repo);

@@ -49,7 +49,7 @@ namespace TechiesWeb.TeamBins.Controllers
                     UpdateTeam(teamid.Value);
                 }
                 var vm = new DashBoardVM();
-                var projectList = repo.GetProjects().Where(s => s.TeamID == TeamID).ToList();
+                var projectList = repo.GetProjects(TeamID).Where(s => s.TeamID == TeamID).ToList();
                 foreach (var project in projectList)
                 {
                     var projectVM = new ProjectVM { ID = project.ID, Name = project.Name, Description = project.Description };
