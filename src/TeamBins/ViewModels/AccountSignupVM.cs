@@ -15,8 +15,7 @@ namespace TechiesWeb.TeamBins.ViewModels
         public string Email { set; get; }
 
         [Required]
-        [DataType(DataType.Password)]
-        [StringLength(25, MinimumLength = 4)]
+        [DataType(DataType.Password)]        
         public string Password { set; get; }
 
     }
@@ -35,6 +34,8 @@ namespace TechiesWeb.TeamBins.ViewModels
         [DataType(DataType.Password)]
         [StringLength(25, MinimumLength=6,ErrorMessage="Password must have minimum of 6 characters")]
         public string Password { set; get; }
+
+        public string ReturnUrl { set; get; }
     }
     public class ForgotPasswordVM
     {

@@ -41,7 +41,7 @@ namespace TechiesWeb.TeamBins.ViewModels
     }
     public class AddTeamMemberRequestVM :MemberVM
     {
-        public int TeamID { set; get; }
+        public int TeamID { set; get; }      
     }
 
     public class CommentVM

@@ -17,18 +17,18 @@ namespace TechiesWeb.TeamBins.ViewModels
     }
     public class BugsListVM
     {
-        public List<BugVM> Bugs { set; get; }
+        public List<IssueVM> Bugs { set; get; }
 
         public BugsListVM()
         {
-            Bugs = new List<BugVM>();
+            Bugs = new List<IssueVM>();
         }
         public bool IsCreateAndEditEnabled { set; get; }
         public string CurrentTab { set; get; }
         public bool ProjectsExist { set; get; }
     }
 
-    public class BugVM
+    public class IssueVM
     {
         public int ID { set; get; }
 
@@ -44,8 +44,10 @@ namespace TechiesWeb.TeamBins.ViewModels
         public string Status { set; get; }
         public string StatusCode { set; get; }
         public string OpenedBy { set; get; }
-        public string LastModifiedBy { set; get; }  
+        public string LastModifiedBy { set; get; }
+        public string Iteration { set; get; }
 
+        public int ProjectID { set; get; }
         public string Project { get; set; }
         public string CreatedDate { set; get; }
         public string LastModifiedDate { set; get; }
@@ -58,7 +60,7 @@ namespace TechiesWeb.TeamBins.ViewModels
 
         public List<MemberVM> Members { set; get; }
         public List<CommentVM> Comments { set; get; }
-        public BugVM()
+        public IssueVM()
         {
             Images = new List<DocumentVM>();
             Attachments = new List<DocumentVM>();
@@ -79,7 +81,7 @@ namespace TechiesWeb.TeamBins.ViewModels
     
     }
 
-    public class CreateBug : BugVM
+    public class CreateIssue : IssueVM
     {
 
         public bool IsFromModalWindow { set; get; }
@@ -91,6 +93,7 @@ namespace TechiesWeb.TeamBins.ViewModels
  
         public int SelectedCategory { set; get; }
 
+        public string SelectedIteration { set; get; }
      
          public int SelectedCycle { set; get; }
 
@@ -99,12 +102,13 @@ namespace TechiesWeb.TeamBins.ViewModels
         public List<SelectListItem> Projects { set; get; }
         public List<SelectListItem> Priorities { set; get; }
         public List<SelectListItem> Cycles { set; get; }
+        public List<SelectListItem> Iterations { set; get; }
 
         public string Version { set; get; }
 
         public List<HttpPostedFileBase> files { set; get; }
 
-        public CreateBug()
+        public CreateIssue()
         {
             files = new List<HttpPostedFileBase>();
         }

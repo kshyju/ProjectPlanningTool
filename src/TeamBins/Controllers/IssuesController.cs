@@ -1,5 +1,4 @@
-﻿using Planner.DataAccess;
-using Planner.Services;
+﻿using Planner.Services;
 using SmartPlan.DataAccess;
 using System;
 using System.Collections.Generic;
@@ -7,56 +6,88 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using TeamBins.DataAccess;
+using TeamBins.Services;
 using TechiesWeb.TeamBins.ViewModels;
 
-
-
-namespace Planner.Controllers
+namespace TechiesWeb.TeamBins.Controllers
 {
-
     public class IssuesController : BaseController
     {
         IRepositary repo;
-
         public IssuesController()
         {
             repo = new Repositary();
         }
 
-
         public ActionResult Backlog()
-        {        
-            var bugListVM= GetBugList("Backlog");
-            return View("Index", bugListVM);
+        {
+            try
+            {
+                BugsListVM bugListVM = new BugsListVM();
+                var projectList = repo.GetProjects().Where(s => s.TeamID==TeamID).ToList();
+                if (projectList.Count > 0)
+                {
+                    bugListVM = GetBugList("BKLOG");
+                    bugListVM.ProjectsExist = true;
+                }
+                return View("Index", bugListVM);
+            }
+            catch (Exception ex)
+            {
+                // to do : Log error
+                return View("Error");
+            }
         }
         public ActionResult Completed()
-        {           
-            var bugListVM = GetBugList("Completed");
-            return View("Index", bugListVM);
+        {
+            try
+            {
+                BugsListVM bugListVM = new BugsListVM();
+                var projectList = repo.GetProjects().Where(s => s.TeamID==TeamID).ToList();
+                if (projectList.Count > 0)
+                {
+                    bugListVM = GetBugList("ARCHV");
+                    bugListVM.ProjectsExist = true;
+                }
+                return View("Index", bugListVM);
+            }
+            catch (Exception ex)
+            {
+                // to do : Log error
+                return View("Error");
+            }
         }
+        
         public ActionResult Index()
         {
-            BugsListVM bugListVM=new BugsListVM();
-            var projectList = repo.GetProjects().Where(s => s.ProjectMembers.Any(b => b.UserID == UserID)).ToList();
-            if (projectList.Count > 0)
+            try
             {
-                bugListVM = GetBugList("Current");
-                bugListVM.ProjectsExist = true;
+                BugsListVM bugListVM = new BugsListVM();
+                var projectList = repo.GetProjects().Where(s => s.TeamID == TeamID).ToList();
+                //.Where(s => s.ProjectMembers.Any(b => b.UserID == UserID)).ToList();
+                if (projectList.Count > 0)
+                {
+                    bugListVM = GetBugList("SPRNT");
+                    bugListVM.ProjectsExist = true;
+                }
+                return View("Index", bugListVM);
             }
-
-            return View("Index", bugListVM);
+            catch (Exception ex)
+            {
+                // to do : Log error
+                return View("Error");
+            }
         }
 
-        private BugsListVM GetBugList(string iteration)
+        private BugsListVM GetBugList(string iteration,int size=25)
         {
             var vm = new BugsListVM { CurrentTab = iteration };
-
-            var bugList = repo.GetIssues().Where(g => g.Project.ProjectMembers.Any(b => b.UserID == UserID)).OrderByDescending(s=>s.ID).ToList();
-            
-            //.OrderByDescending(x => x.ID).Take(25);
+            var bugList = repo.GetIssues().Where(g=>g.TeamID==TeamID && g.Location==iteration).OrderByDescending(s=>s.ID).Take(size).ToList();
+                    
             foreach (var bug in bugList)
             {
-               var bugVM = new BugVM { ID = bug.ID, Title = bug.Title, Description = bug.Description };
+               var bugVM = new IssueVM { ID = bug.ID, Title = bug.Title, Description = bug.Description };
                bugVM.OpenedBy = bug.CreatedBy.FirstName;
                bugVM.Priority = bug.Priority.Name;
                 bugVM.Status = bug.Status.Name;
@@ -75,7 +106,7 @@ namespace Planner.Controllers
         /*
         public ActionResult Add()
         {
-            CreateBug vm = new CreateBug();
+            CreateIssue vm = new CreateIssue();
             LoadDropDownsForCreate(vm);
             vm.Statuses = ProjectService.GetStatuses(repo, new List<string> { "New" });    
         
@@ -87,24 +118,22 @@ namespace Planner.Controllers
         }
         */
        
-        private void LoadDropDownsForCreate(CreateBug viewModel)
-        {
-            
+        private void LoadDropDownsForCreate(CreateIssue viewModel)
+        {            
             viewModel.Projects = ProjectService.GetProjects(repo);
             viewModel.Priorities = ProjectService.GetPriorities(repo);
             viewModel.Categories = ProjectService.GetCategories(repo);
             viewModel.Cycles = ProjectService.GetCycles(repo);
             viewModel.Statuses = ProjectService.GetStatuses(repo);
+            viewModel.Iterations = ProjectService.GetIterations();
         }
         
         
         [HttpPost]
-        public ActionResult Add(CreateBug model,List<HttpPostedFileBase> files)
+        public ActionResult Add(CreateIssue model,List<HttpPostedFileBase> files)
         {
-
             try
-            {
-                
+            {                
                 if (ModelState.IsValid)
                 {
                     Issue bug = new Issue { ID = model.ID };
@@ -115,36 +144,32 @@ namespace Planner.Controllers
 
                     bug.Title = model.Title;
                     bug.Description = model.Description;
-
-                  
-
-                 //   bug.Team.ID = 1;
-                    bug.CreatedByID = UserID;
-                   // Issue existingIssue=new Issue();
+                    bug.TeamID = TeamID;
+                    bug.CreatedByID = UserID;                 
                     LoadDefaultIssueValues(bug, model);
-
 
                     OperationStatus result = repo.SaveIssue(bug);
                     if (result.Status)
                     {
-                       // SaveActivity(model, existingIssue, result.OperationID);
+                        // SaveActivity(model, existingIssue, result.OperationID);
+                    }
+                    else
+                    {
+                        log.Debug(result);
                     }
                     if (Request.IsAjaxRequest())
                     {
                         if (result.Status)
                         {
-
-                           
-                            
-
                             var issue = repo.GetIssue(result.OperationID);
                             if (issue != null)
                             {
-                                var issueVM = new BugVM { ID = result.OperationID };
+                                var issueVM = new IssueVM { ID = result.OperationID };
                                 issueVM.Title = issue.Title;
                                 issueVM.Priority = issue.Priority.Name;
                                 issueVM.Status = issue.Status.Name;
                                 issueVM.OpenedBy = issue.CreatedBy.FirstName;
+                                issueVM.Category = issue.Category.Name;
                                 issueVM.CreatedDate = issue.CreatedDate.ToShortDateString();
 
                                 return Json(new { Status = "Success", Item = issueVM });
@@ -165,10 +190,10 @@ namespace Planner.Controllers
 
 
                                 string fileName = Path.GetFileName(file.FileName).ToLower();
-                                string fileKey = fileName.Replace(" ", "-");
-                                fileName = fileName.Replace("%", "-");
-
-                                fileKey = result.OperationID + "-" + fileCounter + "-" + Guid.NewGuid().ToString("n") + "-" + fileName;
+                                string fileKey = fileName;
+                                fileKey = fileKey.Replace(" ", "-").Replace("%", "-");                                 
+                                
+                                fileKey = String.Format("{0}-{1}-{2:n}-{3}", result.OperationID, fileCounter, Guid.NewGuid(), fileName);
 
                                 if (fileKey.Length > 99)
                                     fileKey = fileKey.Substring(0, 99);
@@ -176,36 +201,27 @@ namespace Planner.Controllers
 
                                 string path = Path.Combine(Server.MapPath("~/uploads"), fileKey);
                                 file.SaveAs(path);
-                                /*
-                                Document img = new Document { UploadType = "Bug", DocName = fileName, Extension = Path.GetExtension(file.FileName) };
-                                img.DocKey = fileKey;
+                               
+                                Document img = new Document {  FileName = fileName, ParentID=model.ID };
+                                img.FileAlias = fileKey;
                                 img.CreatedByID = UserID;
-                                img.ParentID = result.OperationID;*/
-                                /*
+                                img.ParentID = result.OperationID;
+                                
                                 var resultForImg = repo.SaveDocument(img);
                                 {
 
-
-                                }*/
-
+                                }
                            }
-
-
                         }
-
                     }
 
-
                     if (result.Status)
-                    {
-                       
-                  
+                    { 
                         if (model.IsFromModalWindow)
                         {
                             if (Request.UrlReferrer != null)
                                 return Redirect(Request.UrlReferrer.AbsoluteUri);
                         }
-
                         return RedirectToAction("Index");
                     }
                 }
@@ -214,10 +230,15 @@ namespace Planner.Controllers
             }
             catch (Exception ex)
             {
-                return View(model);
+                log.Error(ex);
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(new { Status = "Error" });
+                }
             }
+            return RedirectToAction("Index");
         }
-        private void LoadDefaultIssueValues(Issue issue,CreateBug model)
+        private void LoadDefaultIssueValues(Issue issue,CreateIssue model)
         {
             var user = repo.GetUser(UserID);
             issue.PriorityID = model.SelectedPriority;
@@ -227,7 +248,10 @@ namespace Planner.Controllers
             issue.ProjectID = model.SelectedProject;
             if (issue.ProjectID == 0)
             {
-                issue.ProjectID = user.DefaultProjectID.Value;
+                var teamMember = repo.GetTeamMember(UserID, TeamID);
+                
+                //get from team member 
+                issue.ProjectID = teamMember.DefaultProjectID.Value;
             }
             issue.StatusID = model.SelectedStatus;
             if ((model.ID == 0) && (model.SelectedStatus == 0)) 
@@ -238,9 +262,11 @@ namespace Planner.Controllers
             if (issue.CategoryID == 0)
                 issue.CategoryID = 1;
 
+            issue.Location = (string.IsNullOrEmpty(model.SelectedIteration)?"SPRNT":model.SelectedIteration);
+
         }
        /*
-        private void SaveActivity(CreateBug model,Issue existingIssue, int issueId)
+        private void SaveActivity(CreateIssue model,Issue existingIssue, int issueId)
         {
             var activity = new Activity();
             activity.CreatedBy.ID = UserID;
@@ -265,28 +291,13 @@ namespace Planner.Controllers
 
             var r = repo.SaveActivity(activity);
         }*/
-        /*
-        private string GetStatusName(int statusId)
-        {
-            if (statusId == 1)
-                return "New";
-            else if (statusId == 2)
-                return "In Progress";
-            else if (statusId == 3)
-                return "Completed";
-            else if (statusId == 4)
-                 return "Closed";
-            else
-                return string.Empty;
-
-        }*//*
-            * */
+       
         public ActionResult Edit(int id)
         {
             var bug = repo.GetIssue(id);
             if (bug != null)
             {
-                var editVM = new CreateBug();
+                var editVM = new CreateIssue();
                 editVM.Title = bug.Title;
                 editVM.Description = bug.Description;
                 LoadDropDownsForCreate(editVM);
@@ -295,8 +306,7 @@ namespace Planner.Controllers
                 editVM.SelectedPriority = bug.Priority.ID;
                 editVM.SelectedProject = bug.Project.ID;
                 editVM.SelectedStatus = bug.Status.ID;
-                //editVM.IsShowStopper = bug.IsShowStopper;
-                //editVM.OpenedBy = bug.CreatedBy.DisplayName;
+                editVM.SelectedIteration = bug.Location;
                 editVM.CreatedDate = bug.CreatedDate.ToShortDateString();
               
                 //var allDocuments = repo.GetDocuments(id, "Bug");
@@ -313,71 +323,69 @@ namespace Planner.Controllers
                     editVM.IsFromModalWindow = true;
                     return PartialView("~/Views/Issues/Partial/Edit.cshtml", editVM);
                 }
-
                 return View(editVM);
             }
             return View("NotFound");
         }
-                    /*
-        *//*
-        */
+                    
         public ActionResult Details(int id)
         {
             var bug = repo.GetIssue(id);
-            BugVM bugVm = new BugVM { ID = bug.ID, Title = bug.Title };
+            IssueVM bugVm = new IssueVM { ID = bug.ID, Title = bug.Title };
             bugVm.Description = bug.Description;
             bugVm.CreatedDate = bug.CreatedDate.ToString("g");
             bugVm.OpenedBy = bug.CreatedBy.FirstName;
             bugVm.Title = bug.Title;
             bugVm.Project = bug.Project.Name;
+            bugVm.Category = bug.Category.Name;
+            bugVm.ProjectID = bug.ProjectID;
             bugVm.Status = bug.Status.Name;
             bugVm.Priority = bug.Priority.Name;
             bugVm.StatusCode = bug.Status.Name;
-          //  bugVm.IssueDueDate=(bug.DueDate.Year>2000?bug.DueDate.ToShortDateString():"");
+            bugVm.Iteration = ProjectService.GetIterationName(bug.Location);
+            if(bug.DueDate.HasValue)
+                bugVm.IssueDueDate=(bug.DueDate.Value.Year>2000?bug.DueDate.Value.ToShortDateString():"");
 
-            /*
-            var allDocuments = repo.GetDocuments(id, "Bug");
-            var images = allDocuments; //;.Where(x => x.Extension.ToUpper() == ".JPG" || x.Extension.ToUpper()==".PNG"); 
-            foreach (var img in images)
+            
+            var allDocuments = repo.GetDocuments(id);           
+            foreach (var img in allDocuments)
             {
-
-                var imgVM = new DocumentVM { FileName=img.DocName, FileExtn=img.Extension };
-                imgVM.FileKey = img.DocKey;
+                var imgVM = new DocumentVM { FileName=img.FileName, FileKey=img.FileAlias};
+                imgVM.FileExtn = Path.GetExtension(img.FileName);
                
                 if(imgVM.FileExtn.ToUpper()==".JPG" || imgVM.FileExtn.ToUpper()==".PNG")
                     bugVm.Images.Add(imgVM);
                 else
                     bugVm.Attachments.Add(imgVM);
 
-            }
-            */
+            }          
 
        
             LoadComments(id, bugVm);
             //Get Members
-           // LoadIssueMembers(id, bugVm);
+            LoadIssueMembers(id, bugVm);
             return View(bugVm);
         }
 
-        private void LoadComments(int id, BugVM bugVm)
+        private void LoadComments(int id, IssueVM bugVm)
         {
             var commentList = repo.GetCommentsForIssue(id);
             foreach (var item in commentList)
             {
                 var commentVM = new CommentVM { ID = item.ID, CommentBody = item.CommentText, AuthorName=item.Author.FirstName, CreativeDate = item.CreatedDate.ToString("g") };
-                //commentVM.AvatarHash = UserService.GetImageSource(item.CreatedBy.EmailAddress, 42);
+                commentVM.AvatarHash = UserService.GetImageSource(item.Author.EmailAddress, 42);
                 commentVM.CreatedDateRelative = item.CreatedDate.ToShortDateString();//.ToRelativeDateTime();
                 bugVm.Comments.Add(commentVM);
             }
         }
-        /*
-        private void LoadIssueMembers(int id, BugVM bugVm)
+        
+        private void LoadIssueMembers(int id, IssueVM bugVm)
         {
             var memberList = repo.GetIssueMembers(id);
             foreach (var member in memberList)
             {
-                var vm = new MemberVM { MemberType = member.JobTitle, Name = member.DisplayName, MemberID = member.ID };
-                vm.AvatarHash = UserService.GetImageSource(member.EmailAddress);
+                var vm = new MemberVM { MemberType = member.Member.JobTitle, Name = member.Member.FirstName, MemberID = member.MemberID };
+                vm.AvatarHash = UserService.GetImageSource(member.Member.EmailAddress);
                 bugVm.Members.Add(vm);
             }
         }
@@ -385,12 +393,12 @@ namespace Planner.Controllers
         public ActionResult Image(string id)
         {
 
-            var img = repo.GetDocument(id);
+          /*  var img = repo.GetDocument(id);
             if (img != null)
             {
                 var imgVM = new ImageVM { ID = img.DocID, FileKey = img.DocKey };
                 return PartialView(imgVM);
-            }
+            }*/
             return View("NotFound");
         }
 
@@ -399,30 +407,37 @@ namespace Planner.Controllers
         {
             repo.DeleteIssueMember(id, memberId);
             return Json(new { Status = "Success" });
-
         }
-         *  */
+       
         [HttpPost]
         public int SavePreference(bool CreateAndEditMode)
         {
             Session["CreateAndEditMode"] = CreateAndEditMode;
             return 1;
         }
-        /*
+        
         [HttpPost]
         public int AddMember(int memberId, int issueId)
         {
-          //  repo.SaveIssueMember(issueId, memberId, UserID);
-            return 1;
-        }*/
-        /*
+            try
+            {
+                repo.SaveIssueMember(issueId, memberId, UserID);
+                return 1;
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                return 0;
+            }
+        }
+        
         public ActionResult IssueMembers(int id)
         {
-            var vm = new BugVM { ID = id };
+            var vm = new IssueVM { ID = id };
             LoadIssueMembers(id, vm);
             return PartialView("Partial/Members",vm);
         }
-        */
+        
        
        [HttpPost]        
        public ActionResult Comment(NewIssueCommentVM model)
@@ -440,6 +455,7 @@ namespace Planner.Controllers
             }
             catch(Exception ex)
             {
+                log.Error(ex);
                 return Json(new { Status = "Error" });
             }            
         }
@@ -450,38 +466,44 @@ namespace Planner.Controllers
             if (comment != null)
             {
                 var commentVM = new CommentVM { ID = comment.ID, AuthorName = comment.Author.FirstName, CommentBody = comment.CommentText, CreativeDate = comment.CreatedDate.ToString("g") };
-                //commentVM.AvatarHash = UserService.GetImageSource(comment.Author.EmailAddress, 42);
+                commentVM.AvatarHash = UserService.GetImageSource(comment.Author.EmailAddress, 42);
                 commentVM.CreatedDateRelative = comment.CreatedDate.ToShortDateString(); //.ToRelativeDateTime();
                 return PartialView("Partial/Comment", commentVM);
             }
             return Content("");
         }
-        /*
+        
         [HttpPost]
         public void SaveDueDate(string issueDueDate, int issueId)
         {
-            var issue = repo.GetIssue(issueId);
-            if (issue != null)
+            try
             {
-                if (!String.IsNullOrEmpty(issueDueDate))
+                var issue = repo.GetIssue(issueId);
+                if (issue != null)
                 {
-                    issue.DueDate = DateTime.Parse(issueDueDate);
-                }
-                else
-                {
-                    issue.DueDate = DateTime.Now.AddYears(-1000);
-                }
-                
-                var result=repo.SaveIssue(issue);
-                if (!result.Status)
-                {
+                    if (!String.IsNullOrEmpty(issueDueDate))
+                    {
+                        issue.DueDate = DateTime.Parse(issueDueDate);
+                    }
+                    else
+                    {
+                        issue.DueDate = DateTime.Now.AddYears(-1000);
+                    }
 
+                    var result = repo.SaveIssue(issue);
+                    if (!result.Status)
+                    {
+                        log.Error(result);
+                    }
                 }
-
             }
-
-        }*/
+            catch (Exception ex)
+            {
+                log.Error(ex);
+            }
         }
+
+    }
 }
         
     

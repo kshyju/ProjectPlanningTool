@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SmartPlan.DataAccess
+namespace TeamBins.DataAccess
 {
     using System;
     using System.Collections.Generic;
@@ -18,7 +18,7 @@ namespace SmartPlan.DataAccess
         {
             this.Issues = new HashSet<Issue>();
             this.ProjectMembers = new HashSet<ProjectMember>();
-            this.Users = new HashSet<User>();
+            this.TeamMembers = new HashSet<TeamMember>();
         }
     
         public int ID { get; set; }
@@ -26,10 +26,11 @@ namespace SmartPlan.DataAccess
         public string Description { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public int CreatedByID { get; set; }
+        public Nullable<int> TeamID { get; set; }
     
         public virtual ICollection<Issue> Issues { get; set; }
-        public virtual User User { get; set; }
         public virtual ICollection<ProjectMember> ProjectMembers { get; set; }
-        public virtual ICollection<User> Users { get; set; }
+        public virtual User CreatedBy { get; set; }
+        public virtual ICollection<TeamMember> TeamMembers { get; set; }
     }
 }

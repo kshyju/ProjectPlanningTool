@@ -51,6 +51,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\EntityFramework.6.0.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Core">
       <HintPath>..\..\packages\Microsoft.AspNet.SignalR.Core.1.0.1\lib\net40\Microsoft.AspNet.SignalR.Core.dll</HintPath>
     </Reference>
@@ -155,28 +159,36 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ImageController.cs" />
     <Compile Include="Controllers\IssuesController.cs" />
     <Compile Include="Controllers\ProjectsController.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\ExtensionMethods\DateTimeExtensions.cs" />
     <Compile Include="Helpers\HelperMethods\HTMLHelpers.cs" />
     <Compile Include="Helpers\Infrastructure\AlertMessageStore.cs" />
+    <Compile Include="Helpers\Infrastructure\Email.cs" />
+    <Compile Include="Helpers\Logging\ILogger.cs" />
+    <Compile Include="Helpers\Logging\Logger.cs" />
     <Compile Include="Hubs\UserHub.cs" />
+    <Compile Include="Services\EmailService.cs" />
     <Compile Include="Services\ProjectService.cs" />
     <Compile Include="Services\SecurityService.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="ViewModels\AccountSignupVM.cs" />
     <Compile Include="ViewModels\BugsListVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\EmailTemplate\JoinMyTeamEmail.cs" />
     <Compile Include="ViewModels\JSON ViewModels\IssueJsonVM.cs" />
     <Compile Include="ViewModels\NotificationVM.cs" />
     <Compile Include="ViewModels\DashBoardVM.cs" />
     <Compile Include="ViewModels\ProjectVM.cs" />
     <Compile Include="ViewModels\TeamVM.cs" />
+    <Compile Include="ViewModels\UsersCurrentTeamVM.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
@@ -184,7 +196,10 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\datepicker.css" />
+    <Content Include="Content\images\bug-icon.png" />
     <Content Include="Content\images\bug.png" />
+    <Content Include="Content\images\feature-icon.png" />
+    <Content Include="Content\images\idea-icon-16.png" />
     <Content Include="Content\images\logo.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -414,6 +429,13 @@
     <Content Include="Views\Account\EditProfile.cshtml" />
     <Content Include="Views\Account\Password.cshtml" />
     <Content Include="Views\Account\Settings.cshtml" />
+    <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\Home\GettingStarted.cshtml" />
+    <Content Include="Views\Users\Index.cshtml" />
+    <Content Include="Views\Users\Add.cshtml" />
+    <Content Include="Views\Users\WelcomeToTeam.cshtml" />
+    <Content Include="Views\Dashboard\Teams.cshtml" />
+    <Content Include="Views\EmailTemplates\JoinMyTeam.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

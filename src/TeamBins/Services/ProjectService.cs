@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using TeamBins.DataAccess;
 
 namespace Planner.Services
 {
@@ -16,7 +17,6 @@ namespace Planner.Services
             foreach (var pro in projects)
             {
                 projectList.Add(new SelectListItem { Value = pro.ID.ToString(), Text = pro.Name });
-
             }
             return projectList;
         }
@@ -31,6 +31,32 @@ namespace Planner.Services
             }
             return projectList;
         }
+
+        public static List<SelectListItem> GetIterations()
+        {
+            return new List<SelectListItem>
+            {
+                new SelectListItem { Value="SPRNT", Text="Sprint"},
+                new SelectListItem { Value="BKLOG", Text="BackLog"},
+                new SelectListItem { Value="ARCHV", Text="Archieve"},
+            };
+        }
+        public static string GetIterationName(string iterationCode)
+        {
+            switch(iterationCode)
+            {
+                case "ARCHV": return "Archived";
+                              break;
+                case "BKLOG": return "BackLog";
+                              break;
+                default: return "Current Sprint";
+                              break;
+
+                    
+            }
+
+        }
+
         public static List<SelectListItem> GetStatuses(IRepositary repo)
         {
             List<SelectListItem> projectList = new List<SelectListItem>();

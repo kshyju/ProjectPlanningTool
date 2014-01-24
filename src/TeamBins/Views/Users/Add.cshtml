@@ -1,0 +1,31 @@
+﻿@model TechiesWeb.TeamBins.ViewModels.AddTeamMemberRequestVM
+@{
+Layout=null;
+}
+@using(Html.BeginForm("Add","Users"))
+{       
+<div class="modal-dialog">
+    <div class="modal-content" style="width:500px;">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">Add Member</h4>
+        </div>
+        <div class="modal-body">
+            <div id="msg" style="display:none;"></div>            
+                <table class="tblform sleek modelTblFull">
+                <tr>
+                    <th>Email Address</th>
+                </tr>
+                <tr>
+                    <td>@Html.TextBoxFor(x=>x.EmailAddress)</td>
+                </tr>               
+                </table>
+                @Html.HiddenFor(x=>x.TeamID)            
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" id="btnAddMember" class="btn btn-primary">Save</button>
+        </div>  
+    </div>
+</div>
+}

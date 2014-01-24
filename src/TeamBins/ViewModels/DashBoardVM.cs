@@ -10,19 +10,16 @@ namespace SmartPlan.ViewModels
     {
         public IList<TeamVM> Teams { set; get; }
         public List<ProjectVM> Projects { set; get; }
-        public List<BugVM> RecentIssues { set; get; }
+        public List<IssueVM> RecentIssues { set; get; }
+        public List<IssueVM> IssuesAssignedToMe { set; get; }
         public DashBoardVM()
         {
             Teams = new List<TeamVM>();
             Projects = new List<ProjectVM>();
-            RecentIssues = new List<BugVM>();
+            RecentIssues = new List<IssueVM>();
+            IssuesAssignedToMe = new List<IssueVM>();
         }
     }
     
-    public class TeamVM
-    {
-        public int ID { set; get; }
-        public string Name { set; get; }
-        
-    }
+    
 }

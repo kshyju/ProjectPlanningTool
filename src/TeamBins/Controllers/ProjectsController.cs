@@ -1,13 +1,11 @@
-﻿using Planner.Controllers;
-using Planner.DataAccess;
-using Planner.Services;
-using SmartPlan.DataAccess;
-using System;
+﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using TeamBins.DataAccess;
+using TeamBins.Services;
 using TechiesWeb.TeamBins.ViewModels;
 
-namespace SmartPlan.Controllers
+namespace TechiesWeb.TeamBins.Controllers
 {
 
     public class ProjectsController : BaseController
@@ -19,20 +17,31 @@ namespace SmartPlan.Controllers
             repo = new Repositary();
             userService = new UserService(repo);
         }
-
         
         public ActionResult Index()
         {
-            var vm = new TeamProjectListVM ();           
-            var projectList = repo.GetProjects().Where(s => s.ProjectMembers.Any(b => b.UserID == UserID)).ToList();
-
-            foreach (var project in projectList)
+            try
             {
-                var projectVM = new ProjectVM { Name = project.Name, ID = project.ID };
-               // projectVM.IsProjectOwner = true;
-                vm.Projects.Add(projectVM);
+                var vm = new TeamProjectListVM();
+                var projectList = repo.GetProjects().Where(s => s.TeamID == TeamID).ToList(); ;
+
+                var teamMember = repo.GetTeamMember(UserID, TeamID);
+
+                foreach (var project in projectList)
+                {
+                    var projectVM = new ProjectVM { Name = project.Name, ID = project.ID };
+                    if (teamMember.DefaultProjectID.HasValue)
+                        projectVM.IsDefaultProject = project.ID == teamMember.DefaultProjectID.Value;
+
+                    vm.Projects.Add(projectVM);
+                }
+                return View(vm);
             }
-            return View(vm);
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                return View("Error");
+            }
         }
         public ActionResult Details(int id)
         {
@@ -60,54 +69,68 @@ namespace SmartPlan.Controllers
         [HttpPost]
         public ActionResult Add(CreateProjectVM model)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var existing = repo.GetProject(model.Name,UserID);
-                if((existing!=null) && (existing.ID!=model.ID))
-                    return Json(new { Status="Error", Message= "Project name exists"});
-
-
-                var project = new Project { Name = model.Name, ID=model.ID };
-                project.CreatedByID = UserID;               
-                var res=repo.SaveProject(project);
-                if (res!=null)
+                if (ModelState.IsValid)
                 {
-                    //Add as Project member
-                    var projectMember = new ProjectMember { ProjectID = project.ID, UserID = UserID, CreatedDate = DateTime.Now };
-                    var result = repo.SaveProjectMember(projectMember);
+                    var existing = repo.GetProject(model.Name, UserID);
+                    if ((existing != null) && (existing.ID != model.ID))
+                        return Json(new { Status = "Error", Message = "Project name exists" });
 
-                    var projectCount = repo.GetProjects()
-                                    .Where(s => s.ProjectMembers.Any(b => b.UserID == UserID)).Count();
 
-                    //If this is the first project, then save as the default project
-                    if (projectCount==1)
+                    var project = new Project { Name = model.Name, ID = model.ID, TeamID = TeamID };
+                    project.CreatedByID = UserID;
+                    var res = repo.SaveProject(project);
+                    if (res != null)
                     {
-                        var defProjRes = userService.SaveDefaultIssueSettings(UserID, project.ID);    
-                    }
+                        //Add as Project member
 
-                    return Json(new { Status = "Success", Message = "Project created successfully" });
+                        /*
+                        var projectMember = new ProjectMember { ProjectID = project.ID, UserID = UserID, CreatedDate = DateTime.Now };
+                        var result = repo.SaveProjectMember(projectMember);
+                        */
+
+                        var teamMember = repo.GetTeamMember(UserID, TeamID);
+
+                        if (teamMember != null && !teamMember.DefaultProjectID.HasValue)
+                        {
+                            var defProjRes = userService.SaveDefaultProjectForTeam(UserID, TeamID, project.ID);
+                        }
+
+                        return Json(new { Status = "Success", Message = "Project created successfully" });
+                    }
                 }
+                return Json(new { Status = "Error", Message = "Required fields are missing" });
             }
-            return Json(new { Status = "Error", Message = "Required fields are missing" });
-           
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                return Json(new { Status = "Error", Message = "Error in saving project" });
+            }           
         }
 
         public ActionResult Edit(int id)
         {
-            var project = repo.GetProject(id,TeamID);
-            if (project != null)
+            try
             {
-                var vm = new CreateProjectVM { ID = id, Name = project.Name };
-                return PartialView("Partial/Add", vm);
+                var project = repo.GetProject(id, TeamID);
+                if (project != null)
+                {
+                    var vm = new CreateProjectVM { ID = id, Name = project.Name };
+                    return PartialView("Partial/Add", vm);
+                }
+                return View("NotFound");
             }
-            return View("NotFound");    
+            catch (Exception ex)
+            {
+                log.Error("id : "+id,ex);
+                return View("Error");
+            }
         }
         public ActionResult DeleteConfirm(int id)
         {
             var vm = new DeleteProjectConfirmVM();
-
             vm.DependableItemsCount = repo.GetIssues().Where(s => s.Project.ID == id).Count();
-
             return PartialView("Partial/DeleteConfirm",vm);
         }
         [HttpPost]
@@ -120,6 +143,7 @@ namespace SmartPlan.Controllers
             }
             catch(Exception ex)
             {
+                log.Error(ex);
                 return Json(new { Status = "Error", Message = "Error deleting project" });
             }
         }
@@ -140,7 +164,6 @@ namespace SmartPlan.Controllers
                     //Existing member, So lets add him to the project
                     var projectMember = new ProjectMember { ProjectID = model.ProjectID, UserID = member.ID, CreatedDate = DateTime.Now };
                     var result = repo.SaveProjectMember(projectMember);
-
                 }
                 return Json(new { Status = "Success", Message = "Project member added successfully" });
             }
@@ -149,6 +172,18 @@ namespace SmartPlan.Controllers
                 return Json(new { Status = "Error", Message = "Error adding project member" });
             }
         }
+        /*
+        // JSON for auto complete
+        public ActionResult Members(int id,string term)
+        {
+            //Returns project member list in JSON format
+            var project= repo.GetProject(id);
+            
+            var projectMembers=project.ProjectMembers.Where(s=>s.Member.FirstName.StartsWith(term,StringComparison.OrdinalIgnoreCase)).Select(item => new { value = item.Member.FirstName, id = item.Member.ID.ToString() }).ToList();
+            return Json( projectMembers , JsonRequestBehavior.AllowGet);
+            
+             
+        }*/
 
     }
 }

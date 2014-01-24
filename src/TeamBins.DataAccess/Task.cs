@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SmartPlan.DataAccess
+namespace TeamBins.DataAccess
 {
     using System;
     using System.Collections.Generic;
@@ -33,6 +33,6 @@ namespace SmartPlan.DataAccess
     
         public virtual ICollection<Task> Tasks { get; set; }
         public virtual Task ParentTask { get; set; }
-        public virtual User ResponsiblePerson { get; set; }
+        public virtual User User { get; set; }
     }
 }

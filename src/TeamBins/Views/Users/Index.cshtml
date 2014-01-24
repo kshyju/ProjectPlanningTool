@@ -1,0 +1,38 @@
+﻿@{
+    ViewBag.Title = "Team Members";
+}
+@model TechiesWeb.TeamBins.ViewModels.TeamVM
+<h2>Members</h2>
+@Html.ActionLink("Add", "Add", "Users", null, new { @class="popup"})
+<table class="table table-bordered table-condensed">
+<thead>
+    <tr>
+        <th></th><th>Name</th><th>Email</th>
+    </tr>
+</thead>
+<tbody>
+@foreach(var member in Model.Members)
+{
+ <tr>
+     <td><img src="@member.AvatarHash"</td>
+     <td>@member.Name</td>
+     <td>@member.EmailAddress</td>
+ </tr>
+}
+</tbody>
+</table>
+<script type="text/javascript">
+    $(function () {
+
+        $(document).on("click", "#btnAddMember", function (e) {
+            e.preventDefault();
+            $.post($(this).closest("form").attr("action"), $(this).closest("form").serialize(), function (res) {
+                if (res.Status === "Success")
+                    window.location.href = "@Url.Action("Index")";
+                else
+                    $("#msg").text(res.Message).addClass("error").slideDown(); $("#Name").focus();
+            });
+        });
+
+    });
+</script>

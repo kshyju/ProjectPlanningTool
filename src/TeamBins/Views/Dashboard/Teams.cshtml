@@ -1,0 +1,17 @@
+﻿@model SmartPlan.ViewModels.UsersCurrentTeamVM
+<div class="switch-teams">
+    <a href="#" class="a-current-team" data-state="selected" title="switch between teams" >
+    <div class="current-team">  
+        <span class="current-team-icon glyphicon glyphicon-th-list"></span>     
+        <span class="current-team-name">@Model.CurrentTeamName</span>
+    </div>
+    </a>
+    <div class="available-teams" id="available-teams" style="display:none;">
+    <p>Switch team</p>
+    @foreach(var team in Model.Teams)
+    {
+        <a href="~/t/@team.ID/@team.Name"><div class="available-team">@team.Name</div></a>           
+    }
+    </div>
+</div>
+

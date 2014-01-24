@@ -7,15 +7,26 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SmartPlan.DataAccess
+namespace TeamBins.DataAccess
 {
     using System;
     using System.Collections.Generic;
     
     public partial class Team
     {
+        public Team()
+        {
+            this.Issues = new HashSet<Issue>();
+            this.TeamMemberRequests = new HashSet<TeamMemberRequest>();
+            this.TeamMembers = new HashSet<TeamMember>();
+        }
+    
         public int ID { get; set; }
         public string Name { get; set; }
         public System.DateTime CreatedDate { get; set; }
+    
+        public virtual ICollection<Issue> Issues { get; set; }
+        public virtual ICollection<TeamMemberRequest> TeamMemberRequests { get; set; }
+        public virtual ICollection<TeamMember> TeamMembers { get; set; }
     }
 }

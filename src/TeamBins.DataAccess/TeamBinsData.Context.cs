@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SmartPlan.DataAccess
+namespace TeamBins.DataAccess
 {
     using System;
     using System.Data.Entity;
@@ -29,11 +29,17 @@ namespace SmartPlan.DataAccess
         public DbSet<Priority> Priorities { get; set; }
         public DbSet<Status> Status { get; set; }
         public DbSet<Team> Teams { get; set; }
-        public DbSet<User> Users { get; set; }
         public DbSet<Task> Tasks { get; set; }
         public DbSet<Issue> Issues { get; set; }
         public DbSet<ProjectMember> ProjectMembers { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<IssueMember> IssueMembers { get; set; }
+        public DbSet<Document> Documents { get; set; }
+        public DbSet<TeamMemberRequest> TeamMemberRequests { get; set; }
+        public DbSet<Activity> Activities { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<TeamMember> TeamMembers { get; set; }
+        public DbSet<EmailTemplate> EmailTemplates { get; set; }
     }
 }

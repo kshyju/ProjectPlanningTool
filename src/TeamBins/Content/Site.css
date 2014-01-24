@@ -329,7 +329,7 @@ div#quick_create input
     display: block;
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
     font-size: 12px;
-    height: 22px;
+   
     line-height: 20px;
    padding: 6px 6px 5px 5px;
   width: 100%;
@@ -744,7 +744,7 @@ div.dashboardItem
 {
 	padding:3px;
 	border:1px solid #76a7fa;
-	overflow:auto; width:400px;border-top: 8px solid #76a7fa;border-bottom: 1px solid #76a7fa;
+	overflow:auto; border-top: 8px solid #76a7fa;border-bottom: 1px solid #76a7fa;
 	margin:10px;
 }
 	div.dashboardItem ul
@@ -908,4 +908,97 @@ color: green;
 .tab-content
 {
     padding-top:10px;
+}
+.right-detail-items {
+    background-color: #F7F7F7;
+    padding: 5px 10px 10px;
+     margin: 0 10px 10px;
+
+}
+.issue-detail-item {
+
+}
+.important {
+    font-size:22px;
+}
+
+.issue-icon-Feature {
+    background-image: url(images/feature-icon.png);
+    background-repeat: no-repeat;
+    display: block;
+    height: 24px;
+    width: 24px;
+}
+.issue-icon-Bug {
+    background-image: url(images/bug-icon.png);
+    background-repeat: no-repeat;
+    display: block;
+    height: 24px;
+    width: 24px;
+}
+.issue-icon-Idea {
+    background-image: url(images/idea-icon-16.png);
+    background-repeat: no-repeat;
+    display: block;
+    height: 24px;
+    width: 24px;
+}
+.dbItemContainer {
+    width: 33%; float: left;
+}
+.switch-teams {
+   
+}
+.current-team {
+    padding:4px;
+    background-color: #444444;
+    display:inline-block;
+     background:#E6EFF4;
+    
+     margin-top:4px;
+     padding:2px;color:black; font-weight:bold;
+
+     border-radius: 3px;
+     padding-left:5px;
+     margin-left:20px; padding-right:6px
+
+}
+.current-team:hover {
+    background-color:#E5E5E5;
+}
+.available-teams {
+    position:fixed;
+    top:32px;
+    left:120px;
+    min-height:40px;
+    background: hsl(202, 10%, 100%);
+-webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+border-top-left-radius: 0;
+border-top-right-radius: 3px;
+border-bottom-right-radius: 3px;
+border-bottom-left-radius: 0;
+
+}
+.available-team {
+     background:#E6EFF4;
+     height:30px;
+     margin:4px; padding:4px;
+     color:black; font-weight:bold;
+     margin-bottom:4px;  margin-top:1px; 
+
+}
+
+.available-teams a:hover{
+    text-decoration:none;
+    background-color:#CFE0EA;
+}
+.current-team-icon {
+}
+.switch-teams {
+    display:inline-block; float:left;
+}
+.available-teams p {
+   margin:12px;
+   margin-top:4px; margin-bottom:4px;
 }

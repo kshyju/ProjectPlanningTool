@@ -1,37 +1,57 @@
-using Planner.DataAccess;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+using TeamBins.DataAccess;
+using TechiesWeb.TeamBins.Infrastructure;
 
-namespace Planner.Services
+namespace TeamBins.Services
 {
-
     public class UserService
     {
+        public string SiteBaseURL { set; get; }
+        public UserService()
+        {          
+        }
+        public UserService(string siteBaseUrl)
+        {
+            SiteBaseURL = siteBaseUrl;
+        }
         IRepositary repo;
         public UserService(IRepositary repositary)
         {
             repo = repositary;
         }
-        public bool SaveDefaultIssueSettings(int userId,int defaultProjectId)
+        public bool SaveDefaultProjectForTeam(int userId,int teamId, int defaultProjectId)
         {
-            var user = repo.GetUser(userId);
-            if (user != null)
+            var teamMember = repo.GetTeamMember(userId, teamId);
+            if (teamMember != null)
             {
-                user.DefaultProjectID = defaultProjectId;
-                var result = repo.SaveUser(user);
-                return result.Status;                
-            }
+                teamMember.DefaultProjectID = defaultProjectId;
+                var res = repo.SaveTeamMember(teamMember);
+                return true;
+            }          
             return false;
         }
 
+        public void SendJoinMyTeamEmail(TeamMemberRequest teamMemberRequest)
+        {    
+            var emailTemplate = repo.GetEmailTemplate("JoinMyTeam");
+            if (emailTemplate != null)
+            {              
+                string emailBody = emailTemplate.EmailBody;
+                Email email = new Email();
+                email.ToAddress.Add(teamMemberRequest.EmailAddress);
+
+                string joinLink = String.Format("{0}/Account/Join?returnurl={1}", SiteBaseURL, teamMemberRequest.ActivationCode);
+                emailBody = emailBody.Replace("@teamName", teamMemberRequest.Team.Name);
+                emailBody = emailBody.Replace("@link", joinLink);
+                emailBody=emailBody.Replace("@inviter", teamMemberRequest.CreatedBy.FirstName);
+
+                email.Send();
+            }
+
+
+        }
         public static string GetImageSource(string email,int size=0)
         {
-
-
-
 
 
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(email.Trim()))

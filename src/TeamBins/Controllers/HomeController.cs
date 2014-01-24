@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace Planner.Controllers
+namespace TechiesWeb.TeamBins.Controllers
 {
     public class HomeController : Controller
     {
@@ -23,6 +23,14 @@ namespace Planner.Controllers
         {
             Session["TB_TeamID"] = id;
             return RedirectToAction("Index", "Issues");
+        }
+        public ActionResult About()
+        {
+            return View();
+        }
+        public ActionResult GettingStarted()
+        {
+            return View();
         }
     }
 }
