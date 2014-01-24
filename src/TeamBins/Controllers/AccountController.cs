@@ -82,7 +82,7 @@ namespace TechiesWeb.TeamBins.Controllers
         }
         public ActionResult Login()
         {
-            return View(new LoginVM { Email = "kshyju1@gmail.com", Password = "" });
+            return View("Login",new LoginVM());
         }
         [HttpPost]
         public ActionResult Login(LoginVM model)
@@ -114,7 +114,7 @@ namespace TechiesWeb.TeamBins.Controllers
 
         public ActionResult forgotPassword()
         {
-            return View(new ForgotPasswordVM());
+            return View("forgotPassword",new ForgotPasswordVM());
         }
         [HttpPost]
         public ActionResult forgotpassword(ForgotPasswordVM model)
