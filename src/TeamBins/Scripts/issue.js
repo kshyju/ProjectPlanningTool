@@ -25,6 +25,10 @@
                     ShowModel(editIssueUrl + "/" + data.Item.ID, data.Item.Title);                    
                 }
             }
+            else
+            {
+                alert(data.Message);
+            }
         });
     });
 
@@ -109,10 +113,10 @@
         }
 
     });
-    /*
+    
     if ($("#activityStream").length) {
-       // $("#activityStream").load("../../Team/ActivityStream");
-    }*/
+        $("#activityStream").load("../../Team/ActivityStream");
+    }
 
 
 });

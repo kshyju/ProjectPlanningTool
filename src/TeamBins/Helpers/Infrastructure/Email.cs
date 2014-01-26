@@ -9,6 +9,15 @@ using TechiesWeb.TeamBibs.Helpers.Logging;
 
 namespace TechiesWeb.TeamBins.Infrastructure
 {
+    public class MissingSettingsException : Exception
+    {
+        public MissingSettingsException(string message, string missingSettingName)
+            : base(message)
+        {
+            MissingSettingName = missingSettingName;
+        }
+        public string MissingSettingName { set; get; }
+    }
     public class Email
     {
         public string FromAddress { set; get; }
@@ -16,6 +25,10 @@ namespace TechiesWeb.TeamBins.Infrastructure
         public string Subject { set; get; }
         public string Body { set; get; }
 
+        public Email()
+        {
+            ToAddress = new List<string>();
+        }
         public void Send()
         {
             try
@@ -24,7 +37,9 @@ namespace TechiesWeb.TeamBins.Infrastructure
                 string smtpServerName = ConfigurationManager.AppSettings["smtpServer"] as string;
                 SmtpClient smtp = new SmtpClient(smtpServerName);
                 smtp.Port = Convert.ToInt32(ConfigurationManager.AppSettings["smtpPort"] as string);
+                FromAddress = ConfigurationManager.AppSettings["emailIdFrom"] as string;
                 MailAddress fromAddress = new MailAddress(FromAddress, "TeamBins");
+                mail.From = fromAddress;
                 foreach (var address in ToAddress)
                 {
                     mail.To.Add(address);

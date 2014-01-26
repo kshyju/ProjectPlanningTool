@@ -164,6 +164,7 @@
     <Compile Include="Controllers\ProjectsController.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Controllers\TeamController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

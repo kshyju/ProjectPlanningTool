@@ -8,14 +8,22 @@ using System.Web;
 using System.Web.Mvc;
 using TeamBins.DataAccess;
 using TeamBins.Services;
+using TechiesWeb.TeamBins.Infrastructure;
 using TechiesWeb.TeamBins.ViewModels;
 
 namespace TechiesWeb.TeamBins.Controllers
 {
     public class IssuesController : BaseController
     {
+        private IssueService issueService;
+        public IssuesController() {
+            issueService=new IssueService(new Repositary());
+        
+        }
+
         public IssuesController(IRepositary repositary) :base(repositary)
         {            
+
         }
 
         public ActionResult Backlog()
@@ -69,6 +77,9 @@ namespace TechiesWeb.TeamBins.Controllers
                     bugListVM = GetBugList("SPRNT");
                     bugListVM.ProjectsExist = true;
                 }
+                
+               
+
                 return View("Index", bugListVM);
             }
             catch (Exception ex)
@@ -145,13 +156,10 @@ namespace TechiesWeb.TeamBins.Controllers
                     LoadDefaultIssueValues(bug, model);
 
                     OperationStatus result = repo.SaveIssue(bug);
-                    if (result.Status)
-                    {
-                        // SaveActivity(model, existingIssue, result.OperationID);
-                    }
-                    else
-                    {
+                    if (!result.Status)
+                    {  
                         log.Debug(result);
+                        return Json(new { Status = "Error" });
                     }
                     if (Request.IsAjaxRequest())
                     {
@@ -160,8 +168,9 @@ namespace TechiesWeb.TeamBins.Controllers
                             var issue = repo.GetIssue(result.OperationID);
                             if (issue != null)
                             {
-                                var issueVM = new IssueVM { ID = result.OperationID };
-                                issueVM.Title = issue.Title;
+                                SaveActivity(model, issue, result.OperationID);
+
+                                var issueVM = new IssueVM { ID = result.OperationID, Title = issue.Title };
                                 issueVM.Priority = issue.Priority.Name;
                                 issueVM.Status = issue.Status.Name;
                                 issueVM.OpenedBy = issue.CreatedBy.FirstName;
@@ -182,8 +191,6 @@ namespace TechiesWeb.TeamBins.Controllers
                             if (file != null)
                             {
                                 fileCounter++;
-
-
 
                                 string fileName = Path.GetFileName(file.FileName).ToLower();
                                 string fileKey = fileName;
@@ -224,16 +231,22 @@ namespace TechiesWeb.TeamBins.Controllers
                 LoadDropDownsForCreate(model);
                 return View(model);
             }
+            catch(MissingSettingsException mex)
+            {
+                log.Debug(mex);
+                return Json(new { Status = "Error", Message="You need to set a value for "+mex.MissingSettingName+ " first." });
+            }
             catch (Exception ex)
             {
                 log.Error(ex);
                 if (Request.IsAjaxRequest())
                 {
-                    return Json(new { Status = "Error" });
+                    return Json(new { Status = "Error", Message="Error saving issue" });
                 }
             }
             return RedirectToAction("Index");
         }
+        
         private void LoadDefaultIssueValues(Issue issue,CreateIssue model)
         {
             var user = repo.GetUser(UserID);
@@ -245,7 +258,8 @@ namespace TechiesWeb.TeamBins.Controllers
             if (issue.ProjectID == 0)
             {
                 var teamMember = repo.GetTeamMember(UserID, TeamID);
-                
+                if (teamMember.DefaultProjectID == null)
+                    throw new MissingSettingsException("Default Project not set","Default Project");
                 //get from team member 
                 issue.ProjectID = teamMember.DefaultProjectID.Value;
             }
@@ -261,32 +275,38 @@ namespace TechiesWeb.TeamBins.Controllers
             issue.Location = (string.IsNullOrEmpty(model.SelectedIteration)?"SPRNT":model.SelectedIteration);
 
         }
-       /*
+      
         private void SaveActivity(CreateIssue model,Issue existingIssue, int issueId)
         {
             var activity = new Activity();
-            activity.CreatedBy.ID = UserID;
-            activity.ItemID = issueId;
-            activity.ItemName = model.Title;
-            activity.ItemType = "Issue";
+            activity.CreatedByID=UserID;
+            activity.ObjectID=issueId;
+            activity.ObjectType="Issue";
+           
             if (model.ID == 0)
             {
-                activity.Action = "Created";
+                activity.ActivityDesc="Created";
+                activity.NewState = model.Title;
             }
             else
             {
-                activity.Action = "Updated";
-                if (existingIssue.Status.StatusID != model.SelectedStatus)
+                activity.ActivityDesc = "Updated";
+                if (existingIssue.StatusID != model.SelectedStatus)
                 {
-                    activity.Action = "Changed status";
-                    activity.NewState = GetStatusName(model.SelectedStatus);
+                    activity.ActivityDesc = "Changed status";
+                    //activity.OldState=existingIssue.Status
+                   // activity.NewState = GetStatusName(model.SelectedStatus);
                 }
             }
 
             activity.TeamID = TeamID;
 
             var r = repo.SaveActivity(activity);
-        }*/
+            if(!r.Status)
+            {
+
+            }
+        }
        
         public ActionResult Edit(int id)
         {

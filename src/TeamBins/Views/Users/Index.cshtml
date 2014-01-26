@@ -4,22 +4,24 @@
 @model TechiesWeb.TeamBins.ViewModels.TeamVM
 <h2>Members</h2>
 @Html.ActionLink("Add", "Add", "Users", null, new { @class="popup"})
-<table class="table table-bordered table-condensed">
-<thead>
-    <tr>
-        <th></th><th>Name</th><th>Email</th>
-    </tr>
-</thead>
-<tbody>
-@foreach(var member in Model.Members)
-{
- <tr>
-     <td><img src="@member.AvatarHash"</td>
-     <td>@member.Name</td>
-     <td>@member.EmailAddress</td>
- </tr>
-}
-</tbody>
+<table class="tblGrid">
+    <thead>
+        <tr>            
+            <th>Name</th>
+            <th>Email</th>
+            <th>Joined date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var member in Model.Members)
+        {
+            <tr>
+                <td><img src="@member.AvatarHash">@member.Name</td>
+                <td>@member.EmailAddress</td>
+                <td>@member.JoinedDate</td>
+            </tr>
+        }
+    </tbody>
 </table>
 <script type="text/javascript">
     $(function () {

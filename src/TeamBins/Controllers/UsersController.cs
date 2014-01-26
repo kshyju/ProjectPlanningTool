@@ -74,7 +74,7 @@ namespace TechiesWeb.TeamBins.Controllers
                         if (resultNew.Status)
                         {
 
-
+                            new UserService(repo,SiteBaseURL).SendJoinMyTeamEmail(teamMemberRequest);
 
                             // TO DO : Send Email to user with the activation link                      
                             return Json(new { Status = "Success" });
@@ -96,22 +96,37 @@ namespace TechiesWeb.TeamBins.Controllers
 
         public ActionResult JoinMyTeam(string id)
         {
+
             // For users who received an email with the join link to join a team.
             // The user must have created an account by now and coming back to this lin kafter registration
-            var teamMemberRequest = repo.GetTeamMemberRequest(id);
-            if (teamMemberRequest != null)
+
+            try
             {
-                var user = repo.GetUser(teamMemberRequest.EmailAddress);
-                if (user.ID == UserID)
+                var teamMemberRequest = repo.GetTeamMemberRequest(id);
+                if (teamMemberRequest != null)
                 {
-                    
+                    var user = repo.GetUser(teamMemberRequest.EmailAddress);
+                    if (user.ID == UserID)
+                    {
+                        //Add to the team.
+                        var teamMember = new TeamMember { MemberID = UserID, TeamID = teamMemberRequest.TeamID, CreatedByID = teamMemberRequest.CreatedByID };
+                        repo.SaveTeamMember(teamMember);
+                       
+                        //Keep that team as default team for the user 
+                        SetUserIDToSession(UserID, teamMemberRequest.TeamID, user.FirstName);
 
-                    //Correct user 
-                    return View("WelcomeToTeam");
+                        //Correct user 
+                        return View("WelcomeToTeam");
+                    }
+
                 }
-
+                return View("NotFound");
             }
-            return View("NotFound"); 
+            catch(Exception ex)
+            {
+                log.Error(ex);
+                return View("Error");
+            }
         }
 
         //JSON

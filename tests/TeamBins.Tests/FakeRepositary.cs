@@ -187,5 +187,16 @@ namespace TeamBins.Tests
         {
             throw new System.NotImplementedException();
         }
+
+
+        public IEnumerable<Activity> GetTeamActivity(int teamId)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public SmartPlan.DataAccess.OperationStatus SaveActivity(Activity comment)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

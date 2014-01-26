@@ -48,8 +48,8 @@ namespace TeamBins.DataAccess
         EmailTemplate GetEmailTemplate(string templateName);
        
 
-       // IEnumerable<Activity> GetTeamActivity(int teamId);
-       // OperationStatus SaveActivity(Activity comment);
+        IEnumerable<Activity> GetTeamActivity(int teamId);
+        OperationStatus SaveActivity(Activity comment);
 
     }
 }

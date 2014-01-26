@@ -20,6 +20,13 @@ namespace TechiesWeb.TeamBins.Controllers
             log = new Logger();
             repo = repositary;
         }
+        protected string SiteBaseURL
+        {
+            get
+            {
+                return string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~"));
+            }
+        }
         protected void UpdateTeam(int teamId)
         {
             Session["TB_TeamID"] = teamId;

@@ -1,9 +1,44 @@
+using SmartPlan.ViewModels;
 using System;
+using System.Collections.Generic;
 using TeamBins.DataAccess;
 using TechiesWeb.TeamBins.Infrastructure;
-
+using System.Linq;
+using TechiesWeb.TeamBins.ViewModels;
 namespace TeamBins.Services
 {
+    public class IssueService
+    {
+        IRepositary repo;
+        public string SiteBaseURL { set; get; }
+        public IssueService(IRepositary repositary)
+        {
+            repo = repositary;
+           
+        }
+       public List<ActivityVM> GetTeamActivityVMs(int teamId)
+       {
+           List<ActivityVM> activityVMList = new List<ActivityVM>();
+           var activityList = repo.GetTeamActivity(teamId).ToList();
+              
+           foreach (var item in activityList)
+           {
+               var activityVM = new ActivityVM();
+               activityVM.Author = item.User.FirstName;
+               activityVM.CreatedDateRelative = item.CreatedDate.ToString();
+               if(item.ActivityDesc=="Created")
+               {
+                   activityVM.Activity = item.ActivityDesc;
+                   activityVM.ObjectTite = item.NewState;
+                   activityVM.ObjectURL = SiteBaseURL + "Issues/edit/" + item.ObjectID.ToString();
+               }
+               activityVMList.Add(activityVM);
+           }
+           return activityVMList;
+       }
+
+    }
+
     public class UserService
     {
         public string SiteBaseURL { set; get; }
@@ -19,6 +54,11 @@ namespace TeamBins.Services
         {
             repo = repositary;
         }
+        public UserService(IRepositary repositary, string siteBaseUrl)
+        {
+            repo = repositary;
+            SiteBaseURL = siteBaseUrl;
+        }
         public bool SaveDefaultProjectForTeam(int userId,int teamId, int defaultProjectId)
         {
             var teamMember = repo.GetTeamMember(userId, teamId);
@@ -31,20 +71,41 @@ namespace TeamBins.Services
             return false;
         }
 
+        public void SendNewAccountCreatedEmail(User user)
+        {
+            var emailTemplate = repo.GetEmailTemplate("NewAccount");
+            if (emailTemplate != null)
+            {
+                string emailSubject = emailTemplate.EmailSubject;
+                string emailBody = emailTemplate.EmailBody;
+                Email email = new Email();
+                email.ToAddress.Add(user.EmailAddress);
+              
+                emailBody = emailBody.Replace("@userName", user.FirstName);
+                email.Body = emailBody;
+                email.Subject = emailSubject;
+                email.Send();
+            }
+        }
         public void SendJoinMyTeamEmail(TeamMemberRequest teamMemberRequest)
         {    
             var emailTemplate = repo.GetEmailTemplate("JoinMyTeam");
             if (emailTemplate != null)
-            {              
+            {
+                teamMemberRequest = repo.GetTeamMemberRequest(teamMemberRequest.ActivationCode);
+
+                string emailSubject = emailTemplate.EmailSubject;
                 string emailBody = emailTemplate.EmailBody;
                 Email email = new Email();
                 email.ToAddress.Add(teamMemberRequest.EmailAddress);
 
-                string joinLink = String.Format("{0}/Account/Join?returnurl={1}", SiteBaseURL, teamMemberRequest.ActivationCode);
+                
+                string joinLink = String.Format("{0}Account/Join?returnurl={1}", SiteBaseURL, teamMemberRequest.ActivationCode);
                 emailBody = emailBody.Replace("@teamName", teamMemberRequest.Team.Name);
-                emailBody = emailBody.Replace("@link", joinLink);
+                emailBody = emailBody.Replace("@joinUrl", joinLink);
                 emailBody=emailBody.Replace("@inviter", teamMemberRequest.CreatedBy.FirstName);
-
+                email.Body = emailBody;
+                email.Subject=emailSubject;
                 email.Send();
             }
 

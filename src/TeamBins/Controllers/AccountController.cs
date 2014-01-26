@@ -122,8 +122,7 @@ namespace TechiesWeb.TeamBins.Controllers
             return View();
         }
         public ActionResult Profile()
-        {
-            
+        {            
             var user = repo.GetUser(UserID);
             if(user!=null)
             {

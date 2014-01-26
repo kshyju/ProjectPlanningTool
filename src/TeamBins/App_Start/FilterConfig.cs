@@ -1,7 +1,7 @@
 ﻿using System.Web;
 using System.Web.Mvc;
 
-namespace SmartPlan
+namespace TeamBins
 {
     public class FilterConfig
     {

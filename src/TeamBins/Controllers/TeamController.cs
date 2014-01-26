@@ -5,16 +5,28 @@ using System.Collections.Generic;
 using System.Web.Mvc;
 using TechiesWeb.TeamBins.ViewModels;
 using SmartPlan.DataAccess;
-namespace Planner.Controllers
+using TeamBins.DataAccess;
+using TechiesWeb.TeamBins.Controllers;
+using TeamBins.Services;
+
+namespace TechiesWeb.TeamBins.Controllers
 {
 
     public class TeamController : BaseController
     {       
-        IRepositary repo;
-        public TeamController()
-        {
-            repo = new Repositary();
+       private IssueService issueService;
+        public TeamController() {
+            issueService=new IssueService(new Repositary());
+        
         }
+
+        public TeamController(IRepositary repositary)
+            : base(repositary)
+        {            
+
+        }
+
+       /*
         public ActionResult Index()
         {
             var teams = repo.GetTeams(UserID);
@@ -41,7 +53,7 @@ namespace Planner.Controllers
                    member.EmailHash = UserService.GetImageSource(member.EmailAddress);
                    vm.Members.Add(member);
                 }*/
-
+        /*
                 return View(vm);
             }
             return View("NotFound");
@@ -80,7 +92,7 @@ namespace Planner.Controllers
                     var team = new TeamMemberRequest { EmailAddress = model.EmailAddress, CreatedByID = UserID };
                     team.TeamID = model.TeamID;
                     team.ActivationCode = model.TeamID + "-" + Guid.NewGuid().ToString("n");
-                    var result = repo.AddTeamMemberRequest(team);
+                   /* var result = repo.AddTeamMemberRequest(team);
                     if (result != null)
                     {
                         return RedirectToAction("memberinvited", "Team");
@@ -88,7 +100,7 @@ namespace Planner.Controllers
                     else
                     {
                         //LOG ERROR
-                    }
+                    }*//*
                 }
                 return View(model);
             }
@@ -121,7 +133,7 @@ namespace Planner.Controllers
                    
                     if (isNew)
                     {
-                        TeamMember req = new TeamMember { TeamID = result.ID, UserID = UserID };
+                        TeamMember req = new TeamMember { TeamID = result.ID, CreatedByID = UserID };
                       //  var res = repo.SaveTeamMember(req);
                        // TempData["TeamID"] = result.ID;
                         return RedirectToAction("created", "Team");
@@ -163,13 +175,17 @@ namespace Planner.Controllers
                 var vm = new MemberVM {MemberType = member.JobTitle, Name = member.DisplayName, MemberID=member.ID };
                 vm.AvatarHash = UserService.GetImageSource(member.EmailAddress,48);
                 memberList.Add(vm);
-            }*/
+            }*//*
             return Json ( new{ Data = memberList, Status = "Success" },JsonRequestBehavior.AllowGet);
         }
-
+        */
         public ActionResult ActivityStream()
         {
-            List<TeamActivityVM> list = new List<TeamActivityVM>();
+            List<ActivityVM> list = new List<ActivityVM>();
+
+            list= issueService.GetTeamActivityVMs(TeamID);
+
+
           //  var activityList = repo.GetTeamActivity(TeamID).Take(12);
             /*foreach (var activity in activityList)
             {

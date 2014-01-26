@@ -22,7 +22,9 @@ namespace TeamBins.DataAccess
         public string NewState { get; set; }
         public int CreatedByID { get; set; }
         public System.DateTime CreatedDate { get; set; }
+        public int TeamID { get; set; }
     
         public virtual User User { get; set; }
+        public virtual Team Team { get; set; }
     }
 }

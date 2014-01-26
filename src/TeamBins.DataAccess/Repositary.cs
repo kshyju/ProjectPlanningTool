@@ -334,17 +334,27 @@ namespace TeamBins.DataAccess
         {
             return db.Comments.Where(s => s.ID == commentId).FirstOrDefault();
         }
-/*
+
         public IEnumerable<Activity> GetTeamActivity(int teamId)
         {
-            throw new System.NotImplementedException();
+            return db.Activities.Where(s => s.TeamID == teamId);
         }
 
-        public OperationStatus SaveActivity(Activity comment)
+        public OperationStatus SaveActivity(Activity activity)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                activity.CreatedDate = DateTime.Now;
+                db.Activities.Add(activity);
+                db.SaveChanges();
+                return new OperationStatus { Status = true };
+            }
+            catch(Exception ex)
+            {
+                return OperationStatus.CreateFromException("error in saving", ex);
+            }
         }
-        */
+        
         public void Dispose()
         {
             throw new System.NotImplementedException();
@@ -356,7 +366,7 @@ namespace TeamBins.DataAccess
         }
         public TeamMemberRequest GetTeamMemberRequest(string activationCode)
         {
-            return db.TeamMemberRequests.FirstOrDefault(s => s.ActivationCode == activationCode);
+            return db.TeamMemberRequests.Include(s=>s.CreatedBy).Include(s=>s.Team).FirstOrDefault(s => s.ActivationCode == activationCode);
         }
 
         public IEnumerable<Team> GetTeams(int userId)

@@ -105,5 +105,7 @@ namespace TeamBins.Tests
             //Assert
             Assert.AreEqual(resultModel.Bugs.Count, 2);
         }
+
+
     }
 }
