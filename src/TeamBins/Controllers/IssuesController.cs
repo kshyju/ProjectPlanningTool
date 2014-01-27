@@ -1,4 +1,4 @@
-﻿using Planner.Services;
+﻿
 using SmartPlan.DataAccess;
 using System;
 using System.Collections.Generic;
@@ -17,8 +17,7 @@ namespace TechiesWeb.TeamBins.Controllers
     {
         private IssueService issueService;
         public IssuesController() {
-            issueService=new IssueService(new Repositary());
-        
+            issueService=new IssueService(new Repositary());        
         }
 
         public IssuesController(IRepositary repositary) :base(repositary)
@@ -110,32 +109,16 @@ namespace TechiesWeb.TeamBins.Controllers
             vm.IsCreateAndEditEnabled = CreateAndEditMode;
             return vm;
         }
-        /*
-        public ActionResult Add()
-        {
-            CreateIssue vm = new CreateIssue();
-            LoadDropDownsForCreate(vm);
-            vm.Statuses = ProjectService.GetStatuses(repo, new List<string> { "New" });    
-        
-
-
-
-
-            return View(vm);
-        }
-        */
-       
+               
         private void LoadDropDownsForCreate(CreateIssue viewModel)
         {            
             viewModel.Projects = ProjectService.GetProjects(repo,TeamID);
             viewModel.Priorities = ProjectService.GetPriorities(repo);
             viewModel.Categories = ProjectService.GetCategories(repo);
-            viewModel.Cycles = ProjectService.GetCycles(repo);
             viewModel.Statuses = ProjectService.GetStatuses(repo);
             viewModel.Iterations = ProjectService.GetIterations();
         }
-        
-        
+                
         [HttpPost]
         public ActionResult Add(CreateIssue model,List<HttpPostedFileBase> files)
         {
@@ -159,8 +142,9 @@ namespace TechiesWeb.TeamBins.Controllers
                     if (!result.Status)
                     {  
                         log.Debug(result);
-                        return Json(new { Status = "Error" });
+                        return Json(new { Status = "Error", Message="Error saving issue" });
                     }
+
                     if (Request.IsAjaxRequest())
                     {
                         if (result.Status)
@@ -176,45 +160,17 @@ namespace TechiesWeb.TeamBins.Controllers
                                 issueVM.OpenedBy = issue.CreatedBy.FirstName;
                                 issueVM.Category = issue.Category.Name;
                                 issueVM.CreatedDate = issue.CreatedDate.ToShortDateString();
-
                                 return Json(new { Status = "Success", Item = issueVM });
                             }
                         }
                     }
-
 
                     if ((files != null) && (files.Count() > 0))
                     {
                         int fileCounter = 0;
                         foreach (var file in files)
                         {
-                            if (file != null)
-                            {
-                                fileCounter++;
-
-                                string fileName = Path.GetFileName(file.FileName).ToLower();
-                                string fileKey = fileName;
-                                fileKey = fileKey.Replace(" ", "-").Replace("%", "-");                                 
-                                
-                                fileKey = String.Format("{0}-{1}-{2:n}-{3}", result.OperationID, fileCounter, Guid.NewGuid(), fileName);
-
-                                if (fileKey.Length > 99)
-                                    fileKey = fileKey.Substring(0, 99);
-
-
-                                string path = Path.Combine(Server.MapPath("~/uploads"), fileKey);
-                                file.SaveAs(path);
-                               
-                                Document img = new Document {  FileName = fileName, ParentID=model.ID };
-                                img.FileAlias = fileKey;
-                                img.CreatedByID = UserID;
-                                img.ParentID = result.OperationID;
-                                
-                                var resultForImg = repo.SaveDocument(img);
-                                {
-
-                                }
-                           }
+                            fileCounter = SaveAttachedDocument(model, result, fileCounter, file);
                         }
                     }
 
@@ -227,9 +183,7 @@ namespace TechiesWeb.TeamBins.Controllers
                         }
                         return RedirectToAction("Index");
                     }
-                }
-                LoadDropDownsForCreate(model);
-                return View(model);
+                }               
             }
             catch(MissingSettingsException mex)
             {
@@ -244,7 +198,38 @@ namespace TechiesWeb.TeamBins.Controllers
                     return Json(new { Status = "Error", Message="Error saving issue" });
                 }
             }
-            return RedirectToAction("Index");
+            LoadDropDownsForCreate(model);
+            return View(model);           
+        }
+
+        private int SaveAttachedDocument(CreateIssue model, OperationStatus result, int fileCounter, HttpPostedFileBase file)
+        {
+            if (file != null)
+            {
+                fileCounter++;
+
+                string fileName = Path.GetFileName(file.FileName).ToLower();
+                string fileKey = fileName;
+                fileKey = fileKey.Replace(" ", "-").Replace("%", "-");
+
+                fileKey = String.Format("{0}-{1}-{2:n}-{3}", result.OperationID, fileCounter, Guid.NewGuid(), fileName);
+
+                if (fileKey.Length > 99)
+                    fileKey = fileKey.Substring(0, 99);
+
+                string path = Path.Combine(Server.MapPath("~/uploads"), fileKey);
+                file.SaveAs(path);
+
+                Document img = new Document { FileName = fileName, ParentID = model.ID };
+                img.FileAlias = fileKey;
+                img.CreatedByID = UserID;
+                img.ParentID = result.OperationID;
+
+                var resultForImg = repo.SaveDocument(img);
+                {
+                }
+            }
+            return fileCounter;
         }
         
         private void LoadDefaultIssueValues(Issue issue,CreateIssue model)
@@ -346,41 +331,46 @@ namespace TechiesWeb.TeamBins.Controllers
                     
         public ActionResult Details(int id)
         {
-            var bug = repo.GetIssue(id);
-            IssueVM bugVm = new IssueVM { ID = bug.ID, Title = bug.Title };
-            bugVm.Description = bug.Description;
-            bugVm.CreatedDate = bug.CreatedDate.ToString("g");
-            bugVm.OpenedBy = bug.CreatedBy.FirstName;
-            bugVm.Title = bug.Title;
-            bugVm.Project = bug.Project.Name;
-            bugVm.Category = bug.Category.Name;
-            bugVm.ProjectID = bug.ProjectID;
-            bugVm.Status = bug.Status.Name;
-            bugVm.Priority = bug.Priority.Name;
-            bugVm.StatusCode = bug.Status.Name;
-            bugVm.Iteration = ProjectService.GetIterationName(bug.Location);
-            if(bug.DueDate.HasValue)
-                bugVm.IssueDueDate=(bug.DueDate.Value.Year>2000?bug.DueDate.Value.ToShortDateString():"");
-
-            
-            var allDocuments = repo.GetDocuments(id);           
-            foreach (var img in allDocuments)
+            try
             {
-                var imgVM = new DocumentVM { FileName=img.FileName, FileKey=img.FileAlias};
-                imgVM.FileExtn = Path.GetExtension(img.FileName);
-               
-                if(imgVM.FileExtn.ToUpper()==".JPG" || imgVM.FileExtn.ToUpper()==".PNG")
-                    bugVm.Images.Add(imgVM);
-                else
-                    bugVm.Attachments.Add(imgVM);
+                var bug = repo.GetIssue(id);
+                IssueVM bugVm = new IssueVM { ID = bug.ID, Title = bug.Title, Description = bug.Description };
+                bugVm.CreatedDate = bug.CreatedDate.ToString("g");
+                bugVm.OpenedBy = bug.CreatedBy.FirstName;
+                bugVm.Title = bug.Title;
+                bugVm.Project = bug.Project.Name;
+                bugVm.Category = bug.Category.Name;
+                bugVm.ProjectID = bug.ProjectID;
+                bugVm.Status = bug.Status.Name;
+                bugVm.Priority = bug.Priority.Name;
+                bugVm.StatusCode = bug.Status.Name;
+                bugVm.Iteration = ProjectService.GetIterationName(bug.Location);
+                if (bug.DueDate.HasValue)
+                    bugVm.IssueDueDate = (bug.DueDate.Value.Year > 2000 ? bug.DueDate.Value.ToShortDateString() : "");
 
-            }          
+                var allDocuments = repo.GetDocuments(id);
+                foreach (var img in allDocuments)
+                {
+                    var imgVM = new DocumentVM { FileName = img.FileName, FileKey = img.FileAlias };
+                    imgVM.FileExtn = Path.GetExtension(img.FileName);
 
-       
-            LoadComments(id, bugVm);
-            //Get Members
-            LoadIssueMembers(id, bugVm);
-            return View(bugVm);
+                    if (imgVM.FileExtn.ToUpper() == ".JPG" || imgVM.FileExtn.ToUpper() == ".PNG")
+                        bugVm.Images.Add(imgVM);
+                    else
+                        bugVm.Attachments.Add(imgVM);
+
+                }
+
+                LoadComments(id, bugVm);
+                //Get Members
+                LoadIssueMembers(id, bugVm);
+                return View(bugVm);
+            }
+            catch(Exception ex)
+            {
+                log.Error(ex);
+                return View("Error");
+            }
         }
 
         private void LoadComments(int id, IssueVM bugVm)
@@ -421,8 +411,16 @@ namespace TechiesWeb.TeamBins.Controllers
         [HttpPost]
         public ActionResult RemoveMember(int id, int memberId)
         {
-            repo.DeleteIssueMember(id, memberId);
-            return Json(new { Status = "Success" });
+            try
+            {
+                repo.DeleteIssueMember(id, memberId);
+                return Json(new { Status = "Success" });
+            }
+            catch(Exception ex)
+            {
+                log.Error(ex);
+                return Json(new { Status = "Error", Message="Error deleting issue member" });
+            }
         }
        
         [HttpPost]

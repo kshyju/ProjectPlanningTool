@@ -1,10 +1,10 @@
-using SmartPlan.ViewModels;
 using System;
 using System.Collections.Generic;
 using TeamBins.DataAccess;
 using TechiesWeb.TeamBins.Infrastructure;
 using System.Linq;
 using TechiesWeb.TeamBins.ViewModels;
+using TechiesWeb.TeamBibs.Helpers.Logging;
 namespace TeamBins.Services
 {
     public class IssueService
@@ -30,7 +30,7 @@ namespace TeamBins.Services
                {
                    activityVM.Activity = item.ActivityDesc;
                    activityVM.ObjectTite = item.NewState;
-                   activityVM.ObjectURL = SiteBaseURL + "Issues/edit/" + item.ObjectID.ToString();
+                   activityVM.ObjectURL = SiteBaseURL + "Issues/details/" + item.ObjectID.ToString();
                }
                activityVMList.Add(activityVM);
            }
@@ -70,6 +70,23 @@ namespace TeamBins.Services
             }          
             return false;
         }
+
+        public void SaveActivityForNewUserJoinedTeam(TeamMemberRequest teamMemberRequest, User user,int currentUserId,int teamId)
+        {
+            var activity = new Activity { CreatedByID = currentUserId, TeamID = teamId };
+            activity.ObjectID = user.ID;
+            activity.ObjectType = "User";
+            activity.ActivityDesc = "Joined team " + teamMemberRequest.Team.Name;
+            activity.NewState = user.FirstName;
+
+            var result = repo.SaveActivity(activity);
+            if (!result.Status)
+            {
+                var log = new Logger("Email");
+                log.Error(result);
+            }
+        }
+
 
         public void SendNewAccountCreatedEmail(User user)
         {

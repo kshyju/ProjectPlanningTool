@@ -7,17 +7,18 @@ using TechiesWeb.TeamBins.ViewModels;
 
 namespace TechiesWeb.TeamBins.Controllers
 {
-
     public class ProjectsController : BaseController
-    {
-        private IRepositary repo;
+    {        
         private UserService userService;
         public ProjectsController()
         {
             repo = new Repositary();
             userService = new UserService(repo);
         }
-        
+        public ProjectsController(IRepositary repositary):base(repositary)
+        {           
+            userService = new UserService(repo);
+        }
         public ActionResult Index()
         {
             try

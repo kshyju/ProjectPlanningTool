@@ -8,12 +8,15 @@ namespace TechiesWeb.TeamBins.Controllers
 {
     public class UsersController : BaseController
     {
-        protected IRepositary repo;
-       
         public UsersController()
         {
             repo = new Repositary();
         }
+
+        public UsersController(IRepositary repositary) : base(repositary)
+        {
+        }
+
         public ActionResult Index()
         {
             try
@@ -60,8 +63,7 @@ namespace TechiesWeb.TeamBins.Controllers
                         TeamMember teamMember = new TeamMember { MemberID = existingUser.ID, TeamID = TeamID, CreatedByID = UserID };
                         var result = repo.SaveTeamMember(teamMember);
                         if (result.ID > 0)
-                        {
-                            // TO DO : Save a record to Activity stream
+                        {                            
                             return Json(new { Status = "Success",Message="Successfully added user to team" });
                         }
                     }
@@ -73,10 +75,7 @@ namespace TechiesWeb.TeamBins.Controllers
                         var resultNew = repo.SaveTeamMemberRequest(teamMemberRequest);
                         if (resultNew.Status)
                         {
-
                             new UserService(repo,SiteBaseURL).SendJoinMyTeamEmail(teamMemberRequest);
-
-                            // TO DO : Send Email to user with the activation link                      
                             return Json(new { Status = "Success" });
                         }
                         else
@@ -88,17 +87,15 @@ namespace TechiesWeb.TeamBins.Controllers
             }
             catch (Exception ex)
             {
-                log.Error(ex);
-                
+                log.Error(ex);                
             }
             return Json(new { Status = "Error", Message = "Error adding user to team" });
         }
 
         public ActionResult JoinMyTeam(string id)
         {
-
             // For users who received an email with the join link to join a team.
-            // The user must have created an account by now and coming back to this lin kafter registration
+            // The user must have created an account by now and coming back to this link after registration
 
             try
             {
@@ -108,17 +105,19 @@ namespace TechiesWeb.TeamBins.Controllers
                     var user = repo.GetUser(teamMemberRequest.EmailAddress);
                     if (user.ID == UserID)
                     {
-                        //Add to the team.
+                        //Add to the team
                         var teamMember = new TeamMember { MemberID = UserID, TeamID = teamMemberRequest.TeamID, CreatedByID = teamMemberRequest.CreatedByID };
                         repo.SaveTeamMember(teamMember);
                        
                         //Keep that team as default team for the user 
                         SetUserIDToSession(UserID, teamMemberRequest.TeamID, user.FirstName);
+                                                
+                        var userService = new UserService(repo);
+                        userService.SaveActivityForNewUserJoinedTeam(teamMemberRequest, user, UserID, TeamID);
 
                         //Correct user 
                         return View("WelcomeToTeam");
                     }
-
                 }
                 return View("NotFound");
             }
@@ -127,16 +126,23 @@ namespace TechiesWeb.TeamBins.Controllers
                 log.Error(ex);
                 return View("Error");
             }
-        }
-
-        //JSON
+        }       
+                
         public JsonResult TeamMembers(string term)
         {
             //Returns project member list in JSON format
-            var team = repo.GetTeam(TeamID);
+            try
+            {
+                var team = repo.GetTeam(TeamID);
 
-            var projectMembers = team.TeamMembers.Where(s => s.Member.FirstName.StartsWith(term, StringComparison.OrdinalIgnoreCase)).Select(item => new { value = item.Member.FirstName, id = item.Member.ID.ToString() }).ToList();
-            return Json(projectMembers, JsonRequestBehavior.AllowGet);
+                var projectMembers = team.TeamMembers.Where(s => s.Member.FirstName.StartsWith(term, StringComparison.OrdinalIgnoreCase)).Select(item => new { value = item.Member.FirstName, id = item.Member.ID.ToString() }).ToList();
+                return Json(projectMembers, JsonRequestBehavior.AllowGet);
+            }
+            catch(Exception ex)
+            {
+                log.Error(ex);
+                return Json(new { Status = "Error", Message = "Troubles getting team members", JsonRequestBehavior.AllowGet });
+            }
         }
     }
 }

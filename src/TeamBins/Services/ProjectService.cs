@@ -6,7 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using TeamBins.DataAccess;
 
-namespace Planner.Services
+namespace TeamBins.Services
 {
     public class ProjectService
     {
@@ -27,7 +27,6 @@ namespace Planner.Services
             foreach (var pro in projects)
             {
                 projectList.Add(new SelectListItem { Value = pro.ID.ToString(), Text = pro.Name });
-
             }
             return projectList;
         }

@@ -8,12 +8,14 @@ using TechiesWeb.TeamBins.ViewModels;
 namespace TechiesWeb.TeamBins.Controllers
 {
     public class DashboardController : BaseController
-    {        
-        IRepositary repo;
-
+    { 
         public DashboardController()
         {
             repo=new Repositary();
+        }
+        public DashboardController(IRepositary repositary) : base(repositary)
+        {            
+
         }
 
         [ChildActionOnly]
