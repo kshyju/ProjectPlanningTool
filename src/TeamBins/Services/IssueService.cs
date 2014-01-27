@@ -6,10 +6,11 @@ using System;
 
 namespace TeamBins.Services
 {
-    public class IssueService
+    public class IssueService : IDisposable
     {
         IRepositary repo;
         public string SiteBaseURL { set; get; }
+      
         public IssueService(IRepositary repositary)
         {
             repo = repositary;
@@ -22,7 +23,7 @@ namespace TeamBins.Services
             foreach (var item in activityList)
             {
                 var activityVM = new ActivityVM() { Author = item.User.FirstName, CreatedDateRelative = item.CreatedDate.ToString() };
-                if (item.ActivityDesc == "Created")
+                if (item.ActivityDesc.ToUpper() == "CREATED")
                 {
                     activityVM.Activity = item.ActivityDesc;
                     activityVM.ObjectTite = item.NewState;
@@ -33,5 +34,12 @@ namespace TeamBins.Services
             return activityVMList;
         }
 
+        public void Dispose()
+        {
+            if (repo != null)
+            {
+                repo.Dispose();
+            }
+        }
     }
 }

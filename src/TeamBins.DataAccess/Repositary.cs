@@ -356,7 +356,10 @@ namespace TeamBins.DataAccess
         
         public void Dispose()
         {
-            throw new System.NotImplementedException();
+            if (db != null)
+            {
+                db.Dispose();
+            }
         }
 
         public User GetUser(string emailAddress)
