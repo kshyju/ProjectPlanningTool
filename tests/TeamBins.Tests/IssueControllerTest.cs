@@ -22,10 +22,10 @@ namespace TeamBins.Tests
 
             FakeRepositary repo = new FakeRepositary(fakeDb);
 
-            IssuesController accntCntrl = new IssuesController(repo);
+            IssuesController issueCtrl = new IssuesController(repo);
 
             //Act
-            var result = accntCntrl.Index() as ViewResult;
+            var result = issueCtrl.Index() as ViewResult;
 
             //Assert
             Assert.AreEqual(result.ViewName, "Index");
@@ -39,10 +39,10 @@ namespace TeamBins.Tests
 
             FakeRepositary repo = new FakeRepositary(fakeDb);
 
-            IssuesController accntCntrl = new IssuesController(repo);
+            IssuesController issueCtrl = new IssuesController(repo);
 
             //Act
-            var result = accntCntrl.Index() as ViewResult;
+            var result = issueCtrl.Index() as ViewResult;
 
             var resultModel = result.Model as IssueListVM;
             //Assert
@@ -55,10 +55,10 @@ namespace TeamBins.Tests
             //Arrange
             var repository = MockRepository.GenerateStrictMock<IRepositary>();
             repository.Stub(s => s.GetProjects(Arg<int>.Is.Anything)).Throw(new Exception());
-            IssuesController accntCntrl = new IssuesController(repository);
+            IssuesController issueCtrl = new IssuesController(repository);
             
             //Act
-            var result = accntCntrl.Index() as ViewResult;          
+            var result = issueCtrl.Index() as ViewResult;          
 
             //Assert
             Assert.AreEqual(result.ViewName, "Error");
@@ -89,17 +89,16 @@ namespace TeamBins.Tests
             issueList.Add(new Issue { ID = 2, Title = "db error", Description = "test", TeamID = fakeTeamID, Location = "SPRNT", CreatedBy = new User { ID = 1, FirstName = "Scott" }, Priority = new Priority { ID = 1, Name = "High" }, Category = new Category { ID = 1, Name = "Bug" }, Status = new Status { ID = 1, Name = "New" }, Project = projectList[0] });
             issueList.Add(new Issue { ID = 3, Title = "error", Description = "test", TeamID = fakeTeamID, Location = "BKLOG", CreatedBy = new User { ID = 1, FirstName = "Scott" }, Priority = new Priority { ID = 1, Name = "High" }, Category = new Category { ID = 1, Name = "Bug" }, Status = new Status { ID = 1, Name = "New" }, Project = projectList[0] });
 
-
             var repository = MockRepository.GenerateStrictMock<IRepositary>();
-            repository.Stub(s => s.GetProjects(Arg<int>.Is.Anything)).Return(projectList);
 
+            repository.Stub(s => s.GetProjects(Arg<int>.Is.Anything)).Return(projectList);
             repository.Stub(s => s.GetIssues()).Return(issueList);
 
-            IssuesController accntCntrl = new IssuesController(repository);
-            accntCntrl.ControllerContext = new ControllerContext(_context, new RouteData(), accntCntrl);
+            IssuesController issueCtrl = new IssuesController(repository);
+            issueCtrl.ControllerContext = new ControllerContext(_context, new RouteData(), issueCtrl);
             
             //Act
-            var result = accntCntrl.Index() as ViewResult;
+            var result = issueCtrl.Index() as ViewResult;
             var resultModel = result.Model as IssueListVM;
 
             //Assert
