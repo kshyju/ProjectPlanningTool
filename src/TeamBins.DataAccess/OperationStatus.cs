@@ -4,7 +4,7 @@ using System.Data.Entity.Validation;
 using System.Linq;
 using System.Text;
 
-namespace SmartPlan.DataAccess
+namespace TeamBins.DataAccess
 {
     public class OperationStatus
     {

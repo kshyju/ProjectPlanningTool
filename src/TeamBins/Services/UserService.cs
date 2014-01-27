@@ -1,44 +1,9 @@
 using System;
-using System.Collections.Generic;
 using TeamBins.DataAccess;
-using TechiesWeb.TeamBins.Infrastructure;
-using System.Linq;
-using TechiesWeb.TeamBins.ViewModels;
 using TechiesWeb.TeamBibs.Helpers.Logging;
+using TechiesWeb.TeamBins.Infrastructure;
 namespace TeamBins.Services
 {
-    public class IssueService
-    {
-        IRepositary repo;
-        public string SiteBaseURL { set; get; }
-        public IssueService(IRepositary repositary)
-        {
-            repo = repositary;
-           
-        }
-       public List<ActivityVM> GetTeamActivityVMs(int teamId)
-       {
-           List<ActivityVM> activityVMList = new List<ActivityVM>();
-           var activityList = repo.GetTeamActivity(teamId).ToList();
-              
-           foreach (var item in activityList)
-           {
-               var activityVM = new ActivityVM();
-               activityVM.Author = item.User.FirstName;
-               activityVM.CreatedDateRelative = item.CreatedDate.ToString();
-               if(item.ActivityDesc=="Created")
-               {
-                   activityVM.Activity = item.ActivityDesc;
-                   activityVM.ObjectTite = item.NewState;
-                   activityVM.ObjectURL = SiteBaseURL + "Issues/details/" + item.ObjectID.ToString();
-               }
-               activityVMList.Add(activityVM);
-           }
-           return activityVMList;
-       }
-
-    }
-
     public class UserService
     {
         public string SiteBaseURL { set; get; }
@@ -131,7 +96,6 @@ namespace TeamBins.Services
         public static string GetImageSource(string email,int size=0)
         {
 
-
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(email.Trim()))
                 throw new ArgumentException("The email is empty.", "email");
 
@@ -144,8 +108,7 @@ namespace TeamBins.Services
             for (var i = 0; i < hashedBytes.Length; i++)
                 sb.Append(hashedBytes[i].ToString("X2"));
 
-            imageUrl += "gravatar_id=" + sb.ToString().ToLower();
-           // imageUrl += "&rating=PG";
+            imageUrl += "gravatar_id=" + sb.ToString().ToLower();          
             if (size>0)
                 imageUrl += "?s="+size;           
 

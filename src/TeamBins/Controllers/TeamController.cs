@@ -1,12 +1,8 @@
-﻿using Planner.DataAccess;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Web.Mvc;
-using TechiesWeb.TeamBins.ViewModels;
-using SmartPlan.DataAccess;
 using TeamBins.DataAccess;
-using TechiesWeb.TeamBins.Controllers;
 using TeamBins.Services;
+using TechiesWeb.TeamBins.ViewModels;
 
 namespace TechiesWeb.TeamBins.Controllers
 {

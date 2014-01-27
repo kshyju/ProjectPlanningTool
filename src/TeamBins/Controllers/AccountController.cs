@@ -8,101 +8,119 @@ using TeamBins.DataAccess;
 using TechiesWeb.TeamBins.Infrastructure;
 using TechiesWeb.TeamBins.ViewModels;
 
-
 namespace TechiesWeb.TeamBins.Controllers
 {
     public class AccountController : BaseController
     {
-            IRepositary repo;
-            UserService userService;
-            public AccountController()
-        {
-            repo = new Repositary();
+            
+        UserService userService;
+        public AccountController()
+        {          
             userService = new UserService(repo);
         }
 
+        public AccountController(IRepositary repositary): base(repositary)
+        {            
+
+        }
 
         public ActionResult Index()
         {
             return View();
         }
+
         public ActionResult Join(string returnurl="")
         {
             return View(new AccountSignupVM { ReturnUrl = returnurl });
         }
 
-
-
         [HttpPost]
         public ActionResult Join(AccountSignupVM model)
         {
-            if (ModelState.IsValid)
-            {                
-                var user = repo.GetUser(model.Email);
-                if (user == null)
+            try
+            {
+                if (ModelState.IsValid)
                 {
-                    var newUser = new User { EmailAddress = model.Email, FirstName=model.Name, Password=model.Password };
-                   // SecurityService.SetNewPassword(newUser, model.Password);                  
-                   var result = repo.SaveUser(newUser);
-                    if (result.Status)
+                    var user = repo.GetUser(model.Email);
+                    if (user == null)
                     {
-                        var team = new Team { Name = newUser.FirstName.Replace(" ","-") };
-                        if (team.Name.Length > 19)
-                            team.Name = team.Name.Substring(0, 19);
-
-                        var res = repo.SaveTeam(team);
-
-                        var teamMember = new TeamMember { MemberID = result.OperationID, TeamID = team.ID, CreatedByID = result.OperationID };
-                        repo.SaveTeamMember(teamMember);
-                        if (teamMember.ID > 0)
+                        var newUser = new User { EmailAddress = model.Email, FirstName = model.Name, Password = model.Password };
+                        // SecurityService.SetNewPassword(newUser, model.Password);                  
+                        var result = repo.SaveUser(newUser);
+                        if (result.Status)
                         {
-                            SetUserIDToSession(result.OperationID, team.ID,model.Name);
+                            var team = new Team { Name = newUser.FirstName.Replace(" ", "-") };
+                            if (team.Name.Length > 19)
+                                team.Name = team.Name.Substring(0, 19);
+
+                            var res = repo.SaveTeam(team);
+
+                            var teamMember = new TeamMember { MemberID = result.OperationID, TeamID = team.ID, CreatedByID = result.OperationID };
+                            repo.SaveTeamMember(teamMember);
+                            if (teamMember.ID > 0)
+                            {
+                                SetUserIDToSession(result.OperationID, team.ID, model.Name);
+                            }
+
+                            /* var notificationVM = new NotificationVM { Title = "New User Joined", Message = model.Name + " joined" };
+                             var context = GlobalHost.ConnectionManager.GetHubContext<UserHub>();
+                             context.Clients.All.ShowNotificaion(notificationVM);*/
+
+                            if (!String.IsNullOrEmpty(model.ReturnUrl))
+                                return RedirectToAction("JoinMyTeam", "Users", new { id = model.ReturnUrl });
+
+                            return RedirectToAction("AccountCreated");
                         }
-
-                       /* var notificationVM = new NotificationVM { Title = "New User Joined", Message = model.Name + " joined" };
-                        var context = GlobalHost.ConnectionManager.GetHubContext<UserHub>();
-                        context.Clients.All.ShowNotificaion(notificationVM);*/
-
-                        if(!String.IsNullOrEmpty(model.ReturnUrl))
-                            return RedirectToAction("JoinMyTeam", "Users", new { id = model.ReturnUrl });
-
-                        return RedirectToAction("AccountCreated");
                     }
-                }
-                else
-                {
-                    ModelState.AddModelError("", "Account already exists with this email address");
-                }
+                    else
+                    {
+                        ModelState.AddModelError("", "Account already exists with this email address");
+                    }
+                }               
             }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+            } 
             return View(model);
         }
+       
         public ActionResult AccountCreated()
         {
             return View();
         }
+        
         public ActionResult Login()
         {
             return View("Login",new LoginVM());
         }
+       
         [HttpPost]
         public ActionResult Login(LoginVM model)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var user = repo.GetUser(model.Email);
-                if (user != null)
+                if (ModelState.IsValid)
                 {
-                    string hashed = SecurityService.GetPasswordHash(model.Password);
-                  // var s= PasswordHash.ValidatePassword(model.Password,user.HA);
-                   if (user.Password==model.Password)
-                   {
-                       var teamMember=user.TeamMembers1.Where(s=>s.MemberID==user.ID).FirstOrDefault();
-                       SetUserIDToSession(user.ID, teamMember.TeamID, user.FirstName);
-                       return RedirectToAction("Index", "Dashboard");
-                   }
+                    var user = repo.GetUser(model.Email);
+                    if (user != null)
+                    {
+                        string hashed = SecurityService.GetPasswordHash(model.Password);
+                        // var s= PasswordHash.ValidatePassword(model.Password,user.HA);
+                        if (user.Password == model.Password)
+                        {
+                            var teamMember = user.TeamMembers1.Where(s => s.MemberID == user.ID).FirstOrDefault();
+                            SetUserIDToSession(user.ID, teamMember.TeamID, user.FirstName);
+                            return RedirectToAction("Index", "Dashboard");
+                        }
+                    }
                 }
+                ModelState.AddModelError("", "Username/Password is incorrect!");
             }
-            ModelState.AddModelError("", "Username/Password is incorrect!");
+            catch (Exception ex)
+            {
+                log.Error(ex);
+            }
             return View(model);
         }
 
@@ -116,11 +134,13 @@ namespace TechiesWeb.TeamBins.Controllers
         {
             return View("forgotPassword",new ForgotPasswordVM());
         }
+        
         [HttpPost]
         public ActionResult forgotpassword(ForgotPasswordVM model)
         {
             return View();
         }
+        
         public ActionResult Profile()
         {            
             var user = repo.GetUser(UserID);
@@ -236,7 +256,6 @@ namespace TechiesWeb.TeamBins.Controllers
 
             return projects;
         }
-
 
     }
 }

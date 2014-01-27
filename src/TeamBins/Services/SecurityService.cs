@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using SimpleCrypto;
+using System;
 using System.Security.Cryptography;
-using System.Web;
-using SimpleCrypto;
-using SmartPlan.DataAccess;
 using TeamBins.DataAccess;
 
 

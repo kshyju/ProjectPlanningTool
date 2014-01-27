@@ -177,6 +177,7 @@
     <Compile Include="Helpers\Logging\Logger.cs" />
     <Compile Include="Hubs\UserHub.cs" />
     <Compile Include="Services\EmailService.cs" />
+    <Compile Include="Services\IssueService.cs" />
     <Compile Include="Services\ProjectService.cs" />
     <Compile Include="Services\SecurityService.cs" />
     <Compile Include="Services\UserService.cs" />

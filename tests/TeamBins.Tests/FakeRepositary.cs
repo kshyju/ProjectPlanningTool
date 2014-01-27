@@ -65,12 +65,12 @@ namespace TeamBins.Tests
             throw new System.NotImplementedException();
         }
 
-        public SmartPlan.DataAccess.OperationStatus SaveIssue(Issue bug)
+        public TeamBins.DataAccess.OperationStatus SaveIssue(Issue bug)
         {
             throw new System.NotImplementedException();
         }
 
-        public SmartPlan.DataAccess.OperationStatus SaveDocument(Document image)
+        public TeamBins.DataAccess.OperationStatus SaveDocument(Document image)
         {
             throw new System.NotImplementedException();
         }
@@ -80,12 +80,12 @@ namespace TeamBins.Tests
             throw new System.NotImplementedException();
         }
 
-        public SmartPlan.DataAccess.OperationStatus SaveProjectMember(ProjectMember projectMember)
+        public TeamBins.DataAccess.OperationStatus SaveProjectMember(ProjectMember projectMember)
         {
             throw new System.NotImplementedException();
         }
 
-        public SmartPlan.DataAccess.OperationStatus SaveUser(User user)
+        public TeamBins.DataAccess.OperationStatus SaveUser(User user)
         {
             throw new System.NotImplementedException();
         }
@@ -138,7 +138,7 @@ namespace TeamBins.Tests
             throw new System.NotImplementedException();
         }
 
-        public SmartPlan.DataAccess.OperationStatus SaveComment(Comment comment)
+        public TeamBins.DataAccess.OperationStatus SaveComment(Comment comment)
         {
             throw new System.NotImplementedException();
         }
@@ -153,17 +153,17 @@ namespace TeamBins.Tests
             throw new System.NotImplementedException();
         }
 
-        public SmartPlan.DataAccess.OperationStatus SaveIssueMember(int issueId, int memberId, int addedBy)
+        public TeamBins.DataAccess.OperationStatus SaveIssueMember(int issueId, int memberId, int addedBy)
         {
             throw new System.NotImplementedException();
         }
 
-        public SmartPlan.DataAccess.OperationStatus DeleteIssueMember(int issueId, int memberId)
+        public TeamBins.DataAccess.OperationStatus DeleteIssueMember(int issueId, int memberId)
         {
             throw new System.NotImplementedException();
         }
 
-        public SmartPlan.DataAccess.OperationStatus SaveTeamMemberRequest(TeamMemberRequest teamMemberRequest)
+        public TeamBins.DataAccess.OperationStatus SaveTeamMemberRequest(TeamMemberRequest teamMemberRequest)
         {
             throw new System.NotImplementedException();
         }
@@ -194,7 +194,7 @@ namespace TeamBins.Tests
             throw new System.NotImplementedException();
         }
 
-        public SmartPlan.DataAccess.OperationStatus SaveActivity(Activity comment)
+        public TeamBins.DataAccess.OperationStatus SaveActivity(Activity comment)
         {
             throw new System.NotImplementedException();
         }
