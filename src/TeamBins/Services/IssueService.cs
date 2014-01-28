@@ -15,23 +15,30 @@ namespace TeamBins.Services
         {
             repo = repositary;
         }
+
         public List<ActivityVM> GetTeamActivityVMs(int teamId)
         {
             List<ActivityVM> activityVMList = new List<ActivityVM>();
-            var activityList = repo.GetTeamActivity(teamId).ToList();
+            var activityList = repo.GetTeamActivity(teamId).OrderByDescending(s=>s.CreatedDate).ToList();
 
             foreach (var item in activityList)
             {
-                var activityVM = new ActivityVM() { Author = item.User.FirstName, CreatedDateRelative = item.CreatedDate.ToString() };
-                if (item.ActivityDesc.ToUpper() == "CREATED")
-                {
-                    activityVM.Activity = item.ActivityDesc;
-                    activityVM.ObjectTite = item.NewState;
-                    activityVM.ObjectURL = String.Format("{0}Issues/details/{1}", SiteBaseURL, item.ObjectID);
-                }
+                var activityVM = GetActivityVM(item);
                 activityVMList.Add(activityVM);
             }
             return activityVMList;
+        }
+
+        public ActivityVM GetActivityVM(Activity item)
+        {
+            var activityVM = new ActivityVM() { Author = item.User.FirstName, CreatedDateRelative = item.CreatedDate.ToString() };
+            if (item.ActivityDesc.ToUpper() == "CREATED")
+            {
+                activityVM.Activity = item.ActivityDesc;
+                activityVM.ObjectTite = item.NewState;
+                activityVM.ObjectURL = String.Format("{0}Issues/details/{1}", SiteBaseURL, item.ObjectID);
+            }
+            return activityVM;
         }
 
         public void Dispose()

@@ -4,6 +4,8 @@
 }
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 <link href="http://code.jquery.com/ui/1.10.3/themes/ui-lightness/jquery-ui.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.signalR-2.0.2.min.js"></script>
+<script src="~/signalr/hubs"></script>
 <script src="~/Scripts/issue.js"></script>
 @if(Model.ProjectsExist)
 {
@@ -79,8 +81,6 @@
         <div>
             Howdy ! Nothing happened yet.
         </div>
-
-        
     </div>
 </div>
 }
@@ -91,11 +91,20 @@ else
         @Html.ActionLink("Create Projects","Index","Projects")
     </div>
 }
-
-            <!-- open button -->
           
 <script type="text/javascript">
     var addIssueUrl = "@Url.Action("Add","ISsues")";
     var editIssueUrl = "@Url.Action("edit","issues")";
-    var savePrefUrl="@Url.Action("SavePreference", "Issues")";
+    var savePrefUrl = "@Url.Action("SavePreference", "Issues")";
+   
+    $(function () {        
+        var chat = $.connection.issuesHub;       
+        chat.client.addNewTeamActivity = function (activity) {           
+            var newActivity = "<div class='activity-item'><a class='activity-author' href='#'> " + activity.Author + " </a> " + activity.Activity + " <a href='" + activity.ObjectURL + "' class='activity-name'> " + activity.ObjectTite + " </a><p class='activity-date' title='" + activity.CreatedDateRelative + "'> " + activity.CreatedDateRelative + "</p></div>";
+            $("#activityList").prepend(newActivity);
+        };                
+        $.connection.hub.start();
+    });
+
+
 </script>

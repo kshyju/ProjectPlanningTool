@@ -1,5 +1,6 @@
 ﻿@model List<TechiesWeb.TeamBins.ViewModels.ActivityVM>
 <h4>Activity</h4>
+<div id="activityList">
 @foreach (var act in Model)
 {
     <div class="activity-item">
@@ -7,3 +8,4 @@
         <p class="activity-date" title="@act.CreatedDateRelative">@act.CreatedDateRelative</p>
     </div>
 }
+</div>

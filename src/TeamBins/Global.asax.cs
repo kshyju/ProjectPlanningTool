@@ -24,7 +24,7 @@ namespace TeamBins
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
 
-            RouteTable.Routes.MapHubs();
+           // RouteTable.Routes.MapHubs();
         }
     }
 }

@@ -43,14 +43,10 @@
     $("#txtAssignMember").autocomplete({
         source: "../../Users/TeamMembers",
         minLength: 1,
-        select: function (event, ui) {
-           
-            //Save it now
+        select: function (event, ui) {                      
             $.post(addMemberToIssueUrl,{ memberId:ui.item.id, issueId:$("#ID").val()},function(res){
                 //Reload the member list ,function
                 $("#members").load(issueMembersUrl+"/"+ $("#ID").val(), function () {
-
-
                 });
             });
         }
@@ -63,8 +59,7 @@
             if (res.Status == "Success") {
                 $("#members").load("../../Issues/IssueMembers/" + $("#ID").val(), function () {
                     
-                });
-                
+                });                
             }
         });
     });
@@ -111,14 +106,9 @@
         else {
             $("#newComment").focus();
         }
-
     });
     
     if ($("#activityStream").length) {
         $("#activityStream").load("../../Team/ActivityStream");
     }
-
-
 });
-
-

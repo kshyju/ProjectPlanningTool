@@ -11,6 +11,7 @@ Built with
 -----------
 
 * ASP.NET MVC
+* ASP.NET SignalR
 * jQuery
 * Twitter bootstrap
 * Log4net

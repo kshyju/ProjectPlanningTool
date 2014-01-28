@@ -1,12 +1,15 @@
 ﻿
+using Microsoft.AspNet.SignalR;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using TeamBins;
 using TeamBins.DataAccess;
 using TeamBins.Services;
+
 using TechiesWeb.TeamBins.Infrastructure;
 using TechiesWeb.TeamBins.ViewModels;
 
@@ -120,7 +123,7 @@ namespace TechiesWeb.TeamBins.Controllers
                             var issue = repo.GetIssue(result.OperationID);
                             if (issue != null)
                             {
-                                SaveActivity(model, issue, result.OperationID);
+                                var teamActivity=SaveActivity(model, issue, result.OperationID);
 
                                 var issueVM = new IssueVM { ID = result.OperationID, Title = issue.Title };
                                 issueVM.Priority = issue.Priority.Name;
@@ -128,6 +131,12 @@ namespace TechiesWeb.TeamBins.Controllers
                                 issueVM.OpenedBy = issue.CreatedBy.FirstName;
                                 issueVM.Category = issue.Category.Name;
                                 issueVM.CreatedDate = issue.CreatedDate.ToShortDateString();
+
+                                var activityVM = issueService.GetActivityVM(teamActivity);
+                                
+                                var context = GlobalHost.ConnectionManager.GetHubContext<IssuesHub>();
+                                context.Clients.All.addNewTeamActivity(activityVM);
+
                                 return Json(new { Status = "Success", Item = issueVM });
                             }
                         }
@@ -450,7 +459,7 @@ namespace TechiesWeb.TeamBins.Controllers
 
         }
 
-        private void SaveActivity(CreateIssue model, Issue existingIssue, int issueId)
+        private Activity SaveActivity(CreateIssue model, Issue existingIssue, int issueId)
         {
             var activity = new Activity() { CreatedByID = UserID, ObjectID = issueId, ObjectType = "Issue" };
 
@@ -475,6 +484,7 @@ namespace TechiesWeb.TeamBins.Controllers
             {
                 log.Error(result);
             }
+            return activity;
         }
 
         private void LoadComments(int id, IssueVM bugVm)
