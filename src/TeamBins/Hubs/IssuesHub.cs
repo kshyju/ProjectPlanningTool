@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Microsoft.AspNet.SignalR;
-using TechiesWeb.TeamBins.ViewModels;
+﻿using Microsoft.AspNet.SignalR;
+using System.Threading.Tasks;
 
 namespace TeamBins
 {
     public class IssuesHub : Hub
     {
-        public void NewTeamActivity(ActivityVM activity)
+        public Task SubscribeToTeam(int id)
         {
-            Clients.All.addNewTeamActivity(activity);
+            return Groups.Add(Context.ConnectionId, id.ToString());
         }
     }
 }

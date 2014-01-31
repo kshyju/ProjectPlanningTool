@@ -19,12 +19,19 @@ namespace TeamBins.Services
         public List<ActivityVM> GetTeamActivityVMs(int teamId)
         {
             List<ActivityVM> activityVMList = new List<ActivityVM>();
-            var activityList = repo.GetTeamActivity(teamId).OrderByDescending(s=>s.CreatedDate).ToList();
-
-            foreach (var item in activityList)
+            try
             {
-                var activityVM = GetActivityVM(item);
-                activityVMList.Add(activityVM);
+                var activityList = repo.GetTeamActivity(teamId).OrderByDescending(s => s.CreatedDate).ToList();
+
+                foreach (var item in activityList)
+                {
+                    var activityVM = GetActivityVM(item);
+                    activityVMList.Add(activityVM);
+                }
+            }
+            catch (Exception ex)
+            {
+                
             }
             return activityVMList;
         }
