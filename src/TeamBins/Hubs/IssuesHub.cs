@@ -13,5 +13,12 @@ namespace TeamBins
         {
             Clients.All.addNewTeamActivity(activity);
         }
+        public System.Threading.Tasks.Task JoinRoom(int teamId)
+        {
+            //int userId= 
+
+            return Groups.Add(Context.ConnectionId, teamId.ToString());
+        }
+
     }
 }

@@ -103,7 +103,9 @@ else
             var newActivity = "<div class='activity-item'><a class='activity-author' href='#'> " + activity.Author + " </a> " + activity.Activity + " <a href='" + activity.ObjectURL + "' class='activity-name'> " + activity.ObjectTite + " </a><p class='activity-date' title='" + activity.CreatedDateRelative + "'> " + activity.CreatedDateRelative + "</p></div>";
             $("#activityList").prepend(newActivity);
         };                
-        $.connection.hub.start();
+        $.connection.hub.start().done(function(){
+            chat.server.joinRoom(1);
+        });
     });
 
 
