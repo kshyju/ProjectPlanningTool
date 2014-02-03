@@ -282,6 +282,23 @@ namespace TechiesWeb.TeamBins.Controllers
         }
 
         [HttpPost]
+        public JsonResult Star(int id, string mode)
+        {
+            //to do : Check user has permission to do this
+            // to do : save to db
+
+            string starClass = "glyphicon-star-empty";
+            string starMode="unstarred";
+
+            if(mode.ToString()=="UNSTARRED")
+            {
+                starClass = "glyphicon-star";
+                starMode = "starred";
+            }
+            return Json(new { Status = "Success", StarClass = starClass, Mode = starMode });
+
+        }
+        [HttpPost]
         public int AddMember(int memberId, int issueId)
         {
             try

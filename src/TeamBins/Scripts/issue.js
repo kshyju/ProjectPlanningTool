@@ -111,4 +111,15 @@
     if ($("#activityStream").length) {
         $("#activityStream").load("../../Team/ActivityStream");
     }
+
+
+    $("#issue-star").click(function (e) {
+        var _this = $(this);
+        $.post("../Star/" + $("#ID").val()+"?mode="+_this.attr("data-starred"), function (res) {
+            if (res.Status === "Success") {
+                _this.removeClass().addClass("glyphicon").addClass(res.StarClass).attr("data-starred",res.Mode);
+            }
+        });
+    });
+
 });
