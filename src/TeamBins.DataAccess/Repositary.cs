@@ -20,6 +20,20 @@ namespace TeamBins.DataAccess
         {
             return db.TeamMembers.Where(s => s.TeamID == teamId && s.MemberID == userId).FirstOrDefault();
         }
+        public OperationStatus SaveIssueMemberRelation(IssueMember issueMember)
+        {
+            try
+            {
+                issueMember.CreatedDate = DateTime.Now;
+                db.IssueMembers.Add(issueMember);
+                db.SaveChanges();
+            }
+            catch(Exception ex)
+            {
+                return OperationStatus.CreateFromException("error saving issue member",ex);
+            }
+            return new OperationStatus();
+        }
         public bool DeleteProject(int projectId)
         {
             
@@ -264,7 +278,7 @@ namespace TeamBins.DataAccess
         */ 
         public List<IssueMember> GetIssueMembers(int issueId)
         {
-            return db.IssueMembers.Where(s => s.IssueID == issueId).ToList();
+            return db.IssueMembers.Where(s => s.IssueID == issueId ).ToList();
         }
        /*
         public List<TechiesWeb.TeamBins.Entities.User> GetNonIssueMembers(int teamId, int issueId)

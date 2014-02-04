@@ -23,7 +23,7 @@ namespace TeamBins
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-
+            log4net.Config.XmlConfigurator.Configure();
            // RouteTable.Routes.MapHubs();
         }
     }

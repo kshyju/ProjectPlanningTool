@@ -82,6 +82,7 @@
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="IssueID" Type="int" Nullable="false" />
           <Property Name="MemberID" Type="int" Nullable="false" />
+          <Property Name="RelationType" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="CreatedByID" Type="int" Nullable="false" />
         </EntityType>
@@ -975,6 +976,7 @@
           <NavigationProperty Name="Issue" Relationship="TeamBinsModel.FK_IssueMember_Issue" FromRole="IssueMember" ToRole="Issue" />
           <NavigationProperty Name="Member" Relationship="TeamBinsModel.FK_IssueMember_IssueMember" FromRole="IssueMember" ToRole="User" />
           <NavigationProperty Name="CreatedBy" Relationship="TeamBinsModel.FK_IssueMember_User_CreatedBy" FromRole="IssueMember" ToRole="User" />
+          <Property Name="RelationType" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_IssueMember_Issue">
           <End Type="TeamBinsModel.Issue" Role="Issue" Multiplicity="1" />
@@ -1419,6 +1421,7 @@
           <EntitySetMapping Name="IssueMembers">
             <EntityTypeMapping TypeName="TeamBinsModel.IssueMember">
               <MappingFragment StoreEntitySet="IssueMember">
+                <ScalarProperty Name="RelationType" ColumnName="RelationType" />
                 <ScalarProperty Name="CreatedByID" ColumnName="CreatedByID" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="MemberID" ColumnName="MemberID" />

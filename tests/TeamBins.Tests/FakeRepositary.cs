@@ -198,5 +198,11 @@ namespace TeamBins.Tests
         {
             throw new System.NotImplementedException();
         }
+
+
+        public OperationStatus SaveIssueMemberRelation(IssueMember issueMember)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

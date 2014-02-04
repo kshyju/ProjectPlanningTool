@@ -40,7 +40,8 @@ namespace TeamBins.DataAccess
         //List<User> GetTeamMembers(int teamId);
         List<IssueMember> GetIssueMembers(int issueId);
         //List<User> GetNonIssueMembers(int teamId, int issueId);
-        OperationStatus SaveIssueMember(int issueId, int memberId, int addedBy);
+      //  OperationStatus SaveIssueMember(int issueId, int memberId, int addedBy);
+        OperationStatus SaveIssueMemberRelation(IssueMember issueMember);
         OperationStatus DeleteIssueMember(int issueId, int memberId);
         OperationStatus SaveTeamMemberRequest(TeamMemberRequest teamMemberRequest);
         TeamMemberRequest GetTeamMemberRequest(string activationCode);

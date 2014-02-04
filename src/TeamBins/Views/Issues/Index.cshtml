@@ -103,15 +103,15 @@ else
         chat.client.addNewTeamActivity = function (activity) {           
             activityList.prepend(BuildNewActivityMarkup(activity));
         };                
-<<<<<<< HEAD
+
         $.connection.hub.start().done(function(){
             chat.server.joinRoom(1);
         });
-=======
+
         $.connection.hub.start().done(function () {           
             chat.server.subscribeToTeam(@Model.TeamID)
         })    
->>>>>>> c35631178de6e8571c2fb0af9a54caf0db5e61a7
+
     });
     function BuildNewActivityMarkup(activity) {
        return "<div class='activity-item'><a class='activity-author' href='#'> " + activity.Author + " </a> " + activity.Activity + " <a href='" + activity.ObjectURL + "' class='activity-name'> " + activity.ObjectTite + " </a><p class='activity-date' title='" + activity.CreatedDateRelative + "'> " + activity.CreatedDateRelative + "</p></div>";

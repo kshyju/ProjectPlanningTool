@@ -249,7 +249,7 @@ namespace TechiesWeb.TeamBins.Controllers
 
                 LoadComments(id, bugVm);
                 //Get Members
-                LoadIssueMembers(id, bugVm);
+                issueService.LoadIssueMembers(id, bugVm,UserID);
                 return View(bugVm);
             }
             catch (Exception ex)
@@ -285,25 +285,30 @@ namespace TechiesWeb.TeamBins.Controllers
         public JsonResult Star(int id, string mode)
         {
             //to do : Check user has permission to do this
-            // to do : save to db
-
-            string starClass = "glyphicon-star-empty";
-            string starMode="unstarred";
-
-            if(mode.ToString()=="UNSTARRED")
+          
+            var result=issueService.StarIssue(id, UserID);
+            if (result)
             {
-                starClass = "glyphicon-star";
-                starMode = "starred";
-            }
-            return Json(new { Status = "Success", StarClass = starClass, Mode = starMode });
 
+                string starClass = "glyphicon-star-empty";
+                string starMode = "unstarred";
+
+                if (mode.ToString() == "UNSTARRED")
+                {
+                    starClass = "glyphicon-star";
+                    starMode = "starred";
+                }
+
+                return Json(new { Status = "Success", StarClass = starClass, Mode = starMode });
+            }
+            return Json(new { Status = "Error" });
         }
         [HttpPost]
         public int AddMember(int memberId, int issueId)
         {
             try
             {
-                repo.SaveIssueMember(issueId, memberId, UserID);
+                issueService.SaveIssueMember(issueId, memberId);
                 return 1;
             }
             catch (Exception ex)
@@ -316,7 +321,7 @@ namespace TechiesWeb.TeamBins.Controllers
         public ActionResult IssueMembers(int id)
         {
             var vm = new IssueVM { ID = id };
-            LoadIssueMembers(id, vm);
+            issueService.LoadIssueMembers(id, vm,UserID);
             return PartialView("Partial/Members", vm);
         }
 
@@ -516,16 +521,7 @@ namespace TechiesWeb.TeamBins.Controllers
             }
         }
 
-        private void LoadIssueMembers(int id, IssueVM bugVm)
-        {
-            var memberList = repo.GetIssueMembers(id);
-            foreach (var member in memberList)
-            {
-                var vm = new MemberVM { MemberType = member.Member.JobTitle, Name = member.Member.FirstName, MemberID = member.MemberID };
-                vm.AvatarHash = UserService.GetImageSource(member.Member.EmailAddress);
-                bugVm.Members.Add(vm);
-            }
-        }
+
         
         #endregion private methods
        

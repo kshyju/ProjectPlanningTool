@@ -91,7 +91,7 @@ namespace TechiesWeb.TeamBins.Controllers
         }
         
         public ActionResult Login()
-        {
+        {       
             return View("Login",new LoginVM());
         }
        

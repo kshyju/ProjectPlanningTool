@@ -19,6 +19,7 @@ namespace TeamBins.DataAccess
         public int MemberID { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public int CreatedByID { get; set; }
+        public string RelationType { get; set; }
     
         public virtual Issue Issue { get; set; }
         public virtual User Member { get; set; }
