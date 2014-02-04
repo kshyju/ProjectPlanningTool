@@ -62,6 +62,9 @@
         <div id="issue-details" class="right-detail-items ">
              <div class="issue-detail-item important">
             Issue # @Model.ID.ToString()
+                 <div class="starHolder">
+                  <span id="issue-star" class="glyphicon @(Model.IsStarredForUser?"glyphicon-star ":"glyphicon-star-empty")" data-starred="@(Model.IsStarredForUser?"starred":"unstarred")"></span>
+                 </div>
             </div>
             <div class="issue-detail-item">
             Type : @Model.Category

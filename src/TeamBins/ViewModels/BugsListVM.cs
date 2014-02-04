@@ -55,6 +55,7 @@ namespace TechiesWeb.TeamBins.ViewModels
         public bool IsShowStopper { set; get; }
 
         public string IssueDueDate { set; get; }
+        public bool IsStarredForUser { set; get; }
 
         public List<DocumentVM> Images { set; get; }
         public List<DocumentVM> Attachments { set; get; }

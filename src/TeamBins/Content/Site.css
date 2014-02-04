@@ -1002,3 +1002,9 @@ border-bottom-left-radius: 0;
    margin:12px;
    margin-top:4px; margin-bottom:4px;
 }
+.starHolder {
+    float:right;
+    margin-right:2px;
+    position:relative;
+    cursor:pointer;
+}
