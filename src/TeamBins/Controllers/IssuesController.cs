@@ -135,7 +135,7 @@ namespace TechiesWeb.TeamBins.Controllers
                                 var activityVM = issueService.GetActivityVM(teamActivity);
                                 
                                 var context = GlobalHost.ConnectionManager.GetHubContext<IssuesHub>();
-                                context.Clients.All.addNewTeamActivity(activityVM);
+                                context.Clients.Group(TeamID.ToString()).addNewTeamActivity(activityVM);
 
                                 return Json(new { Status = "Success", Item = issueVM });
                             }

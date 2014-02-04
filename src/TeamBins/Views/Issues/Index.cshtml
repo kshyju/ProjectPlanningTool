@@ -97,16 +97,24 @@ else
     var editIssueUrl = "@Url.Action("edit","issues")";
     var savePrefUrl = "@Url.Action("SavePreference", "Issues")";
    
-    $(function () {        
+    $(function () {
+        var activityList = $("#activityList");
         var chat = $.connection.issuesHub;       
         chat.client.addNewTeamActivity = function (activity) {           
-            var newActivity = "<div class='activity-item'><a class='activity-author' href='#'> " + activity.Author + " </a> " + activity.Activity + " <a href='" + activity.ObjectURL + "' class='activity-name'> " + activity.ObjectTite + " </a><p class='activity-date' title='" + activity.CreatedDateRelative + "'> " + activity.CreatedDateRelative + "</p></div>";
-            $("#activityList").prepend(newActivity);
+            activityList.prepend(BuildNewActivityMarkup(activity));
         };                
+<<<<<<< HEAD
         $.connection.hub.start().done(function(){
             chat.server.joinRoom(1);
         });
+=======
+        $.connection.hub.start().done(function () {           
+            chat.server.subscribeToTeam(@Model.TeamID)
+        })    
+>>>>>>> c35631178de6e8571c2fb0af9a54caf0db5e61a7
     });
-
+    function BuildNewActivityMarkup(activity) {
+       return "<div class='activity-item'><a class='activity-author' href='#'> " + activity.Author + " </a> " + activity.Activity + " <a href='" + activity.ObjectURL + "' class='activity-name'> " + activity.ObjectTite + " </a><p class='activity-date' title='" + activity.CreatedDateRelative + "'> " + activity.CreatedDateRelative + "</p></div>";
+    }
 
 </script>

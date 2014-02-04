@@ -17,6 +17,7 @@ namespace TechiesWeb.TeamBins.ViewModels
     }
     public class IssueListVM
     {
+        public int TeamID { set; get; }
         public List<IssueVM> Bugs { set; get; }
 
         public IssueListVM()
