@@ -36,8 +36,7 @@ namespace TeamBins.DataAccess
         IEnumerable<Comment> GetCommentsForIssue(int issueId);
         OperationStatus SaveComment(Comment comment);
         Comment GetComment(int commentId);
- 
-        //List<User> GetTeamMembers(int teamId);
+        
         List<IssueMember> GetIssueMembers(int issueId);
         //List<User> GetNonIssueMembers(int teamId, int issueId);
       //  OperationStatus SaveIssueMember(int issueId, int memberId, int addedBy);
@@ -51,6 +50,6 @@ namespace TeamBins.DataAccess
 
         IEnumerable<Activity> GetTeamActivity(int teamId);
         OperationStatus SaveActivity(Activity comment);
-
+        OperationStatus DeleteIssueMemberRelation(IssueMember issueMember);
     }
 }

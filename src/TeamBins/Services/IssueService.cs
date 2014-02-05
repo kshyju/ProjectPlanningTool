@@ -69,26 +69,44 @@ namespace TeamBins.Services
                 issueVm.Members.Add(vm);
             }
         }
-        public bool SaveIssueMember(int issueId, int userId)
+        public bool SaveIssueMember(int issueId, int userId, int createdById)
         {
-            return SaveIssueMemberRelation(issueId, userId, IssueMemberRelationType.Member);
+            return SaveIssueMemberRelation(issueId, userId, IssueMemberRelationType.Member,createdById);
         }
 
         public bool StarIssue(int issueId, int userId)
         {
-            return SaveIssueMemberRelation(issueId, userId, IssueMemberRelationType.Star);
+            return SaveIssueMemberRelation(issueId, userId, IssueMemberRelationType.Star,userId);
         }
-
-        private bool SaveIssueMemberRelation(int issueId, int userId, IssueMemberRelationType relationType)
+        public bool UnStarIssue(int issueId, int userId)
+        {
+            return DeleteIssueMemberRelation(issueId, userId, IssueMemberRelationType.Star);
+        }
+        private bool DeleteIssueMemberRelation(int issueId, int userId, IssueMemberRelationType relationType)
         {
             try
             {
-                var issueMember = new IssueMember { MemberID = userId, IssueID = issueId, RelationType = relationType.ToString() };
+                var issueMember = new IssueMember { MemberID = userId, IssueID = issueId,  RelationType = relationType.ToString() };
+                var result = repo.DeleteIssueMemberRelation(issueMember);
+            }
+            catch (Exception ex)
+            {
+                // to do : Log
+                return false;
+            }
+            return true;
+        }
+        private bool SaveIssueMemberRelation(int issueId, int userId, IssueMemberRelationType relationType, int createdById)
+        {
+            try
+            {
+                var issueMember = new IssueMember { MemberID = userId, IssueID = issueId, CreatedByID=createdById, RelationType = relationType.ToString() };
                 var result = repo.SaveIssueMemberRelation(issueMember);
             }
             catch(Exception ex)
             {
                 // to do : Log
+                return false;
             }
             return true;    
         }

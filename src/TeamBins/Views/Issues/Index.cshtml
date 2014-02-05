@@ -97,16 +97,11 @@ else
     var editIssueUrl = "@Url.Action("edit","issues")";
     var savePrefUrl = "@Url.Action("SavePreference", "Issues")";
    
-    $(function () {
-        var activityList = $("#activityList");
+    $(function () {       
         var chat = $.connection.issuesHub;       
-        chat.client.addNewTeamActivity = function (activity) {           
-            activityList.prepend(BuildNewActivityMarkup(activity));
-        };                
-
-        $.connection.hub.start().done(function(){
-            chat.server.joinRoom(1);
-        });
+        chat.client.addNewTeamActivity = function (activity) {
+            $("#activityList").prepend(BuildNewActivityMarkup(activity));
+        };
 
         $.connection.hub.start().done(function () {           
             chat.server.subscribeToTeam(@Model.TeamID)

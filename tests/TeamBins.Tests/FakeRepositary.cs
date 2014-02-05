@@ -204,5 +204,11 @@ namespace TeamBins.Tests
         {
             throw new System.NotImplementedException();
         }
+
+
+        public OperationStatus DeleteIssueMemberRelation(IssueMember issueMember)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

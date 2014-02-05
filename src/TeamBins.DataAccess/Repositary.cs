@@ -20,6 +20,24 @@ namespace TeamBins.DataAccess
         {
             return db.TeamMembers.Where(s => s.TeamID == teamId && s.MemberID == userId).FirstOrDefault();
         }
+        public OperationStatus DeleteIssueMemberRelation(IssueMember issueMember)
+        {
+            try
+            {
+                var issueMemberRelation = db.IssueMembers.Where(s => s.IssueID == issueMember.IssueID && s.MemberID == issueMember.MemberID && s.RelationType == issueMember.RelationType).FirstOrDefault();
+                if (issueMemberRelation != null)
+                {
+                    db.IssueMembers.Remove(issueMemberRelation);
+                    db.SaveChanges();
+                    return new OperationStatus { Status = true };
+                }
+            }
+            catch (Exception ex)
+            {
+                return OperationStatus.CreateFromException("error deleting issue member relation "+issueMember.ID , ex);
+            }
+            return new OperationStatus();
+        }
         public OperationStatus SaveIssueMemberRelation(IssueMember issueMember)
         {
             try

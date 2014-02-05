@@ -17,30 +17,7 @@ namespace TechiesWeb.TeamBins.Controllers
         {            
 
         }
-
-        [ChildActionOnly]
-        public ActionResult Teams()
-        {
-            var vm = new UsersCurrentTeamVM();
-            try
-            {
-                var teams = repo.GetTeams(UserID).ToList();
-                foreach (var team in teams)
-                {
-                    var teamVM = new TeamVM { ID = team.ID, Name = team.Name };
-                    vm.Teams.Add(teamVM);
-                    if (team.ID == TeamID)
-                        vm.CurrentTeamName = team.Name;
-                }
-                vm.SelectedTeam = TeamID;
-            }
-            catch (Exception ex)
-            {
-                log.Error(ex);
-            }
-            return PartialView(vm);
-        }
-
+      
         public ActionResult Index(int? teamid,string teamname = "")
         {
             try

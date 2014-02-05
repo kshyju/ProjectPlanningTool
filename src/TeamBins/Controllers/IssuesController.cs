@@ -73,7 +73,7 @@ namespace TechiesWeb.TeamBins.Controllers
         {
             try
             {
-                IssueListVM bugListVM = new IssueListVM();
+                IssueListVM bugListVM = new IssueListVM ();
                 var projectList = repo.GetProjects(TeamID).ToList();
 
                 if (projectList.Count > 0)
@@ -285,30 +285,36 @@ namespace TechiesWeb.TeamBins.Controllers
         public JsonResult Star(int id, string mode)
         {
             //to do : Check user has permission to do this
-          
-            var result=issueService.StarIssue(id, UserID);
-            if (result)
+            string starClass = "glyphicon-star-empty";
+            string starMode = "unstarred";
+
+            try
             {
-
-                string starClass = "glyphicon-star-empty";
-                string starMode = "unstarred";
-
-                if (mode.ToString() == "UNSTARRED")
+                if (mode.ToUpper() == "UNSTARRED")
                 {
+                    issueService.StarIssue(id, UserID);
                     starClass = "glyphicon-star";
                     starMode = "starred";
                 }
-
+                else if (mode.ToUpper() == "STARRED")
+                {
+                    issueService.UnStarIssue(id, UserID);
+                }
                 return Json(new { Status = "Success", StarClass = starClass, Mode = starMode });
             }
-            return Json(new { Status = "Error" });
+            catch(Exception ex)
+            {
+                log.Error("Error staring issue "+ id, ex);
+                return Json(new { Status = "Error" });
+            }
+           
         }
         [HttpPost]
         public int AddMember(int memberId, int issueId)
         {
             try
             {
-                issueService.SaveIssueMember(issueId, memberId);
+                issueService.SaveIssueMember(issueId, memberId,UserID);
                 return 1;
             }
             catch (Exception ex)
@@ -395,7 +401,7 @@ namespace TechiesWeb.TeamBins.Controllers
        
         private IssueListVM GetBugList(string iteration, int size = 25)
         {
-            var vm = new IssueListVM { CurrentTab = iteration };
+            var vm = new IssueListVM { CurrentTab = iteration, TeamID=TeamID };
             var bugList = repo.GetIssues().Where(g => g.TeamID == TeamID && g.Location == iteration).OrderByDescending(s => s.ID).Take(size).ToList();
 
             foreach (var bug in bugList)

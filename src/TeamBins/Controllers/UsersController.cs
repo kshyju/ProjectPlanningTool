@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SmartPlan.ViewModels;
+using System;
 using System.Linq;
 using System.Web.Mvc;
 using TeamBins.DataAccess;
@@ -126,7 +127,37 @@ namespace TechiesWeb.TeamBins.Controllers
                 log.Error(ex);
                 return View("Error");
             }
-        }       
+        }
+
+        [ChildActionOnly]
+        public ActionResult MenuHeader()
+        {
+            var vm = new UserMenuHeaderVM();
+            try
+            {
+                var user = repo.GetUser(UserID);
+                if (user != null)
+                {
+                    vm.UserDisplayName = user.FirstName;
+                    vm.UserAvatarHash = UserService.GetImageSource(user.EmailAddress);
+                    var teams = repo.GetTeams(UserID).ToList();
+                    foreach (var team in teams)
+                    {
+                        var teamVM = new TeamVM { ID = team.ID, Name = team.Name };
+                        vm.Teams.Add(teamVM);
+                        if (team.ID == TeamID)
+                            vm.CurrentTeamName = team.Name;
+                    }
+                    vm.SelectedTeam = TeamID;
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+            }
+            return PartialView("Partial/MenuHeader",vm);
+        }
+
                 
         public JsonResult TeamMembers(string term)
         {

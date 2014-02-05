@@ -182,7 +182,6 @@
     <Compile Include="Helpers\Logging\ILogger.cs" />
     <Compile Include="Helpers\Logging\Logger.cs" />
     <Compile Include="Hubs\IssuesHub.cs" />
-    <Compile Include="Services\EmailService.cs" />
     <Compile Include="Services\IssueService.cs" />
     <Compile Include="Services\ProjectService.cs" />
     <Compile Include="Services\SecurityService.cs" />
@@ -357,6 +356,8 @@
     <Content Include="Views\Users\WelcomeToTeam.cshtml" />
     <Content Include="Views\Dashboard\Teams.cshtml" />
     <Content Include="Views\EmailTemplates\JoinMyTeam.cshtml" />
+    <Content Include="Views\Users\Partial\MenuHeader.cshtml" />
+    <Content Include="Views\Shared\NotFound.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

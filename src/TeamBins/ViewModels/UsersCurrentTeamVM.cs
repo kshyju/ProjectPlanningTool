@@ -4,17 +4,19 @@ using System.Linq;
 using System.Web;
 using TechiesWeb.TeamBins.ViewModels;
 
-namespace SmartPlan.ViewModels
+namespace TechiesWeb.TeamBins.ViewModels
 {
-    public class UsersCurrentTeamVM
+    public class UserMenuHeaderVM
     {
-        //View model for the user to switch betwen different teams ( shows in the header menu, Layout.cshtml)
         public List<TeamVM> Teams { set; get; }
         public int SelectedTeam { set; get; }
         public string CurrentTeamName { set; get; }
-        public UsersCurrentTeamVM()
+        public string UserDisplayName { set; get; }
+        public string UserAvatarHash { set; get; }
+        public UserMenuHeaderVM()
         {
             Teams = new List<TeamVM>();
         }
     }
+   
 }

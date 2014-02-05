@@ -9,12 +9,5 @@ namespace TeamBins
         {
             return Groups.Add(Context.ConnectionId, id.ToString());
         }
-        public System.Threading.Tasks.Task JoinRoom(int teamId)
-        {
-            //int userId= 
-
-            return Groups.Add(Context.ConnectionId, teamId.ToString());
-        }
-
     }
 }
