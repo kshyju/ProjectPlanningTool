@@ -21,7 +21,7 @@ namespace TechiesWeb.TeamBins.Controllers
 
         }
 
-       /*
+     
         public ActionResult Index()
         {
             var teams = repo.GetTeams(UserID);
@@ -32,7 +32,7 @@ namespace TechiesWeb.TeamBins.Controllers
             }
             return View(teamListVM);
         }
-       
+         /*
         public ActionResult View(int id)        
         {
             
@@ -57,17 +57,17 @@ namespace TechiesWeb.TeamBins.Controllers
         public ActionResult Create()
         {
             return View(new TeamVM());
-        }
+        }*/
         public ActionResult Edit(int id)
         {
              var team = repo.GetTeam(id);
              if (team != null)
              {
                  var vm = new TeamVM { Name = team.Name, ID = team.ID };
-                 return View(vm);
+                 return PartialView(vm);
              }
              return View("NotFound");
-        }
+        }/*
         public ActionResult AddMember(int id)
         {
             var vm=new AddTeamMemberRequestVM { TeamID=id};

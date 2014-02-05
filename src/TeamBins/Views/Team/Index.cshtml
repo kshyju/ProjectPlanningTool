@@ -15,7 +15,7 @@
 @foreach(var team in Model.Teams)
 {
   <tr>
-      <td>@Html.ActionLink(team.Name,"View",new { id=team.ID})</td>
+      <td>@Html.ActionLink(team.Name, "edit", "Team", new { id = team.ID }, new { @class="popup" })</td>
       <td>@team.MemberCount</td>
   </tr>  
      

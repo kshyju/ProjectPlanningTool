@@ -4,17 +4,8 @@
 }
 
 <h2>@Model.Name</h2>
-<h4>Project Members</h4>
-@Html.ActionLink("Add New Member", "AddMember", "Projects",new { id = Model.ID }, new { @class="aPopup" })
-<div>
-@foreach(var member in Model.Members)
-{
-    <div>
-        <h4>@member.Name</h4>
-        <p>@member.JobTitle</p>
-    </div>
-}
-</div>
+
+
 <div id="modal" class="modal fade"></div>
 
 <script type="text/javascript">
