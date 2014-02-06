@@ -28,7 +28,10 @@ namespace TechiesWeb.TeamBins.ViewModels
         public string CurrentTab { set; get; }
         public bool ProjectsExist { set; get; }
     }
+    public class DeleteIssueConfirmationVM : IssueVM
+    {
 
+    }
     public class IssueVM
     {
         public int ID { set; get; }

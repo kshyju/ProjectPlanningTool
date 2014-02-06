@@ -7,6 +7,7 @@
 <script src="~/Scripts/issue.js"></script>
 
 <div class="divToobar">
+       @Html.ActionLink("Delete", "Delete", new { id = Model.ID }, new { @class = "toolLink popup" })  
        @Html.ActionLink("Edit", "Edit", new { id = Model.ID }, new { @class = "toolLink aPopup" })    
 </div>
 

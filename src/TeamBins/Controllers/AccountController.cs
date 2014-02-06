@@ -101,7 +101,7 @@ namespace TechiesWeb.TeamBins.Controllers
                     var user = repo.GetUser(model.Email);
                     if (user != null)
                     {
-                        string hashed = SecurityService.GetPasswordHash(model.Password);
+                        //string hashed = SecurityService.GetPasswordHash(model.Password);
                         // var s= PasswordHash.ValidatePassword(model.Password,user.HA);
                         if (user.Password == model.Password)
                         {
@@ -115,6 +115,7 @@ namespace TechiesWeb.TeamBins.Controllers
             }
             catch (Exception ex)
             {
+                ModelState.AddModelError("", "Oops! Something went wrong :(");
                 log.Error(ex);
             }
             return View(model);

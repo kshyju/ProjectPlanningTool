@@ -1,5 +1,4 @@
-﻿
-using Microsoft.AspNet.SignalR;
+﻿using Microsoft.AspNet.SignalR;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,7 +8,6 @@ using System.Web.Mvc;
 using TeamBins;
 using TeamBins.DataAccess;
 using TeamBins.Services;
-
 using TechiesWeb.TeamBins.Infrastructure;
 using TechiesWeb.TeamBins.ViewModels;
 
@@ -23,8 +21,7 @@ namespace TechiesWeb.TeamBins.Controllers
         }
 
         public IssuesController(IRepositary repositary) :base(repositary)
-        {            
-
+        {
         }
 
         #region public methods
@@ -309,6 +306,7 @@ namespace TechiesWeb.TeamBins.Controllers
             }
            
         }
+
         [HttpPost]
         public int AddMember(int memberId, int issueId)
         {
@@ -363,6 +361,12 @@ namespace TechiesWeb.TeamBins.Controllers
                 return PartialView("Partial/Comment", commentVM);
             }
             return Content("");
+        }
+
+        public ActionResult Delete(int id)
+        {
+            var deleteConfirmVM = new DeleteIssueConfirmationVM { ID = id };
+            return PartialView("Partial/DeleteConfirm",deleteConfirmVM);
         }
 
         [HttpPost]

@@ -188,7 +188,7 @@
     <Compile Include="Services\UserService.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\AccountSignupVM.cs" />
-    <Compile Include="ViewModels\BugsListVM.cs" />
+    <Compile Include="ViewModels\IssueVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\EmailTemplate\JoinMyTeamEmail.cs" />
     <Compile Include="ViewModels\JSON ViewModels\IssueJsonVM.cs" />
@@ -358,6 +358,7 @@
     <Content Include="Views\EmailTemplates\JoinMyTeam.cshtml" />
     <Content Include="Views\Users\Partial\MenuHeader.cshtml" />
     <Content Include="Views\Shared\NotFound.cshtml" />
+    <Content Include="Views\Issues\Partial\DeleteConfirm.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
