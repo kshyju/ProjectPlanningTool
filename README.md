@@ -1,11 +1,12 @@
 TeamBins
 ========
 
-An Agile Project management tool built with Microsoft technologies
+An Agile Project management tool built with Microsoft technologies.
 
 
-![alt text](https://f.cloud.github.com/assets/144469/1905478/cfc2bae4-7c9e-11e3-9485-0fd7737d5ac6.png "Logo Title Text 1")
+![alt text](https://f.cloud.github.com/assets/144469/2100571/faf145c4-8f49-11e3-8125-b781b5d4c52f.png "Issue listing")
 
+![alt text](https://f.cloud.github.com/assets/144469/2100576/0584619c-8f4a-11e3-8c67-48ae551f7e32.png "Issue details")
 
 Built with
 -----------
