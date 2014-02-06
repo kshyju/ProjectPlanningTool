@@ -25,13 +25,14 @@
         <a href="@Url.Action( "index", "issues")">Issues</a>
         <a href="@Url.Action("index","projects")">Projects</a>
         <a href="@Url.Action("index","users")">Members</a>
+        <a href="@Url.Action("index","team")">Teams</a>
     </div>
     <div class="userInfo">
     @if (Session["TB_NickName"] != null)
     {
         <span>Howdy, <a href="@Url.Action("editprofile","account")">@Model.UserDisplayName</a> </span>
         <img src="@Model.UserAvatarHash?s=26" />
-        @Html.ActionLink("logout", "logout", "account", null, new { @class = "aLogout" })
+        @Html.ActionLink("Logout", "logout", "account", null, new { @class = "aLogout" })
     }
     </div>
 </div>

@@ -1008,3 +1008,7 @@ border-bottom-left-radius: 0;
     position:relative;
     cursor:pointer;
 }
+.def-project-item
+{
+    font-style:italic; font-size:12px; padding-left:6px;
+}

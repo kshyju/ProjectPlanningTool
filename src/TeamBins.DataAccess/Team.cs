@@ -25,10 +25,12 @@ namespace TeamBins.DataAccess
         public int ID { get; set; }
         public string Name { get; set; }
         public System.DateTime CreatedDate { get; set; }
+        public int CreatedByID { get; set; }
     
         public virtual ICollection<Issue> Issues { get; set; }
         public virtual ICollection<TeamMemberRequest> TeamMemberRequests { get; set; }
         public virtual ICollection<TeamMember> TeamMembers { get; set; }
         public virtual ICollection<Activity> Activities { get; set; }
+        public virtual User CreatedBy { get; set; }
     }
 }

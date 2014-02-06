@@ -50,13 +50,13 @@ namespace TechiesWeb.TeamBins.Controllers
             if (project != null)
             {
                 var projectVm = new ProjectDetailsVM { ID = id, Name = project.Name };
-
+                /*
                 var projectMembers = project.ProjectMembers.ToList();
                 foreach (var item in projectMembers)
                 {
                     var member = new MemberVM { Name = item.Member.FirstName, JobTitle = item.Member.JobTitle };
                     projectVm.Members.Add(member);
-                }
+                }*/
                 return View(projectVm);
             }
             return View("NotFound");
@@ -74,30 +74,32 @@ namespace TechiesWeb.TeamBins.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var existing = repo.GetProject(model.Name, UserID);
-                    if ((existing != null) && (existing.ID != model.ID))
+                    Project project = new Project { ID = model.ID };
+
+                    project = repo.GetProject(model.Name, UserID);
+                    if ((project != null) && (project.ID != model.ID))
                         return Json(new { Status = "Error", Message = "Project name exists" });
 
+                    if (project == null)
+                    {
+                        if (model.ID > 0)
+                            project = repo.GetProject(model.ID);
+                        else
+                            project = new Project();
 
-                    var project = new Project { Name = model.Name, ID = model.ID, TeamID = TeamID };
-                    project.CreatedByID = UserID;
+                        project.TeamID = TeamID;
+                        project.CreatedByID = UserID;
+                    }
+                    project.Name=model.Name;                                      
+                    
                     var res = repo.SaveProject(project);
                     if (res != null)
-                    {
-                        //Add as Project member
-
-                        /*
-                        var projectMember = new ProjectMember { ProjectID = project.ID, UserID = UserID, CreatedDate = DateTime.Now };
-                        var result = repo.SaveProjectMember(projectMember);
-                        */
-
+                    {                        
                         var teamMember = repo.GetTeamMember(UserID, TeamID);
-
                         if (teamMember != null && !teamMember.DefaultProjectID.HasValue)
                         {
                             var defProjRes = userService.SaveDefaultProjectForTeam(UserID, TeamID, project.ID);
                         }
-
                         return Json(new { Status = "Success", Message = "Project created successfully" });
                     }
                 }
@@ -154,25 +156,7 @@ namespace TechiesWeb.TeamBins.Controllers
             var vm = new AddProjectMemberVM { ProjectID = id };
             return PartialView("Partial/AddMember",vm);
         }
-        [HttpPost]
-        public ActionResult AddMember(AddProjectMemberVM model)
-        {
-            try
-            {
-                var member=repo.GetUser(model.Email);
-                if(member!=null)
-                {
-                    //Existing member, So lets add him to the project
-                    var projectMember = new ProjectMember { ProjectID = model.ProjectID, UserID = member.ID, CreatedDate = DateTime.Now };
-                    var result = repo.SaveProjectMember(projectMember);
-                }
-                return Json(new { Status = "Success", Message = "Project member added successfully" });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { Status = "Error", Message = "Error adding project member" });
-            }
-        }
+       
         /*
         // JSON for auto complete
         public ActionResult Members(int id,string term)

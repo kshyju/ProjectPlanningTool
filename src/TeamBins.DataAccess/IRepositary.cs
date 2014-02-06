@@ -21,8 +21,7 @@ namespace TeamBins.DataAccess
         List<Category> GetCategories();    
         OperationStatus SaveIssue(Issue bug);
         OperationStatus SaveDocument(Document image);
-        Project SaveProject(Project project);
-        OperationStatus SaveProjectMember(ProjectMember projectMember);      
+        Project SaveProject(Project project);       
         OperationStatus SaveUser(User user);
         User GetUser(string emailAddress);
         User GetUser(int userId);

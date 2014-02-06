@@ -8,17 +8,15 @@
         <EntityTypeShape EntityType="TeamBinsModel.Category" Width="1.5" PointX="3" PointY="5.25" IsExpanded="true" />
         <EntityTypeShape EntityType="TeamBinsModel.Priority" Width="1.5" PointX="3" PointY="7.5" IsExpanded="true" />
         <EntityTypeShape EntityType="TeamBinsModel.Status" Width="1.5" PointX="3" PointY="9.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="TeamBinsModel.Team" Width="1.5" PointX="5.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="TeamBinsModel.Team" Width="1.5" PointX="11.75" PointY="5.125" IsExpanded="true" />
         <EntityTypeShape EntityType="TeamBinsModel.Task" Width="1.5" PointX="7.2978780862399741" PointY="2.3030796806808" />
         <AssociationConnector Association="TeamBinsModel.FK_Task_Task" />
         <EntityTypeShape EntityType="TeamBinsModel.Issue" Width="1.5" PointX="7.0059360689511223" PointY="9.15500806698343" />
         <AssociationConnector Association="TeamBinsModel.FK_Issue_Category" />
         <AssociationConnector Association="TeamBinsModel.FK_Issue_Priority" />
         <AssociationConnector Association="TeamBinsModel.FK_Issue_Status" />
-        <EntityTypeShape EntityType="TeamBinsModel.ProjectMember" Width="1.5" PointX="5.25" PointY="0.75" />
         <EntityTypeShape EntityType="TeamBinsModel.Project" Width="1.5" PointX="3" PointY="1.875" />
         <AssociationConnector Association="TeamBinsModel.FK_Issue_Project" />
-        <AssociationConnector Association="TeamBinsModel.FK_ProjectMember_Project" />
         <EntityTypeShape EntityType="TeamBinsModel.Comment" Width="1.5" PointX="9.25" PointY="7.5" />
         <AssociationConnector Association="TeamBinsModel.FK_Comment_Issue" />
         <EntityTypeShape EntityType="TeamBinsModel.IssueMember" Width="1.5" PointX="9.13194611348768" PointY="3.3422567859954464" />
@@ -38,7 +36,6 @@
         <AssociationConnector Association="TeamBinsModel.FK_IssueMember_IssueMember" />
         <AssociationConnector Association="TeamBinsModel.FK_IssueMember_User_CreatedBy" />
         <AssociationConnector Association="TeamBinsModel.FK_Project_User" />
-        <AssociationConnector Association="TeamBinsModel.FK_ProjectMember_User" />
         <AssociationConnector Association="TeamBinsModel.FK_Task_User" />
         <AssociationConnector Association="TeamBinsModel.FK_TeamMemberRequest_CreatedBy" />
         <EntityTypeShape EntityType="TeamBinsModel.TeamMember" Width="1.5" PointX="3.0822332329499691" PointY="13.279599806889705" />
@@ -48,6 +45,7 @@
         <AssociationConnector Association="TeamBinsModel.FK_TeamMember_Member" />
         <EntityTypeShape EntityType="TeamBinsModel.EmailTemplate" Width="1.5" PointX="0.49741583526945476" PointY="17.022941507875426" />
         <AssociationConnector Association="TeamBinsModel.FK_Activity_Team" />
+        <AssociationConnector Association="TeamBinsModel.FK_Team_User" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

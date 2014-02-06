@@ -24,11 +24,11 @@ namespace TeamBins.DataAccess
             this.IssueMembers = new HashSet<IssueMember>();
             this.IssueMembers1 = new HashSet<IssueMember>();
             this.Projects = new HashSet<Project>();
-            this.ProjectMembers = new HashSet<ProjectMember>();
             this.Tasks = new HashSet<Task>();
             this.TeamMemberRequests = new HashSet<TeamMemberRequest>();
             this.TeamMembers = new HashSet<TeamMember>();
             this.TeamMembers1 = new HashSet<TeamMember>();
+            this.Teams = new HashSet<Team>();
         }
     
         public int ID { get; set; }
@@ -47,10 +47,10 @@ namespace TeamBins.DataAccess
         public virtual ICollection<IssueMember> IssueMembers { get; set; }
         public virtual ICollection<IssueMember> IssueMembers1 { get; set; }
         public virtual ICollection<Project> Projects { get; set; }
-        public virtual ICollection<ProjectMember> ProjectMembers { get; set; }
         public virtual ICollection<Task> Tasks { get; set; }
         public virtual ICollection<TeamMemberRequest> TeamMemberRequests { get; set; }
         public virtual ICollection<TeamMember> TeamMembers { get; set; }
         public virtual ICollection<TeamMember> TeamMembers1 { get; set; }
+        public virtual ICollection<Team> Teams { get; set; }
     }
 }

@@ -80,10 +80,7 @@ namespace TeamBins.Tests
             throw new System.NotImplementedException();
         }
 
-        public TeamBins.DataAccess.OperationStatus SaveProjectMember(ProjectMember projectMember)
-        {
-            throw new System.NotImplementedException();
-        }
+       
 
         public TeamBins.DataAccess.OperationStatus SaveUser(User user)
         {

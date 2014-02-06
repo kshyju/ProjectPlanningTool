@@ -41,17 +41,6 @@
 </div>
 <div class="dbItemContainer">
 <div class="dashboardItem">
-<h4>Recent Activity</h4>
-<table>
-@foreach (var issue in Model.IssuesAssignedToMe)
-{
-    <tr>
-        <td>@Html.ActionLink(issue.Title, "details", "Issues", new { id = issue.ID }, null)</td>
-    </tr>
-}
-</table>    
-</div>
-<div class="dashboardItem">
 <h4>TeamBins news</h4>
 <p>No news now</p>   
 </div>

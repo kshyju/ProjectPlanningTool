@@ -9,7 +9,7 @@
 {
      @Html.ActionLink("Add New", "Add", "Projects", new { id=Model.TeamID}, new { @class = "aPopup" })
     
-    <table class="table table-bordered">
+    <table class="table">
         <thead>
             <tr><th>Name</th><th></th></tr>
         </thead>
@@ -21,7 +21,7 @@
                     @Html.ActionLink(project.Name, "details", "Projects", new { @id = project.ID }, new { @class = "listItem" })
                     @if(project.IsDefaultProject)
                     {
-                        <span>Default project</span>
+                        <span class="def-project-item">Default project</span>
                     }
                 </td>
                 <td>

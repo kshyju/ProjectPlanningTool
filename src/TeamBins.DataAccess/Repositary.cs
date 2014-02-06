@@ -94,23 +94,7 @@ namespace TeamBins.DataAccess
             {
                 return OperationStatus.CreateFromException("Error in saving team member" , ex);
             }
-        }
-        public OperationStatus SaveProjectMember(ProjectMember projectMember)
-        {
-            try
-            {
-                db.ProjectMembers.Add(projectMember);
-                db.SaveChanges();
-                return new OperationStatus { Status = true, OperationID = projectMember.ID };
-            }
-            catch(Exception ex)
-            {
-                return new OperationStatus { Status = true, OperationID = projectMember.ID };
-            }
-
-          
-        }
-        
+        }            
 
         public Document GetDocument(string fileAlias)
         {
@@ -121,12 +105,7 @@ namespace TeamBins.DataAccess
         {
             return db.Documents.Where(s => s.ParentID == parentId).ToList();
         }
-/*
-        public List<Bug> GetBugs(int page, int size)
-        {
-            throw new System.NotImplementedException();
-        }
-        */
+
         public IEnumerable<Project> GetProjects(int teamId)
         {
             return db.Projects.Where(s=>s.TeamID==teamId);

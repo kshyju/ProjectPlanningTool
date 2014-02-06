@@ -3,22 +3,44 @@
 }
 @model TechiesWeb.TeamBins.ViewModels.TeamListVM
 <h2>Teams</h2>
-<ul class="breadcrumb">
-  <li><a href="@Url.Action("Index","Dashboard")">Home</a> <span class="divider">/</span></li> 
-  <li class="active">Teams</li>
-</ul>
 <table  class="table">
     <tr>
         <th>Team Name</th>
-        <th>Members</th>
+        <th>Member type</th>
     </tr>
 @foreach(var team in Model.Teams)
 {
   <tr>
-      <td>@Html.ActionLink(team.Name, "edit", "Team", new { id = team.ID }, new { @class="popup" })</td>
-      <td>@team.MemberCount</td>
+      <td>
+          @if (team.IsTeamOwner)
+          {
+            @Html.ActionLink(team.Name, "edit", "Team", new { id = team.ID }, new { @class="popup" })
+          }
+          else
+          {
+            <span>@team.Name</span>
+          }
+      </td>
+      <td>
+          @(team.IsTeamOwner?"Team Admin":"Team Member")
+
+      </td>
   </tr>  
      
 
 }
 </table>
+<script type="text/javascript">
+    $(function () {
+        $(document).on("click", "#btnSaveTeam", function (e) {
+            e.preventDefault();
+            $.post($(this).closest("form").attr("action"), $(this).closest("form").serialize(), function (res) {
+                if (res.Status === "Success")
+                    window.location.href = "@Url.Action("Index")";
+            else
+                    $("#msg").text(res.Message).addClass("error").slideDown(); $("#Name").focus();
+            });
+        });
+
+    });
+</script>

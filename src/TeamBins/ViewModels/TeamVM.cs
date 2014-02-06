@@ -22,7 +22,7 @@ namespace TechiesWeb.TeamBins.ViewModels
         public string Name { set; get; }
         public int MemberCount { set; get; }
         public List<MemberVM> Members { set; get; }
-
+        public bool IsTeamOwner { set; get; }
         public TeamVM()
         {
             Members = new List<MemberVM>();

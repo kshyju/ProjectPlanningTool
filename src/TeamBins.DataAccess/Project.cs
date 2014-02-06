@@ -17,7 +17,6 @@ namespace TeamBins.DataAccess
         public Project()
         {
             this.Issues = new HashSet<Issue>();
-            this.ProjectMembers = new HashSet<ProjectMember>();
             this.TeamMembers = new HashSet<TeamMember>();
         }
     
@@ -29,7 +28,6 @@ namespace TeamBins.DataAccess
         public Nullable<int> TeamID { get; set; }
     
         public virtual ICollection<Issue> Issues { get; set; }
-        public virtual ICollection<ProjectMember> ProjectMembers { get; set; }
         public virtual User CreatedBy { get; set; }
         public virtual ICollection<TeamMember> TeamMembers { get; set; }
     }

@@ -4,6 +4,7 @@ using TeamBins.DataAccess;
 using TeamBins.Services;
 using TechiesWeb.TeamBins.ViewModels;
 using System.Linq;
+using System;
 namespace TechiesWeb.TeamBins.Controllers
 {
 
@@ -28,7 +29,7 @@ namespace TechiesWeb.TeamBins.Controllers
             var teamListVM = new TeamListVM();
             foreach (var team in teams)
             {
-                teamListVM.Teams.Add(new TeamVM { ID = team.ID, Name = team.Name  });
+                teamListVM.Teams.Add(new TeamVM { ID = team.ID, Name = team.Name , IsTeamOwner=team.CreatedByID==UserID });
             }
             return View(teamListVM);
         }
@@ -106,46 +107,36 @@ namespace TechiesWeb.TeamBins.Controllers
             }
 
         }
-
+        */
         [HttpPost]
         public ActionResult Create(TeamVM model)
         {
-            if (ModelState.IsValid)
+            try
             {
-                Team team = new Team { Name = model.Name ,ID=model.ID };
-                bool isNew = (model.ID == 0);
-                if(!isNew)
+                if (ModelState.IsValid)
                 {
-                    team=repo.GetTeam(model.ID);
-                    team.Name = model.Name;
-                }
-                
-                var result=repo.SaveTeam(team);
-                if (result!=null)
-                {
-                    //Add this user as a team member
-
-                   
-                    if (isNew)
+                    Team team = new Team { Name = model.Name, ID = model.ID };
+                    bool isNew = (model.ID == 0);
+                    if (!isNew)
                     {
-                        TeamMember req = new TeamMember { TeamID = result.ID, CreatedByID = UserID };
-                      //  var res = repo.SaveTeamMember(req);
-                       // TempData["TeamID"] = result.ID;
-                        return RedirectToAction("created", "Team");
+                        team = repo.GetTeam(model.ID);
+                        team.Name = model.Name;
                     }
-                    else
+                    var result = repo.SaveTeam(team);
+                    if (result != null)
                     {
-                        return RedirectToAction("View", new { id= model.ID });
+                        return Json(new { Status = "Success" });
                     }
                 }
-                else
-                {
-                    //LOG ERROR
-                }
+                return View(model);
             }
-            return View(model);
+            catch(Exception ex)
+            {
+                log.Error("Error updating team "+model.ID,ex);
+            }
+            return Json(new { Status = "Error" });
         }
-
+        /*
         public ActionResult Created()
         {
             string strTeamId = TempData["TeamID"].ToString();
