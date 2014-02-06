@@ -9,7 +9,7 @@
 @foreach (var project in Model.Projects)
 {
     <tr>
-        <td>@Html.ActionLink(project.Name, "Index", "Project", new { id = project.ID }, null)</td>              
+        <td>@Html.ActionLink(project.Name, "index", "projects", new { id = project.ID }, null)</td>              
     </tr>
 }
 </table>      
@@ -22,7 +22,7 @@
 @foreach (var issue in Model.RecentIssues)
 {
     <tr>
-        <td>@Html.ActionLink(issue.Title, "details", "Issues", new { id = issue.ID }, null)</td>
+        <td>@Html.ActionLink(issue.Title, "details", "issues", new { id = issue.ID }, null)</td>
     </tr>
 }
 </table>    
@@ -33,7 +33,7 @@
 @foreach (var issue in Model.IssuesAssignedToMe)
 {
     <tr>
-        <td>@Html.ActionLink(issue.Title, "details", "Issues", new { id = issue.ID }, null)</td>
+        <td>@Html.ActionLink(issue.Title, "details", "issues", new { id = issue.ID }, null)</td>
     </tr>
 }
 </table>    

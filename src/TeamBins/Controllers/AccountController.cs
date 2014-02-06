@@ -49,7 +49,7 @@ namespace TechiesWeb.TeamBins.Controllers
                         var result = repo.SaveUser(newUser);
                         if (result.Status)
                         {
-                            var team = new Team { Name = newUser.FirstName.Replace(" ", "-") };
+                            var team = new Team { Name = newUser.FirstName.Replace(" ", "-"), CreatedByID = result.OperationID };
                             if (team.Name.Length > 19)
                                 team.Name = team.Name.Substring(0, 19);
 
@@ -61,10 +61,6 @@ namespace TechiesWeb.TeamBins.Controllers
                             {
                                 SetUserIDToSession(result.OperationID, team.ID, model.Name);
                             }
-
-                            /* var notificationVM = new NotificationVM { Title = "New User Joined", Message = model.Name + " joined" };
-                             var context = GlobalHost.ConnectionManager.GetHubContext<UserHub>();
-                             context.Clients.All.ShowNotificaion(notificationVM);*/
 
                             if (!String.IsNullOrEmpty(model.ReturnUrl))
                                 return RedirectToAction("JoinMyTeam", "Users", new { id = model.ReturnUrl });
