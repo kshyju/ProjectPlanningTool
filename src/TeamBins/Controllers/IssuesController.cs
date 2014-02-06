@@ -97,7 +97,7 @@ namespace TechiesWeb.TeamBins.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    Issue bug = new Issue { ID = model.ID };
+                    Issue bug = new Issue { ID = model.ID ,  CreatedByID = UserID,  TeamID = TeamID};
                     if (model.ID != 0)
                     {
                         bug = repo.GetIssue(model.ID);
@@ -106,7 +106,7 @@ namespace TechiesWeb.TeamBins.Controllers
                     bug.Title = model.Title;
                     bug.Description = model.Description;
                     bug.TeamID = TeamID;
-                    bug.CreatedByID = UserID;
+                   
                     LoadDefaultIssueValues(bug, model);
 
                     OperationStatus result = repo.SaveIssue(bug);
