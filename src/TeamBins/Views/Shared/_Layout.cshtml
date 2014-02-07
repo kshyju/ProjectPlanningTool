@@ -21,15 +21,16 @@
     </div>
     <div id="modal" class="modal fade"></div>
     <script type="text/javascript">
-        function ShowModel(url,title) {            
+        function ShowModel(url, title) {
+            $('#modal').removeData("modal")
             $('#modal').modal({ remote: url });
         }
         $(function () {
             //Show popup on clicking the link
             $(document).on("click", "a.popup", function (e) {
                 e.preventDefault();
-                var _this = $(this);
-                ShowModel(_this.attr("href"), _this.text());
+                var _this = $(this);                
+                ShowModel(_this.attr("href")+"?"+$.now(), _this.text());
             });
             $("a.a-current-team").click(function (e) {
                 e.preventDefault();
