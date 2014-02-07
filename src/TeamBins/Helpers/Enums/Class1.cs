@@ -11,4 +11,10 @@ namespace TeamBins.Helpers.Enums
         Star,
         Following
     }
+    public enum LocationType
+    {
+        SPRNT,
+        ARCHV, 
+        BKLOG
+    }
 }

@@ -16,10 +16,10 @@ namespace TeamBins.DataAccess
     {
         public Team()
         {
-            this.Issues = new HashSet<Issue>();
-            this.TeamMemberRequests = new HashSet<TeamMemberRequest>();
-            this.TeamMembers = new HashSet<TeamMember>();
             this.Activities = new HashSet<Activity>();
+            this.Issues = new HashSet<Issue>();
+            this.TeamMembers = new HashSet<TeamMember>();
+            this.TeamMemberRequests = new HashSet<TeamMemberRequest>();
         }
     
         public int ID { get; set; }
@@ -27,10 +27,10 @@ namespace TeamBins.DataAccess
         public System.DateTime CreatedDate { get; set; }
         public int CreatedByID { get; set; }
     
-        public virtual ICollection<Issue> Issues { get; set; }
-        public virtual ICollection<TeamMemberRequest> TeamMemberRequests { get; set; }
-        public virtual ICollection<TeamMember> TeamMembers { get; set; }
         public virtual ICollection<Activity> Activities { get; set; }
+        public virtual ICollection<Issue> Issues { get; set; }
         public virtual User CreatedBy { get; set; }
+        public virtual ICollection<TeamMember> TeamMembers { get; set; }
+        public virtual ICollection<TeamMemberRequest> TeamMemberRequests { get; set; }
     }
 }

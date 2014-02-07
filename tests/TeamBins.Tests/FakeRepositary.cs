@@ -207,5 +207,11 @@ namespace TeamBins.Tests
         {
             throw new System.NotImplementedException();
         }
+
+
+        public OperationStatus DeleteIssue(int issueId)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

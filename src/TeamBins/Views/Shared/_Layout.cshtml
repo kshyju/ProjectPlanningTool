@@ -19,18 +19,18 @@
             </div>
         </div>
     </div>
-    <div id="modal" class="modal fade"></div>
     <script type="text/javascript">
         function ShowModel(url, title) {
-            $('#modal').removeData("modal")
-            $('#modal').modal({ remote: url });
+            $("#modal").remove();
+            $.get(url, function (data) {
+                $('<div id="modal" class="modal fade">' + data + '</div>').modal();
+            });
         }
         $(function () {
             //Show popup on clicking the link
             $(document).on("click", "a.popup", function (e) {
-                e.preventDefault();
-                var _this = $(this);                
-                ShowModel(_this.attr("href")+"?"+$.now(), _this.text());
+                e.preventDefault();                         
+                ShowModel($(this).attr("href"));
             });
             $("a.a-current-team").click(function (e) {
                 e.preventDefault();

@@ -11,14 +11,13 @@
 
                 <table class="tblform sleek modelTblFull">
                     <tr>
-                        <td>The issue will be permenantly deleted and you won't be able to access it any more.If you want to keep the issue, but remove from the current list, you may archive it.</td>
+                        <td>The issue will be permanently deleted and it won't be avaliable for future access. Do you still want to delete it ?</td>
                     </tr>                   
                 </table>
                 @Html.HiddenFor(x => x.ID)
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>               
-                <button type="button" id="btnArchiveIssue" class="btn btn-primary">Archive</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> 
                 <button type="button" id="btnDeleteIssue" class="btn btn-primary">Delete</button>
             </div>
         </div>

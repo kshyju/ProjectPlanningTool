@@ -35,7 +35,7 @@ namespace TeamBins.DataAccess
         IEnumerable<Comment> GetCommentsForIssue(int issueId);
         OperationStatus SaveComment(Comment comment);
         Comment GetComment(int commentId);
-        
+        OperationStatus DeleteIssue(int issueId);
         List<IssueMember> GetIssueMembers(int issueId);
         //List<User> GetNonIssueMembers(int teamId, int issueId);
       //  OperationStatus SaveIssueMember(int issueId, int memberId, int addedBy);

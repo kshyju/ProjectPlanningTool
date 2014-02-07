@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using TeamBins;
 using TeamBins.DataAccess;
+using TeamBins.Helpers.Enums;
 using TeamBins.Services;
 using TechiesWeb.TeamBins.Infrastructure;
 using TechiesWeb.TeamBins.ViewModels;
@@ -34,7 +35,7 @@ namespace TechiesWeb.TeamBins.Controllers
                 var projectList = repo.GetProjects(TeamID).Where(s => s.TeamID == TeamID).ToList();
                 if (projectList.Count > 0)
                 {
-                    bugListVM = GetBugList("BKLOG");
+                    bugListVM = GetBugList(LocationType.BKLOG.ToString(),TeamID);
                     bugListVM.ProjectsExist = true;
                 }
                 return View("Index", bugListVM);
@@ -54,7 +55,7 @@ namespace TechiesWeb.TeamBins.Controllers
                 var projectList = repo.GetProjects(TeamID).Where(s => s.TeamID == TeamID).ToList();
                 if (projectList.Count > 0)
                 {
-                    bugListVM = GetBugList("ARCHV");
+                    bugListVM = GetBugList(LocationType.ARCHV.ToString(),TeamID);
                     bugListVM.ProjectsExist = true;
                 }
                 return View("Index", bugListVM);
@@ -66,16 +67,23 @@ namespace TechiesWeb.TeamBins.Controllers
             }
         }
 
-        public ActionResult Index()
+        public ActionResult Index(int? id)
         {
             try
             {
+                int teamId = TeamID;
+                if (id.HasValue)
+                {
+                    //to do : check issue board has "public" visibility
+                    teamId = id.Value;
+                }
+
                 IssueListVM bugListVM = new IssueListVM ();
-                var projectList = repo.GetProjects(TeamID).ToList();
+                var projectList = repo.GetProjects(teamId).ToList();
 
                 if (projectList.Count > 0)
                 {
-                    bugListVM = GetBugList("SPRNT");
+                    bugListVM = GetBugList(LocationType.SPRNT.ToString(),teamId);
                     bugListVM.ProjectsExist = true;
                 }
                 return View("Index", bugListVM);
@@ -105,6 +113,13 @@ namespace TechiesWeb.TeamBins.Controllers
                     bug.TeamID = TeamID;
                    
                     LoadDefaultIssueValues(bug, model);
+
+                    var status = repo.GetStatuses().FirstOrDefault(s => s.ID == bug.StatusID);
+                    if (status != null && (status.Name.ToUpper() == "CLOSED" || status.Name.ToUpper() == "COMPLETED"))
+                    {
+                        //Move the location to "Completed"
+                        bug.Location = LocationType.ARCHV.ToString();
+                    }
 
                     OperationStatus result = repo.SaveIssue(bug);
                     if (!result.Status)
@@ -368,6 +383,24 @@ namespace TechiesWeb.TeamBins.Controllers
             var deleteConfirmVM = new DeleteIssueConfirmationVM { ID = id };
             return PartialView("Partial/DeleteConfirm",deleteConfirmVM);
         }
+        [HttpPost]
+        public ActionResult Delete(int id,string token="")
+        {
+            // to do : Check user permission
+            try
+            {
+                var result=repo.DeleteIssue(id);
+                if (result.Status)
+                    return Json(new { Status = "Success" });
+                else
+                    log.Debug(result);
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+            }
+            return Json(new { Status = "Error" });
+        }
 
         [HttpPost]
         public void SaveDueDate(string issueDueDate, int issueId)
@@ -403,10 +436,10 @@ namespace TechiesWeb.TeamBins.Controllers
 
         #region private methods
        
-        private IssueListVM GetBugList(string iteration, int size = 25)
+        private IssueListVM GetBugList(string iteration,int teamId, int size = 25)
         {
-            var vm = new IssueListVM { CurrentTab = iteration, TeamID=TeamID };
-            var bugList = repo.GetIssues().Where(g => g.TeamID == TeamID && g.Location == iteration).OrderByDescending(s => s.ID).Take(size).ToList();
+            var vm = new IssueListVM { CurrentTab = iteration, TeamID = teamId };
+            var bugList = repo.GetIssues(teamId).Where(g => g.Location == iteration).OrderByDescending(s => s.ID).Take(size).ToList();
 
             foreach (var bug in bugList)
             {

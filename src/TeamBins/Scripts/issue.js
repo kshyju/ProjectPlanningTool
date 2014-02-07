@@ -122,4 +122,13 @@
         });
     });
 
+    $(document).on("click", "#btnDeleteIssue", function (e) {
+        e.preventDefault();
+        $.post("../Delete/" + $("#ID").val(), function (res) {
+            if (res.Status === "Success") {
+                window.location.href = "../Index";
+            }
+        });
+    });
+
 });

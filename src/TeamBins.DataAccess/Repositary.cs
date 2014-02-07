@@ -20,6 +20,25 @@ namespace TeamBins.DataAccess
         {
             return db.TeamMembers.Where(s => s.TeamID == teamId && s.MemberID == userId).FirstOrDefault();
         }
+        public OperationStatus DeleteIssue(int issueId)
+        {
+            try
+            {
+                var issue=db.Issues.FirstOrDefault(s=>s.ID==issueId);
+                if(issue!=null)
+                {
+                    issue.Active = false;
+                    db.Entry(issue).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
+
+                return new OperationStatus { Status = true };
+            }
+            catch (Exception ex)
+            {
+                return OperationStatus.CreateFromException("Error deleting issue " + issueId, ex);
+            }
+        }
         public OperationStatus DeleteIssueMemberRelation(IssueMember issueMember)
         {
             try
@@ -143,6 +162,7 @@ namespace TeamBins.DataAccess
         {
             if (issue.ID == 0)
             {
+                issue.Active = true;
                 issue.CreatedDate = DateTime.Now;
                 db.Issues.Add(issue);
             }
@@ -261,11 +281,11 @@ namespace TeamBins.DataAccess
         }
         public IEnumerable<Issue> GetIssues(int teamId)
         {
-            return db.Issues.Where(s => s.TeamID == teamId);
+            return db.Issues.Where(s => s.TeamID == teamId && s.Active==true);
         }
         public Issue GetIssue(int issueId)
         {
-            return db.Issues.Include(s=>s.Priority).Include(x=>x.Status).Include(s=>s.Category).Include(s=>s.CreatedBy).FirstOrDefault(s => s.ID == issueId);
+            return db.Issues.Include(s => s.Priority).Include(x => x.Status).Include(s => s.Category).Include(s => s.CreatedBy).FirstOrDefault(s => s.ID == issueId && s.Active == true);
         }
   /*
         public List<TechiesWeb.TeamBins.Entities.User> GetTeamMembers(int teamId)

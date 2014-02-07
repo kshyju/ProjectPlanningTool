@@ -37,7 +37,7 @@ namespace TeamBins.Services
             {
                 new SelectListItem { Value="SPRNT", Text="Sprint"},
                 new SelectListItem { Value="BKLOG", Text="BackLog"},
-                new SelectListItem { Value="ARCHV", Text="Archieve"},
+               // new SelectListItem { Value="ARCHV", Text="Archieve"},
             };
         }
         public static string GetIterationName(string iterationCode)

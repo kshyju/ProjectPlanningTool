@@ -28,7 +28,6 @@ namespace TeamBins.DataAccess
         public DbSet<Category> Categories { get; set; }
         public DbSet<Priority> Priorities { get; set; }
         public DbSet<Status> Status { get; set; }
-        public DbSet<Team> Teams { get; set; }
         public DbSet<Task> Tasks { get; set; }
         public DbSet<Issue> Issues { get; set; }
         public DbSet<Project> Projects { get; set; }
@@ -40,5 +39,6 @@ namespace TeamBins.DataAccess
         public DbSet<User> Users { get; set; }
         public DbSet<TeamMember> TeamMembers { get; set; }
         public DbSet<EmailTemplate> EmailTemplates { get; set; }
+        public DbSet<Team> Teams { get; set; }
     }
 }
