@@ -1,26 +1,31 @@
 ﻿@model TechiesWeb.TeamBins.ViewModels.IssueVM
-
-    <h4>Assigned To</h4>
-    <div id="memberList">
-    @if(Model.Members.Count>0)
+<h4>Assigned To</h4>
+<div id="memberList">
+@if(Model.Members.Count>0)
+{
+    foreach(var member in Model.Members) 
     {
-        foreach(var member in Model.Members) 
-        {
-            <div class="issueMember">
-                <img class="memberAvatar" src="@member.AvatarHash?s=24" />
-                <h5>@member.Name</h5>
+        <div class="issueMember">
+            <img class="memberAvatar" src="@member.AvatarHash?s=24" />
+            <h5>@member.Name</h5>
+            @if(Model.IsEditableForCurrentUser)
+            {
                 <span>@Html.ActionLink("[remove]", "RemoveMember", "issues", new { @id = Model.ID, @memberId = @member.MemberID }, new { @class = "aRemove hiddenChangeLink" })</span>
-            </div>
-        }
+            }
+        </div>
     }
-    else
-    {
-        <p id="pNoData"> No Members assigned to this issue yet</p>
-    }
-    </div>
+}
+else
+{
+    <p id="pNoData"> No Members assigned to this issue yet</p>
+}
+</div>
+@if(Model.IsEditableForCurrentUser)
+{
     <h4>Assign New Member</h4>
     <input id="txtAssignMember" value="" />
+}
 <script type="text/javascript">
-    var addMemberToIssueUrl = "@Url.Action("AddMember","Issues")";
-    var issueMembersUrl = "@Url.Action("IssueMembers","Issues")";
+var addMemberToIssueUrl = "@Url.Action("AddMember","Issues")";
+var issueMembersUrl = "@Url.Action("IssueMembers","Issues")";
 </script>

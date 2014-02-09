@@ -6,6 +6,8 @@
         </a>
     </div>
     <div class="switch-teams">
+    @if(!String.IsNullOrEmpty(Model.UserDisplayName))
+    {
         <a href="#" class="a-current-team" data-state="selected" title="switch between teams">
             <div class="current-team">
                 <span class="current-team-icon glyphicon glyphicon-th-list"></span>
@@ -19,13 +21,17 @@
                 <a href="~/t/@team.ID/@team.Name"><div class="available-team">@team.Name</div></a>
             }
         </div>
+    }
     </div>
     <div class="navigation">
+    @if(!String.IsNullOrEmpty(Model.UserDisplayName))
+    { 
         <a href="@Url.Action( "index", "dashboard")">Home</a>
         <a href="@Url.Action( "index", "issues")">Issues</a>
         <a href="@Url.Action("index","projects")">Projects</a>
         <a href="@Url.Action("index","users")">Members</a>
         <a href="@Url.Action("index","team")">Teams</a>
+    }
     </div>
     <div class="userInfo">
     @if (Session["TB_NickName"] != null)
@@ -33,6 +39,10 @@
         <span>Howdy, <a href="@Url.Action("editprofile","account")">@Model.UserDisplayName</a> </span>
         <img src="@Model.UserAvatarHash?s=26" />
         @Html.ActionLink("Logout", "logout", "account", null, new { @class = "aLogout" })
+    }
+    else
+    {       
+        @Html.ActionLink("Signup or Login to enjoy the full version", "login", "account", null, new { @class = "aLogout" })
     }
     </div>
 </div>

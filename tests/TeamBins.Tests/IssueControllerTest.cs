@@ -25,7 +25,7 @@ namespace TeamBins.Tests
             IssuesController issueCtrl = new IssuesController(repo);
 
             //Act
-            var result = issueCtrl.Index() as ViewResult;
+            var result = issueCtrl.Index(null) as ViewResult;
 
             //Assert
             Assert.AreEqual(result.ViewName, "Index");
@@ -42,7 +42,7 @@ namespace TeamBins.Tests
             IssuesController issueCtrl = new IssuesController(repo);
 
             //Act
-            var result = issueCtrl.Index() as ViewResult;
+            var result = issueCtrl.Index(null) as ViewResult;
 
             var resultModel = result.Model as IssueListVM;
             //Assert
@@ -58,7 +58,7 @@ namespace TeamBins.Tests
             IssuesController issueCtrl = new IssuesController(repository);
             
             //Act
-            var result = issueCtrl.Index() as ViewResult;          
+            var result = issueCtrl.Index(null) as ViewResult;          
 
             //Assert
             Assert.AreEqual(result.ViewName, "Error");
@@ -98,7 +98,7 @@ namespace TeamBins.Tests
             issueCtrl.ControllerContext = new ControllerContext(_context, new RouteData(), issueCtrl);
             
             //Act
-            var result = issueCtrl.Index() as ViewResult;
+            var result = issueCtrl.Index(null) as ViewResult;
             var resultModel = result.Model as IssueListVM;
 
             //Assert

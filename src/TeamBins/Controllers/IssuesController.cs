@@ -67,15 +67,15 @@ namespace TechiesWeb.TeamBins.Controllers
             }
         }
 
-        public ActionResult Index(int? id)
+        public ActionResult Index(int? teamid)
         {
             try
             {
                 int teamId = TeamID;
-                if (id.HasValue)
+                if (teamid.HasValue)
                 {
                     //to do : check issue board has "public" visibility
-                    teamId = id.Value;
+                    teamId = teamid.Value;
                 }
 
                 IssueListVM bugListVM = new IssueListVM ();
@@ -86,6 +86,9 @@ namespace TechiesWeb.TeamBins.Controllers
                     bugListVM = GetBugList(LocationType.SPRNT.ToString(),teamId);
                     bugListVM.ProjectsExist = true;
                 }
+                
+
+
                 return View("Index", bugListVM);
             }
             catch (Exception ex)
@@ -191,6 +194,7 @@ namespace TechiesWeb.TeamBins.Controllers
             return View(model);
         }
 
+        [VerifyLogin]
         public ActionResult Edit(int id)
         {
             var bug = repo.GetIssue(id);
@@ -226,12 +230,24 @@ namespace TechiesWeb.TeamBins.Controllers
             }
             return View("NotFound");
         }
+               
 
-        public ActionResult Details(int id)
+        public ActionResult Details(int id=0,int commentId=0)
         {
+            int issueId = 0;
             try
-            {
-                var bug = repo.GetIssue(id);
+            {               
+                if(id>0)
+                {
+                    issueId = id;
+                }                   
+                else if(id==0 && commentId>0)
+                {
+                    issueId= repo.GetComment(commentId).IssueID;                   
+                }
+
+                var bug = repo.GetIssue(issueId);
+
                 IssueVM bugVm = new IssueVM { ID = bug.ID, Title = bug.Title, Description = bug.Description };
                 bugVm.CreatedDate = bug.CreatedDate.ToString("g");
                 bugVm.OpenedBy = bug.CreatedBy.FirstName;
@@ -259,19 +275,21 @@ namespace TechiesWeb.TeamBins.Controllers
 
                 }
 
-                LoadComments(id, bugVm);
+                LoadComments(issueId, bugVm);
                 //Get Members
-                issueService.LoadIssueMembers(id, bugVm,UserID);
+                issueService.LoadIssueMembers(issueId, bugVm, UserID);
+                issueService.SetUserPermissionsForIssue(bugVm, UserID, TeamID);
                 return View(bugVm);
             }
             catch (Exception ex)
             {
-                log.Error(ex);
+                log.Error("error loading issue " + issueId, ex);
                 return View("Error");
             }
         }
 
         [HttpPost]
+        [VerifyLogin]
         public ActionResult RemoveMember(int id, int memberId)
         {
             try
@@ -294,6 +312,7 @@ namespace TechiesWeb.TeamBins.Controllers
         }
 
         [HttpPost]
+        [VerifyLogin]
         public JsonResult Star(int id, string mode)
         {
             //to do : Check user has permission to do this
@@ -351,9 +370,17 @@ namespace TechiesWeb.TeamBins.Controllers
             {
                 if (ModelState.IsValid)
                 {
+
                     model.CommentBody = HttpUtility.HtmlEncode(model.CommentBody);
                     var comment = new Comment { CommentText = model.CommentBody, IssueID = model.IssueID, CreatedByID = UserID, CreatedDate = DateTime.Now };
                     var res = repo.SaveComment(comment);
+
+                    var activity = issueService.SaveActivity(comment,TeamID);
+                    var activityVM = new CommentService(SiteBaseURL).GetActivityVM(activity);
+                    
+                    var context = GlobalHost.ConnectionManager.GetHubContext<IssuesHub>();
+                    context.Clients.Group(TeamID.ToString()).addNewTeamActivity(activityVM);
+
                     return Json(new { Status = "Success", NewCommentID = res.OperationID });
                 }
                 return Json(new { Status = "Error" });
@@ -384,6 +411,7 @@ namespace TechiesWeb.TeamBins.Controllers
             return PartialView("Partial/DeleteConfirm",deleteConfirmVM);
         }
         [HttpPost]
+        [VerifyLogin]
         public ActionResult Delete(int id,string token="")
         {
             // to do : Check user permission

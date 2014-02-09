@@ -6,8 +6,9 @@ using System;
 using TeamBins.Helpers.Enums;
 
 namespace TeamBins.Services
-{
-    public class IssueService : IDisposable
+{    
+
+    public class IssueService : IDisposable, IActivity
     {
         IRepositary repo;
         public string SiteBaseURL { set; get; }
@@ -23,10 +24,19 @@ namespace TeamBins.Services
             try
             {
                 var activityList = repo.GetTeamActivity(teamId).OrderByDescending(s => s.CreatedDate).ToList();
-
+                
+                ActivityVM activityVM=new ActivityVM();
                 foreach (var item in activityList)
                 {
-                    var activityVM = GetActivityVM(item);
+                    if (item.ObjectType.ToUpper() == "ISSUE")
+                    {
+                        activityVM = GetActivityVM(item);
+                    }
+                    else if (item.ObjectType.ToUpper() == "ISSUECOMMENT")
+                    {
+                        activityVM = new CommentService(SiteBaseURL).GetActivityVM(item);
+                    }
+
                     activityVMList.Add(activityVM);
                 }
             }
@@ -48,9 +58,20 @@ namespace TeamBins.Services
             }
             return activityVM;
         }
-
+        public void SetUserPermissionsForIssue(IssueVM issueVm,int currentUserId=0,int teamId=0)
+        {
+            if(currentUserId>0)
+            {
+                var teamMember = repo.GetTeamMember(currentUserId, teamId);
+                if(teamMember!=null)
+                {
+                    issueVm.IsEditableForCurrentUser = true;
+                }
+            }
+        }
         public void LoadIssueMembers(int id, IssueVM issueVm,int currentUserId=0)
         {
+
             var issueMemberRelations = repo.GetIssueMembers(id);
 
             //check the current user has starred the issue
@@ -111,6 +132,21 @@ namespace TeamBins.Services
             return true;    
         }
         
+        public Activity SaveActivity(Comment comment,int teamId)
+        {
+            var issue = repo.GetIssue(comment.IssueID);
+     
+            Activity activity = new Activity();
+            activity.CreatedByID = comment.CreatedByID;
+            activity.OldState = issue.Title;
+            activity.NewState = comment.CommentText;
+            activity.ObjectID = comment.ID;
+            activity.ObjectType = "IssueComment";
+            activity.ActivityDesc = "Commented";
+            activity.TeamID = teamId;
+            var result = repo.SaveActivity(activity);         
+            return activity;
+        }
 
         public void Dispose()
         {

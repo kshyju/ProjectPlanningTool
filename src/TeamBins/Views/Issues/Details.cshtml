@@ -1,93 +1,78 @@
 ﻿@model TechiesWeb.TeamBins.ViewModels.IssueVM
 @{
-    ViewBag.Title = "Issue #"+Model.ID;
+ViewBag.Title = "Issue #"+Model.ID;
 }
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 <link href="http://code.jquery.com/ui/1.10.3/themes/ui-lightness/jquery-ui.css" rel="stylesheet" />
 <script src="~/Scripts/issue.js"></script>
-
-<div class="divToobar">
-       @Html.ActionLink("Delete", "Delete","Issues", new { id = Model.ID }, new { @class = "toolLink popup" })  
-       @Html.ActionLink("Edit", "Edit", "Issues", new { id = Model.ID }, new { @class = "toolLink popup" })    
-</div>
-
+@if(Model.IsEditableForCurrentUser)
+{
+    <div class="divToobar">
+        @Html.ActionLink("Delete", "Delete","Issues", new { id = Model.ID }, new { @class = "toolLink popup" })  
+        @Html.ActionLink("Edit", "Edit", "Issues", new { id = Model.ID }, new { @class = "toolLink popup" })    
+    </div>
+}
 <div class="divPageContent">
     <div class="divLeft">
         <h2>@Model.Title</h2>
         <div id="issueMeta">
-        <div class="authorInfo">
-            Opened by @Html.ActionLink(@Model.OpenedBy,"details","user",new{ @id=@Model.OpenedBy},null) on @Model.CreatedDate  
-        </div>  
-                 
-        <div id="issueStatus">Status <span class="@Model.StatusCode">@Model.Status</span></div>  
+            <div class="authorInfo">Opened by @Model.OpenedBy on @Model.CreatedDate</div>       
+            <div id="issueStatus">Status <span class="@Model.StatusCode">@Model.Status</span></div>  
             <div id="issueStatus">Project <span class="">@Model.Project</span></div>                  
-            </div>
+        </div>
         <div class="divDetail">
-            <div class="divDescr">
-                @Html.Raw(Model.Description)
-
-                @foreach (var img in Model.Images)
-                {
-
-                    <div>
-                        <a href="@Url.Content("~/uploads/"+img.FileKey)" target="_blank">
-                        <img class="detailImg" src="@Url.Content("~/uploads/"+img.FileKey)" />
-                            </a>
-                    </div>
-                }
-
-
+            <div class="divDescr">@Html.Raw(Model.Description)
+            @foreach (var img in Model.Images)
+            {
+                <div>
+                    <a href="@Url.Content("~/uploads/"+img.FileKey)" target="_blank"><img class="detailImg" src="@Url.Content("~/uploads/"+img.FileKey)" /></a>
                 </div>
+            }
+            </div>
             <div id="attachmentHolder">
                 <h5>Other Attachements</h5>
                 <ul>
-                                @foreach (var img in Model.Attachments)
+                @foreach (var img in Model.Attachments)
                 {
-
-                    <li>
-                        <a href="~/uploads/@img.FileKey" target="_blank">@img.FileName</a>
-                    </li>
+                    <li><a href="~/uploads/@img.FileKey" target="_blank">@img.FileName</a></li>
                 }
-                    </ul>
-
-            </div>
-        </div>   
-      
-
-                <div id="comments">
-             @Html.Partial("Partial/Comments",Model)
-
+                </ul>
+             </div>
+        </div> 
+        <div id="comments">
+            @Html.Partial("Partial/Comments",Model)
         </div>         
     </div>
     <div class="divRight">
         <div id="issue-details" class="right-detail-items ">
-             <div class="issue-detail-item important">
-            Issue # @Model.ID.ToString()
-                 <div class="starHolder">
-                  <span id="issue-star" class="glyphicon @(Model.IsStarredForUser?"glyphicon-star ":"glyphicon-star-empty")" data-starred="@(Model.IsStarredForUser?"starred":"unstarred")"></span>
-                 </div>
+            <div class="issue-detail-item important">Issue # @Model.ID.ToString()
+                @if (Model.IsEditableForCurrentUser)
+                {
+                    <div class="starHolder">
+                        <span id="issue-star" class="glyphicon @(Model.IsStarredForUser?"glyphicon-star ":"glyphicon-star-empty")" data-starred="@(Model.IsStarredForUser?"starred":"unstarred")"></span>
+                    </div>
+                }
             </div>
-            <div class="issue-detail-item">
-            Type : @Model.Category
-            </div>
-             <div class="issue-detail-item">
-                Priority: @Model.Priority
-            </div>
+            <div class="issue-detail-item">Type : @Model.Category</div>
+            <div class="issue-detail-item">Priority: @Model.Priority</div>
         </div>
         <div class="right-detail-items ">
             In <span>@Model.Iteration</span>
         </div>
         <div id="members"  class="changableWidget">
-        @Html.Partial("Partial/Members",Model)
+            @Html.Partial("Partial/Members",Model)
         </div>
-        <div id="dueDate" class="changableWidget">
-            <h4>Due Date</h4>
-            <span id="dueDate">@Model.IssueDueDate</span><a href="#" id="aChangeDueDate"  class="hiddenChangeLink" >Change</a>
-            <div id="dueDatePicker"  style="display:none;" >
-            <input type="text" name="IssueDueDate" value="@Model.IssueDueDate" id="IssueDueDate"/>
-                </div>
-        </div>
-
+        @if (Model.IsEditableForCurrentUser)
+        {
+            <div id="dueDate" class="changableWidget">
+                <h4>Due Date</h4>
+                <span id="dueDate">@Model.IssueDueDate</span>
+                <a href="#" id="aChangeDueDate"  class="hiddenChangeLink" >Change</a>
+                <div id="dueDatePicker" style="display:none;">
+                    <input type="text" name="IssueDueDate" value="@Model.IssueDueDate" id="IssueDueDate" />
+                </div>           
+            </div>
+        }
     </div>
 </div>
 <div id="modal" class="modal fade"></div>

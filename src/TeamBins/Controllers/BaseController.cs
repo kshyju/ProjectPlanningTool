@@ -101,7 +101,25 @@ namespace TechiesWeb.TeamBins.Controllers
                 return sw.GetStringBuilder().ToString();
             }
         }
-       
+
+        public class VerifyLogin : ActionFilterAttribute
+        {
+            public override void OnActionExecuting(ActionExecutingContext filterContext)
+            {
+
+                var session = filterContext.HttpContext.Session;
+                if (session["TB_UserID"] != null)
+                {
+                    return;
+                }
+
+                string baseUrl = filterContext.HttpContext.Request.Url.Scheme + "://" + filterContext.HttpContext.Request.Url.Authority +
+                       filterContext.HttpContext.Request.ApplicationPath.TrimEnd('/') + "/";
+
+                //Redirect user to login page
+                filterContext.Result = new RedirectResult(baseUrl + "account/login");
+            }
+        }
 
     }
 

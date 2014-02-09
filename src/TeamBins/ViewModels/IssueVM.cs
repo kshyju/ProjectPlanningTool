@@ -65,12 +65,14 @@ namespace TechiesWeb.TeamBins.ViewModels
 
         public List<MemberVM> Members { set; get; }
         public List<CommentVM> Comments { set; get; }
+        public bool IsEditableForCurrentUser { set; get; }
         public IssueVM()
         {
             Images = new List<DocumentVM>();
             Attachments = new List<DocumentVM>();
             Members = new List<MemberVM>();
             Comments = new List<CommentVM>();
+           
         }
     }
 
