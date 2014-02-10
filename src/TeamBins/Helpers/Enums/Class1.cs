@@ -17,4 +17,9 @@ namespace TeamBins.Helpers.Enums
         ARCHV, 
         BKLOG
     }
+    public enum ActivityObjectType
+    {
+        Issue,
+        IssueComment
+    }
 }

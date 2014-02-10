@@ -6,18 +6,22 @@ using System;
 using TeamBins.Helpers.Enums;
 
 namespace TeamBins.Services
-{    
+{
 
-    public class IssueService : IDisposable, IActivity
+    public class IssueService : IDisposable, IActivitySavable
     {
         IRepositary repo;
         public string SiteBaseURL { set; get; }
-      
-        public IssueService(IRepositary repositary)
+        private int _userId;
+        private int _teamId;
+        public IssueService(IRepositary repositary, int userId, int teamId)
         {
             repo = repositary;
+          
+            _userId = userId;
+            _teamId = teamId;
         }
-
+        /*
         public List<ActivityVM> GetTeamActivityVMs(int teamId)
         {
             List<ActivityVM> activityVMList = new List<ActivityVM>();
@@ -34,7 +38,7 @@ namespace TeamBins.Services
                     }
                     else if (item.ObjectType.ToUpper() == "ISSUECOMMENT")
                     {
-                        activityVM = new CommentService(SiteBaseURL).GetActivityVM(item);
+                        activityVM = new CommentService(repo,SiteBaseURL).GetActivityVM(item);
                     }
 
                     activityVMList.Add(activityVM);
@@ -46,7 +50,9 @@ namespace TeamBins.Services
             }
             return activityVMList;
         }
-
+        */
+        
+        /*
         public ActivityVM GetActivityVM(Activity item)
         {
             var activityVM = new ActivityVM() { Author = item.User.FirstName, CreatedDateRelative = item.CreatedDate.ToString() };
@@ -57,7 +63,7 @@ namespace TeamBins.Services
                 activityVM.ObjectURL = String.Format("{0}Issues/details/{1}", SiteBaseURL, item.ObjectID);
             }
             return activityVM;
-        }
+        }*/
         public void SetUserPermissionsForIssue(IssueVM issueVm,int currentUserId=0,int teamId=0)
         {
             if(currentUserId>0)
@@ -154,6 +160,40 @@ namespace TeamBins.Services
             {
                 repo.Dispose();
             }
+        }
+
+        public ActivityVM GetActivityVM(IActivity activity)
+        {
+            var activityVM = new ActivityVM() { Author = activity.User.FirstName, CreatedDateRelative = activity.CreatedDate.ToString() };
+            if (activity.ActivityDesc.ToUpper() == "CREATED")
+            {
+                activityVM.Activity = activity.ActivityDesc;
+                activityVM.ObjectTite = activity.NewState;
+                activityVM.ObjectURL = String.Format("{0}Issues/details/{1}", SiteBaseURL, activity.ObjectID);
+            }
+            return activityVM;
+        }
+        /*
+        public Activity SaveActivity(IActivity activity)
+        {
+            var activityEntity = new Activity() { CreatedByID = UserID, ObjectID = issueId, ObjectType = "Issue" };
+
+            activityEntity.ActivityDesc = "Created";
+            activityEntity.NewState = model.Title;
+            activityEntity.TeamID = TeamID;
+
+            var result = repo.SaveActivity(activityEntity);
+            if (!result.Status)
+            {
+                //log.Error(result);
+            }
+            return activityEntity;
+        }*/
+
+
+        public Activity SaveActivity(IActivity activity)
+        {
+            throw new NotImplementedException();
         }
     }
 }

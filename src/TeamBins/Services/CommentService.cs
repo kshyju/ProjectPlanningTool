@@ -7,13 +7,16 @@ using TechiesWeb.TeamBins.ViewModels;
 
 namespace TeamBins.Services
 {
-    public class CommentService : IActivity
+    public class CommentService : IActivitySavable
     {
-        public CommentService(string siteBaseUrl)
+        IRepositary repo;
+        public CommentService(IRepositary repositary,string siteBaseUrl)
         {
+            repo = new Repositary();
             SiteBaseURL = siteBaseUrl;
         }
         public string SiteBaseURL { set; get; }
+
         public ActivityVM GetActivityVM(Activity activity)
         {
             var activityVM = new ActivityVM() { Author = activity.User.FirstName, CreatedDateRelative = activity.CreatedDate.ToString() };
@@ -28,6 +31,16 @@ namespace TeamBins.Services
                 activityVM.ObjectURL = String.Format("{0}issuecomment/{1}/"+seoFriendlyIssueTitle, SiteBaseURL, activity.ObjectID);
             }
             return activityVM;
+        }
+
+        public ActivityVM GetActivityVM(IActivity activity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Activity SaveActivity(IActivity activity)
+        {
+            throw new NotImplementedException();
         }
     }
 }

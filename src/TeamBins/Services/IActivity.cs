@@ -7,8 +7,9 @@ using TechiesWeb.TeamBins.ViewModels;
 
 namespace TeamBins.Services
 {
-    public interface IActivity
+    public interface IActivitySavable
     {
-        ActivityVM GetActivityVM(Activity activity);        
+        ActivityVM GetActivityVM(IActivity activity);
+        //Activity SaveActivity(IActivity activity);
     }
 }

@@ -1,0 +1,2 @@
+ERROR 5 TechiesWeb.TeamBibs.Helpers.Logging.Logger - System.NullReferenceException: Object reference not set to an instance of an object.
+   at TechiesWeb.TeamBins.Controllers.IssuesController.Details(Int32 id, Int32 commentId) in c:\SHYJU\Projects\Source code\GitHub\TeamBins\src\TeamBins\Controllers\IssuesController.cs:line 251

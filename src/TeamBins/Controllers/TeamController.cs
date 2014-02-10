@@ -5,6 +5,7 @@ using TeamBins.Services;
 using TechiesWeb.TeamBins.ViewModels;
 using System.Linq;
 using System;
+using TeamBins.Helpers.Enums;
 namespace TechiesWeb.TeamBins.Controllers
 {
 
@@ -12,7 +13,7 @@ namespace TechiesWeb.TeamBins.Controllers
     {       
        private IssueService issueService;
         public TeamController() {
-            issueService=new IssueService(new Repositary());
+            issueService=new IssueService(new Repositary(),UserID,TeamID);
         
         }
 
@@ -169,39 +170,44 @@ namespace TechiesWeb.TeamBins.Controllers
         {
             List<ActivityVM> list = new List<ActivityVM>();
 
-            list= issueService.GetTeamActivityVMs(TeamID);
-
-
-          //  var activityList = repo.GetTeamActivity(TeamID).Take(12);
-            /*foreach (var activity in activityList)
-            {
-                var vm = new TeamActivityVM();
-                vm.ItemName = activity.ItemName;
-                vm.UserName = activity.CreatedBy.DisplayName;
-                vm.UserID = activity.CreatedBy.ID;
-                vm.Activity = activity.Action.ToLower();
-                if (vm.Activity.ToUpper() == "CHANGED STATUS")
-                {
-                    vm.Activity += " of";
-
-                    vm.NewState ="to "+ activity.NewState;
-                }
-
-                
-                vm.EventDate = activity.CreatedDate.ToString("g");
-                vm.EventDateRelative = activity.CreatedDate.ToRelativeDateTime();
-
-                if (activity.ItemType == "Issue")
-                {
-                    vm.LinkURL = Url.Action("Details", "Issues", new { @id = activity.ItemID });
-                }
-
-                list.Add(vm);
-            }*/
+            list= GetTeamActivityVMs(TeamID);
             if (Request.IsAjaxRequest())
                 return PartialView("Partial/ActivityStream", list);
 
             return View(list);
         }
+
+public List<ActivityVM> GetTeamActivityVMs(int teamId)
+{
+    List<ActivityVM> activityVMList = new List<ActivityVM>();
+    try
+    {
+        var activityList = repo.GetTeamActivity(teamId).OrderByDescending(s => s.CreatedDate).ToList();
+
+        ActivityVM activityVM = new ActivityVM();
+        var issueService = new IssueService(repo, UserID, TeamID);
+        issueService.SiteBaseURL = SiteBaseURL;
+        var commentService = new CommentService(repo, SiteBaseURL);
+
+        foreach (var item in activityList)
+        {
+            if (item.ObjectType == ActivityObjectType.Issue.ToString())
+            {
+                activityVM = issueService.GetActivityVM(item);
+            }
+            else if (item.ObjectType == ActivityObjectType.IssueComment.ToString())
+            {
+                activityVM = commentService.GetActivityVM(item);
+            }
+            activityVMList.Add(activityVM);
+        }
+    }
+    catch (Exception ex)
+    {
+        log.Error(ex);
+    }
+    return activityVMList;
+}
+
     }
 }

@@ -18,7 +18,7 @@ namespace TechiesWeb.TeamBins.Controllers
     {
         private IssueService issueService;
         public IssuesController() {
-            issueService=new IssueService(new Repositary());        
+            issueService=new IssueService(new Repositary(),UserID,TeamID);        
         }
 
         public IssuesController(IRepositary repositary) :base(repositary)
@@ -376,7 +376,7 @@ namespace TechiesWeb.TeamBins.Controllers
                     var res = repo.SaveComment(comment);
 
                     var activity = issueService.SaveActivity(comment,TeamID);
-                    var activityVM = new CommentService(SiteBaseURL).GetActivityVM(activity);
+                    var activityVM = new CommentService(repo,SiteBaseURL).GetActivityVM(activity);
                     
                     var context = GlobalHost.ConnectionManager.GetHubContext<IssuesHub>();
                     context.Clients.Group(TeamID.ToString()).addNewTeamActivity(activityVM);
