@@ -26,6 +26,8 @@ namespace TeamBins.DataAccess
         public string Name { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public int CreatedByID { get; set; }
+        public byte[] TeamLink { get; set; }
+        public bool IsPublic { get; set; }
     
         public virtual ICollection<Activity> Activities { get; set; }
         public virtual ICollection<Issue> Issues { get; set; }

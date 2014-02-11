@@ -34,7 +34,7 @@ namespace TechiesWeb.TeamBins.Controllers
             }
             return View(teamListVM);
         }
-         /*
+       
         public ActionResult View(int id)        
         {
             
@@ -50,12 +50,12 @@ namespace TechiesWeb.TeamBins.Controllers
                    member.EmailHash = UserService.GetImageSource(member.EmailAddress);
                    vm.Members.Add(member);
                 }*/
-        /*
+       
                 return View(vm);
             }
             return View("NotFound");
            
-        }
+        }/*
         public ActionResult Create()
         {
             return View(new TeamVM());
@@ -65,11 +65,13 @@ namespace TechiesWeb.TeamBins.Controllers
              var team = repo.GetTeam(id);
              if (team != null)
              {
-                 var vm = new TeamVM { Name = team.Name, ID = team.ID };
+                 var vm = new TeamVM { Name = team.Name, ID = team.ID }; 
                  return PartialView(vm);
              }
              return View("NotFound");
-        }/*
+        }
+
+        /*
         public ActionResult AddMember(int id)
         {
             var vm=new AddTeamMemberRequestVM { TeamID=id};
@@ -121,7 +123,7 @@ namespace TechiesWeb.TeamBins.Controllers
                     if (!isNew)
                     {
                         team = repo.GetTeam(model.ID);
-                        team.Name = model.Name;
+                        team.Name = model.Name;                       
                     }
                     var result = repo.SaveTeam(team);
                     if (result != null)
@@ -177,37 +179,50 @@ namespace TechiesWeb.TeamBins.Controllers
             return View(list);
         }
 
-public List<ActivityVM> GetTeamActivityVMs(int teamId)
-{
-    List<ActivityVM> activityVMList = new List<ActivityVM>();
-    try
-    {
-        var activityList = repo.GetTeamActivity(teamId).OrderByDescending(s => s.CreatedDate).ToList();
-
-        ActivityVM activityVM = new ActivityVM();
-        var issueService = new IssueService(repo, UserID, TeamID);
-        issueService.SiteBaseURL = SiteBaseURL;
-        var commentService = new CommentService(repo, SiteBaseURL);
-
-        foreach (var item in activityList)
+        private List<ActivityVM> GetTeamActivityVMs(int teamId)
         {
-            if (item.ObjectType == ActivityObjectType.Issue.ToString())
+            List<ActivityVM> activityVMList = new List<ActivityVM>();
+            try
             {
-                activityVM = issueService.GetActivityVM(item);
+                var activityList = repo.GetTeamActivity(teamId).OrderByDescending(s => s.CreatedDate).ToList();
+
+                ActivityVM activityVM = new ActivityVM();
+                var issueService = new IssueService(repo, UserID, TeamID);
+                issueService.SiteBaseURL = SiteBaseURL;
+                var commentService = new CommentService(repo, SiteBaseURL);
+
+                foreach (var item in activityList)
+                {
+                    if (item.ObjectType == ActivityObjectType.Issue.ToString())
+                    {
+                        activityVM = issueService.GetActivityVM(item);
+                    }
+                    else if (item.ObjectType == ActivityObjectType.IssueComment.ToString())
+                    {
+                        activityVM = commentService.GetActivityVM(item);
+                    }
+                    activityVMList.Add(activityVM);
+                }
             }
-            else if (item.ObjectType == ActivityObjectType.IssueComment.ToString())
+            catch (Exception ex)
             {
-                activityVM = commentService.GetActivityVM(item);
+                log.Error(ex);
             }
-            activityVMList.Add(activityVM);
+            return activityVMList;
         }
-    }
-    catch (Exception ex)
-    {
-        log.Error(ex);
-    }
-    return activityVMList;
-}
+
+        public ActionResult TestEmail()
+        {
+            try
+            {
+                return Content("done");
+            }
+            catch(Exception ex)
+            {
+                return Content(ex.Message);
+            }
+            
+        }
 
     }
 }

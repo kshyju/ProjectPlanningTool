@@ -67,28 +67,18 @@ namespace TechiesWeb.TeamBins.Controllers
             }
         }
 
-        public ActionResult Index(int? teamid)
+        public ActionResult Index()
         {
             try
-            {
-                int teamId = TeamID;
-                if (teamid.HasValue)
-                {
-                    //to do : check issue board has "public" visibility
-                    teamId = teamid.Value;
-                }
-
+            {                
                 IssueListVM bugListVM = new IssueListVM ();
-                var projectList = repo.GetProjects(teamId).ToList();
+                var projectList = repo.GetProjects(TeamID).ToList();
 
                 if (projectList.Count > 0)
                 {
-                    bugListVM = GetBugList(LocationType.SPRNT.ToString(),teamId);
+                    bugListVM = GetBugList(LocationType.SPRNT.ToString(), TeamID);
                     bugListVM.ProjectsExist = true;
                 }
-                
-
-
                 return View("Index", bugListVM);
             }
             catch (Exception ex)

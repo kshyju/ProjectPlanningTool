@@ -10,6 +10,7 @@ namespace TechiesWeb.TeamBins.ViewModels
     {
         public List<TeamVM> Teams { set; get; }
         public int SelectedTeam { set; get; }
+      //  public int CurrentTeamID { set; get; }
         public string CurrentTeamName { set; get; }
         public string UserDisplayName { set; get; }
         public string UserAvatarHash { set; get; }

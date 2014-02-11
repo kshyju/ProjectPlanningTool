@@ -26,7 +26,10 @@ namespace TechiesWeb.TeamBins.ViewModels
         public TeamVM()
         {
             Members = new List<MemberVM>();
+            Visibilities = new List<SelectListItem>();
         }
+        public List<SelectListItem> Visibilities { set; get; }
+        public string SelectedVisibility { set; get; }
     }
     public class MemberVM
     {

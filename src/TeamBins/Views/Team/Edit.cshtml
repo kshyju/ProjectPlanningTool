@@ -2,10 +2,9 @@
 @{
     ViewBag.Title = "Edit "+Model.Name;
 }
-
     
-    @using(Html.BeginForm("Create","Team"))
-    {
+@using(Html.BeginForm("Create","Team"))
+{
 <div class="modal-dialog">
     <div class="modal-content" style="width:500px;">
         <div class="modal-header">
@@ -21,7 +20,7 @@
                     <td>@Html.TextBoxFor(x=>x.Name)</td>
                 </tr>
                 </table>
-        @Html.HiddenFor(s=>s.ID)
+                @Html.HiddenFor(s=>s.ID)
             </div>
             <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

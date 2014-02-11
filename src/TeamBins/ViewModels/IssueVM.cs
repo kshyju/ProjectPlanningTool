@@ -27,6 +27,10 @@ namespace TechiesWeb.TeamBins.ViewModels
         public bool IsCreateAndEditEnabled { set; get; }
         public string CurrentTab { set; get; }
         public bool ProjectsExist { set; get; }
+
+        public bool IsUserTeamMember { set; get; }
+
+
     }
     public class DeleteIssueConfirmationVM : IssueVM
     {
