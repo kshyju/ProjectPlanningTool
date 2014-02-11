@@ -6,6 +6,7 @@ using TechiesWeb.TeamBins.ViewModels;
 using System.Linq;
 using System;
 using TeamBins.Helpers.Enums;
+using TechiesWeb.TeamBins.Infrastructure;
 namespace TechiesWeb.TeamBins.Controllers
 {
 
@@ -215,6 +216,10 @@ namespace TechiesWeb.TeamBins.Controllers
         {
             try
             {
+                Email email = new Email { Body = "Test", Subject = "test email " + DateTime.Now.ToString("g") };
+                email.ToAddress = new List<string> { "connectshyju@gmail.com" };
+                email.FromAddress = "teambinsprojects@gmail.com";
+                email.Send();
                 return Content("done");
             }
             catch(Exception ex)

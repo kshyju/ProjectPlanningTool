@@ -79,6 +79,9 @@
       <DependentUpon>TeamBinsData.tt</DependentUpon>
     </Compile>
     <Compile Include="OperationStatus.cs" />
+    <Compile Include="PasswordResetRequest.cs">
+      <DependentUpon>TeamBinsData.tt</DependentUpon>
+    </Compile>
     <Compile Include="Priority.cs">
       <DependentUpon>TeamBinsData.tt</DependentUpon>
     </Compile>

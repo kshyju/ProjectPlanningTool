@@ -366,6 +366,9 @@
     <Content Include="Views\Shared\NotFound.cshtml" />
     <Content Include="Views\Issues\Partial\DeleteConfirm.cshtml" />
     <Content Include="Views\Issues\IssueBoardNotFound.cshtml" />
+    <Content Include="Views\Account\forgotPasswordEmailSent.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
+    <Content Include="Views\Account\PasswordUpdated.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

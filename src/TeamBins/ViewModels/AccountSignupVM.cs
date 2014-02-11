@@ -44,6 +44,7 @@ namespace TechiesWeb.TeamBins.ViewModels
         [StringLength(100)]
         public string Email { set; get; }
     }
+    
     public class ResetPasswordVM
     {
         [Required]
@@ -56,6 +57,7 @@ namespace TechiesWeb.TeamBins.ViewModels
         [StringLength(25, MinimumLength = 6)]
         public string ConfirmPassword { set; get; }
 
+        public string ActivationCode { set; get; }
     }
 
     public class EditProfileVM

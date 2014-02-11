@@ -69,6 +69,26 @@ namespace TeamBins.Services
                 email.Send();
             }
         }
+        public void SendResetPasswordEmail(PasswordResetRequest request)
+        {
+            var emailTemplate = repo.GetEmailTemplate("ResetPassword");
+            if (emailTemplate != null)
+            {                
+
+                string emailSubject = emailTemplate.EmailSubject;
+                string emailBody = emailTemplate.EmailBody;
+                Email email = new Email();
+                email.ToAddress.Add(request.User.EmailAddress);
+
+                string joinLink = String.Format("{0}Account/resetpassword/{1}", SiteBaseURL, request.ActivationCode);
+                emailBody = emailBody.Replace("@resetLink", joinLink);              
+                email.Body = emailBody;
+                email.Subject = emailSubject;
+                email.Send();
+            }
+
+
+        }
         public void SendJoinMyTeamEmail(TeamMemberRequest teamMemberRequest)
         {    
             var emailTemplate = repo.GetEmailTemplate("JoinMyTeam");

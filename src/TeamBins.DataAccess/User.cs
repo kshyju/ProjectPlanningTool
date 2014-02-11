@@ -29,6 +29,7 @@ namespace TeamBins.DataAccess
             this.TeamMembers = new HashSet<TeamMember>();
             this.TeamMembers1 = new HashSet<TeamMember>();
             this.Teams = new HashSet<Team>();
+            this.PasswordResetRequests = new HashSet<PasswordResetRequest>();
         }
     
         public int ID { get; set; }
@@ -52,5 +53,6 @@ namespace TeamBins.DataAccess
         public virtual ICollection<TeamMember> TeamMembers { get; set; }
         public virtual ICollection<TeamMember> TeamMembers1 { get; set; }
         public virtual ICollection<Team> Teams { get; set; }
+        public virtual ICollection<PasswordResetRequest> PasswordResetRequests { get; set; }
     }
 }

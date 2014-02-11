@@ -40,5 +40,6 @@ namespace TeamBins.DataAccess
         public DbSet<TeamMember> TeamMembers { get; set; }
         public DbSet<EmailTemplate> EmailTemplates { get; set; }
         public DbSet<Team> Teams { get; set; }
+        public DbSet<PasswordResetRequest> PasswordResetRequests { get; set; }
     }
 }

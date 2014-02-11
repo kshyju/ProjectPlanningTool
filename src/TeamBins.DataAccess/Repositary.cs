@@ -2,15 +2,33 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using TeamBins.DataAccess;
 namespace TeamBins.DataAccess
 {    
     public class Repositary : IRepositary
     {
-        TeamEntities db;
+        private TeamEntities db;
         public Repositary()
         {
            db = new TeamEntities();
+        }
+        public void  SavePasswordResetRequest(PasswordResetRequest request)
+        {
+            try
+            {
+                request.CreatedDate = DateTime.UtcNow;
+                db.PasswordResetRequests.Add(request);
+                db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public PasswordResetRequest GetPasswordResetRequest(string activationCode)
+        {
+            return db.PasswordResetRequests.OrderByDescending(s=>s.CreatedDate).FirstOrDefault(s => s.ActivationCode == activationCode);
         }
         public User GetUser(int userId)
         {

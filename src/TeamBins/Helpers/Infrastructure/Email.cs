@@ -30,7 +30,7 @@ namespace TechiesWeb.TeamBins.Infrastructure
             ToAddress = new List<string>();
         }
         public void Send()
-        {
+        {           
             try
             {
                 MailMessage mail = new MailMessage();
@@ -48,9 +48,9 @@ namespace TechiesWeb.TeamBins.Infrastructure
                 mail.Bcc.Add(addressBCC);
 
                 string senderUserName = ConfigurationManager.AppSettings["senderUserName"] as string;
-                string senderPass = ConfigurationManager.AppSettings["senderPassword"] as string;
+                string senderPassword = ConfigurationManager.AppSettings["senderPassword"] as string;
 
-                NetworkCredential basicCredential = new NetworkCredential(senderUserName, senderPass);
+                NetworkCredential basicCredential = new NetworkCredential(senderUserName, senderPassword);
 
                 mail.Subject = Subject;
                 mail.Body = Body;
@@ -64,7 +64,7 @@ namespace TechiesWeb.TeamBins.Infrastructure
             }
             catch (Exception ex)
             {
-                var log = new Logger("Email");
+                var log = new Logger("Email");               
                 log.Error(ex);
             }
 

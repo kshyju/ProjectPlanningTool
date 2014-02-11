@@ -46,6 +46,9 @@
         <AssociationConnector Association="TeamBinsModel.FK_Team_User" />
         <AssociationConnector Association="TeamBinsModel.FK_TeamMember_Team" />
         <AssociationConnector Association="TeamBinsModel.FK_TeamMemberRequest_Team" />
+        <EntityTypeShape EntityType="TeamBinsModel.PasswordResetRequest" Width="1.5" PointX="10.891711972137779" PointY="19.842070827187072" />
+        <AssociationConnector Association="TeamBinsModel.FK_PasswordResetRequest_PasswordResetRequest" />
+        <AssociationConnector Association="TeamBinsModel.FK_PasswordResetRequest_User" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

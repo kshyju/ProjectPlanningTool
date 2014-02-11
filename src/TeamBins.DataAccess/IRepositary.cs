@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 
 
@@ -8,6 +9,8 @@ namespace TeamBins.DataAccess
 {
     public interface IRepositary : IDisposable  
     {
+        void SavePasswordResetRequest(PasswordResetRequest request);
+        PasswordResetRequest GetPasswordResetRequest(string activationCode);
         bool DeleteProject(int projectId);
         Document GetDocument(string documentKey);
         List<Document> GetDocuments(int parentId);       

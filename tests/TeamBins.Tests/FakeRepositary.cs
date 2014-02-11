@@ -213,5 +213,15 @@ namespace TeamBins.Tests
         {
             throw new System.NotImplementedException();
         }
+
+        public void SavePasswordResetRequest(PasswordResetRequest request)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public PasswordResetRequest GetPasswordResetRequest(string activationCode)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

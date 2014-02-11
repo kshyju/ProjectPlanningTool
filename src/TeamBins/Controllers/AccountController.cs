@@ -131,13 +131,84 @@ namespace TechiesWeb.TeamBins.Controllers
         {
             return View("forgotPassword",new ForgotPasswordVM());
         }
-        
-        [HttpPost]
-        public ActionResult forgotpassword(ForgotPasswordVM model)
+        public ActionResult forgotPasswordEmailSent()
         {
             return View();
         }
-        
+        [HttpPost]
+        public ActionResult forgotpassword(ForgotPasswordVM model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var user = repo.GetUser(model.Email);
+                    if (user != null)
+                    {
+                        var passwordResetRequest = new PasswordResetRequest { UserID = user.ID };
+                        passwordResetRequest.ActivationCode = Guid.NewGuid().ToString("n") + user.ID;
+                        repo.SavePasswordResetRequest(passwordResetRequest);
+
+                        var resetRequest = repo.GetPasswordResetRequest(passwordResetRequest.ActivationCode);
+                        userService = new UserService(repo,SiteBaseURL);
+                        userService.SendResetPasswordEmail(resetRequest);
+
+                        return RedirectToAction("forgotPasswordEmailSent");
+                    }
+                    ModelState.AddModelError("", "We do not see an account with that email address!");
+                }
+                return View();
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "Error in processing the your request");
+            }
+            return View(model);
+        }
+
+        public ActionResult ResetPassword(string id)
+        {
+            //coming from the password reset link received in email
+            var passwordResetRequest = repo.GetPasswordResetRequest(id);
+            if (passwordResetRequest != null)
+            {
+                var user = repo.GetUser(passwordResetRequest.UserID);
+                if (user != null)
+                {
+                    return View(new ResetPasswordVM { ActivationCode = passwordResetRequest.ActivationCode });
+                }
+            }
+            return View("NotFound");
+        }
+
+        [HttpPost]
+        public ActionResult ResetPassword(ResetPasswordVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                var passwordRequest = repo.GetPasswordResetRequest(model.ActivationCode);
+                if (passwordRequest != null)
+                {
+                    var user = repo.GetUser(passwordRequest.UserID);
+                    if (user != null)
+                    {
+                        user.Password = model.Password;
+                        var result = repo.SaveUser(user);
+                        if (result.Status)
+                        {
+                            return RedirectToAction("PasswordUpdated");
+                        }
+                    }
+                }
+
+            }
+            return View(model);
+
+        }
+        public ActionResult PasswordUpdated()
+        {
+            return View();
+        }
         public ActionResult Profile()
         {            
             var user = repo.GetUser(UserID);
