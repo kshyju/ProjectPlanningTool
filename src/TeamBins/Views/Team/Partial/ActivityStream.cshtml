@@ -5,6 +5,10 @@
 {
     <div class="activity-item">
         <a href="#" class="activity-author">@act.Author</a> @act.Activity <a href="@act.ObjectURL" class="activity-name">@act.ObjectTite</a>
+       @if(!String.IsNullOrEmpty(act.NewState))
+       {
+         <b>@act.NewState </b>
+       }
         <p class="activity-date" title="@act.CreatedDateRelative">@act.CreatedDateRelative</p>
     </div>
 }

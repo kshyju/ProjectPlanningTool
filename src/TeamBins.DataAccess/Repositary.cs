@@ -26,6 +26,10 @@ namespace TeamBins.DataAccess
                 throw;
             }
         }
+        public Activity GetActivity(int id)
+        {
+            return db.Activities.Include(s=>s.User).FirstOrDefault(s=>s.ID==id);
+        }
         public PasswordResetRequest GetPasswordResetRequest(string activationCode)
         {
             return db.PasswordResetRequests.OrderByDescending(s=>s.CreatedDate).FirstOrDefault(s => s.ActivationCode == activationCode);

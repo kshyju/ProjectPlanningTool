@@ -48,8 +48,8 @@ namespace TeamBins.DataAccess
         TeamMemberRequest GetTeamMemberRequest(string activationCode);
         TeamMember GetTeamMember(int userId, int teamId);
         EmailTemplate GetEmailTemplate(string templateName);
-       
 
+        Activity GetActivity(int id); 
         IEnumerable<Activity> GetTeamActivity(int teamId);
         OperationStatus SaveActivity(Activity comment);
         OperationStatus DeleteIssueMemberRelation(IssueMember issueMember);

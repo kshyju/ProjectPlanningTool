@@ -55,6 +55,7 @@ namespace TechiesWeb.TeamBins.ViewModels
         public string LastModifiedBy { set; get; }
         public string Iteration { set; get; }
 
+        public int TeamID { set; get; }
         public int ProjectID { set; get; }
         public string Project { get; set; }
         public string CreatedDate { set; get; }

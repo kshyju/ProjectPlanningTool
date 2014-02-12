@@ -1,19 +1,17 @@
 ﻿@model TechiesWeb.TeamBins.ViewModels.IssueVM
 <h4>@Model.Comments.Count() Comments</h4>
-<div id="commentList">
-@foreach(var item in Model.Comments)
-{  
-    <div class="commentItem">          
-        <img src="@item.AvatarHash" />         
+ 
+<div id="commentList" ng-controller="IssueDetailsCtrl"> 
+    <div class="commentItem" ng-repeat="comment in comments">          
+        <img ng-src="{{comment.AvatarHash}}" />    
         <div class="commentItemBody" >
-            <span class="cmntAuthorName">@item.AuthorName</span><br>            
-            <span class="commentmetadata" title="@item.CreativeDate">@item.CreatedDateRelative</span>
-            <p>@Html.Raw(HttpUtility.HtmlDecode(item.CommentBody))</p>
+            <span class="cmntAuthorName">{{comment.AuthorName}}</span><br>            
+            <span class="commentmetadata" title="">{{comment.CreatedDateRelative}}</span>
+            <p>{{comment.CommentBody}}</p>
         </div>
     </div>
-}
-
-</div>   
+</div> 
+ 
 @if (Model.IsEditableForCurrentUser)
 {
 <div id="addComment">

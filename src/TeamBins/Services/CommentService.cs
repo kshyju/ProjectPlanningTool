@@ -17,6 +17,21 @@ namespace TeamBins.Services
         }
         public string SiteBaseURL { set; get; }
 
+        public CommentVM GetCommentVM(int commentId)
+        {
+            var commentVM = new CommentVM();
+            var comment = repo.GetComment(commentId);
+            if (comment != null)
+            {
+                commentVM.ID = comment.ID;
+                commentVM.AuthorName = comment.Author.FirstName;
+                commentVM.CommentBody = comment.CommentText;
+                commentVM.CreativeDate = comment.CreatedDate.ToString("g");
+                commentVM.AvatarHash = UserService.GetImageSource(comment.Author.EmailAddress, 42);
+                commentVM.CreatedDateRelative = comment.CreatedDate.ToShortDateString(); //.ToRelativeDateTime();
+            }
+            return commentVM;
+        }
         public ActivityVM GetActivityVM(Activity activity)
         {
             var activityVM = new ActivityVM() { Author = activity.User.FirstName, CreatedDateRelative = activity.CreatedDate.ToString() };

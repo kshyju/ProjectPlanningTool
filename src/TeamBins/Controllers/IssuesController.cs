@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using TeamBins;
 using TeamBins.DataAccess;
 using TeamBins.Helpers.Enums;
+using TeamBins.Helpers.Infrastructure;
 using TeamBins.Services;
 using TechiesWeb.TeamBins.Infrastructure;
 using TechiesWeb.TeamBins.ViewModels;
@@ -93,13 +94,17 @@ namespace TechiesWeb.TeamBins.Controllers
         {
             try
             {
+                Issue issuePreviousVersion = new Issue();
                 if (ModelState.IsValid)
                 {
                     Issue bug = new Issue { ID = model.ID ,  CreatedByID = UserID,  TeamID = TeamID};
                     if (model.ID != 0)
                     {
                         bug = repo.GetIssue(model.ID);
+                      
                     }
+
+                    issuePreviousVersion = ObjectCloner.DeepClone<Issue>(bug);
 
                     bug.Title = model.Title;
                     bug.Description = model.Description;
@@ -120,16 +125,21 @@ namespace TechiesWeb.TeamBins.Controllers
                         log.Debug(result);
                         return Json(new { Status = "Error", Message = "Error saving issue" });
                     }
-
-                    if (Request.IsAjaxRequest())
+                    else
                     {
-                        if (result.Status)
+                        var issue = repo.GetIssue(result.OperationID);
+                        if (issue != null)
                         {
-                            var issue = repo.GetIssue(result.OperationID);
-                            if (issue != null)
-                            {
-                                var teamActivity=SaveActivity(model, issue, result.OperationID);
+                            var teamActivity = SaveActivity(model, issue,issuePreviousVersion,  status,result.OperationID, model.ID== 0);
 
+                            if (teamActivity != null)
+                            {
+                                var activityVM = issueService.GetActivityVM(teamActivity);
+                                var context = GlobalHost.ConnectionManager.GetHubContext<IssuesHub>();
+                                context.Clients.Group(TeamID.ToString()).addNewTeamActivity(activityVM);
+                            }
+                            if (Request.IsAjaxRequest())
+                            {
                                 var issueVM = new IssueVM { ID = result.OperationID, Title = issue.Title };
                                 issueVM.Priority = issue.Priority.Name;
                                 issueVM.Status = issue.Status.Name;
@@ -137,15 +147,11 @@ namespace TechiesWeb.TeamBins.Controllers
                                 issueVM.Category = issue.Category.Name;
                                 issueVM.CreatedDate = issue.CreatedDate.ToShortDateString();
 
-                                var activityVM = issueService.GetActivityVM(teamActivity);
-                                
-                                var context = GlobalHost.ConnectionManager.GetHubContext<IssuesHub>();
-                                context.Clients.Group(TeamID.ToString()).addNewTeamActivity(activityVM);
-
                                 return Json(new { Status = "Success", Item = issueVM });
                             }
                         }
                     }
+                   
 
                     if ((files != null) && (files.Count() > 0))
                     {
@@ -245,6 +251,7 @@ namespace TechiesWeb.TeamBins.Controllers
                 bugVm.Project = bug.Project.Name;
                 bugVm.Category = bug.Category.Name;
                 bugVm.ProjectID = bug.ProjectID;
+                bugVm.TeamID = bug.TeamID;
                 bugVm.Status = bug.Status.Name;
                 bugVm.Priority = bug.Priority.Name;
                 bugVm.StatusCode = bug.Status.Name;
@@ -264,8 +271,7 @@ namespace TechiesWeb.TeamBins.Controllers
                         bugVm.Attachments.Add(imgVM);
 
                 }
-
-                LoadComments(issueId, bugVm);
+                
                 //Get Members
                 issueService.LoadIssueMembers(issueId, bugVm, UserID);
                 issueService.SetUserPermissionsForIssue(bugVm, UserID, TeamID);
@@ -366,11 +372,16 @@ namespace TechiesWeb.TeamBins.Controllers
                     var res = repo.SaveComment(comment);
 
                     var activity = issueService.SaveActivity(comment,TeamID);
-                    var activityVM = new CommentService(repo,SiteBaseURL).GetActivityVM(activity);
-                    
-                    var context = GlobalHost.ConnectionManager.GetHubContext<IssuesHub>();
-                    context.Clients.Group(TeamID.ToString()).addNewTeamActivity(activityVM);
+                    if (activity != null)
+                    {
+                        var activityVM = new CommentService(repo, SiteBaseURL).GetActivityVM(activity);
 
+                        var context = GlobalHost.ConnectionManager.GetHubContext<IssuesHub>();                        
+                        context.Clients.Group(TeamID.ToString()).addNewTeamActivity(activityVM);
+
+                        var commentVM = new CommentService(repo, SiteBaseURL).GetCommentVM(comment.ID);
+                        context.Clients.Group(TeamID.ToString()).addNewComment(commentVM);
+                    }
                     return Json(new { Status = "Success", NewCommentID = res.OperationID });
                 }
                 return Json(new { Status = "Error" });
@@ -425,12 +436,14 @@ namespace TechiesWeb.TeamBins.Controllers
         {
             try
             {
+                bool isValidDate=false;
                 var issue = repo.GetIssue(issueId);
                 if (issue != null)
                 {
                     if (!String.IsNullOrEmpty(issueDueDate))
                     {
                         issue.DueDate = DateTime.Parse(issueDueDate);
+                        isValidDate = true;
                     }
                     else
                     {
@@ -438,7 +451,21 @@ namespace TechiesWeb.TeamBins.Controllers
                     }
 
                     var result = repo.SaveIssue(issue);
-                    if (!result.Status)
+                    if (result.Status)
+                    {
+                        if (isValidDate)
+                        {
+                           var activity= issueService.SaveActivityForDueDate(issueId, TeamID, UserID);
+                           if (activity != null)
+                           {
+                               var activityVM = issueService.GetActivityVM(activity);
+                               var context = GlobalHost.ConnectionManager.GetHubContext<IssuesHub>();
+                               context.Clients.Group(TeamID.ToString()).addNewTeamActivity(activityVM);
+                           }
+
+                        }
+                    }
+                    else
                     {
                         log.Error(result);
                     }
@@ -449,6 +476,13 @@ namespace TechiesWeb.TeamBins.Controllers
                 log.Error(ex);
             }
         }
+
+        public JsonResult comments(int id)
+        {
+            List<CommentVM> commentVMList = new List<CommentVM>();
+            return Json(issueService.GetIssueCommentVMs(id),JsonRequestBehavior.AllowGet);            
+        }
+
 
         #endregion public methods
 
@@ -542,32 +576,44 @@ namespace TechiesWeb.TeamBins.Controllers
 
         }
 
-        private Activity SaveActivity(CreateIssue model, Issue existingIssue, int issueId)
+        private Activity SaveActivity(CreateIssue model, Issue existingIssue,Issue issuePreviousVersion, Status currentIssueStatus, int issueId,bool isNewIssue=false)
         {
+            bool isStateChanged = false;
             var activity = new Activity() { CreatedByID = UserID, ObjectID = issueId, ObjectType = "Issue" };
 
-            if (model.ID == 0)
+            if (isNewIssue)
             {
                 activity.ActivityDesc = "Created";
                 activity.NewState = model.Title;
+                isStateChanged = true;
             }
             else
             {
-                activity.ActivityDesc = "Updated";
-                if (existingIssue.StatusID != model.SelectedStatus)
+                if (issuePreviousVersion.StatusID != existingIssue.StatusID)
                 {
+                    // status of issue updated
+                    activity.OldState = model.Title;
                     activity.ActivityDesc = "Changed status";
+                    activity.NewState = currentIssueStatus.Name;
+                    isStateChanged = true;
                 }
+                                
             }
 
             activity.TeamID = TeamID;
 
-            var result = repo.SaveActivity(activity);
-            if (!result.Status)
+            if (isStateChanged)
             {
-                log.Error(result);
+                var result = repo.SaveActivity(activity);
+                if (!result.Status)
+                {
+                    log.Error(result);
+                }
+                return repo.GetActivity(activity.ID);
+                
+
             }
-            return activity;
+            return null;
         }
 
         private void LoadComments(int id, IssueVM bugVm)

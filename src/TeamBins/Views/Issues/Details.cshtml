@@ -1,10 +1,15 @@
 ﻿@model TechiesWeb.TeamBins.ViewModels.IssueVM
-@{
-ViewBag.Title = "Issue #"+Model.ID;
+@{   
+    ViewBag.Title = "Issue #"+Model.ID;
 }
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 <link href="http://code.jquery.com/ui/1.10.3/themes/ui-lightness/jquery-ui.css" rel="stylesheet" />
+<script src="~/Scripts/angular.min.js"></script>
+<script src="~/Scripts/controller.js"></script>
 <script src="~/Scripts/issue.js"></script>
+<script src="~/Scripts/jquery.signalR-2.0.2.min.js"></script>
+<script src="~/signalr/hubs"></script>
+
 @if(Model.IsEditableForCurrentUser)
 {
     <div class="divToobar">
@@ -12,7 +17,7 @@ ViewBag.Title = "Issue #"+Model.ID;
         @Html.ActionLink("Edit", "Edit", "Issues", new { id = Model.ID }, new { @class = "toolLink popup" })    
     </div>
 }
-<div class="divPageContent">
+<div class="divPageContent" ng-app="issueDetialApp">
     <div class="divLeft">
         <h2>@Model.Title</h2>
         <div id="issueMeta">
@@ -39,7 +44,7 @@ ViewBag.Title = "Issue #"+Model.ID;
                 </ul>
              </div>
         </div> 
-        <div id="comments">
+        <div id="comments" >
             @Html.Partial("Partial/Comments",Model)
         </div>         
     </div>
@@ -75,6 +80,14 @@ ViewBag.Title = "Issue #"+Model.ID;
         }
     </div>
 </div>
-<div id="modal" class="modal fade"></div>
 @Html.HiddenFor(x=>x.ID)
-@Html.HiddenFor(x=>x.ProjectID)
+@Html.HiddenFor(x=>x.TeamID)
+<script type="text/javascript">
+      
+           
+  
+
+    
+    
+
+</script>

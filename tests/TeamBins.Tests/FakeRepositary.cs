@@ -223,5 +223,11 @@ namespace TeamBins.Tests
         {
             throw new System.NotImplementedException();
         }
+
+
+        public Activity GetActivity(int id)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

@@ -137,7 +137,27 @@ namespace TeamBins.Services
             }
             return true;    
         }
-        
+
+        public Activity SaveActivityForDueDate(int issueId, int teamId,int currentUserId)
+        {
+            var issue = repo.GetIssue(issueId);
+
+            Activity activity = new Activity();
+            activity.CreatedByID = currentUserId;
+            activity.OldState = issue.Title;
+            activity.NewState = issue.DueDate.Value.ToShortDateString();
+            activity.ObjectID = issueId;
+            activity.ObjectType = "Issue";
+            activity.ActivityDesc = "Due date updated";
+            activity.TeamID = teamId;
+            var result = repo.SaveActivity(activity);
+            if (result.Status)
+            {
+                return repo.GetActivity(activity.ID);
+            }
+            return null;
+        }
+       
         public Activity SaveActivity(Comment comment,int teamId)
         {
             var issue = repo.GetIssue(comment.IssueID);
@@ -150,10 +170,14 @@ namespace TeamBins.Services
             activity.ObjectType = "IssueComment";
             activity.ActivityDesc = "Commented";
             activity.TeamID = teamId;
-            var result = repo.SaveActivity(activity);         
-            return activity;
+            var result = repo.SaveActivity(activity);
+            if (result.Status)
+            {
+                return repo.GetActivity(activity.ID);
+            }
+            return null;
         }
-
+        
         public void Dispose()
         {
             if (repo != null)
@@ -168,10 +192,36 @@ namespace TeamBins.Services
             if (activity.ActivityDesc.ToUpper() == "CREATED")
             {
                 activityVM.Activity = activity.ActivityDesc;
-                activityVM.ObjectTite = activity.NewState;
-                activityVM.ObjectURL = String.Format("{0}Issues/details/{1}", SiteBaseURL, activity.ObjectID);
+                activityVM.ObjectTite = activity.NewState;               
             }
+            else if (activity.ActivityDesc.ToUpper() == "CHANGED STATUS")
+            {
+                activityVM.Activity = "changed status of";
+                activityVM.ObjectTite = activity.OldState;
+                activityVM.NewState = "to "+activity.NewState;               
+            }
+            else if (activity.ActivityDesc.ToUpper() == "DUE DATE UPDATED")
+            {
+                activityVM.Activity = "updated due date of";
+                activityVM.ObjectTite = activity.OldState;
+                activityVM.NewState = "to " + activity.NewState;               
+            }
+            activityVM.ObjectURL = String.Format("{0}Issues/details/{1}", SiteBaseURL, activity.ObjectID);
             return activityVM;
+        }
+
+        public List<CommentVM> GetIssueCommentVMs(int id)
+        {
+            var commentVMList=new List<CommentVM>();
+            var commentList = repo.GetCommentsForIssue(id);
+            foreach (var item in commentList)
+            {
+                var commentVM = new CommentVM { ID = item.ID, CommentBody = item.CommentText, AuthorName = item.Author.FirstName, CreativeDate = item.CreatedDate.ToString("g") };
+                commentVM.AvatarHash = UserService.GetImageSource(item.Author.EmailAddress, 42);
+                commentVM.CreatedDateRelative = item.CreatedDate.ToShortDateString();//.ToRelativeDateTime();
+                commentVMList.Add(commentVM);
+            }
+            return commentVMList;
         }
         /*
         public Activity SaveActivity(IActivity activity)
