@@ -32,8 +32,8 @@ Installation / Setup
 + Enjoy !
 
 ###Special Thanks to
-*All those wonderful people who worked behind those open source libraries 
-*Jabbr friends
+* All those wonderful people who worked behind those open source libraries 
+* Jabbr friends
 
 ###How to contribute
 Write your feature and send a PR ! :)
