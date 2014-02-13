@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Web.Mvc;
 using TeamBins.DataAccess;
@@ -37,14 +38,15 @@ namespace TechiesWeb.TeamBins.Controllers
         public ActionResult Join(AccountSignupVM model)
         {
             try
-            {
+            {               
                 if (ModelState.IsValid)
                 {
                     var user = repo.GetUser(model.Email);
                     if (user == null)
                     {
                         var newUser = new User { EmailAddress = model.Email, FirstName = model.Name, Password = model.Password };
-                        // SecurityService.SetNewPassword(newUser, model.Password);                  
+                        // SecurityService.SetNewPassword(newUser, model.Password); 
+                       
                         var result = repo.SaveUser(newUser);
                         if (result.Status)
                         {
@@ -231,10 +233,13 @@ namespace TechiesWeb.TeamBins.Controllers
             if (user != null)
             {
                 var vm = new EditProfileVM { Name = user.FirstName, Email = user.EmailAddress };
+                
+               
                 return View(vm);
             }
             return View("NotFound");
         }
+       
 
         [HttpPost]
         public ActionResult EditProfile(EditProfileVM model)
@@ -244,13 +249,14 @@ namespace TechiesWeb.TeamBins.Controllers
                 var user = repo.GetUser(UserID);
                 if(user!=null)
                 {
-                    user.FirstName = model.Name;
+                    user.FirstName = model.Name;                  
                     var result = repo.SaveUser(user);
                     if(result.Status)
                     {
                         var msg = new AlertMessageStore();
                         msg.AddMessage("success", "Profile updated successfully");
                         TempData["AlertMessages"] = msg;
+                        return RedirectToAction("EditProfile");
                     }
                 }
             }

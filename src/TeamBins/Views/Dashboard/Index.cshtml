@@ -2,6 +2,10 @@
 @{
     ViewBag.Title = "Dashboard";
 }
+<script src="~/Scripts/angular.min.js"></script>
+<script src="~/Scripts/jquery.signalR-2.0.2.min.js"></script>
+<script src="~/signalr/hubs"></script>
+<div ng-app="dashboardApp">
 <div class="dbItemContainer">
 <div class="dashboardItem">
 <h4>Projects</h4>
@@ -40,8 +44,41 @@
 </div>
 </div>
 <div class="dbItemContainer">
+<div class="dashboardItem" ng-controller="dashboardCtrl">
+<h4>Team Activity</h4>
+<ul class="db-recent-activity">
+    <li ng-repeat="activity in activities | orderBy:'Id':true | limitTo:6">
+       <a href="#" class="activity-author">{{activity.Author}}</a> {{activity.Activity}} <a href="{{activity.ObjectURL}}" class="activity-name">{{activity.ObjectTite}}</a>       
+       <i>{{activity.NewState}}</i>       
+       <p class="activity-date" >{{activity.CreatedDate | date:'medium'}}</p>
+    </li>
+</ul>  
+</div>
 <div class="dashboardItem">
 <h4>TeamBins news</h4>
 <p>No news now</p>   
 </div>
 </div>
+</div>
+@Html.HiddenFor(s=>s.TeamID)
+<script type="text/javascript">
+
+    var dashboardApp = angular.module('dashboardApp', []);
+    dashboardApp.controller("dashboardCtrl", function ($scope, $http) {
+        $http.get('../../team/stream/' + $("#TeamID").val()+"?size=6").success(function (data) {
+            $scope.activities = data;
+        });
+
+        var chat = $.connection.issuesHub;
+        chat.client.addNewTeamActivity = function (comment) {
+            $scope.activities.push(comment);
+            $scope.$apply();
+        };
+
+        $.connection.hub.start().done(function () {
+            chat.server.subscribeToTeam($("#TeamID").val())
+        })
+
+    });
+
+</script>

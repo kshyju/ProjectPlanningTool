@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using TeamBins.DataAccess;
 using TechiesWeb.TeamBins.ViewModels;
-
+using TechiesWeb.TeamBins.ExtensionMethods;
 namespace TeamBins.Services
 {
     public class CommentService : IActivitySavable
@@ -34,7 +34,8 @@ namespace TeamBins.Services
         }
         public ActivityVM GetActivityVM(Activity activity)
         {
-            var activityVM = new ActivityVM() { Author = activity.User.FirstName, CreatedDateRelative = activity.CreatedDate.ToString() };
+            var activityVM = new ActivityVM() { Id = activity.ID, Author = activity.User.FirstName };
+            activityVM.CreatedDate = activity.CreatedDate.ToJSONFriendlyDateTime();
             if (activity.ActivityDesc.ToUpper() == "COMMENTED")
             {
                 activityVM.Activity = activity.ActivityDesc+" on";

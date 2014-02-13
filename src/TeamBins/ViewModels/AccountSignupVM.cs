@@ -70,6 +70,7 @@ namespace TechiesWeb.TeamBins.ViewModels
         [DataType(DataType.EmailAddress)]
         [StringLength(100)]
         public string Email { set; get; }
+        
     }
 
     public class ChangePasswordVM : ResetPasswordVM

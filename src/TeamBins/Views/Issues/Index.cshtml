@@ -4,11 +4,13 @@
 }
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 <link href="http://code.jquery.com/ui/1.10.3/themes/ui-lightness/jquery-ui.css" rel="stylesheet" />
+<script src="~/Scripts/angular.min.js"></script>
 <script src="~/Scripts/jquery.signalR-2.0.2.min.js"></script>
 <script src="~/signalr/hubs"></script>
 <script src="~/Scripts/issue.js"></script>
 @if(Model.ProjectsExist)
 {
+<div ng-app="issueListApp">
 <div id="leftContentPane">
 <h2>Recent Issues</h2>
 <div class="btnBar">
@@ -77,12 +79,18 @@
 </table>
 </div>
 <div id="rightPanel">
-    <div id="activityStream">
-        <div>
-            Howdy ! Nothing happened yet.
+    <div id="activityStream" ng-controller="IssueListCtrl">
+        <h4>Activity</h4>
+        <div id="activityList">
+            <div class="activity-item" ng-repeat="activity in activities | orderBy:'Id':true">
+               <a href="#" class="activity-author">{{activity.Author}}</a> {{activity.Activity}} <a href="{{activity.ObjectURL}}" class="activity-name">{{activity.ObjectTite}}</a>       
+               <i>{{activity.NewState}}</i>       
+               <p class="activity-date" >{{activity.CreatedDate | date:'medium'}}</p>
+            </div>
         </div>
     </div>
 </div>
+</div>    
 }
 else
 {
@@ -97,19 +105,23 @@ else
     var editIssueUrl = "@Url.Action("edit","issues")";
     var savePrefUrl = "@Url.Action("SavePreference", "Issues")";
    
-    $(function () {       
-        var chat = $.connection.issuesHub;       
-        chat.client.addNewTeamActivity = function (activity) {
-            $("#activityList").prepend(BuildNewActivityMarkup(activity));
+    var issueListApp = angular.module('issueListApp', []);
+    issueListApp.controller('IssueListCtrl', function ($scope, $http) {
+        $http.get('../../team/stream/@Model.TeamID' + "?size=20").success(function (data) {
+            $scope.activities = data;
+        });
+
+        var chat = $.connection.issuesHub;
+        chat.client.addNewTeamActivity = function (comment) {
+            $scope.activities.push(comment);
+            $scope.$apply();
         };
 
-        $.connection.hub.start().done(function () {           
+        $.connection.hub.start().done(function () {
             chat.server.subscribeToTeam(@Model.TeamID)
-        })    
+        })
 
     });
-    function BuildNewActivityMarkup(activity) {
-       return "<div class='activity-item'><a class='activity-author' href='#'> " + activity.Author + " </a> " + activity.Activity + " <a href='" + activity.ObjectURL + "' class='activity-name'> " + activity.ObjectTite + " </a><p class='activity-date' title='" + activity.CreatedDateRelative + "'> " + activity.CreatedDateRelative + "</p></div>";
-    }
+     
 
 </script>

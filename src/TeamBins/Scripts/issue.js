@@ -114,10 +114,6 @@ $(function () {
         }
     });
     
-    if ($("#activityStream").length) {
-        $("#activityStream").load("../../Team/ActivityStream");
-    }
-
 
     $("#issue-star").click(function (e) {
         var _this = $(this);

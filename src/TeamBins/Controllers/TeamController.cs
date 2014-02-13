@@ -169,23 +169,21 @@ namespace TechiesWeb.TeamBins.Controllers
             return Json ( new{ Data = memberList, Status = "Success" },JsonRequestBehavior.AllowGet);
         }
         */
-        public ActionResult ActivityStream()
+
+        // we will move this method to the web api once authentication stuff is finalized.
+        public ActionResult Stream(int id,int size=25)
         {
             List<ActivityVM> list = new List<ActivityVM>();
-
-            list= GetTeamActivityVMs(TeamID);
-            if (Request.IsAjaxRequest())
-                return PartialView("Partial/ActivityStream", list);
-
-            return View(list);
+            list = GetTeamActivityVMs(id,size);
+            return Json(list, JsonRequestBehavior.AllowGet);
         }
-
-        private List<ActivityVM> GetTeamActivityVMs(int teamId)
+       
+        private List<ActivityVM> GetTeamActivityVMs(int teamId, int size)
         {
             List<ActivityVM> activityVMList = new List<ActivityVM>();
             try
             {
-                var activityList = repo.GetTeamActivity(teamId).OrderByDescending(s => s.CreatedDate).ToList();
+                var activityList = repo.GetTeamActivity(teamId).OrderByDescending(s => s.CreatedDate).Take(size).ToList();
 
                 ActivityVM activityVM = new ActivityVM();
                 var issueService = new IssueService(repo, UserID, TeamID);
@@ -212,22 +210,6 @@ namespace TechiesWeb.TeamBins.Controllers
             return activityVMList;
         }
 
-        public ActionResult TestEmail()
-        {
-            try
-            {
-                Email email = new Email { Body = "Test", Subject = "test email " + DateTime.Now.ToString("g") };
-                email.ToAddress = new List<string> { "connectshyju@gmail.com" };
-                email.FromAddress = "teambinsprojects@gmail.com";
-                email.Send();
-                return Content("done");
-            }
-            catch(Exception ex)
-            {
-                return Content(ex.Message);
-            }
-            
-        }
 
     }
 }

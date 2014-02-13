@@ -80,14 +80,9 @@
         }
     </div>
 </div>
-@Html.HiddenFor(x=>x.ID)
+<input type="hidden" id="ID" name="ID" value="@Model.ID" />
+
 @Html.HiddenFor(x=>x.TeamID)
 <script type="text/javascript">
-      
-           
-  
-
-    
-    
-
+    var issueCommentsUrl = "@Url.Action("comments","Issues")";
 </script>

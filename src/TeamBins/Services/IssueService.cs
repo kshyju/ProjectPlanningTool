@@ -4,11 +4,11 @@ using TeamBins.DataAccess;
 using TechiesWeb.TeamBins.ViewModels;
 using System;
 using TeamBins.Helpers.Enums;
-
+using TechiesWeb.TeamBins.ExtensionMethods;
 namespace TeamBins.Services
 {
 
-    public class IssueService : IDisposable, IActivitySavable
+    public class IssueService : IDisposable
     {
         IRepositary repo;
         public string SiteBaseURL { set; get; }
@@ -186,9 +186,9 @@ namespace TeamBins.Services
             }
         }
 
-        public ActivityVM GetActivityVM(IActivity activity)
+        public ActivityVM GetActivityVM(Activity activity)
         {
-            var activityVM = new ActivityVM() { Author = activity.User.FirstName, CreatedDateRelative = activity.CreatedDate.ToString() };
+            var activityVM = new ActivityVM() { Id=activity.ID, Author = activity.User.FirstName, CreatedDate = activity.CreatedDate.ToJSONFriendlyDateTime()};
             if (activity.ActivityDesc.ToUpper() == "CREATED")
             {
                 activityVM.Activity = activity.ActivityDesc;
@@ -218,7 +218,7 @@ namespace TeamBins.Services
             {
                 var commentVM = new CommentVM { ID = item.ID, CommentBody = item.CommentText, AuthorName = item.Author.FirstName, CreativeDate = item.CreatedDate.ToString("g") };
                 commentVM.AvatarHash = UserService.GetImageSource(item.Author.EmailAddress, 42);
-                commentVM.CreatedDateRelative = item.CreatedDate.ToShortDateString();//.ToRelativeDateTime();
+                commentVM.CreatedDateRelative = item.CreatedDate.ToJSONFriendlyDateTime();//.ToRelativeDateTime();
                 commentVMList.Add(commentVM);
             }
             return commentVMList;

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Threading.Tasks;
 using TeamBins.DataAccess;
@@ -121,7 +122,7 @@ namespace TeamBins.DataAccess
                 if (teamMemberRequest.ID == 0)
                 {
 
-                    teamMemberRequest.CreatedDate = DateTime.Now;
+                    teamMemberRequest.CreatedDate = DateTime.UtcNow;
                     db.TeamMemberRequests.Add(teamMemberRequest);
                 }
                 else
@@ -185,7 +186,7 @@ namespace TeamBins.DataAccess
             if (issue.ID == 0)
             {
                 issue.Active = true;
-                issue.CreatedDate = DateTime.Now;
+                issue.CreatedDate = DateTime.UtcNow;
                 db.Issues.Add(issue);
             }
             else
@@ -198,7 +199,7 @@ namespace TeamBins.DataAccess
        
        public OperationStatus SaveDocument(Document image)
         {
-            image.CreatedDate = DateTime.Now;
+            image.CreatedDate = DateTime.UtcNow;
             db.Documents.Add(image);
             db.SaveChanges();
             return new OperationStatus { Status = true };
@@ -208,7 +209,7 @@ namespace TeamBins.DataAccess
         {
             if (project.ID == 0)
             {
-                project.CreatedDate = DateTime.Now;
+                project.CreatedDate = DateTime.UtcNow;
                 db.Projects.Add(project);
             }
             else
@@ -225,16 +226,20 @@ namespace TeamBins.DataAccess
             {
                 if (user.ID == 0)
                 {
-                    user.CreatedDate = DateTime.Now;
+                    user.CreatedDate = DateTime.UtcNow;
                     db.Users.Add(user);
                 }
                 else
-                {                  
+                {
                     db.Entry(user).State = EntityState.Modified;
                 }
                 db.SaveChanges();
             }
-            catch(Exception ex)
+            catch (DbEntityValidationException dbEx)
+            {
+                return  OperationStatus.CreateFromException("error", dbEx);
+            }
+            catch (Exception ex)
             {
                 var res = new OperationStatus();
 
@@ -264,7 +269,7 @@ namespace TeamBins.DataAccess
         {
             if (team.ID == 0)
             {
-                team.CreatedDate = DateTime.Now;
+                team.CreatedDate = DateTime.UtcNow;
                 db.Teams.Add(team);
             }
             else
@@ -277,7 +282,7 @@ namespace TeamBins.DataAccess
        
        /* public TeamMemberRequest AddTeamMemberRequest(TeamMemberRequest request)
         {
-            request.CreatedDate = DateTime.Now;
+            request.CreatedDate = DateTime.UtcNow;
             db.TeamMemberRequests.Add(request);
             db.SaveChanges();
             return request;
@@ -286,7 +291,7 @@ namespace TeamBins.DataAccess
         {
             if (teamMember.ID == 0)
             {
-                teamMember.CreatedDate = DateTime.Now;
+                teamMember.CreatedDate = DateTime.UtcNow;
                 db.TeamMembers.Add(teamMember);
             }
             else
@@ -329,7 +334,7 @@ namespace TeamBins.DataAccess
         {
             try
             {
-                var issueMember = new IssueMember { IssueID = issueId, MemberID = memberId, CreatedByID = addedBy, CreatedDate = DateTime.Now };
+                var issueMember = new IssueMember { IssueID = issueId, MemberID = memberId, CreatedByID = addedBy, CreatedDate = DateTime.UtcNow };
                 db.IssueMembers.Add(issueMember);
                 db.SaveChanges();
                 return new OperationStatus { Status = true };
@@ -369,6 +374,7 @@ namespace TeamBins.DataAccess
         {
             try
             {
+                comment.CreatedDate = DateTime.UtcNow;
                 db.Comments.Add(comment);
                 db.SaveChanges();
             }
@@ -396,7 +402,7 @@ namespace TeamBins.DataAccess
         {
             try
             {
-                activity.CreatedDate = DateTime.Now;
+                activity.CreatedDate = DateTime.UtcNow;
                 db.Activities.Add(activity);
                 db.SaveChanges();
                 return new OperationStatus { Status = true };

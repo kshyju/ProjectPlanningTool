@@ -27,7 +27,7 @@ namespace TechiesWeb.TeamBins.Controllers
                     //User switched team from the header menu
                     UpdateTeam(teamid.Value);
                 }
-                var vm = new DashBoardVM();
+                var vm = new DashBoardVM { TeamID = TeamID };
                 var projectList = repo.GetProjects(TeamID).Where(s => s.TeamID == TeamID).ToList();
                 foreach (var project in projectList)
                 {

@@ -7,9 +7,14 @@ namespace TechiesWeb.TeamBins.ExtensionMethods
 {
     public static class DateTimeExtensions
     {
+        public static string ToJSONFriendlyDateTime(this DateTime dateTime)
+        {
+            return dateTime.ToString("yyy-MM-ddTH:mm:ssZ");
+        }
         public static string ToRelativeDateTime(this DateTime dateTime)
         {
-
+           
+           
             const int SECOND = 1;
             const int MINUTE = 60 * SECOND;
             const int HOUR = 60 * MINUTE;
