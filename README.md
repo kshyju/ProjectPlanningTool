@@ -13,6 +13,7 @@ Built with
 
 * ASP.NET MVC
 * ASP.NET SignalR
+* Angular JS
 * jQuery
 * Twitter bootstrap
 * Log4net
@@ -30,7 +31,9 @@ Installation / Setup
 + Update the connection string,app settings values in your web.config
 + Enjoy !
 
-
+###Special Thanks to
+*All those wonderful people who worked behind those open source libraries 
+*Jabbr friends
 
 ###How to contribute
 Write your feature and send a PR ! :)
