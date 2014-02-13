@@ -6,7 +6,7 @@ issueDetailApp.controller("IssueDetailsCtrl", function ($scope, $http) {
         $scope.comments = data;
     });
     
-});
+
 
 var chat = $.connection.issuesHub;       
 chat.client.addNewComment = function (comment) {
@@ -17,3 +17,5 @@ chat.client.addNewComment = function (comment) {
 $.connection.hub.start().done(function () {           
     chat.server.subscribeToTeam($("#TeamID").val())
 })  
+
+});
