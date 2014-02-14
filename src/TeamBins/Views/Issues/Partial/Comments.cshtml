@@ -1,25 +1,22 @@
 ﻿@model TechiesWeb.TeamBins.ViewModels.IssueVM
-<h4>@Model.Comments.Count() Comments</h4>
- 
-<div id="commentList" ng-controller="IssueDetailsCtrl"> 
+<h4>{{commentCount}} comments</h4> 
+<div id="commentList" > 
     <div class="commentItem" ng-repeat="comment in comments">          
         <img ng-src="{{comment.AvatarHash}}" />    
         <div class="commentItemBody" >
             <span class="cmntAuthorName">{{comment.AuthorName}}</span><br>            
-            <span class="commentmetadata" title="">{{comment.CreatedDateRelative}}</span>
+            <span class="commentmetadata" title="">{{comment.CreatedDateRelative | date:'medium'}}</span>
             <p>{{comment.CommentBody}}</p>
         </div>
     </div>
-</div> 
- 
+</div>  
 @if (Model.IsEditableForCurrentUser)
 {
 <div id="addComment">
     <p>
-     <b>Add a comment</b><br />
-    <textarea id="newComment" name="newComment" rows="4" cols="100%" maxlength="5000" style="height:70px;"  ></textarea>
-      
-        </p>
+        <b>Add a comment</b><br />
+        <textarea id="newComment" name="newComment" rows="4" cols="100%" maxlength="5000" style="height:70px;"  ></textarea>
+    </p>
     <p>
         <input type="submit" id="saveComment" value="Post" />
     </p>
