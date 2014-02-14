@@ -98,14 +98,6 @@ $(function () {
                 data: {
                     CommentBody: $("#newComment").val(),
                     IssueID: $("#ID").val()
-                },
-                success: function (res, textStatus, jqXHR) {
-                    if (res.Status === "Success") {
-                      /*  $.get("../../Issues/Comment/" + res.NewCommentID, function (dat) {
-                            $(dat).hide().appendTo("#commentList").fadeIn(350);                            
-                            $("#newComment").val("");
-                        });*/
-                    }
                 }
             });
         }
