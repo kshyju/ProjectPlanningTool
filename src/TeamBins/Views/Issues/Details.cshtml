@@ -3,7 +3,7 @@
     ViewBag.Title = "Issue #"+Model.ID;
 }
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-<link href="http://code.jquery.com/ui/1.10.3/themes/ui-lightness/jquery-ui.css" rel="stylesheet" />
+<link href="http://code.jquery.com/ui/1.10.3/themes/flick/jquery-ui.css" rel="stylesheet" />
 <script src="~/Scripts/angular.min.js"></script>
 <script src="~/Scripts/controller.js"></script>
 <script src="~/Scripts/issue.js"></script>
@@ -29,8 +29,8 @@
             <div class="divDescr">@Html.Raw(Model.Description)
             @foreach (var img in Model.Images)
             {
-                <div>
-                    <a href="@Url.Content("~/uploads/"+img.FileKey)" target="_blank"><img class="detailImg" src="@Url.Content("~/uploads/"+img.FileKey)" /></a>
+                <div>                   
+                    <a href="~/uploads/@(img.FileKey)" target="_blank"><img class="detailImg" src="~/uploads/@(img.FileKey)" /></a>
                 </div>
             }
             </div>

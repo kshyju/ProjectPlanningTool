@@ -259,7 +259,7 @@ namespace TechiesWeb.TeamBins.Controllers
                 if (bug.DueDate.HasValue)
                     bugVm.IssueDueDate = (bug.DueDate.Value.Year > 2000 ? bug.DueDate.Value.ToShortDateString() : "");
 
-                var allDocuments = repo.GetDocuments(id);
+                var allDocuments = repo.GetDocuments(issueId);
                 foreach (var img in allDocuments)
                 {
                     var imgVM = new DocumentVM { FileName = img.FileName, FileKey = img.FileAlias };
@@ -356,6 +356,7 @@ namespace TechiesWeb.TeamBins.Controllers
         {
             var vm = new IssueVM { ID = id };
             issueService.LoadIssueMembers(id, vm,UserID);
+            issueService.SetUserPermissionsForIssue(vm, UserID, TeamID);
             return PartialView("Partial/Members", vm);
         }
 

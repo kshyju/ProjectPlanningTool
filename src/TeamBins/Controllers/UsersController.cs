@@ -159,14 +159,16 @@ namespace TechiesWeb.TeamBins.Controllers
         }
 
                 
-        public JsonResult TeamMembers(string term)
+        public JsonResult TeamMembers(string term,int issueId)
         {
-            //Returns project member list in JSON format
+            //Returns team members who are not assigned to the issue in a list in JSON format
             try
             {
                 var team = repo.GetTeam(TeamID);
-
-                var projectMembers = team.TeamMembers.Where(s => s.Member.FirstName.StartsWith(term, StringComparison.OrdinalIgnoreCase)).Select(item => new { value = item.Member.FirstName, id = item.Member.ID.ToString() }).ToList();
+               
+                var projectMembers = team.TeamMembers.Where(t=>!repo.GetIssueMembers(issueId).Any(s=>s.MemberID==t.MemberID))
+                                            .Where(s => s.Member.FirstName.StartsWith(term, StringComparison.OrdinalIgnoreCase))                                            
+                                            .Select(item => new { value = item.Member.FirstName, id = item.Member.ID.ToString() }).ToList();
                 return Json(projectMembers, JsonRequestBehavior.AllowGet);
             }
             catch(Exception ex)

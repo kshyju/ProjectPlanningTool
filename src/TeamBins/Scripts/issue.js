@@ -39,7 +39,7 @@
 
     //Auto complete for assign issue member
     $("#txtAssignMember").autocomplete({
-        source: "../../Users/TeamMembers",
+        source: "../../Users/TeamMembers?issueId=" + $("#ID").val(),
         minLength: 1,
         select: function (event, ui) {                      
             $.post(addMemberToIssueUrl,{ memberId:ui.item.id, issueId:$("#ID").val()},function(res){
