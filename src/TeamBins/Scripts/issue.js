@@ -1,12 +1,5 @@
-﻿
-
-$(function () {
-
-    
-
-
-    $("input#NewItemTitle").keyup(function (e) {
-        
+﻿$(function () { 
+    $("input#NewItemTitle").keyup(function (e) {        
         if(e.keyCode == 13)        {
             $(this).trigger("enterKey");
         }
@@ -37,7 +30,6 @@ $(function () {
             }
         });
     });
-
    
     //Save the user preference to session
     $("#myonoffswitch").click(function () {
@@ -99,13 +91,8 @@ $(function () {
                     CommentBody: $("#newComment").val(),
                     IssueID: $("#ID").val()
                 },
-                success: function (res, textStatus, jqXHR) {
-                    if (res.Status === "Success") {
-                      /*  $.get("../../Issues/Comment/" + res.NewCommentID, function (dat) {
-                            $(dat).hide().appendTo("#commentList").fadeIn(350);                            
-                            $("#newComment").val("");
-                        });*/
-                    }
+                success: function (res, textStatus, jqXHR) {                   
+                        $("#newComment").val(""); 
                 }
             });
         }

@@ -17,7 +17,7 @@
         @Html.ActionLink("Edit", "Edit", "Issues", new { id = Model.ID }, new { @class = "toolLink popup" })    
     </div>
 }
-<div class="divPageContent" ng-app="issueDetialApp">
+<div class="divPageContent" ng-app="issueDetialApp" ng-controller="IssueDetailsCtrl">
     <div class="divLeft">
         <h2>@Model.Title</h2>
         <div id="issueMeta">
