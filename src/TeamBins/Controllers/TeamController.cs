@@ -136,10 +136,12 @@ namespace TechiesWeb.TeamBins.Controllers
                     }
                     var result = repo.SaveTeam(team);
                     if (result != null)
-                    {
-                        //If it is a new team, add the user as team member
-                        var teamMember = new TeamMember { MemberID = UserID, TeamID = team.ID, CreatedByID = UserID };
-                        repo.SaveTeamMember(teamMember);
+                    {                        
+                        if (isNew)
+                        {
+                            var teamMember = new TeamMember { MemberID = UserID, TeamID = team.ID, CreatedByID = UserID };
+                            repo.SaveTeamMember(teamMember);
+                        }
                         return Json(new { Status = "Success" });
                     }
                 }
