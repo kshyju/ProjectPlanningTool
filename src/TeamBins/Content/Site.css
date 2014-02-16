@@ -978,11 +978,15 @@ border-bottom-left-radius: 0;
 }
 .def-project-item
 {
-    font-style:italic; font-size:12px; padding-left:6px;
+    font-style:italic; font-size:12px; padding-left:6px; background-color:#d5fa6b; padding-right:6px;
 }
 ul.db-recent-activity {
     padding:6px;
 }
 .activity-date {
     font-size:10px;
+}
+.img-team-member
+{
+    margin:1px; margin-right:6px;
 }

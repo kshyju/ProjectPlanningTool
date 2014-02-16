@@ -116,8 +116,11 @@ namespace TechiesWeb.TeamBins.Controllers
                     Issue bug = new Issue { ID = model.ID ,  CreatedByID = UserID,  TeamID = TeamID};
                     if (model.ID != 0)
                     {
-                        bug = repo.GetIssue(model.ID);
-                      
+                        bug = repo.GetIssue(model.ID);                      
+                    }
+                    else
+                    {
+                        bug.Description = model.Title;
                     }
 
                     issuePreviousVersion = ObjectCloner.DeepClone<Issue>(bug);
@@ -255,7 +258,8 @@ namespace TechiesWeb.TeamBins.Controllers
 
                 var bug = repo.GetIssue(issueId);
 
-                IssueDetailVM bugVm = new IssueDetailVM { ID = bug.ID, Title = bug.Title, Description = bug.Description };
+                IssueDetailVM bugVm = new IssueDetailVM { ID = bug.ID, Title = bug.Title };
+                bugVm.Description = (bug.Description == null ? "" : bug.Description);
                 bugVm.CreatedDate = bug.CreatedDate.ToString("g");
                 bugVm.OpenedBy = bug.CreatedBy.FirstName;
                 bugVm.Title = bug.Title;

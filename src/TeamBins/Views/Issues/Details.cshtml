@@ -9,12 +9,11 @@
 <script src="~/Scripts/issue.js"></script>
 <script src="~/Scripts/jquery.signalR-2.0.2.min.js"></script>
 <script src="~/signalr/hubs"></script>
-
 @if(Model.IsEditableForCurrentUser)
 {
-    <div class="divToobar">
-        @Html.ActionLink("Delete", "Delete","Issues", new { id = Model.ID }, new { @class = "toolLink popup" })  
-        @Html.ActionLink("Edit", "Edit", "Issues", new { id = Model.ID }, new { @class = "toolLink popup" })    
+    <div class="divToobar">        
+        @Html.ActionLink("Edit", "Edit", "Issues", new { id = Model.ID }, new { @class = "toolLink popup" })  
+        @Html.ActionLink("Delete", "Delete", "Issues", new { id = Model.ID }, new { @class = "toolLink popup" })          
     </div>
 }
 <div class="divPageContent" ng-app="issueDetialApp" ng-controller="IssueDetailsCtrl">
@@ -26,7 +25,7 @@
             <div id="issueStatus">Project <span class="">@Model.Project</span></div>                  
         </div>
         <div class="divDetail">
-            <div class="divDescr">@Html.Raw(Model.Description)
+            <div class="divDescr">@Html.Raw(HttpUtility.HtmlEncode(Model.Description).Replace("\n", "</br>"))
             @foreach (var img in Model.Images)
             {
                 <div>                   
@@ -34,6 +33,8 @@
                 </div>
             }
             </div>
+            @if(Model.Attachments.Count()>0)
+            {
             <div id="attachmentHolder">
                 <h5>Other Attachements</h5>
                 <ul>
@@ -43,6 +44,7 @@
                 }
                 </ul>
              </div>
+            }
         </div> 
         <div id="comments" >
             @Html.Partial("Partial/Comments",Model)
@@ -51,12 +53,12 @@
     <div class="divRight">
         <div id="issue-details" class="right-detail-items ">
             <div class="issue-detail-item important">Issue # @Model.ID.ToString()
-                @if (Model.IsEditableForCurrentUser)
-                {
-                    <div class="starHolder">
-                        <span id="issue-star" class="glyphicon @(Model.IsStarredForUser?"glyphicon-star ":"glyphicon-star-empty")" data-starred="@(Model.IsStarredForUser?"starred":"unstarred")"></span>
-                    </div>
-                }
+            @if (Model.IsEditableForCurrentUser)
+            {
+                <div class="starHolder">
+                    <span id="issue-star" class="glyphicon @(Model.IsStarredForUser?"glyphicon-star ":"glyphicon-star-empty")" data-starred="@(Model.IsStarredForUser?"starred":"unstarred")"></span>
+                </div>
+            }
             </div>
             <div class="issue-detail-item">Type : @Model.Category</div>
             <div class="issue-detail-item">Priority: @Model.Priority</div>

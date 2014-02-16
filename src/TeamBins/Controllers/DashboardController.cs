@@ -51,7 +51,7 @@ namespace TechiesWeb.TeamBins.Controllers
         {
             var listIssues = new List<IssueVM>();
 
-            var issueList = repo.GetIssues().OrderByDescending(s => s.ID).Take(5);
+            var issueList = repo.GetIssues(TeamID).OrderByDescending(s => s.ID).Take(5);
             foreach (var issue in issueList)
             {
                 var issueVM = new IssueVM { ID = issue.ID, Title = issue.Title };
@@ -65,7 +65,7 @@ namespace TechiesWeb.TeamBins.Controllers
             //Gets the issues assigned to the current user
             var listIssues = new List<IssueVM>();
 
-            var issueList = repo.GetIssues().Where(s=>s.IssueMembers.Any(f=>f.MemberID==UserID))
+            var issueList = repo.GetIssues(TeamID).Where(s => s.IssueMembers.Any(f => f.MemberID == UserID))
                 .OrderByDescending(x=>x.ID).Take(5);
             foreach (var issue in issueList)
             {

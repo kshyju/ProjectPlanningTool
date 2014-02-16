@@ -6,32 +6,31 @@
 <div>
    @Html.ActionLink("Add", "Add", "Team", null, new { @class = "popup" })
 </div>
-<table  class="table">
+<table class="tblGrid table">
     <tr>
         <th>Team Name</th>
         <th>Member type</th>
+        <th>Member count</th>
     </tr>
-@foreach(var team in Model.Teams)
-{
-  <tr>
-      <td>
-          @if (team.IsTeamOwner)
-          {
-            @Html.ActionLink(team.Name, "edit", "Team", new { id = team.ID }, new { @class="popup" })
-          }
-          else
-          {
-            <span>@team.Name</span>
-          }
-      </td>
-      <td>
-          @(team.IsTeamOwner?"Team Admin":"Team Member")
-
-      </td>
-  </tr>  
-     
-
-}
+    @foreach (var team in Model.Teams)
+    {
+        <tr>
+            <td>
+                @if (team.IsTeamOwner)
+                {
+                    @Html.ActionLink(team.Name, "edit", "Team", new { id = team.ID }, new { @class = "popup" })
+                }
+                else
+                {
+                    <span>@team.Name</span>
+                }
+            </td>
+            <td>
+                @(team.IsTeamOwner ? "Team Admin" : "Team Member")
+            </td>
+            <td>@Html.ActionLink(team.MemberCount.ToString(),"index","users",null,null)</td>
+        </tr>
+    }
 </table>
 <script type="text/javascript">
     $(function () {

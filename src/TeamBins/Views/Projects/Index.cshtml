@@ -8,33 +8,33 @@
        @if (Model.Projects.Count > 0)
 {
      @Html.ActionLink("Add New", "Add", "Projects", new { id=Model.TeamID}, new { @class = "aPopup" })
-    
-    <table class="table">
+
+    <table class="tblGrid table">
         <thead>
             <tr><th>Name</th><th></th></tr>
         </thead>
         <tbody>
-        @foreach (var project in Model.Projects)
-        {
-            <tr>
-                <td>
-                    @Html.ActionLink(project.Name, "details", "Projects", new { @id = project.ID }, new { @class = "listItem" })
-                    @if(project.IsDefaultProject)
-                    {
-                        <span class="def-project-item">Default project</span>
-                    }
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", "Projects", new { id = @project.ID }, new { @class = "aPopup" }) |
-                    @Html.ActionLink("Delete", "DeleteConfirm", "Projects", new { id = project.ID }, new { @class = "aPopup delete", @data_id = project.ID })
-              </td>
-            </tr>
-        }
-       </tbody>
+            @foreach (var project in Model.Projects)
+            {
+                <tr>
+                    <td>
+                        @Html.ActionLink(project.Name, "details", "Projects", new { @id = project.ID }, new { @class = "listItem" })
+                        @if (project.IsDefaultProject)
+                        {
+                            <span class="def-project-item">Default project</span>
+                        }
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", "Projects", new { id = @project.ID }, new { @class = "aPopup" }) |
+                        @Html.ActionLink("Delete", "DeleteConfirm", "Projects", new { id = project.ID }, new { @class = "aPopup delete", @data_id = project.ID })
+                    </td>
+                </tr>
+            }
+        </tbody>
     </table>
 }
-else
-{
+       else
+       {
   <div>
     <p>No projects found ! you need to create atleast one project before you start creating issues.</p>
     @Html.ActionLink("Create a project now", "Add", "Projects", new { id = Model.TeamID }, new { @class = "aPopup" })

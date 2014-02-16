@@ -31,7 +31,8 @@ namespace TechiesWeb.TeamBins.Controllers
             var teamListVM = new TeamListVM();
             foreach (var team in teams)
             {
-                teamListVM.Teams.Add(new TeamVM { ID = team.ID, Name = team.Name , IsTeamOwner=team.CreatedByID==UserID });
+                int teamMemberCount = team.TeamMembers.Count();
+                teamListVM.Teams.Add(new TeamVM { ID = team.ID, Name = team.Name ,MemberCount=teamMemberCount, IsTeamOwner=team.CreatedByID==UserID });
             }
             return View(teamListVM);
         }
