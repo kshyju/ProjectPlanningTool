@@ -7,90 +7,69 @@
 <script src="~/Scripts/angular.min.js"></script>
 <script src="~/Scripts/jquery.signalR-2.0.2.min.js"></script>
 <script src="~/signalr/hubs"></script>
-<script src="~/Scripts/issue.js"></script>
-@if(Model.ProjectsExist)
-{
-<div ng-app="issueListApp">
-<div id="leftContentPane">
-<h2>Recent Issues</h2>
-<div class="btnBar">
-    <div id="quick_create">
-        <input type="text" name="NewItemTitle" placeholder="Create Item" id="NewItemTitle" />
-        <div id="default_items">
-            <div class="default_item">
-                <img class="default_item_img" src="~/Content/images/feature-icon.png" />
-            </div>
-        </div>
 
-    </div>
-    <div>
-        <ul class="navtab">
-            <li>             
-                 <a href="@Url.Action("Index","Issues")" class="aIteration @(Model.CurrentTab=="Current"?"aIterationActive":"")">Current</a>
-            </li>
-            <li>               
-                <a href="@Url.Action("Backlog","Issues")" class="aIteration @(Model.CurrentTab=="Backlog"?"aIterationActive":"")">Backlog</a>
-            </li>
-            <li>               
-                <a href="@Url.Action("Completed","Issues")" class="aIteration @(Model.CurrentTab=="Completed"?"aIterationActive":"")">Completed</a>
-            </li>
-        </ul>
-    </div>
-    <div id="createEditMode">
-        <div id="changeLabel">
-     Create and Edit
-            </div>
-        <div class="onoffswitch">
-    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" @(Model.IsCreateAndEditEnabled?"checked":"") >
-          
-    <label class="onoffswitch-label" for="myonoffswitch">
-        <div class="onoffswitch-inner"></div>
-        <div class="onoffswitch-switch"></div>
-    </label>
-</div>
-    </div>
-</div>
-<table class="tblGrid" id="issueTbl">
-    <tr>
-        <th>#</th>
-        <th></th>
-        <th>Title</th>
-        <th>Opened By</th>       
-        <th>Priority</th>
-        <th>Status</th>
-        <th>Opened Date</th>
-    </tr>
-@{        
-    bool isOdd = false;
-}
-@foreach (var issue in Model.Bugs)
+@if (Model.ProjectsExist)
 {
-    <tr class="@(isOdd==true?@Html.Raw("trOdd"):@Html.Raw("trEven"))">
-        <td>@issue.ID</td>
-        <td><div class="issue-icon-@issue.Category" title="@issue.Category" ></div></td>
-        <td>@Html.ActionLink(issue.Title, "details", new { @id = issue.ID },null)</td>
-        <td>@issue.OpenedBy</td>       
-        <td>@issue.Priority</td>
-        <td>@issue.Status</td>
-        <td> @issue.CreatedDate </td>
-    </tr>
-    isOdd = !isOdd;
-}
-</table>
-</div>
-<div id="rightPanel">
-    <div id="activityStream" ng-controller="IssueListCtrl">
-        <h4>Activity</h4>
-        <div id="activityList">
-            <div class="activity-item" ng-repeat="activity in activities | orderBy:'Id':true">
-               <a href="#" class="activity-author">{{activity.Author}}</a> {{activity.Activity}} <a href="{{activity.ObjectURL}}" class="activity-name">{{activity.ObjectTite}}</a>       
-               <i>{{activity.NewState}}</i>       
-               <p class="activity-date" >{{activity.CreatedDate | date:'medium'}}</p>
+    <div ng-app="issueListApp" ng-controller="IssueListCtrl">
+        <div id="leftContentPane">
+            <h2>Recent Issues</h2>
+            <div class="btnBar">
+                <div id="quick_create">                    
+                        <input type="text" ng-keyup="create($event)" name="NewItemTitle" placeholder="Create Item" id="NewItemTitle" />
+                        <div id="default_items">
+                            <div class="default_item">
+                                <img class="default_item_img" src="~/Content/images/feature-icon.png" />
+                            </div>
+                        </div>                    
+                </div>
+                <div class="iterations">
+                    <ul class="navtab">
+                        <li>
+                            <a href="#current" ng-click="updateview('current')" class="aIteration @(Model.CurrentTab=="Current"?"aIterationActive":"")">Current</a>
+                        </li>
+                        <li>
+                            <a href="#backlog" ng-click="updateview('backlog')" class="aIteration @(Model.CurrentTab=="Backlog"?"aIterationActive":"")">Backlog</a>
+                        </li>
+                        <li>
+                            <a href="#completed" ng-click="updateview('completed')" class="aIteration @(Model.CurrentTab=="Completed"?"aIterationActive":"")">Completed</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <table class="tblGrid" id="issueTbl">
+                <tr>
+                    <th>#</th>
+                    <th></th>
+                    <th>Title</th>
+                    <th>Opened By</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                    <th>Opened Date</th>
+                </tr>                
+                <tr ng-repeat="issue in issueList|orderBy:'ID':true" ng-class-odd="'trOdd'" ng-class-even="'trEven'">
+                    <td>{{issue.ID}}</td>
+                    <td><div class="issue-icon-{{issue.Category}}" title="{{issue.Category}}"></div></td>
+                    <td><a href="~/issues/details/{{issue.ID}}">{{issue.Title}}</a></td>
+                    <td>{{issue.OpenedBy}}</td>
+                    <td>{{issue.Priority}}</td>
+                    <td>{{issue.Status}}</td>
+                    <td>{{issue.CreatedDate}} </td>
+                </tr>
+            </table>           
+        </div>
+        <div id="rightPanel">
+            <div id="activityStream">
+                <h4>Activity</h4>
+                <div id="activityList">
+                    <div class="activity-item" ng-repeat="activity in activities | orderBy:'Id':true">
+                        <a href="#" class="activity-author">{{activity.Author}}</a> {{activity.Activity}} <a href="{{activity.ObjectURL}}" class="activity-name">{{activity.ObjectTite}}</a>
+                        <i>{{activity.NewState}}</i>
+                        <p class="activity-date">{{activity.CreatedDate | date:'medium'}}</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
-</div>    
 }
 else
 {
@@ -99,29 +78,13 @@ else
         @Html.ActionLink("Create Projects","Index","Projects")
     </div>
 }
-          
+<input type="hidden" id="TeamID" value="@Model.TeamID" /> 
+<script src="~/Scripts/issue.js"></script>         
 <script type="text/javascript">
     var addIssueUrl = "@Url.Action("Add","ISsues")";
     var editIssueUrl = "@Url.Action("edit","issues")";
     var savePrefUrl = "@Url.Action("SavePreference", "Issues")";
    
-    var issueListApp = angular.module('issueListApp', []);
-    issueListApp.controller('IssueListCtrl', function ($scope, $http) {
-        $http.get('../../team/stream/@Model.TeamID' + "?size=20").success(function (data) {
-            $scope.activities = data;
-        });
 
-        var chat = $.connection.issuesHub;
-        chat.client.addNewTeamActivity = function (comment) {
-            $scope.activities.push(comment);
-            $scope.$apply();
-        };
-
-        $.connection.hub.start().done(function () {
-            chat.server.subscribeToTeam(@Model.TeamID)
-        })
-
-    });
-     
 
 </script>

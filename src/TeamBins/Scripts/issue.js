@@ -1,41 +1,56 @@
-$(function () { 
-    $("input#NewItemTitle").keyup(function (e) {        
-        if(e.keyCode == 13)        {
-            $(this).trigger("enterKey");
-        }
+var issueListApp = angular.module('issueListApp', []);
+issueListApp.config(['$httpProvider', function ($httpProvider) {
+    $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
+}]);
+    
+issueListApp.controller('IssueListCtrl', function ($scope, $http) {
+    $scope.activities = [];
+    $scope.issuesList = [];
+    $http.get('../issues?size=25').success(function (data) {
+        $scope.issueList = data;
     });
-    $("input#NewItemTitle").bind("enterKey", function (e) {
-        var _this = $(this);
-       
-        e.preventDefault();
-        $.post(addIssueUrl, { Title: _this.val() }, function (data) {
-            if (data.Status == "Success") {
-                _this.val("");
-                var secondRow = $("#issueTbl tr").eq(1);
-                var newRowClass="trOdd";
-                if (secondRow.hasClass("trOdd"))
-                {
-                    newRowClass="trEven";
-                }               
-                var newRow = "<tr class='" + newRowClass + "'><td>" + data.Item.ID + "</td><td><div class='issue-icon-" + data.Item.Category + "' title='" + data.Item.Category + "'></div></td><td><a class='popup' href='" + editIssueUrl + "/" + data.Item.ID + "'>" + data.Item.Title + "</a></td><td>" + data.Item.OpenedBy + "</td><td>" + data.Item.Priority + "</td><td>" + data.Item.Status + "</td><td>" + data.Item.CreatedDate + "</td></tr>";
+    $http.get('../../team/stream/' + $("#TeamID").val() + "?size=6").success(function (data) {
+        $scope.activities = data;
+    });
+    $scope.create = function (e) {
+        if (e.keyCode == 13)
+        {
+            if ($("#NewItemTitle").val() != "") {
+                $.post(addIssueUrl, { Title: $("#NewItemTitle").val() }, function (data) {
+                    if (data.Status === "Error") {
+                        alert(data.Message);
+                    }
+                    else {
+                        $("#NewItemTitle").val("");
+                    }
+                });
+            }
+        }        
+    };
 
-                secondRow.before(newRow);
-                if ($("#myonoffswitch").is(":checked")) {                    
-                    ShowModel(editIssueUrl + "/" + data.Item.ID, data.Item.Title);                    
-                }
-            }
-            else
-            {
-                alert(data.Message);
-            }
-        });
-    });
-   
-    //Save the user preference to session
-    $("#myonoffswitch").click(function () {
-        var switchVal = $(this).is(":checked");
-        $.post(savePrefUrl, { CreateAndEditMode: switchVal });
-    });
+    $scope.updateview = function (iteration) {       
+        $http.get('../issues?size=25&iteration=' + iteration).success(function (data) {
+            $scope.issueList = data;
+        });       
+    };
+  
+    var chat = $.connection.issuesHub;
+    chat.client.addNewTeamActivity = function (comment) {
+        $scope.activities.push(comment);
+        $scope.$apply();
+    };
+
+    chat.client.addIssueToIssueList = function (issue) {       
+        $scope.issueList.push(issue);
+        $scope.$apply();       
+    };
+    $.connection.hub.start().done(function () {
+        chat.server.subscribeToTeam($("#TeamID").val())
+    })   
+});
+    
+
+$(function () {
 
     //Auto complete for assign issue member
     $("#txtAssignMember").autocomplete({

@@ -36,14 +36,32 @@ namespace TechiesWeb.TeamBins.ViewModels
     {
 
     }
+
+    public class IssueDetailVM : IssueVM
+    {
+        public bool IsStarredForUser { set; get; }
+        public List<DocumentVM> Images { set; get; }
+        public List<DocumentVM> Attachments { set; get; }
+        public List<MemberVM> Members { set; get; }
+        public List<CommentVM> Comments { set; get; }
+        public bool IsEditableForCurrentUser { set; get; }
+        public int TeamID { set; get; }
+        public int ProjectID { set; get; }
+        public string LastModifiedDate { set; get; }
+
+        public IssueDetailVM()
+        {
+            Images = new List<DocumentVM>();
+            Attachments = new List<DocumentVM>();
+            Members = new List<MemberVM>();
+            Comments = new List<CommentVM>();           
+        }
+    }
+
     public class IssueVM
     {
         public int ID { set; get; }
-
-        [StringLength(120)]
-        [Required]
         public string Title { set; get; }
-     
         [DataType(DataType.MultilineText)]
         [AllowHtml]
         public string Description { set; get; }
@@ -54,31 +72,10 @@ namespace TechiesWeb.TeamBins.ViewModels
         public string OpenedBy { set; get; }
         public string LastModifiedBy { set; get; }
         public string Iteration { set; get; }
-
-        public int TeamID { set; get; }
-        public int ProjectID { set; get; }
         public string Project { get; set; }
-        public string CreatedDate { set; get; }
-        public string LastModifiedDate { set; get; }
-        public bool IsShowStopper { set; get; }
+        public string CreatedDate { set; get; }      
+        public string IssueDueDate { set; get; }      
 
-        public string IssueDueDate { set; get; }
-        public bool IsStarredForUser { set; get; }
-
-        public List<DocumentVM> Images { set; get; }
-        public List<DocumentVM> Attachments { set; get; }
-
-        public List<MemberVM> Members { set; get; }
-        public List<CommentVM> Comments { set; get; }
-        public bool IsEditableForCurrentUser { set; get; }
-        public IssueVM()
-        {
-            Images = new List<DocumentVM>();
-            Attachments = new List<DocumentVM>();
-            Members = new List<MemberVM>();
-            Comments = new List<CommentVM>();
-           
-        }
     }
 
     public class DocumentVM
@@ -93,7 +90,7 @@ namespace TechiesWeb.TeamBins.ViewModels
     
     }
 
-    public class CreateIssue : IssueVM
+    public class CreateIssue : IssueDetailVM
     {
 
         public bool IsFromModalWindow { set; get; }

@@ -61,6 +61,10 @@ namespace TechiesWeb.TeamBins.Controllers
         {
             return View(new TeamVM());
         }*/
+        public ActionResult Add()
+        {
+            return PartialView("Edit", new TeamVM());
+        }
         public ActionResult Edit(int id)
         {
              var team = repo.GetTeam(id);
@@ -126,9 +130,16 @@ namespace TechiesWeb.TeamBins.Controllers
                         team = repo.GetTeam(model.ID);
                         team.Name = model.Name;                       
                     }
+                    else
+                    {
+                        team.CreatedByID = UserID;
+                    }
                     var result = repo.SaveTeam(team);
                     if (result != null)
                     {
+                        //If it is a new team, add the user as team member
+                        var teamMember = new TeamMember { MemberID = UserID, TeamID = team.ID, CreatedByID = UserID };
+                        repo.SaveTeamMember(teamMember);
                         return Json(new { Status = "Success" });
                     }
                 }

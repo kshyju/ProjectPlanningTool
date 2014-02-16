@@ -1,0 +1,46 @@
+// aaaaaabbbbbccc => 6a5b3c
+// aaaaaa…a (> 255 times) 255a3a
+// aaabbb => 3a3b
+public 
+
+
+byte[] RunLengthEncode(byte[] input) {
+ 
+  var charArray[]=GetCharArrayFromByteArra();
+  var result=””;
+   int charCounter=0;
+  var actualResult=””;
+  int maxLimit=255;
+  for(int i=0;i<charArrray.length;i++)
+  {
+     if(i<charArray.Length)
+     {
+
+      var currentIte=charArray[i];
+     var nextItem=charArray[i+1];
+     if(charArray.Length==i+1)
+     {
+        actualResult=actualResult+currentItem+”1”;
+     }
+     if(currentItem==nextItem)
+     {
+       result=currentItem;
+       charCounter++;       
+     }
+     else
+     {
+        
+       result=result+charCiunter.ToString();
+       charCounter=0;
+       actualResult=actualResult+result;
+     }
+      
+     if(charCounter==macLimit)
+     {
+       result=result+maxLimit.ToString());
+       charCounter=0;
+       actualResult=actualResult+result;
+    }
+   }
+  }
+}

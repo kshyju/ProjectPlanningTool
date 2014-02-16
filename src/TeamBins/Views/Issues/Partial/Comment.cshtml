@@ -1,9 +1,0 @@
-﻿@model TechiesWeb.TeamBins.ViewModels.CommentVM
-<div class="commentItem">          
-    <img src="@Model.AvatarHash" />         
-    <div class="commentItemBody" >
-        <span class="cmntAuthorName">@Model.AuthorName</span> <br>       
-        <span class="commentmetadata" title="@Model.CreativeDate">@Model.CreatedDateRelative</span>
-        <p>@Html.Raw(HttpUtility.HtmlDecode(Model.CommentBody))</p>
-    </div>
-</div>

@@ -64,7 +64,42 @@ namespace TeamBins.Services
             }
             return activityVM;
         }*/
-        public void SetUserPermissionsForIssue(IssueVM issueVm,int currentUserId=0,int teamId=0)
+
+        public List<IssueVM> GetIssueListVMs(string iteration, int teamId, int size)
+        {
+            string iterationName = LocationType.SPRNT.ToString();
+            if(iteration=="backlog")
+            {
+                iterationName = LocationType.BKLOG.ToString();
+            }
+            else if(iteration=="completed")
+            {
+                iterationName = LocationType.ARCHV.ToString();
+            }
+
+            var bugList = repo.GetIssues(teamId).Where(g => g.Location == iterationName).OrderByDescending(s => s.ID).Take(size).ToList();
+            List<IssueVM> issueList = new List<IssueVM>();
+            foreach (var bug in bugList)
+            {
+                var issueVM = GetIssueVM(bug);
+                issueList.Add(issueVM);
+            }
+            return issueList;
+        }
+
+        public IssueVM GetIssueVM(Issue bug)
+        {
+            var issueVM = new IssueVM { ID = bug.ID, Title = bug.Title, Description = bug.Description };
+            issueVM.OpenedBy = bug.CreatedBy.FirstName;
+            issueVM.Priority = bug.Priority.Name;
+            issueVM.Status = bug.Status.Name;
+            issueVM.Category = bug.Category.Name;
+            issueVM.Project = (bug.Project!=null?bug.Project.Name:"");
+            issueVM.CreatedDate = bug.CreatedDate.ToShortDateString();
+            return issueVM;
+        }
+
+        public void SetUserPermissionsForIssue(IssueDetailVM issueVm, int currentUserId = 0, int teamId = 0)
         {
             if(currentUserId>0)
             {
@@ -75,7 +110,7 @@ namespace TeamBins.Services
                 }
             }
         }
-        public void LoadIssueMembers(int id, IssueVM issueVm,int currentUserId=0)
+        public void LoadIssueMembers(int id, IssueDetailVM issueVm, int currentUserId = 0)
         {
 
             var issueMemberRelations = repo.GetIssueMembers(id);

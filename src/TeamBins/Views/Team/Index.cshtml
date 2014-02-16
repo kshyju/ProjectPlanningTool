@@ -4,7 +4,7 @@
 @model TechiesWeb.TeamBins.ViewModels.TeamListVM
 <h2>Teams</h2>
 <div>
-   
+   @Html.ActionLink("Add", "Add", "Team", null, new { @class = "popup" })
 </div>
 <table  class="table">
     <tr>

@@ -316,17 +316,17 @@ div.divCenterMsg
 }
 div#quick_create
 {
-    display: block;
+    
     font-size: 12px;
     padding: 10px;
-    position: relative;width: 100%; padding-left:0px; padding-right:0px;
+    width: 100%; padding-left:0px; padding-right:0px;
     padding-bottom:3px;
   
 }
 div#quick_create input
 {
  border:1px solid gray; 
-    display: block;
+   
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
     font-size: 12px;
    
@@ -755,9 +755,14 @@ div.dashboardItem
 	{
 		margin:0px;
 	}
+    .iterations
+    {
+        overflow:auto;
+    }
 ul.navtab
 {
 	list-style:none;	
+    overflow:auto; margin:0px;padding: 5px 16px !IMPORTANT;
 }
 ul.navtab li
 {
@@ -765,58 +770,19 @@ ul.navtab li
 }
 a.aIteration
 {
-	background-color: #99CB38;
+background-color: #99CB38;
 color: white;
-padding: 5px 18px;
-line-height: 19px;
-
-padding-bottom: 8px;
-line-height: 18px;
+padding: 6px 16px 6px 16px !IMPORTANT;
+line-height: 13px;
 border: 1px solid gray;
 -webkit-border-radius: 4px 4px 0 0;
 -moz-border-radius: 4px 4px 0 0;
 border-radius: 4px 4px 0 0;
 }
-a.aIterationActive
+a.aIteration:hover
 {
-	background-color: white;
-color: green;
-}
-
-.card {
-    background-color: #FFFFFF;
-    border: 1px solid #D4D4D4;
-    height: 100px;
-    margin-bottom: 20px;
-    position: relative;
-    width: 225px;  
-    float: left;
-    margin-left: 30px;
-    min-height: 1px;
-}
-.cardHeader {
-    background-color: #007ACC;
-    color: #FFFFFF;
-    font-size: 14pt;
-    padding: 5px;
-}
-.cardBody {
-    padding-left: 5px;
-}
-.cardContainer {
-    width:95%;
-}
-.cardImage {
-    height: 50px;
-    margin-top: 10px;
-    width: 50px;
-}
-.cardBodyLeft {
-    float:left;
-}
-.cardBodyRight {
-    float:left;
-    margin-left:2px;
+    text-decoration:none;
+    background-color:#348e2d;color: white;
 }
 .navbar-inner.toolbar {
     background-color: #FAFAFA;
@@ -982,13 +948,15 @@ border-bottom-left-radius: 0;
 }
 .available-team {
      background:#E6EFF4;
-     height:30px;
-     margin:4px; padding:4px;
-     color:black; font-weight:bold;
-     margin-bottom:4px;  margin-top:1px; 
+     height:28px;
+     margin:4px; padding:4px; 
+     color:black; 
+     margin-bottom:1px;  margin-top:1px; 
 
 }
-
+.available-team:hover{
+    background: #76a7fa;
+}
 .available-teams a:hover{
     text-decoration:none;
     background-color:#CFE0EA;

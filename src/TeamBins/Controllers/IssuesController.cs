@@ -68,19 +68,35 @@ namespace TechiesWeb.TeamBins.Controllers
             }
         }
 
-        public ActionResult Index()
+
+        public ActionResult Index(int size = 50, string iteration = "current")
         {
             try
             {                
                 IssueListVM bugListVM = new IssueListVM ();
                 var projectList = repo.GetProjects(TeamID).ToList();
-
-                if (projectList.Count > 0)
+                                
+                if(projectList.Count==0)
                 {
-                    bugListVM = GetBugList(LocationType.SPRNT.ToString(), TeamID);
-                    bugListVM.ProjectsExist = true;
+                    return RedirectToAction("Index", "Projects");
                 }
-                return View("Index", bugListVM);
+                else 
+                {
+                    List<IssueVM> issueVMs = new List<IssueVM>();
+
+                    if (Request.IsAjaxRequest())
+                    {
+                        issueVMs = issueService.GetIssueListVMs(iteration, TeamID, size);
+                        return Json(issueVMs, JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        bugListVM = GetBugList(LocationType.SPRNT.ToString(), TeamID);
+                        bugListVM.ProjectsExist = true;
+                        return View("Index", bugListVM);
+                    }
+                }
+               
             }
             catch (Exception ex)
             {
@@ -131,23 +147,18 @@ namespace TechiesWeb.TeamBins.Controllers
                         if (issue != null)
                         {
                             var teamActivity = SaveActivity(model, issue,issuePreviousVersion,  status,result.OperationID, model.ID== 0);
-
+                            var context = GlobalHost.ConnectionManager.GetHubContext<IssuesHub>();
                             if (teamActivity != null)
                             {
-                                var activityVM = issueService.GetActivityVM(teamActivity);
-                                var context = GlobalHost.ConnectionManager.GetHubContext<IssuesHub>();
+                                var activityVM = issueService.GetActivityVM(teamActivity);                              
                                 context.Clients.Group(TeamID.ToString()).addNewTeamActivity(activityVM);
                             }
                             if (Request.IsAjaxRequest())
                             {
-                                var issueVM = new IssueVM { ID = result.OperationID, Title = issue.Title };
-                                issueVM.Priority = issue.Priority.Name;
-                                issueVM.Status = issue.Status.Name;
-                                issueVM.OpenedBy = issue.CreatedBy.FirstName;
-                                issueVM.Category = issue.Category.Name;
-                                issueVM.CreatedDate = issue.CreatedDate.ToShortDateString();
+                                var issueVM = issueService.GetIssueVM(issue);
+                                context.Clients.Group(TeamID.ToString()).addIssueToIssueList(issueVM);
 
-                                return Json(new { Status = "Success", Item = issueVM });
+                                return Json(new { Status = "Success" });
                             }
                         }
                     }
@@ -244,7 +255,7 @@ namespace TechiesWeb.TeamBins.Controllers
 
                 var bug = repo.GetIssue(issueId);
 
-                IssueVM bugVm = new IssueVM { ID = bug.ID, Title = bug.Title, Description = bug.Description };
+                IssueDetailVM bugVm = new IssueDetailVM { ID = bug.ID, Title = bug.Title, Description = bug.Description };
                 bugVm.CreatedDate = bug.CreatedDate.ToString("g");
                 bugVm.OpenedBy = bug.CreatedBy.FirstName;
                 bugVm.Title = bug.Title;
@@ -354,7 +365,7 @@ namespace TechiesWeb.TeamBins.Controllers
 
         public ActionResult IssueMembers(int id)
         {
-            var vm = new IssueVM { ID = id };
+            var vm = new IssueDetailVM { ID = id };
             issueService.LoadIssueMembers(id, vm,UserID);
             issueService.SetUserPermissionsForIssue(vm, UserID, TeamID);
             return PartialView("Partial/Members", vm);
@@ -492,24 +503,13 @@ namespace TechiesWeb.TeamBins.Controllers
         private IssueListVM GetBugList(string iteration,int teamId, int size = 25)
         {
             var vm = new IssueListVM { CurrentTab = iteration, TeamID = teamId };
-            var bugList = repo.GetIssues(teamId).Where(g => g.Location == iteration).OrderByDescending(s => s.ID).Take(size).ToList();
-
-            foreach (var bug in bugList)
-            {
-                var issueVM = new IssueVM { ID = bug.ID, Title = bug.Title, Description = bug.Description };
-                issueVM.OpenedBy = bug.CreatedBy.FirstName;
-                issueVM.Priority = bug.Priority.Name;
-                issueVM.Status = bug.Status.Name;
-                issueVM.Category = bug.Category.Name;
-                issueVM.Project = bug.Project.Name;
-                issueVM.CreatedDate = bug.CreatedDate.ToShortDateString();
-                vm.Bugs.Add(issueVM);
-            }
-
+            List<IssueVM> issueList = issueService.GetIssueListVMs(iteration, teamId, size);
+            vm.Bugs = issueList;
             // Set the user preference
             vm.IsCreateAndEditEnabled = CreateAndEditMode;
             return vm;
         }
+        
 
         private void LoadDropDownsForCreate(CreateIssue viewModel)
         {
@@ -616,19 +616,6 @@ namespace TechiesWeb.TeamBins.Controllers
             }
             return null;
         }
-
-        private void LoadComments(int id, IssueVM bugVm)
-        {
-            var commentList = repo.GetCommentsForIssue(id);
-            foreach (var item in commentList)
-            {
-                var commentVM = new CommentVM { ID = item.ID, CommentBody = item.CommentText, AuthorName = item.Author.FirstName, CreativeDate = item.CreatedDate.ToString("g") };
-                commentVM.AvatarHash = UserService.GetImageSource(item.Author.EmailAddress, 42);
-                commentVM.CreatedDateRelative = item.CreatedDate.ToShortDateString();//.ToRelativeDateTime();
-                bugVm.Comments.Add(commentVM);
-            }
-        }
-
 
         
         #endregion private methods
