@@ -4,17 +4,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using TeamBins.DataAccess;
+using TeamBins.Helpers.Enums;
+using TeamBins.Services;
 using TechiesWeb.TeamBins.ViewModels;
 namespace TechiesWeb.TeamBins.Controllers
 {
     public class DashboardController : BaseController
-    { 
+    {        
         public DashboardController()
         {
-            repo=new Repositary();
+            repo=new Repositary();            
         }
         public DashboardController(IRepositary repositary) : base(repositary)
-        {            
+        {           
 
         }
       
@@ -46,6 +48,15 @@ namespace TechiesWeb.TeamBins.Controllers
                 return View("Error");
             }
         }
+
+        public JsonResult GetDashBoardItemSummary()
+        {
+            var issueService = new IssueService(repo, UserID, TeamID);
+            var vm = issueService.GetDashboardSummaryVM(TeamID);
+            return Json(vm, JsonRequestBehavior.AllowGet);
+        }
+
+
 
         private List<IssueVM> GetRecentIssues()
         {

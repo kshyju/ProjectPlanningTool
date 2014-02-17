@@ -9,7 +9,7 @@ namespace TechiesWeb.TeamBins.ExtensionMethods
     {
         public static string ToJSONFriendlyDateTime(this DateTime dateTime)
         {
-            return dateTime.ToString("yyy-MM-ddTH:mm:ssZ");
+            return dateTime.ToString("yyy-MM-ddTHH:mm:ssZ");
         }
         public static string ToRelativeDateTime(this DateTime dateTime)
         {

@@ -117,16 +117,12 @@ namespace TechiesWeb.TeamBins.Controllers
                     if (model.ID != 0)
                     {
                         bug = repo.GetIssue(model.ID);                      
-                    }
-                    else
-                    {
-                        bug.Description = model.Title;
-                    }
+                    }                    
 
                     issuePreviousVersion = ObjectCloner.DeepClone<Issue>(bug);
 
                     bug.Title = model.Title;
-                    bug.Description = model.Description;
+                    bug.Description = (string.IsNullOrEmpty(model.Description) ? model.Title : model.Description);
                     bug.TeamID = TeamID;
                    
                     LoadDefaultIssueValues(bug, model);
@@ -156,11 +152,16 @@ namespace TechiesWeb.TeamBins.Controllers
                                 var activityVM = issueService.GetActivityVM(teamActivity);                              
                                 context.Clients.Group(TeamID.ToString()).addNewTeamActivity(activityVM);
                             }
+                            //update the dashboard
+                            var dashboardSummary = issueService.GetDashboardSummaryVM(TeamID);
+                            context.Clients.Group(TeamID.ToString()).updateDashboardSummary(dashboardSummary);
                             if (Request.IsAjaxRequest())
                             {
-                                var issueVM = issueService.GetIssueVM(issue);
-                                context.Clients.Group(TeamID.ToString()).addIssueToIssueList(issueVM);
-
+                                if (model.ID == 0)
+                                {
+                                    var issueVM = issueService.GetIssueVM(issue);
+                                    context.Clients.Group(TeamID.ToString()).addIssueToIssueList(issueVM);
+                                }
                                 return Json(new { Status = "Success" });
                             }
                         }

@@ -19,6 +19,15 @@ namespace SmartPlan.ViewModels
             IssuesAssignedToMe = new List<IssueVM>();
         }
     }
+
+    public class DashBoardItemSummaryVM
+    {
+        public int CurrentItems { set; get; }
+        public int ItemsInProgress { set; get; }
+        public int NewItems { set; get; }
+        public int BacklogItems { set; get; }
+        public int CompletedItems { set; get; }
+    }
     
     
 }

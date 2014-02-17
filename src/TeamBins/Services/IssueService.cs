@@ -5,6 +5,7 @@ using TechiesWeb.TeamBins.ViewModels;
 using System;
 using TeamBins.Helpers.Enums;
 using TechiesWeb.TeamBins.ExtensionMethods;
+using SmartPlan.ViewModels;
 namespace TeamBins.Services
 {
 
@@ -64,6 +65,18 @@ namespace TeamBins.Services
             }
             return activityVM;
         }*/
+
+        public DashBoardItemSummaryVM GetDashboardSummaryVM(int teamId)
+        {
+            var vm = new DashBoardItemSummaryVM();
+            var issues = repo.GetIssues(teamId);
+            vm.CurrentItems = issues.Where(s => s.Location == LocationType.SPRNT.ToString()).Count();
+            vm.CompletedItems = issues.Where(s => s.Location == LocationType.ARCHV.ToString()).Count();
+            vm.BacklogItems = issues.Where(s => s.Location == LocationType.BKLOG.ToString()).Count();
+            vm.ItemsInProgress = issues.Where(s => s.Status.Name.ToUpper() == "IN PROGRESS").Count();
+            vm.NewItems = issues.Where(s => s.Status.Name.ToUpper() == "NEW").Count();
+            return vm;
+        }
 
         public List<IssueVM> GetIssueListVMs(string iteration, int teamId, int size)
         {
