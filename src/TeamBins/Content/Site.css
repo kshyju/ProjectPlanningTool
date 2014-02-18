@@ -992,5 +992,9 @@ ul.db-recent-activity {
 }
 .dashboard-ataglance span
 {
-    font-weight:bold;
+    font-weight:bold; font-size:16px;
+}
+div.dashboard-ataglance {
+    padding:3px;
+    padding-left:6px;
 }
