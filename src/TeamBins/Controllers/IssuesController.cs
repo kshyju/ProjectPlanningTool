@@ -106,6 +106,7 @@ namespace TechiesWeb.TeamBins.Controllers
         }
 
         [HttpPost]
+        [VerifyLogin]
         public ActionResult Add(CreateIssue model, List<HttpPostedFileBase> files)
         {
             try
@@ -316,12 +317,6 @@ namespace TechiesWeb.TeamBins.Controllers
             }
         }
 
-        [HttpPost]
-        public int SavePreference(bool CreateAndEditMode)
-        {
-            Session["CreateAndEditMode"] = CreateAndEditMode;
-            return 1;
-        }
 
         [HttpPost]
         [VerifyLogin]
@@ -353,7 +348,7 @@ namespace TechiesWeb.TeamBins.Controllers
            
         }
 
-        [HttpPost]
+        [HttpPost]      
         public int AddMember(int memberId, int issueId)
         {
             try
@@ -377,6 +372,7 @@ namespace TechiesWeb.TeamBins.Controllers
         }
 
         [HttpPost]
+        [VerifyLogin]
         public ActionResult Comment(NewIssueCommentVM model)
         {
             try
@@ -410,19 +406,6 @@ namespace TechiesWeb.TeamBins.Controllers
             }
         }
 
-        public ActionResult Comment(int id)
-        {
-            var comment = repo.GetComment(id);
-            if (comment != null)
-            {
-                var commentVM = new CommentVM { ID = comment.ID, AuthorName = comment.Author.FirstName, CommentBody = comment.CommentText, CreativeDate = comment.CreatedDate.ToString("g") };
-                commentVM.AvatarHash = UserService.GetImageSource(comment.Author.EmailAddress, 42);
-                commentVM.CreatedDateRelative = comment.CreatedDate.ToShortDateString(); //.ToRelativeDateTime();
-                return PartialView("Partial/Comment", commentVM);
-            }
-            return Content("");
-        }
-
         public ActionResult Delete(int id)
         {
             var deleteConfirmVM = new DeleteIssueConfirmationVM { ID = id };
@@ -449,6 +432,7 @@ namespace TechiesWeb.TeamBins.Controllers
         }
 
         [HttpPost]
+        [VerifyLogin]
         public void SaveDueDate(string issueDueDate, int issueId)
         {
             try

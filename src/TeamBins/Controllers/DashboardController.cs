@@ -9,6 +9,7 @@ using TeamBins.Services;
 using TechiesWeb.TeamBins.ViewModels;
 namespace TechiesWeb.TeamBins.Controllers
 {
+    [VerifyLogin]
     public class DashboardController : BaseController
     {        
         public DashboardController()
@@ -19,7 +20,7 @@ namespace TechiesWeb.TeamBins.Controllers
         {           
 
         }
-      
+        
         public ActionResult Index(int? teamid,string teamname = "")
         {
             try

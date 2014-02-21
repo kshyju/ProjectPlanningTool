@@ -1006,3 +1006,26 @@ div.dashboard-ataglance {
 {
     font-weight:bold;
 }
+.db-pieChartLegends {
+    width:150px; 
+    height:200px; float:right; padding-top:80px;
+}
+.db-chart-legend {
+    width:16px; height:16px; border:1px solid black;float:left;
+}
+.legendtext {
+    padding-left:5px; float:left;
+}
+.legends li{
+    width:100%; overflow:auto;
+}
+.spn-new {background-color:#EDC240;
+}
+.spn-inprogress {background-color:#74B9EE;
+}
+.spn-closed {
+    background-color:#229A5A;
+}
+#pieChart {
+    padding:5px;  padding-right:4px; padding-left:10px;
+}

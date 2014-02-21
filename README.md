@@ -15,6 +15,7 @@ Built with
 * ASP.NET SignalR
 * Angular JS
 * jQuery
+* Chart.Js
 * Twitter bootstrap
 * Log4net
 * Entity framework 

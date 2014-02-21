@@ -7,6 +7,7 @@ using TechiesWeb.TeamBins.ViewModels;
 
 namespace TechiesWeb.TeamBins.Controllers
 {
+    [VerifyLogin]
     public class ProjectsController : BaseController
     {        
         private UserService userService;

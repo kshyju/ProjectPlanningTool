@@ -9,7 +9,7 @@ using TeamBins.Helpers.Enums;
 using TechiesWeb.TeamBins.Infrastructure;
 namespace TechiesWeb.TeamBins.Controllers
 {
-
+    [VerifyLogin]
     public class TeamController : BaseController
     {       
        private IssueService issueService;

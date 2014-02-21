@@ -290,6 +290,7 @@
     <Content Include="Scripts\bootstrap-datepicker.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\Chart.min.js" />
     <Content Include="Scripts\chosen\chosen-sprite%402x.png" />
     <Content Include="Scripts\chosen\chosen-sprite.png" />
     <Content Include="Scripts\chosen\chosen.css" />

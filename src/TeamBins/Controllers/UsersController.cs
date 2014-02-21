@@ -18,6 +18,7 @@ namespace TechiesWeb.TeamBins.Controllers
         {
         }
 
+        [VerifyLogin]
         public ActionResult Index()
         {
             try
@@ -50,6 +51,7 @@ namespace TechiesWeb.TeamBins.Controllers
         }
 
         [HttpPost]
+        [VerifyLogin]
         public ActionResult Add(AddTeamMemberRequestVM model)
         {
             // This method adds a user to the team
@@ -158,7 +160,8 @@ namespace TechiesWeb.TeamBins.Controllers
             return PartialView("Partial/MenuHeader",vm);
         }
 
-                
+
+        [VerifyLogin]
         public JsonResult TeamMembers(string term,int issueId)
         {
             //Returns team members who are not assigned to the issue in a list in JSON format
