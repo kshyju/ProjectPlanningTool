@@ -998,3 +998,11 @@ div.dashboard-ataglance {
     padding:3px;
     padding-left:6px;
 }
+.team-operations
+{
+    padding:6px;
+}
+.available-teams p
+{
+    font-weight:bold;
+}

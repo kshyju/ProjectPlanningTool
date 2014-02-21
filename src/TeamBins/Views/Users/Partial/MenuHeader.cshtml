@@ -20,6 +20,9 @@
             {
                 <a href="~/t/@team.ID/@team.Name"><div class="available-team">@team.Name</div></a>
             }
+            <div class="team-operations">
+                <a href="@Url.Action("index","team")">Manage Teams</a>
+            </div>
         </div>
     }
     </div>
@@ -27,10 +30,10 @@
     @if(!String.IsNullOrEmpty(Model.UserDisplayName))
     { 
         <a href="@Url.Action( "index", "dashboard")">Home</a>
-    <a href="@Url.Action("index","issues")">Issues</a>
+        <a href="@Url.Action("index","issues")">Issues</a>
         <a href="@Url.Action("index","projects")">Projects</a>
         <a href="@Url.Action("index","users")">Members</a>
-        <a href="@Url.Action("index","team")">Teams</a>
+       
     }
     </div>
     <div class="userInfo">
