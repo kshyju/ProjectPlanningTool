@@ -9,7 +9,7 @@ using TechiesWeb.TeamBins.Infrastructure;
 namespace TechiesWeb.TeamBins.HelperMethods
 {
     public static class HtmlHelpers
-    {
+    {     
 
         public static IHtmlString AlertMessages(this HtmlHelper helper, string tabId = "")
         {
@@ -23,9 +23,21 @@ namespace TechiesWeb.TeamBins.HelperMethods
 
                 var errors = alertMsgs.Messages.Where(s => s.Key == "error").ToList();
                 var successes = alertMsgs.Messages.Where(s => s.Key == "success").ToList();
-
+                var systemMessages = alertMsgs.Messages.Where(s => s.Key == "system").ToList();
 
                 isError = alertMsgs.Messages.ToList()[0].Key == "error";
+
+                if (systemMessages.Count > 0)
+                {
+                    foreach (var system in systemMessages)
+                    {
+                        if (!String.IsNullOrEmpty(system.Value))
+                        {
+                            message += String.Format("<div class='system-msg'>{0}</div>", system.Value);
+                        }
+                    }                   
+                }
+
                 if (errors.Count > 0)
                 {
                     message += "<div class='alert alert-error'><ul>";
@@ -50,6 +62,7 @@ namespace TechiesWeb.TeamBins.HelperMethods
                     }
                     message += "</ul></div>";
                 }
+
             }
             return new HtmlString(message);
 

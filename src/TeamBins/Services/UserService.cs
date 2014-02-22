@@ -35,7 +35,16 @@ namespace TeamBins.Services
             }          
             return false;
         }
-
+        public int GetDefaultProjectForCurrentTeam(int userId, int teamId)
+        {
+            var teamMember = repo.GetTeamMember(userId, teamId);
+            if (teamMember != null)
+            {
+                if (teamMember.DefaultProjectID.HasValue)
+                   return teamMember.DefaultProjectID.Value;
+            }
+            return 0;
+        }
         public void SaveActivityForNewUserJoinedTeam(TeamMemberRequest teamMemberRequest, User user,int currentUserId,int teamId)
         {
             var activity = new Activity { CreatedByID = currentUserId, TeamID = teamId };

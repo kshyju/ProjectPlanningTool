@@ -93,6 +93,15 @@ namespace TechiesWeb.TeamBins.Controllers
                     {
                         bugListVM = GetBugList(LocationType.SPRNT.ToString(), TeamID);
                         bugListVM.ProjectsExist = true;
+
+                        var userService = new UserService(repo, SiteBaseURL);
+                        bool defaultProjectExist = userService.GetDefaultProjectForCurrentTeam(UserID, TeamID) > 0;
+                        if(!defaultProjectExist)
+                        {
+                            var alertMessages = new AlertMessageStore();
+                            alertMessages.AddMessage("system", "Hey!, You need to set a default project for the current team. Go to your <a href='"+SiteBaseURL+"account/settings'>profile</a> and set a project as default project.");
+                            TempData["AlertMessages"]=alertMessages;
+                        }
                         return View("Index", bugListVM);
                     }
                 }
@@ -493,9 +502,7 @@ namespace TechiesWeb.TeamBins.Controllers
         {
             var vm = new IssueListVM { CurrentTab = iteration, TeamID = teamId };
             List<IssueVM> issueList = issueService.GetIssueListVMs(iteration, teamId, size);
-            vm.Bugs = issueList;
-            // Set the user preference
-            vm.IsCreateAndEditEnabled = CreateAndEditMode;
+            vm.Bugs = issueList;            
             return vm;
         }
         

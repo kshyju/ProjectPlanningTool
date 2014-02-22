@@ -12,9 +12,11 @@
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
 </head>
+@using TechiesWeb.TeamBins.HelperMethods
 <body>
     <div>      
-        @Html.Action("MenuHeader", "Users")
+        @Html.Action("MenuHeader", "Users")       
+        @Html.AlertMessages()
         <div class="content">
             <div class="central">
                 @RenderBody()

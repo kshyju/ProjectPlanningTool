@@ -24,13 +24,11 @@ namespace TechiesWeb.TeamBins.ViewModels
         {
             Bugs = new List<IssueVM>();
         }
-        public bool IsCreateAndEditEnabled { set; get; }
+       
         public string CurrentTab { set; get; }
         public bool ProjectsExist { set; get; }
-
         public bool IsUserTeamMember { set; get; }
-
-
+        //public bool IsDefaultProjectSet { set; get; }
     }
     public class DeleteIssueConfirmationVM : IssueVM
     {

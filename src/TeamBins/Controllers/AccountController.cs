@@ -293,12 +293,8 @@ namespace TechiesWeb.TeamBins.Controllers
         public ActionResult Settings()
         {
             var vm = new DefaultIssueSettings { Projects = GetProjectListItem() };
-            var teamMember = repo.GetTeamMember(UserID, TeamID);            
-            if (teamMember != null)
-            {
-                if (teamMember.DefaultProjectID.HasValue)
-                    vm.SelectedProject = teamMember.DefaultProjectID.Value;
-            }
+            var userService = new UserService(repo, SiteBaseURL);
+            vm.SelectedProject = userService.GetDefaultProjectForCurrentTeam(UserID, TeamID);
             return View(vm);
         }
 

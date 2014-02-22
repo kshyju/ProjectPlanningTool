@@ -67,7 +67,7 @@ textarea {
     display: none;
 }
 .header {
-    height:32px; border-bottom:1px solid #B3B3B3;
+    height:32px; 
    background-color:#373737; overflow:auto;
 }
 .content {
@@ -1028,4 +1028,11 @@ div.dashboard-ataglance {
 }
 #pieChart {
     padding:5px;  padding-right:4px; padding-left:10px;
+}
+.system-msg
+{
+    width:100%;
+    padding:10px;
+    background-color:#ff8749;
+    
 }
