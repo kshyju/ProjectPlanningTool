@@ -2,6 +2,7 @@
     ViewBag.Title = "Team Members";
 }
 @model TechiesWeb.TeamBins.ViewModels.TeamVM
+<script src="~/Scripts/moment.min.js"></script>
 <h2>Team Members</h2>
 @Html.ActionLink("Add new member", "add", "users", null, new { @class="popup"})
 <table class="tblGrid table">
@@ -10,6 +11,7 @@
             <th>Name</th>
             <th>Email</th>
             <th>Joined date</th>
+            <th>Last Login</th>
         </tr>
     </thead>
     <tbody>
@@ -19,6 +21,7 @@
                 <td><img class="img-team-member" src="@member.AvatarHash">@member.Name</td>
                 <td>@member.EmailAddress</td>
                 <td>@member.JoinedDate</td>
+                <td><span title="@member.LastLoginDate (UTC time)" class="relativeTime">@member.LastLoginDate</span></td>
             </tr>
         }
     </tbody>
@@ -33,6 +36,17 @@
                 else
                     $("#msg").text(res.Message).addClass("error").slideDown(); $("#Name").focus();
             });
+        });       
+        $('span.relativeTime').each(function () {
+            var _this = $(this);
+            if (_this.html() != "")
+            {
+                var myUtcDate = new Date($(this).html()+" UTC");
+                var a = moment(myUtcDate);
+                var res = a.format("MMM Do YYYY, h:mm a");
+                _this.html(res);
+            }         
         });
     });
+    
 </script>

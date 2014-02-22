@@ -39,6 +39,7 @@ namespace TeamBins.DataAccess
         public string Password { get; set; }
         public string JobTitle { get; set; }
         public System.DateTime CreatedDate { get; set; }
+        public Nullable<System.DateTime> LastLoginDate { get; set; }
     
         public virtual ICollection<Activity> Activities { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }

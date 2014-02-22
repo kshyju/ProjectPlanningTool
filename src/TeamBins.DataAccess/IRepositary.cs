@@ -9,6 +9,7 @@ namespace TeamBins.DataAccess
 {
     public interface IRepositary : IDisposable  
     {
+        void SaveLastLogin(int userId);
         void SavePasswordResetRequest(PasswordResetRequest request);
         PasswordResetRequest GetPasswordResetRequest(string activationCode);
         bool DeleteProject(int projectId);

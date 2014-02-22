@@ -41,6 +41,7 @@ namespace TechiesWeb.TeamBins.ViewModels
         public string MemberType { set; get; }
         public string AvatarHash { set; get; }
         public string JobTitle { set; get; }
+        public string LastLoginDate { set; get; }
     }
     public class AddTeamMemberRequestVM :MemberVM
     {

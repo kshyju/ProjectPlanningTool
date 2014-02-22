@@ -229,5 +229,10 @@ namespace TeamBins.Tests
         {
             throw new System.NotImplementedException();
         }
+
+        public void SaveLastLogin(int userId)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

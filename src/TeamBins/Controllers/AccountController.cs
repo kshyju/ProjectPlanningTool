@@ -108,6 +108,9 @@ namespace TechiesWeb.TeamBins.Controllers
                         {
                             var teamMember = user.TeamMembers1.Where(s => s.MemberID == user.ID).FirstOrDefault();
                             SetUserIDToSession(user.ID, teamMember.TeamID, user.FirstName);
+
+                            repo.SaveLastLogin(user.ID);
+
                             return RedirectToAction("Index", "Dashboard");
                         }
                     }

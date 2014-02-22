@@ -34,6 +34,9 @@ namespace TechiesWeb.TeamBins.Controllers
                     memberVM.EmailAddress = member.Member.EmailAddress;
                     memberVM.AvatarHash = UserService.GetImageSource(memberVM.EmailAddress, 30);
                     memberVM.JoinedDate = member.CreatedDate.ToShortDateString();
+                    if(member.Member.LastLoginDate.HasValue)
+                        memberVM.LastLoginDate=member.Member.LastLoginDate.Value.ToString("g");
+
                     teamVM.Members.Add(memberVM);
                 }
                 return View(teamVM);
