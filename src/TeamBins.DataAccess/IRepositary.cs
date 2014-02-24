@@ -9,6 +9,8 @@ namespace TeamBins.DataAccess
 {
     public interface IRepositary : IDisposable  
     {
+        IEnumerable<NotificationType> GetNotificationTypes();
+        void SaveUserNotificationSubscription(UserNotificationSubscription subscription);
         void SaveLastLogin(int userId);
         void SavePasswordResetRequest(PasswordResetRequest request);
         PasswordResetRequest GetPasswordResetRequest(string activationCode);

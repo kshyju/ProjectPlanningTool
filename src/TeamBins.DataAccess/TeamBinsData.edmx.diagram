@@ -8,8 +8,6 @@
         <EntityTypeShape EntityType="TeamBinsModel.Category" Width="1.5" PointX="3" PointY="5.25" IsExpanded="true" />
         <EntityTypeShape EntityType="TeamBinsModel.Priority" Width="1.5" PointX="3" PointY="7.5" IsExpanded="true" />
         <EntityTypeShape EntityType="TeamBinsModel.Status" Width="1.5" PointX="3" PointY="9.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="TeamBinsModel.Task" Width="1.5" PointX="7.2978780862399741" PointY="2.3030796806808" />
-        <AssociationConnector Association="TeamBinsModel.FK_Task_Task" />
         <EntityTypeShape EntityType="TeamBinsModel.Issue" Width="1.5" PointX="7.0059360689511223" PointY="9.15500806698343" />
         <AssociationConnector Association="TeamBinsModel.FK_Issue_Category" />
         <AssociationConnector Association="TeamBinsModel.FK_Issue_Priority" />
@@ -33,7 +31,6 @@
         <AssociationConnector Association="TeamBinsModel.FK_IssueMember_IssueMember" />
         <AssociationConnector Association="TeamBinsModel.FK_IssueMember_User_CreatedBy" />
         <AssociationConnector Association="TeamBinsModel.FK_Project_User" />
-        <AssociationConnector Association="TeamBinsModel.FK_Task_User" />
         <AssociationConnector Association="TeamBinsModel.FK_TeamMemberRequest_CreatedBy" />
         <EntityTypeShape EntityType="TeamBinsModel.TeamMember" Width="1.5" PointX="3.0822332329499691" PointY="13.279599806889705" />
         <AssociationConnector Association="TeamBinsModel.FK_TeamMember_DefaultProject" />
@@ -49,6 +46,11 @@
         <EntityTypeShape EntityType="TeamBinsModel.PasswordResetRequest" Width="1.5" PointX="10.891711972137779" PointY="19.842070827187072" />
         <AssociationConnector Association="TeamBinsModel.FK_PasswordResetRequest_PasswordResetRequest" />
         <AssociationConnector Association="TeamBinsModel.FK_PasswordResetRequest_User" />
+        <EntityTypeShape EntityType="TeamBinsModel.NotificationType" Width="1.5" PointX="0.41897919793565724" PointY="30.260175212407567" />
+        <EntityTypeShape EntityType="TeamBinsModel.UserNotificationSubscription" Width="1.5" PointX="11.200617882982185" PointY="10.516081442365461" />
+        <AssociationConnector Association="TeamBinsModel.FK_UserNotificationSubscription_NotificationType" />
+        <AssociationConnector Association="TeamBinsModel.FK_UserNotificationSubscription_Team" />
+        <AssociationConnector Association="TeamBinsModel.FK_UserNotificationSubscription_User" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -14,6 +14,17 @@ namespace TeamBins.DataAccess
         {
            db = new TeamEntities();
         }
+        public IEnumerable<NotificationType> GetNotificationTypes()
+        {
+            return db.NotificationTypes;
+        }
+        public void SaveUserNotificationSubscription(UserNotificationSubscription subscription)
+        {
+            subscription.ModifiedDate = DateTime.UtcNow;
+           // db.UserNotificationSubscriptions.Add(
+
+        }
+
         public void SaveLastLogin(int userId)
         {
             var user = db.Users.FirstOrDefault(s=>s.ID==userId);

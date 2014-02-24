@@ -12,27 +12,17 @@ namespace TeamBins.DataAccess
     using System;
     using System.Collections.Generic;
     
-    public partial class Team
+    public partial class NotificationType
     {
-        public Team()
+        public NotificationType()
         {
-            this.Activities = new HashSet<Activity>();
-            this.Issues = new HashSet<Issue>();
-            this.TeamMembers = new HashSet<TeamMember>();
-            this.TeamMemberRequests = new HashSet<TeamMemberRequest>();
             this.UserNotificationSubscriptions = new HashSet<UserNotificationSubscription>();
         }
     
         public int ID { get; set; }
+        public string Code { get; set; }
         public string Name { get; set; }
-        public System.DateTime CreatedDate { get; set; }
-        public int CreatedByID { get; set; }
     
-        public virtual ICollection<Activity> Activities { get; set; }
-        public virtual ICollection<Issue> Issues { get; set; }
-        public virtual User CreatedBy { get; set; }
-        public virtual ICollection<TeamMember> TeamMembers { get; set; }
-        public virtual ICollection<TeamMemberRequest> TeamMemberRequests { get; set; }
         public virtual ICollection<UserNotificationSubscription> UserNotificationSubscriptions { get; set; }
     }
 }
