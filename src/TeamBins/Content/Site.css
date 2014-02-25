@@ -1036,3 +1036,7 @@ div.dashboard-ataglance {
     background-color:#ff8749;
     
 }
+#tbl-notificaton-settings td
+{
+    padding:4px; padding-right:12px;
+}

@@ -2,6 +2,7 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -17,6 +18,8 @@ namespace TeamBins.Tests
         [Test]
         public void Index_Action_Should_Return_Index_View()
         {
+        
+
             //Arrange
             FakeDataStore fakeDb = new FakeDataStore();
 

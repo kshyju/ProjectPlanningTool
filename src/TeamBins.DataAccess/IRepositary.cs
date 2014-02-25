@@ -9,6 +9,7 @@ namespace TeamBins.DataAccess
 {
     public interface IRepositary : IDisposable  
     {
+        IEnumerable<User> GetSubscribers(int teamId, string notificationtypeCode);
         IEnumerable<NotificationType> GetNotificationTypes();
         void SaveUserNotificationSubscription(UserNotificationSubscription subscription);
         void SaveLastLogin(int userId);

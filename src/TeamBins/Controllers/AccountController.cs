@@ -23,6 +23,48 @@ namespace TechiesWeb.TeamBins.Controllers
         {            
 
         }
+        public ActionResult NotificationSettings()
+        {
+            var vm = new UserEmailNotificationSettingsVM { TeamID = TeamID };
+            var userSubscriptions = repo.GetUser(UserID).UserNotificationSubscriptions.ToList();
+
+                var notificationTypes = repo.GetNotificationTypes().ToList();
+                foreach (var item in notificationTypes)
+                {
+                    var emailSubscription = new EmailSubscriptionVM { NotificationTypeID = item.ID, Name = item.Name };
+                    emailSubscription.IsSelected = userSubscriptions.Any(s => s.UserID == UserID && s.TeamID == TeamID && s.NotificationTypeID == item.ID && s.Subscribed==true);
+                    vm.EmailSubscriptions.Add(emailSubscription);
+                }
+            
+            return View(vm);
+        }
+        [HttpPost]
+        public ActionResult NotificationSettings(UserEmailNotificationSettingsVM model)
+        {
+            try
+            {
+
+                foreach (var setting in model.EmailSubscriptions)
+                {
+                    var userNotification = new UserNotificationSubscription { TeamID = TeamID, UserID = UserID };
+                    userNotification.Subscribed = setting.IsSelected;
+                    userNotification.ModifiedDate = DateTime.UtcNow;
+                    userNotification.NotificationTypeID = setting.NotificationTypeID;
+                    repo.SaveUserNotificationSubscription(userNotification);
+                }
+
+                var vm = new UserEmailNotificationSettingsVM { TeamID = TeamID };
+                var msg = new AlertMessageStore();
+                msg.AddMessage("success", "Notification Settings updated successfully");
+                TempData["AlertMessages"] = msg;
+                return RedirectToAction("NotificationSettings");
+            }
+            catch(Exception ex)
+            {
+                log.Error(ex);
+                return View("Error");
+            }
+        }
 
         public ActionResult Index()
         {

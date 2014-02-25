@@ -52,7 +52,7 @@ namespace TechiesWeb.TeamBins.HelperMethods
                 }
                 if (successes.Count > 0)
                 {
-                    message += "<div class='alert alert-success'><ul>";
+                    message += "<div id='success-message' class='alert alert-success'><ul>";
                     foreach (var alert in successes)
                     {
                         if (!String.IsNullOrEmpty(alert.Value))

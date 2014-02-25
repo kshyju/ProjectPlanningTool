@@ -234,5 +234,20 @@ namespace TeamBins.Tests
         {
             throw new System.NotImplementedException();
         }
+
+        public IEnumerable<NotificationType> GetNotificationTypes()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void SaveUserNotificationSubscription(UserNotificationSubscription subscription)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public IEnumerable<User> GetSubscribers(int teamId, string notificationtypeCode)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

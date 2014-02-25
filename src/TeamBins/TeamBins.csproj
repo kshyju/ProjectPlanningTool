@@ -387,6 +387,8 @@
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\Account\PasswordUpdated.cshtml" />
     <Content Include="Views\Team\Add.cshtml" />
+    <Content Include="Views\Account\NotificationSettings.cshtml" />
+    <Content Include="Views\Account\EditorTemplates\EmailSubscriptionVM.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

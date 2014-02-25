@@ -93,5 +93,21 @@ namespace TechiesWeb.TeamBins.ViewModels
         }
     }
 
+    public class UserEmailNotificationSettingsVM
+    {
+        public int TeamID { set;get;}
+        public List<EmailSubscriptionVM> EmailSubscriptions { set; get; }
+        public UserEmailNotificationSettingsVM()
+        {
+            EmailSubscriptions = new List<EmailSubscriptionVM>();
+        }
+    }
+    public class EmailSubscriptionVM
+    {
+        public int NotificationTypeID { set; get; }
+        public string Name { set; get; }
+        public bool IsSelected { set; get; }
+    }
+
 
 }

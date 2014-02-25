@@ -30,8 +30,7 @@
                 $('<div id="modal" class="modal fade">' + data + '</div>').modal();
             });
         }
-        $(function () {
-            //Show popup on clicking the link
+        $(function () {            
             $(document).on("click", "a.popup", function (e) {
                 e.preventDefault();                         
                 ShowModel($(this).attr("href"));
@@ -48,6 +47,9 @@
                     _this.data("state", "selected");
                 }
             });
+            setTimeout(function () { $('#success-message').slideUp(300); }, 6000);
+            
+
         });
     </script>
     <!--Google analytics-->

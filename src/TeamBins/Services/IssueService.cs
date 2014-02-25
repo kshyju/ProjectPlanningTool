@@ -6,6 +6,8 @@ using System;
 using TeamBins.Helpers.Enums;
 using TechiesWeb.TeamBins.ExtensionMethods;
 using SmartPlan.ViewModels;
+using TechiesWeb.TeamBins.Infrastructure;
+using TechiesWeb.TeamBibs.Helpers.Logging;
 namespace TeamBins.Services
 {
 
@@ -21,6 +23,14 @@ namespace TeamBins.Services
           
             _userId = userId;
             _teamId = teamId;
+        }
+        public IssueService(IRepositary repositary, int userId, int teamId,string siteBaseUrl)
+        {
+            repo = repositary;
+
+            _userId = userId;
+            _teamId = teamId;
+            SiteBaseURL = siteBaseUrl;
         }
         /*
         public List<ActivityVM> GetTeamActivityVMs(int teamId)
@@ -77,6 +87,48 @@ namespace TeamBins.Services
             vm.NewItems = issues.Where(s => s.Status.Name.ToUpper() == "NEW").Count();
             return vm;
         }
+
+
+        public void SendEmailNotificaions(Issue issue, int teamId, int currentUserId,string siteBaseUrl)
+        {
+            try
+            {
+                var subscribers = repo.GetSubscribers(teamId, "NewIssue");
+                if (subscribers.Count() > 0)
+                {
+                    var emailTemplate = repo.GetEmailTemplate("NewIssue");
+                    if (emailTemplate != null)
+                    {
+                        var currentTeam = repo.GetTeam(teamId);
+                        string emailSubject = emailTemplate.EmailSubject;
+                        string emailBody = emailTemplate.EmailBody;
+                        Email email = new Email();
+
+                        string issueUrl = siteBaseUrl + "issues/details/" + issue.ID;
+                        var issueLink = "<a href='" + issueUrl + "'>" + "#" + issue.ID + " " + issue.Title + "</a>";
+                        emailBody = emailBody.Replace("@issueAuthor", issue.CreatedBy.FirstName);
+                        emailBody = emailBody.Replace("@issueLink", issueLink);
+                        emailBody = emailBody.Replace("@teamName", currentTeam.Name);
+                        email.Body = emailBody;
+                        emailSubject = emailSubject.Replace("@teamName", currentTeam.Name);
+                        emailSubject = emailSubject + " (#" + issue.ID + ")";
+                        email.Subject = emailSubject;
+
+                        foreach (var subscriber in subscribers)
+                        {
+                            email.ToAddress.Add(subscriber.EmailAddress);
+                        }
+                        email.Send();
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                var log = new Logger("SendEmailNotificaions");
+                log.Error(ex);
+            }
+        }
+      
 
         public List<IssueVM> GetIssueListVMs(string iteration, int teamId, int size)
         {

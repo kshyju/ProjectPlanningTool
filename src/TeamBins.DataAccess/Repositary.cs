@@ -14,15 +14,29 @@ namespace TeamBins.DataAccess
         {
            db = new TeamEntities();
         }
+        public IEnumerable<User> GetSubscribers(int teamId,string notificationtypeCode)
+        {
+            return db.UserNotificationSubscriptions.Where(s => s.NotificationType.Code == notificationtypeCode && s.TeamID==teamId).Select(s => s.User);
+        }
         public IEnumerable<NotificationType> GetNotificationTypes()
         {
             return db.NotificationTypes;
         }
         public void SaveUserNotificationSubscription(UserNotificationSubscription subscription)
         {
-            subscription.ModifiedDate = DateTime.UtcNow;
-           // db.UserNotificationSubscriptions.Add(
+            var existing = db.UserNotificationSubscriptions.FirstOrDefault(s => s.TeamID == subscription.TeamID && s.UserID == s.UserID && s.NotificationTypeID == subscription.NotificationTypeID);
+            if(existing==null)
+            {
+                subscription.ModifiedDate = DateTime.UtcNow;
+                db.UserNotificationSubscriptions.Add(subscription);
 
+            }
+            else
+            {
+                existing.ModifiedDate = DateTime.UtcNow;
+                existing.Subscribed = subscription.Subscribed;
+            }         
+            db.SaveChanges();
         }
 
         public void SaveLastLogin(int userId)

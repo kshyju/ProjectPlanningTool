@@ -4,13 +4,14 @@
 }
 @using TechiesWeb.TeamBins.HelperMethods
 <div class="page">
-    <h2>EditProfile</h2>
-    @Html.AlertMessages()
+    <h2>Edit Profile</h2>
+   
     <div class="tabbable tabs-left">
         <ul class="nav nav-tabs">
             <li class="active"><a href="#">Profile</a></li>
-            <li><a href="@Url.Action("Password","Account")">Password</a></li>
-            <li><a href="@Url.Action("Settings","Account")">Default Issue Settings</a></li>
+            <li><a href="@Url.Action("password","account")">Password</a></li>
+            <li><a href="@Url.Action("settings", "account")">Default Issue Settings</a></li>
+            <li><a href="@Url.Action("notificationSettings", "account")">Notification Settings</a></li>
         </ul>
         <div class="tab-content">
             <div class="tab-pane active" >

@@ -171,6 +171,8 @@ namespace TechiesWeb.TeamBins.Controllers
                                 {
                                     var issueVM = issueService.GetIssueVM(issue);
                                     context.Clients.Group(TeamID.ToString()).addIssueToIssueList(issueVM);
+
+                                    issueService.SendEmailNotificaions(issue, TeamID, UserID,SiteBaseURL);
                                 }
                                 return Json(new { Status = "Success" });
                             }
