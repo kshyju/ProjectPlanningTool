@@ -422,7 +422,7 @@ namespace TeamBins.DataAccess
 
         public Comment GetComment(int commentId)
         {
-            return db.Comments.Where(s => s.ID == commentId).FirstOrDefault();
+            return db.Comments.Where(s => s.ID == commentId).Include(s=>s.Issue).FirstOrDefault();
         }
 
         public IEnumerable<Activity> GetTeamActivity(int teamId)

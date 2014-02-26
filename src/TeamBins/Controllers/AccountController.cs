@@ -43,7 +43,6 @@ namespace TechiesWeb.TeamBins.Controllers
         {
             try
             {
-
                 foreach (var setting in model.EmailSubscriptions)
                 {
                     var userNotification = new UserNotificationSubscription { TeamID = TeamID, UserID = UserID };
@@ -51,9 +50,7 @@ namespace TechiesWeb.TeamBins.Controllers
                     userNotification.ModifiedDate = DateTime.UtcNow;
                     userNotification.NotificationTypeID = setting.NotificationTypeID;
                     repo.SaveUserNotificationSubscription(userNotification);
-                }
-
-                var vm = new UserEmailNotificationSettingsVM { TeamID = TeamID };
+                }                
                 var msg = new AlertMessageStore();
                 msg.AddMessage("success", "Notification Settings updated successfully");
                 TempData["AlertMessages"] = msg;

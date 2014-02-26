@@ -88,8 +88,51 @@ namespace TeamBins.Services
             return vm;
         }
 
+        public void SendEmailNotificaionForNewComment(Comment comment,Issue issue, int teamId, int currentUserId, string siteBaseUrl)
+        {
+            try
+            {
+                var subscribers = repo.GetSubscribers(teamId, "NewComment");
+                if (subscribers.Count() > 0)
+                {
+                    var emailTemplate = repo.GetEmailTemplate("NewComment");
+                    if (emailTemplate != null)
+                    {
+                        var currentTeam = repo.GetTeam(teamId);
+                        string emailSubject = emailTemplate.EmailSubject;
+                        string emailBody = emailTemplate.EmailBody;
+                        Email email = new Email();
 
-        public void SendEmailNotificaions(Issue issue, int teamId, int currentUserId,string siteBaseUrl)
+                        string issueUrl = siteBaseUrl + "issues/details/" + issue.ID;
+                        var issueLink = "<a href='" + issueUrl + "'>" + "# " + issue.ID + " " + issue.Title + "</a>";
+                        emailBody = emailBody.Replace("@author", issue.CreatedBy.FirstName);
+                        emailBody = emailBody.Replace("@link", issueLink);
+                        emailBody = emailBody.Replace("@comment", comment.CommentText);
+                        emailBody = emailBody.Replace("@issueId", issue.ID.ToString());  
+                        email.Body = emailBody;
+                        emailSubject = emailSubject.Replace("@issueId", issue.ID.ToString());                      
+                        email.Subject = emailSubject;
+
+                        foreach (var subscriber in subscribers)
+                        {
+                            email.ToAddress.Add(subscriber.EmailAddress);
+                        }
+                        email.Send();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                var log = new Logger("SendEmailNotificaions");
+                log.Error(ex);
+            }
+        }
+        public void SendEmailNotificationsToSubscribers(Issue issue,int teamId, int currentUserId,string siteBaseUrl)
+        {
+            SendEmailNotificaionForNewIssue(issue, teamId, currentUserId, siteBaseUrl);           
+        }
+
+        private void SendEmailNotificaionForNewIssue(Issue issue, int teamId, int currentUserId,string siteBaseUrl)
         {
             try
             {

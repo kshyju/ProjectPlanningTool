@@ -172,7 +172,7 @@ namespace TechiesWeb.TeamBins.Controllers
                                     var issueVM = issueService.GetIssueVM(issue);
                                     context.Clients.Group(TeamID.ToString()).addIssueToIssueList(issueVM);
 
-                                    issueService.SendEmailNotificaions(issue, TeamID, UserID,SiteBaseURL);
+                                    issueService.SendEmailNotificationsToSubscribers(issue, TeamID, UserID, SiteBaseURL);
                                 }
                                 return Json(new { Status = "Success" });
                             }
@@ -394,7 +394,7 @@ namespace TechiesWeb.TeamBins.Controllers
                     model.CommentBody = HttpUtility.HtmlEncode(model.CommentBody);
                     var comment = new Comment { CommentText = model.CommentBody, IssueID = model.IssueID, CreatedByID = UserID, CreatedDate = DateTime.Now };
                     var res = repo.SaveComment(comment);
-
+                    comment=repo.GetComment(comment.ID);
                     var activity = issueService.SaveActivity(comment,TeamID);
                     if (activity != null)
                     {
@@ -405,6 +405,9 @@ namespace TechiesWeb.TeamBins.Controllers
 
                         var commentVM = new CommentService(repo, SiteBaseURL).GetCommentVM(comment.ID);
                         context.Clients.Group(TeamID.ToString()).addNewComment(commentVM);
+
+                        issueService.SendEmailNotificaionForNewComment(comment, comment.Issue, TeamID, UserID, SiteBaseURL);
+
                     }
                     return Json(new { Status = "Success", NewCommentID = res.OperationID });
                 }
