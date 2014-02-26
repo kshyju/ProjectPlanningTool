@@ -12,23 +12,14 @@ namespace TeamBins.Services
     {
         public static List<SelectListItem> GetProjects(IRepositary repo, int teamId)
         {
-            List<SelectListItem> projectList = new List<SelectListItem>();
-            var projects = repo.GetProjects(teamId);
-            foreach (var pro in projects)
-            {
-                projectList.Add(new SelectListItem { Value = pro.ID.ToString(), Text = pro.Name });
-            }
-            return projectList;
+            return repo.GetProjects(teamId).
+                         Select(s => new SelectListItem { Value = s.ID.ToString(), Text = s.Name }).ToList();
         }
         public static List<SelectListItem> GetPriorities(IRepositary repo)
         {
-            List<SelectListItem> projectList = new List<SelectListItem>();
-            var projects = repo.GetPriorities();
-            foreach (var pro in projects)
-            {
-                projectList.Add(new SelectListItem { Value = pro.ID.ToString(), Text = pro.Name });
-            }
-            return projectList;
+            return repo.GetPriorities().
+                    Select(s => new SelectListItem { Value = s.ID.ToString(), Text = s.Name }).ToList();
+            
         }
 
         public static List<SelectListItem> GetIterations()
@@ -36,8 +27,7 @@ namespace TeamBins.Services
             return new List<SelectListItem>
             {
                 new SelectListItem { Value="SPRNT", Text="Sprint"},
-                new SelectListItem { Value="BKLOG", Text="BackLog"},
-               // new SelectListItem { Value="ARCHV", Text="Archieve"},
+                new SelectListItem { Value="BKLOG", Text="BackLog"},              
             };
         }
         public static string GetIterationName(string iterationCode)
@@ -49,23 +39,15 @@ namespace TeamBins.Services
                 case "BKLOG": return "BackLog";
                               break;
                 default: return "Current Sprint";
-                              break;
-
-                    
+                              break;                    
             }
 
         }
 
         public static List<SelectListItem> GetStatuses(IRepositary repo)
         {
-            List<SelectListItem> projectList = new List<SelectListItem>();
-            var projects = repo.GetStatuses();
-            foreach (var pro in projects)
-            {
-                projectList.Add(new SelectListItem { Value = pro.ID.ToString(), Text = pro.Name });
-
-            }
-            return projectList;
+            return repo.GetStatuses().
+                Select(s => new SelectListItem { Value = s.ID.ToString(), Text = s.Name }).ToList();
         }
         public static List<SelectListItem> GetStatuses(IRepositary repo, List<string> itemsToShow)
         {
@@ -83,19 +65,12 @@ namespace TeamBins.Services
         }
         public static List<SelectListItem> GetCategories(IRepositary repo)
         {
-            List<SelectListItem> projectList = new List<SelectListItem>();
-            var projects = repo.GetCategories();
-            foreach (var pro in projects)
-            {
-                projectList.Add(new SelectListItem { Value = pro.ID.ToString(), Text = pro.Name });
-
-            }
-            return projectList;
+            return repo.GetCategories().
+                Select(s => new SelectListItem { Value = s.ID.ToString(), Text = s.Name }).ToList();
         }
         public static List<SelectListItem> GetCycles(IRepositary repo)
         {
-            List<SelectListItem> projectList = new List<SelectListItem>();
-            var projects = repo.GetCategories();
+            List<SelectListItem> projectList = new List<SelectListItem>();           
            
            projectList.Add(new SelectListItem { Value = "1", Text = "1"});
            projectList.Add(new SelectListItem { Value = "2", Text = "2" });
