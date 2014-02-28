@@ -24,15 +24,16 @@
                 <div class="iterations">
                     <ul class="navtab">
                         <li>
-                            <a href="#current" ng-click="updateview('current')" class="aIteration @(Model.CurrentTab=="Current"?"aIterationActive":"")">Current</a>
+                            <a href="#current" id="tab-current" ng-click="updateview('current', $event)" class="aIteration @(Model.CurrentTab=="Current"?"tab-selected":"")">Current</a>
                         </li>
                         <li>
-                            <a href="#backlog" ng-click="updateview('backlog')" class="aIteration @(Model.CurrentTab=="Backlog"?"aIterationActive":"")">Backlog</a>
+                            <a href="#backlog" id="tab-backlog"  ng-click="updateview('backlog', $event)" class="aIteration @(Model.CurrentTab=="Backlog"?"tab-selected":"")">Backlog</a>
                         </li>
                         <li>
-                            <a href="#completed" ng-click="updateview('completed')" class="aIteration @(Model.CurrentTab=="Completed"?"aIterationActive":"")">Completed</a>
+                            <a href="#completed"  id="tab-completed" ng-click="updateview('completed', $event)" class="aIteration @(Model.CurrentTab=="Completed"?"tab-selected":"")">Completed</a>
                         </li>
                     </ul>
+                    <div class="spinner" ng-show="loading"></div>
                 </div>
             </div>
             <table class="tblGrid" id="issueTbl">

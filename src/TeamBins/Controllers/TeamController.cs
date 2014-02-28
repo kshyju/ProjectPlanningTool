@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using TeamBins.DataAccess;
+using TeamBins.Helpers.Enums;
 using TeamBins.Services;
 using TechiesWeb.TeamBins.ViewModels;
-using System.Linq;
-using System;
-using TeamBins.Helpers.Enums;
-using TechiesWeb.TeamBins.Infrastructure;
 namespace TechiesWeb.TeamBins.Controllers
 {
     [VerifyLogin]
@@ -27,14 +26,24 @@ namespace TechiesWeb.TeamBins.Controllers
      
         public ActionResult Index()
         {
-            var teams = repo.GetTeams(UserID);
-            var teamListVM = new TeamListVM();
-            foreach (var team in teams)
+            try
             {
-                int teamMemberCount = team.TeamMembers.Count();
-                teamListVM.Teams.Add(new TeamVM { ID = team.ID, Name = team.Name ,MemberCount=teamMemberCount, IsTeamOwner=team.CreatedByID==UserID });
+                var teamListVM = new TeamListVM();
+                teamListVM.Teams = repo.GetTeams(UserID).Select(team => new TeamVM
+                {
+                    ID = team.ID,
+                    Name = team.Name,
+                    MemberCount = team.TeamMembers.Count(),
+                    IsTeamOwner = team.CreatedByID == UserID
+                }).ToList();
+
+                return View(teamListVM);
             }
-            return View(teamListVM);
+            catch (Exception ex)
+            {
+                log.Error("error loading teams for user " + UserID, ex);
+                return View("Error");                    
+            }
         }
        
         public ActionResult View(int id)        

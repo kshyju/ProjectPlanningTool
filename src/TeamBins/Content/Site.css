@@ -763,6 +763,12 @@ ul.navtab
 {
 	list-style:none;	
     overflow:auto; margin:0px;padding: 5px 16px !IMPORTANT;
+    width:300px;float:left;
+}
+.spinner {
+    width:100px;float:left;
+    background-image:url('images/ajax-loader.gif'); background-repeat:no-repeat;
+    margin-top:6px; height:20px;
 }
 ul.navtab li
 {
@@ -778,6 +784,9 @@ border: 1px solid gray;
 -webkit-border-radius: 4px 4px 0 0;
 -moz-border-radius: 4px 4px 0 0;
 border-radius: 4px 4px 0 0;
+}
+a.aIteration {
+    text-decoration: none !IMPORTANT;
 }
 a.aIteration:hover
 {
@@ -1040,4 +1049,7 @@ div.dashboard-ataglance {
 {
     padding:4px; padding-right:12px;
     
+}
+.tab-selected {
+    background-color:#5CA941 !IMPORTANT;
 }

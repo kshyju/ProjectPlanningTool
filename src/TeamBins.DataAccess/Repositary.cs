@@ -222,7 +222,8 @@ namespace TeamBins.DataAccess
                 db.Issues.Add(issue);
             }
             else
-            {
+            {                
+                issue.ModifiedDate = DateTime.UtcNow;
                 db.Entry(issue).State = EntityState.Modified;
             }
             db.SaveChanges();

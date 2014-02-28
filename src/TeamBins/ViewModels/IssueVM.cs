@@ -46,7 +46,7 @@ namespace TechiesWeb.TeamBins.ViewModels
         public int TeamID { set; get; }
         public int ProjectID { set; get; }
         public string LastModifiedDate { set; get; }
-
+        public string LastModifiedBy { set; get; }
         public IssueDetailVM()
         {
             Images = new List<DocumentVM>();

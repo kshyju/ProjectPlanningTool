@@ -28,47 +28,6 @@ namespace TechiesWeb.TeamBins.Controllers
 
         #region public methods
 
-        public ActionResult Backlog()
-        {
-            try
-            {
-                IssueListVM bugListVM = new IssueListVM();
-                var projectList = repo.GetProjects(TeamID).Where(s => s.TeamID == TeamID).ToList();
-                if (projectList.Count > 0)
-                {
-                    bugListVM = GetBugList(LocationType.BKLOG.ToString(),TeamID);
-                    bugListVM.ProjectsExist = true;
-                }
-                return View("Index", bugListVM);
-            }
-            catch (Exception ex)
-            {
-                // to do : Log error
-                return View("Error");
-            }
-        }
-      
-        public ActionResult Completed()
-        {
-            try
-            {
-                IssueListVM bugListVM = new IssueListVM();
-                var projectList = repo.GetProjects(TeamID).Where(s => s.TeamID == TeamID).ToList();
-                if (projectList.Count > 0)
-                {
-                    bugListVM = GetBugList(LocationType.ARCHV.ToString(),TeamID);
-                    bugListVM.ProjectsExist = true;
-                }
-                return View("Index", bugListVM);
-            }
-            catch (Exception ex)
-            {
-                // to do : Log error
-                return View("Error");
-            }
-        }
-
-
         public ActionResult Index(int size = 50, string iteration = "current")
         {
             try
@@ -99,7 +58,7 @@ namespace TechiesWeb.TeamBins.Controllers
                         if(!defaultProjectExist)
                         {
                             var alertMessages = new AlertMessageStore();
-                            alertMessages.AddMessage("system", "Hey!, You need to set a default project for the current team. Go to your <a href='"+SiteBaseURL+"account/settings'>profile</a> and set a project as default project.");
+                            alertMessages.AddMessage("system", String.Format("Hey!, You need to set a default project for the current team. Go to your <a href='{0}account/settings'>profile</a> and set a project as default project.", SiteBaseURL));
                             TempData["AlertMessages"]=alertMessages;
                         }
                         return View("Index", bugListVM);
@@ -126,7 +85,8 @@ namespace TechiesWeb.TeamBins.Controllers
                     Issue bug = new Issue { ID = model.ID ,  CreatedByID = UserID,  TeamID = TeamID};
                     if (model.ID != 0)
                     {
-                        bug = repo.GetIssue(model.ID);                      
+                        bug = repo.GetIssue(model.ID);
+                        bug.ModifiedByID = UserID;
                     }                    
 
                     issuePreviousVersion = ObjectCloner.DeepClone<Issue>(bug);
@@ -283,6 +243,12 @@ namespace TechiesWeb.TeamBins.Controllers
                 bugVm.Status = bug.Status.Name;
                 bugVm.Priority = bug.Priority.Name;
                 bugVm.StatusCode = bug.Status.Name;
+                if (bug.ModifiedDate.HasValue && bug.ModifiedDate.Value > DateTime.MinValue)
+                {
+                    bugVm.LastModifiedDate = bug.ModifiedDate.Value.ToString("g");
+                    bugVm.LastModifiedBy = bug.ModifiedBy.FirstName;
+                }
+
                 bugVm.Iteration = ProjectService.GetIterationName(bug.Location);
                 if (bug.DueDate.HasValue)
                     bugVm.IssueDueDate = (bug.DueDate.Value.Year > 2000 ? bug.DueDate.Value.ToShortDateString() : "");
@@ -477,7 +443,6 @@ namespace TechiesWeb.TeamBins.Controllers
                                var context = GlobalHost.ConnectionManager.GetHubContext<IssuesHub>();
                                context.Clients.Group(TeamID.ToString()).addNewTeamActivity(activityVM);
                            }
-
                         }
                     }
                     else
@@ -493,8 +458,7 @@ namespace TechiesWeb.TeamBins.Controllers
         }
 
         public JsonResult comments(int id)
-        {
-            List<CommentVM> commentVMList = new List<CommentVM>();
+        {            
             return Json(issueService.GetIssueCommentVMs(id),JsonRequestBehavior.AllowGet);            
         }
 

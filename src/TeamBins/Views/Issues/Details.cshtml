@@ -20,7 +20,9 @@
     <div class="divLeft">
         <h2>@Model.Title</h2>
         <div id="issueMeta">
-            <div class="authorInfo">Opened by @Model.OpenedBy on @Model.CreatedDate</div>       
+            <div class="authorInfo">Opened by @Model.OpenedBy on @Model.CreatedDate
+                Last Modified by @Model.OpenedBy on @Model.CreatedDate
+            </div>       
             <div id="issueStatus">Status <span class="@Model.StatusCode">@Model.Status</span></div>  
             <div id="issueStatus">Project <span class="">@Model.Project</span></div>                  
         </div>

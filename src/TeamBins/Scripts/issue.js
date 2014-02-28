@@ -4,10 +4,13 @@ issueListApp.config(['$httpProvider', function ($httpProvider) {
 }]);
     
 issueListApp.controller('IssueListCtrl', function ($scope, $http) {
+    $scope.loading = true;
     $scope.activities = [];
     $scope.issuesList = [];
     $http.get('../issues?size=25').success(function (data) {
         $scope.issueList = data;
+        $scope.loading = false;
+        $("#tab-current").addClass("tab-selected");
     });
     $http.get('../../team/stream/' + $("#TeamID").val() + "?size=6").success(function (data) {
         $scope.activities = data;
@@ -28,9 +31,14 @@ issueListApp.controller('IssueListCtrl', function ($scope, $http) {
         }        
     };
 
-    $scope.updateview = function (iteration) {       
+    $scope.updateview = function (iteration, $event) {
+        $scope.loading = true;
+        var _this = $("#" +  $event.target.id);
         $http.get('../issues?size=25&iteration=' + iteration).success(function (data) {
             $scope.issueList = data;
+            $("a.aIteration").removeClass("tab-selected");
+            _this.addClass("tab-selected");
+            $scope.loading = false;
         });       
     };
   
@@ -51,8 +59,7 @@ issueListApp.controller('IssueListCtrl', function ($scope, $http) {
     
 
 $(function () {
-
-    //Auto complete for assign issue member
+    
     $("#txtAssignMember").autocomplete({
         source: "../../Users/TeamMembers?issueId=" + $("#ID").val(),
         minLength: 1,
