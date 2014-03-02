@@ -541,7 +541,7 @@ div.issueMember
 }
 div.issueMember h5
 {
-margin:0px; padding-left:4px; font-size:12px;
+margin:0px; padding-left:4px; font-size:13px;
 display:inline-block; 
 }
 div#dueDate h4
@@ -1052,4 +1052,16 @@ div.dashboard-ataglance {
 }
 .tab-selected {
     background-color:#5CA941 !IMPORTANT;
+}
+.autocomplete-item
+{
+    padding:1px;
+}
+.autocomplete-item img
+{
+    margin-right:5px;
+}
+a.aRemove
+{
+    font-size:12px;
 }

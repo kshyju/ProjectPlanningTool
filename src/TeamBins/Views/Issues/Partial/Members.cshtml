@@ -1,25 +1,18 @@
 ﻿@model TechiesWeb.TeamBins.ViewModels.IssueDetailVM
 <h4>Assigned To</h4>
 <div id="memberList">
-@if(Model.Members.Count>0)
-{
-    foreach(var member in Model.Members) 
-    {
-        <div class="issueMember">
-            <img class="memberAvatar" src="@member.AvatarHash?s=24" />
-            <h5>@member.Name</h5>
-            @if(Model.IsEditableForCurrentUser)
-            {
-                <span>@Html.ActionLink("[remove]", "RemoveMember", "issues", new { @id = Model.ID, @memberId = @member.MemberID }, new { @class = "aRemove hiddenChangeLink" })</span>
-            }
-        </div>
-    }
-}
-else
-{
-    <p id="pNoData"> No Members assigned to this issue yet</p>
-}
-</div>
+    <div class="issueMember" ng-repeat="member in members" ng-mouseenter='hover(member)' ng-mouseleave="hover(member)">
+        <img class="memberAvatar" ng-src="{{ member.AvatarHash}}?size=25" />
+        <h5>{{member.Name}}</h5>       
+        @if(Model.IsEditableForCurrentUser)
+        {
+        <span ng-show="isEditableForCurrentUser">
+            <a class="aRemove hiddenchangelink" ng-show='member.ShowDelete' ng-click="removeIssueMember(@Model.ID,member,$event)" href="">remove</a>
+        </span>
+        }
+    </div>
+    <p id="pNoData" ng-hide="members.length"> No Members assigned to this issue yet</p>
+    </div>
 @if(Model.IsEditableForCurrentUser)
 {
     <h4>Assign New Member</h4>

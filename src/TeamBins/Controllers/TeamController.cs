@@ -162,36 +162,9 @@ namespace TechiesWeb.TeamBins.Controllers
                 log.Error("Error updating team "+model.ID,ex);
             }
             return Json(new { Status = "Error" });
-        }
-        /*
-        public ActionResult Created()
-        {
-            string strTeamId = TempData["TeamID"].ToString();
-            if (!String.IsNullOrEmpty(strTeamId))
-            {
-                int teamId = Convert.ToInt32(strTeamId);
-                var team = repo.GetTeam(teamId);
-                var teamVM = new TeamVM { Name = team.Name  , ID=teamId};
-                return View(teamVM);
-            }
-            return RedirectToAction("Index", "Dashboard");
+        }    
 
-        }
 
-        public JsonResult NonTeamMembers(int issueId)
-        {
-            List<MemberVM> memberList = new List<MemberVM>();
-            /*
-            var members = repo.GetNonIssueMembers(TeamID, issueId);
-            foreach (var member in members)
-            {
-                var vm = new MemberVM {MemberType = member.JobTitle, Name = member.DisplayName, MemberID=member.ID };
-                vm.AvatarHash = UserService.GetImageSource(member.EmailAddress,48);
-                memberList.Add(vm);
-            }*//*
-            return Json ( new{ Data = memberList, Status = "Success" },JsonRequestBehavior.AllowGet);
-        }
-        */
 
         // we will move this method to the web api once authentication stuff is finalized.
         public ActionResult Stream(int id,int size=25)

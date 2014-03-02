@@ -28,6 +28,36 @@ namespace TechiesWeb.TeamBins.Controllers
 
         #region public methods
 
+        public JsonResult NonIssueMembers(string term,int issueId)
+        {
+            //Returns team members who are not assigned to the issue in a list in JSON format
+            try
+            {
+                //TO DO : Have repo method to directly get non issue members
+
+                var team = repo.GetTeam(TeamID);
+                var list = new List<MemberVM>();
+                var existingIssueMembers = repo.GetIssueMembers(issueId).ToList();
+
+                var projectMembers = team.TeamMembers.Where(s => s.Member.FirstName.StartsWith(term, StringComparison.OrdinalIgnoreCase)).ToList();
+                foreach(var member in projectMembers)
+                {
+                    if(!existingIssueMembers.Any(s=>s.MemberID==member.MemberID))
+                    {
+                        var memberVM = new MemberVM { AvatarHash = UserService.GetImageSource(member.Member.EmailAddress) };
+                        memberVM.Name = member.Member.FirstName;
+                        memberVM.MemberID = member.Member.ID;
+                        list.Add(memberVM);
+                    }
+                }
+                return Json(list, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                return Json(new { Status = "Error", Message = "Troubles getting team members", JsonRequestBehavior.AllowGet });
+            }
+        }
         public ActionResult Index(int size = 50, string iteration = "current")
         {
             try
@@ -326,18 +356,33 @@ namespace TechiesWeb.TeamBins.Controllers
         }
 
         [HttpPost]      
-        public int AddMember(int memberId, int issueId)
+        public JsonResult AddMember(int memberId, int issueId)
         {
             try
             {
                 issueService.SaveIssueMember(issueId, memberId,UserID);
-                return 1;
+                return Json(new { Status = "success" });
             }
             catch (Exception ex)
             {
-                log.Error(ex);
-                return 0;
+                log.Error(string.Format("error saving member {0} for issue {1}",memberId,issueId), ex);
+                return Json(new { Status = "error" });
             }
+        }
+
+        public JsonResult Members(int id)
+        {
+            var issueMembers = repo.GetIssueMembers(id);
+            var list=new List<dynamic>();
+            if (issueMembers != null)
+            {
+                foreach (var item in issueMembers)
+                {
+                    var memberVM = new { MemberID = item.MemberID, Name = item.Member.FirstName, AvatarHash = UserService.GetImageSource(item.Member.EmailAddress),ShowDelete=false };
+                    list.Add(memberVM);
+                }
+            }
+            return Json(list,JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult IssueMembers(int id)

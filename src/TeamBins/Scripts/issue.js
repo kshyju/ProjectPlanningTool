@@ -60,7 +60,48 @@ issueListApp.controller('IssueListCtrl', function ($scope, $http) {
 
 $(function () {
     
-    $("#txtAssignMember").autocomplete({
+    $("#txtAssignMember").autocomplete({       
+        source: function (request, response) {                  
+            $.ajax({
+                url: "../../Issues/NonIssueMembers",
+                data: { term: request.term ,issueId: $("#ID").val() },
+                success: function (data) {
+                    response($.map(data, function (item) {                   
+                        return { label: item.Name, value: item.MemberID, Image: item.AvatarHash };
+                    }))
+                }
+            })
+        },
+        create: function () {
+            $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
+                return $('<li>')
+                    .append("<a><div class='autocomplete-item'><img src='" + item.Image + "?size=28' />" + item.label + "</div></a>")
+                    .appendTo(ul);
+            };
+        },
+        focus: function (event, ui) {   
+            $("#txtAssignMember").val(ui.item.label);
+        },
+        select: function (event, ui) {                       
+            $("#txtAssignMember").val(ui.item.label);
+            $.post(addMemberToIssueUrl, { memberId: ui.item.value, issueId: $("#ID").val() }, function (res) {
+                if(res.Status==="success")
+                {
+                    $("#txtAssignMember").val("");
+                    var domElement = $("#memberList");
+                    var scope = angular.element(domElement).scope();
+                    $.get('../../issues/members/' + $("#ID").val()).success(function (data) {
+                        scope.$apply(function () {
+                            scope.members = data;
+                        });
+                    });
+                }
+            });
+            return false;
+        }
+    });
+
+    $("#txtAssignMemberold").autocomplete({
         source: "../../Users/TeamMembers?issueId=" + $("#ID").val(),
         minLength: 1,
         select: function (event, ui) {                      
@@ -71,18 +112,18 @@ $(function () {
             });
         }
     });
- 
+ /*
     $(document).on("click", "a.aRemove", function (e) {
         e.preventDefault();
         var _this = $(this);
         $.post(_this.attr("href"), function (res) {
-            if (res.Status == "Success") {
+            if (res.Status === "Success") {
                 $("#members").load("../../Issues/IssueMembers/" + $("#ID").val(), function () {
                     
                 });                
             }
         });
-    });
+    });*/
     $('#IssueDueDate').datepicker({
         onSelect: function (date) {
             selectedDate = date;//$("#IssueDueDate").val();
