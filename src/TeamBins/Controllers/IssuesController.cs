@@ -273,7 +273,7 @@ namespace TechiesWeb.TeamBins.Controllers
                 bugVm.Status = bug.Status.Name;
                 bugVm.Priority = bug.Priority.Name;
                 bugVm.StatusCode = bug.Status.Name;
-                if (bug.ModifiedDate.HasValue && bug.ModifiedDate.Value > DateTime.MinValue)
+                if (bug.ModifiedDate.HasValue && bug.ModifiedDate.Value > DateTime.MinValue && bug.ModifiedBy!=null)
                 {
                     bugVm.LastModifiedDate = bug.ModifiedDate.Value.ToString("g");
                     bugVm.LastModifiedBy = bug.ModifiedBy.FirstName;
