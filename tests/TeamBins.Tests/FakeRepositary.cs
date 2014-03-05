@@ -249,5 +249,10 @@ namespace TeamBins.Tests
         {
             throw new System.NotImplementedException();
         }
+
+        public void UpdateComment(Comment comment)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

@@ -191,6 +191,7 @@
     </Compile>
     <Compile Include="Helpers\Enums\Class1.cs" />
     <Compile Include="Helpers\ExtensionMethods\DateTimeExtensions.cs" />
+    <Compile Include="Helpers\ExtensionMethods\StringExtensions.cs" />
     <Compile Include="Helpers\HelperMethods\HTMLHelpers.cs" />
     <Compile Include="Helpers\Infrastructure\AlertMessageStore.cs" />
     <Compile Include="Helpers\Infrastructure\Email.cs" />

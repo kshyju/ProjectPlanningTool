@@ -581,44 +581,7 @@ div#members h4
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 
 }
-.commentItem
-{
-    padding:10px; overflow:auto;
-        border:1px solid #DEDEDE; margin-bottom:10px;
-        margin:10px;
-         border-radius: 4px 4px 4px 4px;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075);
-    background-color:#FEFEFE;
-}
-#comments
-{
 
-}
-.commentItem img
-{
-    float:left;
-}
-.commentItemBody
-{
-    padding-left:54px;
-}
-.commentItemBody p
-{
-   color: #000000;
-  
-  
-    padding: 0px 0px; margin-top:0px; margin-bottom:0px;
-}
-.cmntAuthorName
-{
-    font-size: 14px;
-    font-weight: bold;
-    padding: 10px; padding-left:2px;
-}
-.commentmetadata
-{
-    font-size:13px; font-style:italic;
-}
 .avatarHolder
 {
     float:left; width:70px;
@@ -1064,4 +1027,59 @@ div.dashboard-ataglance {
 a.aRemove
 {
     font-size:12px;
+}
+.comment-body {
+     background-color:#FFFFFF; padding:5px;
+}
+.comment-rightpart {
+    background-color:#F7F7F7;    margin-bottom:10px;
+    
+}
+.commentItem
+{
+     overflow:auto;
+         margin-bottom:10px;
+       
+        margin:0px;   margin-right:10px;
+    background-color:#FEFEFE;
+    border-top:1px solid #DEDEDE;
+}
+#comments
+{
+
+}
+.comment-header {
+    padding:5px;
+}
+.commentItem img
+{
+    float:left; margin:10px;
+}
+.commentItemBody
+{
+    padding-left:64px;
+    
+}
+.commentItemBody p
+{
+   color: #000000;
+  
+  
+    padding: 0px 0px; margin-top:0px; margin-bottom:0px;
+}
+.cmntAuthorName
+{
+    font-size: 14px;
+    font-weight: bold;
+    padding: 10px; padding-left:2px;
+}
+.commentmetadata
+{
+    font-size:13px; font-style:italic;
+}
+.right-links {
+    float:right;
+}
+a.comment-delete {
+    font-size:11px;
 }

@@ -25,7 +25,7 @@ namespace TeamBins.Services
             {
                 commentVM.ID = comment.ID;
                 commentVM.AuthorName = comment.Author.FirstName;
-                commentVM.CommentBody = comment.CommentText;
+                commentVM.CommentBody = comment.CommentText.ConvertUrlsToLinks();
                 commentVM.CreativeDate = comment.CreatedDate.ToString("g");
                 commentVM.AvatarHash = UserService.GetImageSource(comment.Author.EmailAddress, 42);
                 commentVM.CreatedDateRelative = comment.CreatedDate.ToShortDateString(); //.ToRelativeDateTime();

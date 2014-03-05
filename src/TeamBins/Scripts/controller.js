@@ -1,5 +1,5 @@
 ﻿
-var issueDetailApp = angular.module('issueDetialApp', []);
+var issueDetailApp = angular.module('issueDetialApp', ['ngSanitize']);
 issueDetailApp.controller("IssueDetailsCtrl", function ($scope, $http) {
     $scope.hover = false;
     $scope.members = [];
@@ -14,15 +14,20 @@ issueDetailApp.controller("IssueDetailsCtrl", function ($scope, $http) {
     $scope.hover = function (member) {       
         return member.ShowDelete = !member.ShowDelete;
     };
-    $scope.removeIssueMember = function (issueId, member, $event) {
-        console.log("beofre");
+    $scope.removeIssueMember = function (issueId, member, $event) {        
         $http.post("../../issues/removemember", { memberid: member.MemberID, id: issueId }).success(function(data) {
             if (data.Status === "Success") {               
                 $scope.members.splice($scope.members.indexOf(member), 1);
             }
         });
     };
-
+    $scope.removeComment = function (issue, $event) {
+        $http.post("../../issues/removecomment", { memberid: member.MemberID, id: issueId }).success(function (data) {
+            if (data.Status === "Success") {
+                $scope.members.splice($scope.members.indexOf(member), 1);
+            }
+        });
+    };
     var chat = $.connection.issuesHub;       
     chat.client.addNewComment = function (comment) {        
         $scope.comments.push(comment);

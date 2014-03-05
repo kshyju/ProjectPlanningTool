@@ -101,29 +101,6 @@ $(function () {
         }
     });
 
-    $("#txtAssignMemberold").autocomplete({
-        source: "../../Users/TeamMembers?issueId=" + $("#ID").val(),
-        minLength: 1,
-        select: function (event, ui) {                      
-            $.post(addMemberToIssueUrl,{ memberId:ui.item.id, issueId:$("#ID").val()},function(res){
-                //Reload the member list ,function
-                $("#members").load(issueMembersUrl+"/"+ $("#ID").val(), function () {
-                });
-            });
-        }
-    });
- /*
-    $(document).on("click", "a.aRemove", function (e) {
-        e.preventDefault();
-        var _this = $(this);
-        $.post(_this.attr("href"), function (res) {
-            if (res.Status === "Success") {
-                $("#members").load("../../Issues/IssueMembers/" + $("#ID").val(), function () {
-                    
-                });                
-            }
-        });
-    });*/
     $('#IssueDueDate').datepicker({
         onSelect: function (date) {
             selectedDate = date;//$("#IssueDueDate").val();
@@ -137,16 +114,12 @@ $(function () {
         e.preventDefault();
         $("#dueDatePicker").fadeIn(50);
     });
-    $(".changableWidget").hover(function () {
-        $(this).find("a.hiddenChangeLink").show();
-        },
-        function () {
-            $(this).find("a.hiddenChangeLink").hide();
-    });
 
     $("#saveComment").click(function (e) {
         e.preventDefault();
-        if ($("#newComment").val() != "") {
+        var _this = $(this);
+        _this.attr("value","Saving...").attr("disabled", true);
+        if ($("#newComment").val()!=="") {
             $.ajax({
                 url: "../../Issues/Comment",
                 type: "post",
@@ -155,7 +128,8 @@ $(function () {
                     IssueID: $("#ID").val()
                 },
                 success: function (res, textStatus, jqXHR) {                   
-                        $("#newComment").val(""); 
+                    $("#newComment").val("");
+                    _this.attr("disabled", false).attr("value","Post");
                 }
             });
         }

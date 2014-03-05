@@ -507,6 +507,28 @@ namespace TechiesWeb.TeamBins.Controllers
             return Json(issueService.GetIssueCommentVMs(id),JsonRequestBehavior.AllowGet);            
         }
 
+        [HttpPost]
+        [VerifyLogin]
+        public JsonResult removecomment(int id)
+        {
+            try
+            {
+                var comment = repo.GetComment(id);
+                if (comment != null)
+                {
+                    if (comment.CreatedByID == UserID)
+                    {
+                       //set status flag to false and save
+                    }
+                }
+                return Json(new { Status = "Error" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Status = "Success" });
+            }
+            
+        }
 
         #endregion public methods
 

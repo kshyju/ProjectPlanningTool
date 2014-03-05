@@ -8,6 +8,7 @@ using TechiesWeb.TeamBins.ExtensionMethods;
 using SmartPlan.ViewModels;
 using TechiesWeb.TeamBins.Infrastructure;
 using TechiesWeb.TeamBibs.Helpers.Logging;
+using System.Text.RegularExpressions;
 namespace TeamBins.Services
 {
 
@@ -352,7 +353,7 @@ namespace TeamBins.Services
             activityVM.ObjectURL = String.Format("{0}Issues/details/{1}", SiteBaseURL, activity.ObjectID);
             return activityVM;
         }
-
+               
         public List<CommentVM> GetIssueCommentVMs(int id)
         {
             var commentVMList=new List<CommentVM>();
@@ -360,30 +361,14 @@ namespace TeamBins.Services
             foreach (var item in commentList)
             {
                 var commentVM = new CommentVM { ID = item.ID, CommentBody = item.CommentText, AuthorName = item.Author.FirstName, CreativeDate = item.CreatedDate.ToString("g") };
+                commentVM.CommentBody = commentVM.CommentBody.ConvertUrlsToLinks();
                 commentVM.AvatarHash = UserService.GetImageSource(item.Author.EmailAddress, 42);
                 commentVM.CreatedDateRelative = item.CreatedDate.ToJSONFriendlyDateTime();//.ToRelativeDateTime();
                 commentVMList.Add(commentVM);
             }
             return commentVMList;
         }
-        /*
-        public Activity SaveActivity(IActivity activity)
-        {
-            var activityEntity = new Activity() { CreatedByID = UserID, ObjectID = issueId, ObjectType = "Issue" };
-
-            activityEntity.ActivityDesc = "Created";
-            activityEntity.NewState = model.Title;
-            activityEntity.TeamID = TeamID;
-
-            var result = repo.SaveActivity(activityEntity);
-            if (!result.Status)
-            {
-                //log.Error(result);
-            }
-            return activityEntity;
-        }*/
-
-
+        
         public Activity SaveActivity(IActivity activity)
         {
             throw new NotImplementedException();
