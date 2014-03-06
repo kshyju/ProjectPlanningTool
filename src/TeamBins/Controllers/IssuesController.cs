@@ -262,7 +262,7 @@ namespace TechiesWeb.TeamBins.Controllers
 
                 var bug = repo.GetIssue(issueId);
 
-                if (TeamID != bug.TeamID)
+                if (bug==null || TeamID != bug.TeamID)
                     return View("NotFound");
 
 

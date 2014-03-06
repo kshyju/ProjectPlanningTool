@@ -13,6 +13,10 @@ namespace TeamBins
     {
         protected void Application_Start()
         {
+            ViewEngines.Engines.Clear();
+            var razorViewEngine = new RazorViewEngine();
+            ViewEngines.Engines.Add(razorViewEngine);
+
             AreaRegistration.RegisterAllAreas();
 
             GlobalConfiguration.Configure(WebApiConfig.Register);
