@@ -103,9 +103,9 @@ namespace TechiesWeb.TeamBins.Controllers
                             }
 
                             if (!String.IsNullOrEmpty(model.ReturnUrl))
-                                return RedirectToAction("JoinMyTeam", "Users", new { id = model.ReturnUrl });
+                                return RedirectToAction("joinmyteam", "users", new { id = model.ReturnUrl });
 
-                            return RedirectToAction("AccountCreated");
+                            return RedirectToAction("accountcreated");
                         }
                     }
                     else
@@ -150,7 +150,7 @@ namespace TechiesWeb.TeamBins.Controllers
 
                             repo.SaveLastLogin(user.ID);
 
-                            return RedirectToAction("Index", "Dashboard");
+                            return RedirectToAction("index", "dashboard");
                         }
                     }
                 }
@@ -196,7 +196,7 @@ namespace TechiesWeb.TeamBins.Controllers
                         userService = new UserService(repo,SiteBaseURL);
                         userService.SendResetPasswordEmail(resetRequest);
 
-                        return RedirectToAction("forgotPasswordEmailSent");
+                        return RedirectToAction("forgotpasswordemailsent");
                     }
                     ModelState.AddModelError("", "We do not see an account with that email address!");
                 }
@@ -239,7 +239,7 @@ namespace TechiesWeb.TeamBins.Controllers
                         var result = repo.SaveUser(user);
                         if (result.Status)
                         {
-                            return RedirectToAction("PasswordUpdated");
+                            return RedirectToAction("passwordupdated");
                         }
                     }
                 }
@@ -266,7 +266,7 @@ namespace TechiesWeb.TeamBins.Controllers
         public ActionResult Logout()
         {
             Session.Abandon();
-            return RedirectToAction("Login", "Account");
+            return RedirectToAction("login", "account");
         }
 
         public ActionResult EditProfile()
@@ -298,7 +298,7 @@ namespace TechiesWeb.TeamBins.Controllers
                         var msg = new AlertMessageStore();
                         msg.AddMessage("success", "Profile updated successfully");
                         TempData["AlertMessages"] = msg;
-                        return RedirectToAction("EditProfile");
+                        return RedirectToAction("editprofile");
                     }
                 }
             }
@@ -351,7 +351,7 @@ namespace TechiesWeb.TeamBins.Controllers
                     var msg = new AlertMessageStore();
                     msg.AddMessage("success", "Settings updated successfully");
                     TempData["AlertMessages"] = msg;
-                    return RedirectToAction("Settings");
+                    return RedirectToAction("settings");
                 }                
             }
             model.Projects = GetProjectListItem();

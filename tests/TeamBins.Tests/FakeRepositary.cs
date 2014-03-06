@@ -254,5 +254,10 @@ namespace TeamBins.Tests
         {
             throw new System.NotImplementedException();
         }
+
+        public void DeleteComment(int commentId)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

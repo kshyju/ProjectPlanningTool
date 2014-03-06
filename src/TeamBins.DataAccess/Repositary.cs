@@ -14,9 +14,22 @@ namespace TeamBins.DataAccess
         {
            db = new TeamEntities();
         }
-        public void UpdateComment(Comment comment)
+        public void DeleteComment(int commentId)
         {
-           //to do : mark comment as removed.
+            var comment = db.Comments.FirstOrDefault(s => s.ID == commentId);
+            if (comment != null)
+            {
+                db.Comments.Remove(comment);
+                db.SaveChanges();
+
+                //delete activity also
+                var activity = db.Activities.FirstOrDefault(s => s.ObjectID == commentId && s.ObjectType.ToUpper() == "ISSUECOMMENT");
+                if (activity != null)
+                {
+                    db.Activities.Remove(activity);
+                    db.SaveChanges();
+                }
+            }
         }
         public IEnumerable<User> GetSubscribers(int teamId,string notificationtypeCode)
         {

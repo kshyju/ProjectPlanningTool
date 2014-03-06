@@ -9,7 +9,7 @@ namespace TeamBins.DataAccess
 {
     public interface IRepositary : IDisposable  
     {
-        void UpdateComment(Comment comment);
+        void DeleteComment(int commentId);
         IEnumerable<User> GetSubscribers(int teamId, string notificationtypeCode);
         IEnumerable<NotificationType> GetNotificationTypes();
         void SaveUserNotificationSubscription(UserNotificationSubscription subscription);

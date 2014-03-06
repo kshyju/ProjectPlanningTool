@@ -12,7 +12,7 @@ using TeamBins.Helpers.Infrastructure;
 using TeamBins.Services;
 using TechiesWeb.TeamBins.Infrastructure;
 using TechiesWeb.TeamBins.ViewModels;
-
+using TechiesWeb.TeamBins.ExtensionMethods;
 namespace TechiesWeb.TeamBins.Controllers
 {   
     public class IssuesController : BaseController
@@ -243,8 +243,9 @@ namespace TechiesWeb.TeamBins.Controllers
             }
             return View("NotFound");
         }
-               
 
+        [Route("issues/{id:int}")]
+        [Route("issuecomment/{commentId}/{issuetitle}")]
         public ActionResult Details(int id=0,int commentId=0)
         {
             int issueId = 0;
@@ -261,8 +262,12 @@ namespace TechiesWeb.TeamBins.Controllers
 
                 var bug = repo.GetIssue(issueId);
 
+                if (TeamID != bug.TeamID)
+                    return View("NotFound");
+
+
                 IssueDetailVM bugVm = new IssueDetailVM { ID = bug.ID, Title = bug.Title };
-                bugVm.Description = (bug.Description == null ? "" : bug.Description);
+                bugVm.Description = (bug.Description == null ? "" : bug.Description.ConvertUrlsToLinks());
                 bugVm.CreatedDate = bug.CreatedDate.ToString("g");
                 bugVm.OpenedBy = bug.CreatedBy.FirstName;
                 bugVm.Title = bug.Title;
@@ -518,14 +523,16 @@ namespace TechiesWeb.TeamBins.Controllers
                 {
                     if (comment.CreatedByID == UserID)
                     {
-                       //set status flag to false and save
+                        repo.DeleteComment(id);
+                        return Json(new { Status = "Success" });
                     }
                 }
                 return Json(new { Status = "Error" });
             }
             catch (Exception ex)
             {
-                return Json(new { Status = "Success" });
+                log.Error("Error deleting comment " + id, ex);
+                return Json(new { Status = "Error" });
             }
             
         }

@@ -1,5 +1,5 @@
 ﻿@model TechiesWeb.TeamBins.ViewModels.IssueDetailVM
-<h4>{{commentCount}} comments</h4> 
+<h4>{{comments.length}} comments</h4> 
 <div id="commentList" > 
     <div class="commentItem" ng-repeat="comment in comments">          
         <img ng-src="{{comment.AvatarHash}}" />    
@@ -10,7 +10,7 @@
                 <span class="cmntAuthorName">{{comment.AuthorName}}</span>
                 <span class="commentmetadata" title="">{{comment.CreatedDateRelative | date:'medium'}}</span>
                 <div class="right-links">
-                   <a class="comment-delete" ng-click="removeComment(member,$event)" href="#">delete</a>
+                   <a class="comment-delete quite" title="Delete comment" ng-click="removeComment(comment,@Model.ID,$event)" href="#">Delete</a>
                 </div>
             </div>
             <div class="comment-body">
@@ -25,7 +25,7 @@
 <div id="addComment">
     <p>
         <b>Add a comment</b><br />
-        <textarea id="newComment" name="newComment" rows="4" cols="100%" maxlength="5000" style="height:70px;"  ></textarea>
+        <textarea id="newComment" name="newComment" rows="3" cols="100%" maxlength="2000" style="height:50px;"  ></textarea>
     </p>
     <p>
         <input type="submit" id="saveComment" value="Post" />

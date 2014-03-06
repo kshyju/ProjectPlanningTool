@@ -25,14 +25,14 @@ namespace TeamBins
                 defaults: new { controller = "Issues", action = "index", teamname=UrlParameter.Optional }
 
             );
-
+            /*
             routes.MapRoute(name: "issue-comment-direct-link",
                  url: "issuecomment/{commentid}/{issuetitle}",
                 defaults: new { controller = "Issues", action = "details", id = 0, issuetitle = UrlParameter.Optional }
             );
-
+            */
            /* */
-            //routes.MapMvcAttributeRoutes();
+            routes.MapMvcAttributeRoutes();
            
             routes.MapRoute(
                 name: "Default",

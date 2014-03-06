@@ -6,12 +6,10 @@
 
 <div class="signUpContainer">
 <h1>Create an Account</h1>
-
 <div class="divSignUp">
 @using(Html.BeginForm())
 {
 <table class="tblEntry register">
-
     <tr>
         <td>
             @Html.ValidationSummary()
@@ -43,7 +41,7 @@
     </tr>
     <tr>
         <td>
-            <input type="submit" value="Register" />
+            <input type="submit" id="btnJoin" value="Register" />
         </td>
     </tr>
 </table>
@@ -55,3 +53,10 @@
     </div>
 </div>
 </div>
+<script type="text/javascript">
+    $(function () {
+        $("#btnJoin").click(function (e) {          
+            $(this).attr("value", "Registering..").addClass("btn-disabled");
+        });
+    });
+</script>

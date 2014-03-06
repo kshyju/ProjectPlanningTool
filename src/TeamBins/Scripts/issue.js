@@ -103,7 +103,7 @@ $(function () {
 
     $('#IssueDueDate').datepicker({
         onSelect: function (date) {
-            selectedDate = date;//$("#IssueDueDate").val();
+            var selectedDate = date;//$("#IssueDueDate").val();
             $("span#dueDate").text(selectedDate);
             $("#dueDatePicker").fadeOut(50);
             $.post("../../Issues/SaveDueDate", { issueDueDate: selectedDate, issueId: $("#ID").val() });
@@ -118,8 +118,9 @@ $(function () {
     $("#saveComment").click(function (e) {
         e.preventDefault();
         var _this = $(this);
-        _this.attr("value","Saving...").attr("disabled", true);
-        if ($("#newComment").val()!=="") {
+       
+        if ($("#newComment").val() !== "") {
+            _this.attr("value", "Saving...").attr("disabled", true);
             $.ajax({
                 url: "../../Issues/Comment",
                 type: "post",

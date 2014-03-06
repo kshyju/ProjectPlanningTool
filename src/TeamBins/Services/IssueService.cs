@@ -104,7 +104,7 @@ namespace TeamBins.Services
                         string emailBody = emailTemplate.EmailBody;
                         Email email = new Email();
 
-                        string issueUrl = siteBaseUrl + "issues/details/" + issue.ID;
+                        string issueUrl = siteBaseUrl + "issues/" + issue.ID;
                         var issueLink = "<a href='" + issueUrl + "'>" + "# " + issue.ID + " " + issue.Title + "</a>";
                         emailBody = emailBody.Replace("@author", issue.CreatedBy.FirstName);
                         emailBody = emailBody.Replace("@link", issueLink);
@@ -148,7 +148,7 @@ namespace TeamBins.Services
                         string emailBody = emailTemplate.EmailBody;
                         Email email = new Email();
 
-                        string issueUrl = siteBaseUrl + "issues/details/" + issue.ID;
+                        string issueUrl = siteBaseUrl + "issues/" + issue.ID;
                         var issueLink = "<a href='" + issueUrl + "'>" + "#" + issue.ID + " " + issue.Title + "</a>";
                         emailBody = emailBody.Replace("@issueAuthor", issue.CreatedBy.FirstName);
                         emailBody = emailBody.Replace("@issueLink", issueLink);
@@ -208,6 +208,9 @@ namespace TeamBins.Services
             return issueVM;
         }
 
+
+        
+
         public void SetUserPermissionsForIssue(IssueDetailVM issueVm, int currentUserId = 0, int teamId = 0)
         {
             if(currentUserId>0)
@@ -219,6 +222,7 @@ namespace TeamBins.Services
                 }
             }
         }
+
         public void LoadIssueMembers(int id, IssueDetailVM issueVm, int currentUserId = 0)
         {
 
@@ -230,7 +234,7 @@ namespace TeamBins.Services
                 var isCurrentUserStarredIssue = issueMemberRelations.Where(s => s.RelationType == IssueMemberRelationType.Star.ToString() && s.MemberID == currentUserId).FirstOrDefault();
                 issueVm.IsStarredForUser = isCurrentUserStarredIssue != null;
             }
-            
+            /**
             //Now get the members assigned to this issue
             var issueMemberList = issueMemberRelations.Where(s => s.RelationType ==IssueMemberRelationType.Member.ToString());
             foreach (var member in issueMemberList)
@@ -238,7 +242,7 @@ namespace TeamBins.Services
                 var vm = new MemberVM { MemberType = member.Member.JobTitle, Name = member.Member.FirstName, MemberID = member.MemberID };
                 vm.AvatarHash = UserService.GetImageSource(member.Member.EmailAddress);
                 issueVm.Members.Add(vm);
-            }
+            }*/
         }
         public bool SaveIssueMember(int issueId, int userId, int createdById)
         {
@@ -350,7 +354,7 @@ namespace TeamBins.Services
                 activityVM.ObjectTite = activity.OldState;
                 activityVM.NewState = "to " + activity.NewState;               
             }
-            activityVM.ObjectURL = String.Format("{0}Issues/details/{1}", SiteBaseURL, activity.ObjectID);
+            activityVM.ObjectURL = String.Format("{0}Issues/{1}", SiteBaseURL, activity.ObjectID);
             return activityVM;
         }
                

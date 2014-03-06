@@ -166,7 +166,7 @@ div.centralHead{
     margin:0px;  background-color:#E9E9E9;padding:1px; padding-left:4px; 
 }
 .central h2 {
-     margin:0px;padding:1px; padding-left:4px; margin-bottom:8px; margin-top:3px; 
+     margin:0px;padding:1px; padding-left:4px; margin-bottom:8px; margin-top:1px; 
 }
 .divAttach {
     min-height:30px;
@@ -185,23 +185,23 @@ div.centralHead{
 
 }
 .divRight {
-    width:29%; float:left;
+    width:30%; float:left;
 }
 .divToobar {
-
-    background-color:#E9E9E9; padding:3px; text-align:right;
+    background-color:#F4F4F4; padding:3px; text-align:right;
 }
 a.toolLink {
-   padding-right:4px; padding-left:2px;
+   padding-right:4px; padding-left:2px; font-size:12px;
 }
 .divDetail {
     background-color:#F1F1F1;
-    padding:10px; padding-left:0px;
+    padding:4px; padding-left:0px;
     padding-right:0px;
 }
 .divDescr {
     background-color:white; padding:12px;
     min-height:30px;
+    line-height: 1.25em;
 }
 .divForm {
     padding:10px;
@@ -510,10 +510,7 @@ div#createEditMode
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
     right: 0px; 
 }
-div#members, div#dueDate
-{
-    margin:10px; margin-top:0px;
-}
+
 input#assignMember
 {
     width:80% !IMPORTANT;
@@ -571,14 +568,14 @@ div#members h4
     font-style:italic; color:gray;
 }
 #newComment
-{  font-size: 14px; padding:5px;
-    font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif;
+{  font-size: 13px; padding:4px;
+ 
     border: 1px solid #CCCCCC;
-    border-radius: 4px 4px 4px 4px;
+    border-radius: 2px 2px 2px 2px;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
     color: #555555;
     display: block;
-    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+   
 
 }
 
@@ -848,9 +845,9 @@ a.aIteration:hover
     padding-top:10px;
 }
 .right-detail-items {
-    background-color: #F7F7F7;
+    background-color:#F5F5F5;
     padding: 5px 10px 10px;
-     margin: 0 10px 10px;
+     margin: 0 0px 10px;
 
 }
 .issue-detail-item {
@@ -1029,7 +1026,7 @@ a.aRemove
     font-size:12px;
 }
 .comment-body {
-     background-color:#FFFFFF; padding:5px;
+     background-color:#FFFFFF; padding:5px; font-size:12px;
 }
 .comment-rightpart {
     background-color:#F7F7F7;    margin-bottom:10px;
@@ -1082,4 +1079,17 @@ a.aRemove
 }
 a.comment-delete {
     font-size:11px;
+}
+input.btn-disabled {
+    background-color:#A8A8A8 !IMPORTANT;
+    background-image:none;cursor:progress;
+}
+a.quite {
+    color: #939393;
+}
+a.quite:hover {
+color: #111;
+}
+.comment-body a {
+    color:black; text-decoration:underline;
 }

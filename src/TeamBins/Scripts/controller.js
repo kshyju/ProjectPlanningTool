@@ -3,8 +3,7 @@ var issueDetailApp = angular.module('issueDetialApp', ['ngSanitize']);
 issueDetailApp.controller("IssueDetailsCtrl", function ($scope, $http) {
     $scope.hover = false;
     $scope.members = [];
-    $http.get(issueCommentsUrl+'/' + $("#ID").val()).success(function (data) {       
-        $scope.commentCount = data.length;
+    $http.get(issueCommentsUrl+'/' + $("#ID").val()).success(function (data) {    
         $scope.comments = data;       
     });
     $http.get('../../issues/members/' + $("#ID").val()).success(function (data) {
@@ -21,12 +20,15 @@ issueDetailApp.controller("IssueDetailsCtrl", function ($scope, $http) {
             }
         });
     };
-    $scope.removeComment = function (issue, $event) {
-        $http.post("../../issues/removecomment", { memberid: member.MemberID, id: issueId }).success(function (data) {
-            if (data.Status === "Success") {
-                $scope.members.splice($scope.members.indexOf(member), 1);
-            }
-        });
+    $scope.removeComment = function (comment, issueId, $event) {
+        var yes = window.confirm("Are you sure to delete this comment ? This cannot be undone.");
+        if (yes) {
+            $http.post("../../issues/removecomment", { id: comment.ID }).success(function (data) {
+                if (data.Status === "Success") {
+                    $scope.comments.splice($scope.comments.indexOf(comment), 1);
+                }
+            });
+        }
     };
     var chat = $.connection.issuesHub;       
     chat.client.addNewComment = function (comment) {        
