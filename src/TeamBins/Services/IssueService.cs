@@ -366,7 +366,7 @@ namespace TeamBins.Services
             {
                 var commentVM = new CommentVM { ID = item.ID, CommentBody = item.CommentText, AuthorName = item.Author.FirstName, CreativeDate = item.CreatedDate.ToString("g") };
                 commentVM.CommentBody = commentVM.CommentBody.ConvertUrlsToLinks();
-                commentVM.AvatarHash = UserService.GetImageSource(item.Author.EmailAddress, 42);
+                commentVM.AvatarHash = UserService.GetAvatarUrl(item.Author.Avatar, 42);
                 commentVM.CreatedDateRelative = item.CreatedDate.ToJSONFriendlyDateTime();//.ToRelativeDateTime();
                 commentVMList.Add(commentVM);
             }

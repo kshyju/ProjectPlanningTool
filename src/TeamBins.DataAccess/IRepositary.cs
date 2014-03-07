@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 
@@ -9,6 +10,9 @@ namespace TeamBins.DataAccess
 {
     public interface IRepositary : IDisposable  
     {
+        IEnumerable<User> GetNonTeamMemberUsers(int teamId, string searchKey);
+        IQueryable<TeamMember> GetTeamMembers(int teamId);
+        IQueryable<User> GetUsers();
         void DeleteComment(int commentId);
         IEnumerable<User> GetSubscribers(int teamId, string notificationtypeCode);
         IEnumerable<NotificationType> GetNotificationTypes();

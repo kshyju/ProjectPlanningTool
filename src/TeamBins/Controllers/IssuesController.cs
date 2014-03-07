@@ -44,7 +44,7 @@ namespace TechiesWeb.TeamBins.Controllers
                 {
                     if(!existingIssueMembers.Any(s=>s.MemberID==member.MemberID))
                     {
-                        var memberVM = new MemberVM { AvatarHash = UserService.GetImageSource(member.Member.EmailAddress) };
+                        var memberVM = new MemberVM { AvatarHash = UserService.GetAvatarUrl(member.Member.Avatar) };
                         memberVM.Name = member.Member.FirstName;
                         memberVM.MemberID = member.Member.ID;
                         list.Add(memberVM);
@@ -383,7 +383,7 @@ namespace TechiesWeb.TeamBins.Controllers
             {
                 foreach (var item in issueMembers)
                 {
-                    var memberVM = new { MemberID = item.MemberID, Name = item.Member.FirstName, AvatarHash = UserService.GetImageSource(item.Member.EmailAddress),ShowDelete=false };
+                    var memberVM = new { MemberID = item.MemberID, Name = item.Member.FirstName, AvatarHash = UserService.GetAvatarUrl(item.Member.Avatar), ShowDelete = false };
                     list.Add(memberVM);
                 }
             }

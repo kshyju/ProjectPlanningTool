@@ -259,5 +259,25 @@ namespace TeamBins.Tests
         {
             throw new System.NotImplementedException();
         }
+
+        public IQueryable<User> GetUsers()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public IQueryable<TeamMember> GetTeamMembers(int teamId)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public IQueryable<User> GetNonTeamMembers(int teamId, string searchKey)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public IEnumerable<User> GetNonTeamMemberUsers(int teamId, string searchKey)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

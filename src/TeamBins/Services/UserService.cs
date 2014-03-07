@@ -123,6 +123,14 @@ namespace TeamBins.Services
 
 
         }
+        public static string GetAvatarUrl(string avatar, int size = 0)
+        {
+            var imageUrl = "http://www.gravatar.com/avatar/"+avatar;
+            if (size > 0)
+                imageUrl += "?s=" + size;
+
+            return imageUrl;
+        }
         public static string GetImageSource(string email,int size=0)
         {
 
@@ -130,6 +138,19 @@ namespace TeamBins.Services
                 throw new ArgumentException("The email is empty.", "email");
 
             var imageUrl = "http://www.gravatar.com/avatar.php?";
+
+            var sb = GetGravatarHash(email);
+
+            imageUrl += "gravatar_id=" + sb;          
+            if (size>0)
+                imageUrl += "?s="+size;           
+
+            return imageUrl;
+
+        }
+
+        public static string GetGravatarHash(string email)
+        {
             var encoder = new System.Text.UTF8Encoding();
             var md5 = new System.Security.Cryptography.MD5CryptoServiceProvider();
             var hashedBytes = md5.ComputeHash(encoder.GetBytes(email.ToLower()));
@@ -138,12 +159,7 @@ namespace TeamBins.Services
             for (var i = 0; i < hashedBytes.Length; i++)
                 sb.Append(hashedBytes[i].ToString("X2"));
 
-            imageUrl += "gravatar_id=" + sb.ToString().ToLower();          
-            if (size>0)
-                imageUrl += "?s="+size;           
-
-            return imageUrl;
-
+            return sb.ToString().ToLower();
         }
     
         

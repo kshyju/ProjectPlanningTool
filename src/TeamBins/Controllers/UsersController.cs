@@ -32,7 +32,7 @@ namespace TechiesWeb.TeamBins.Controllers
                     var memberVM = new MemberVM();
                     memberVM.Name = member.Member.FirstName;
                     memberVM.EmailAddress = member.Member.EmailAddress;
-                    memberVM.AvatarHash = UserService.GetImageSource(memberVM.EmailAddress, 30);
+                    memberVM.AvatarHash = UserService.GetAvatarUrl(member.Member.Avatar, 30);
                     memberVM.JoinedDate = member.CreatedDate.ToShortDateString();
                     if(member.Member.LastLoginDate.HasValue)
                         memberVM.LastLoginDate=member.Member.LastLoginDate.Value.ToString("g");
@@ -144,7 +144,7 @@ namespace TechiesWeb.TeamBins.Controllers
                 if (user != null)
                 {
                     vm.UserDisplayName = user.FirstName;
-                    vm.UserAvatarHash = UserService.GetImageSource(user.EmailAddress);
+                    vm.UserAvatarHash = UserService.GetAvatarUrl(user.Avatar);
                     var teams = repo.GetTeams(UserID).ToList();
                     foreach (var team in teams)
                     {
@@ -172,7 +172,8 @@ namespace TechiesWeb.TeamBins.Controllers
             {
                 var team = repo.GetTeam(TeamID);
                
-                var projectMembers = team.TeamMembers.Where(t=>!repo.GetIssueMembers(issueId).Any(s=>s.MemberID==t.MemberID))
+                var projectMembers = team.TeamMembers
+                    .Where(t=>!repo.GetIssueMembers(issueId).Any(s=>s.MemberID==t.MemberID))
                                             .Where(s => s.Member.FirstName.StartsWith(term, StringComparison.OrdinalIgnoreCase))                                            
                                             .Select(item => new { value = item.Member.FirstName, id = item.Member.ID.ToString() }).ToList();
                 return Json(projectMembers, JsonRequestBehavior.AllowGet);

@@ -29,3 +29,50 @@ Layout=null;
     </div>
 </div>
 }
+<style>
+   
+
+.ui-autocomplete {
+
+  z-index: 1051 !important;
+  
+}
+
+</style>
+<script type="text/javascript">
+    $(function () {       
+
+        $("#EmailAddress").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "../../Team/NonTeamMembers",
+                    data: { term: request.term, issueId: 1 },
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return { label: item.Name, value: item.MemberID, Image: item.AvatarHash };
+                        }))
+                    }
+                })
+            },
+            create: function () {
+                $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
+                    return $('<li>')
+                        .append("<a><div class='autocomplete-item'><img src='" + item.Image + "?size=28' />" + item.label + "</div></a>")
+                        .appendTo(ul);
+                };
+            },
+            focus: function (event, ui) {
+                $("#EmailAddress").val(ui.item.label);
+            },
+            select: function (event, ui) {
+                $("#EmailAddress").val(ui.item.label);
+                $.post(addMemberToIssueUrl, { memberId: ui.item.value, issueId: $("#ID").val() }, function (res) {
+                    if (res.Status === "success") {
+
+                    }
+                });
+                return false;
+            }
+        });
+    });
+</script>

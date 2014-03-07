@@ -303,6 +303,7 @@
           <Property Name="JobTitle" Type="nvarchar" MaxLength="50" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="LastLoginDate" Type="datetime" />
+          <Property Name="Avatar" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="UserNotificationSubscription">
           <Key>
@@ -1036,6 +1037,7 @@
           <NavigationProperty Name="PasswordResetRequests" Relationship="TeamBinsModel.FK_PasswordResetRequest_User" FromRole="User" ToRole="PasswordResetRequest" />
           <Property Name="LastLoginDate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="UserNotificationSubscriptions" Relationship="TeamBinsModel.FK_UserNotificationSubscription_User" FromRole="User" ToRole="UserNotificationSubscription" />
+          <Property Type="String" Name="Avatar" MaxLength="100" FixedLength="false" Unicode="false" />
           </EntityType>
         <Association Name="FK_Activity_User">
           <End Type="TeamBinsModel.User" Role="User" Multiplicity="1" />
@@ -1501,6 +1503,7 @@
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="TeamBinsModel.User">
               <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="Avatar" ColumnName="Avatar" />
                 <ScalarProperty Name="LastLoginDate" ColumnName="LastLoginDate" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="JobTitle" ColumnName="JobTitle" />

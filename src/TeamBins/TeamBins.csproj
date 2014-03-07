@@ -178,6 +178,7 @@
     <Compile Include="Controllers\DashboardController.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Controllers\DevController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImageController.cs" />
     <Compile Include="Controllers\IssuesController.cs" />
@@ -392,6 +393,7 @@
     <Content Include="Views\Account\NotificationSettings.cshtml" />
     <Content Include="Views\Account\EditorTemplates\EmailSubscriptionVM.cshtml" />
     <Content Include="Views\Issues\NotFound.cshtml" />
+    <Content Include="Views\Dev\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

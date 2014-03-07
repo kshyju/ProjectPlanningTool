@@ -14,6 +14,25 @@ namespace TeamBins.DataAccess
         {
            db = new TeamEntities();
         }
+        public IQueryable<User> GetNonTeamMembers(int teamId, string searchKey)
+        {
+            throw new NotImplementedException();
+        }
+        public IEnumerable<User> GetNonTeamMemberUsers(int teamId, string searchKey)
+        {
+            //Get a list of users who are not part of the current team
+            return db.Users                
+               // .Where(s=>s.FirstName.StartsWith(searchKey,StringComparison.OrdinalIgnoreCase)==true)
+                .Where(x=>db.TeamMembers.Any(s=>s.MemberID==x.ID && s.TeamID==teamId))  ;
+        }
+        public IQueryable<TeamMember> GetTeamMembers(int teamId)
+        {
+            return db.TeamMembers.Where(s => s.TeamID == teamId);
+        }
+        public IQueryable<User> GetUsers()
+        {
+            return db.Users;
+        }
         public void DeleteComment(int commentId)
         {
             var comment = db.Comments.FirstOrDefault(s => s.ID == commentId);
@@ -488,5 +507,7 @@ namespace TeamBins.DataAccess
         {
             return db.EmailTemplates.FirstOrDefault(s => s.Name == templateName);
         }
+
+
     }
 }

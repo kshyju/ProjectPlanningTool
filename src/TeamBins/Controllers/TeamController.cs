@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
 using TeamBins.DataAccess;
@@ -8,7 +9,7 @@ using TeamBins.Services;
 using TechiesWeb.TeamBins.ViewModels;
 namespace TechiesWeb.TeamBins.Controllers
 {
-    [VerifyLogin]
+   // [VerifyLogin]
     public class TeamController : BaseController
     {       
        private IssueService issueService;
@@ -85,7 +86,17 @@ namespace TechiesWeb.TeamBins.Controllers
              }
              return View("NotFound");
         }
+        public JsonResult NonTeamMembers(string term)
+        {
+            var nonMembers = repo.GetNonTeamMemberUsers(TeamID,term)
+                 .Where(s => s.FirstName.StartsWith(term, StringComparison.OrdinalIgnoreCase) == true)
+                 .ToList();
+            var nonTeamMembers = nonMembers                
+                 .Select(x => new MemberVM { Name = x.FirstName, AvatarHash = UserService.GetAvatarUrl( x.Avatar), MemberID = x.ID })
+                 .ToList();
 
+            return Json(nonTeamMembers, JsonRequestBehavior.AllowGet);
+        }
         /*
         public ActionResult AddMember(int id)
         {
