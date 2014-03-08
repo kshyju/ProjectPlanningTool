@@ -91,6 +91,7 @@ namespace TechiesWeb.TeamBins.Controllers
             var nonMembers = repo.GetNonTeamMemberUsers(TeamID,term)
                  .Where(s => s.FirstName.StartsWith(term, StringComparison.OrdinalIgnoreCase) == true)
                  .ToList();
+
             var nonTeamMembers = nonMembers                
                  .Select(x => new MemberVM { Name = x.FirstName, AvatarHash = UserService.GetAvatarUrl( x.Avatar), MemberID = x.ID })
                  .ToList();

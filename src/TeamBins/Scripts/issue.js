@@ -114,7 +114,12 @@ $(function () {
         e.preventDefault();
         $("#dueDatePicker").fadeIn(50);
     });
-
+    $(".changableWidget").hover(function () {
+        $(this).find("a.hiddenChangeLink").show();
+    },
+    function () {
+        $(this).find("a.hiddenChangeLink").hide();
+    });
     $("#saveComment").click(function (e) {
         e.preventDefault();
         var _this = $(this);
@@ -151,9 +156,9 @@ $(function () {
 
     $(document).on("click", "#btnDeleteIssue", function (e) {
         e.preventDefault();
-        $.post("../Delete/" + $("#ID").val(), function (res) {
+        $.post(issueDeleteUrl+"/"+ $("#ID").val(), function (res) {
             if (res.Status === "Success") {
-                window.location.href = "../Index";
+                window.location.href = issuesUrl;
             }
         });
     });

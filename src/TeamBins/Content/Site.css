@@ -181,7 +181,7 @@ div.centralHead{
     background-color:#EBF0F4;
 }
 .divLeft {
-    width:70%; border-right:1px solid #D7D7D7; float:left;
+    width:70%; border-right:1px solid #D7D7D7; float:left;min-height: 500px;
 
 }
 .divRight {

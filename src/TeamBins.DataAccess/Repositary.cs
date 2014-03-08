@@ -23,7 +23,7 @@ namespace TeamBins.DataAccess
             //Get a list of users who are not part of the current team
             return db.Users                
                // .Where(s=>s.FirstName.StartsWith(searchKey,StringComparison.OrdinalIgnoreCase)==true)
-                .Where(x=>db.TeamMembers.Any(s=>s.MemberID==x.ID && s.TeamID==teamId))  ;
+                .Where(x=>!db.TeamMembers.Any(s=>s.MemberID==x.ID && s.TeamID==teamId))  ;
         }
         public IQueryable<TeamMember> GetTeamMembers(int teamId)
         {
