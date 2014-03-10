@@ -5,7 +5,7 @@
 <script src="~/Scripts/moment.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 <link href="http://code.jquery.com/ui/1.10.3/themes/flick/jquery-ui.css" rel="stylesheet" />
-<h2>Team Members</h2>
+<h2>Team Members (@Model.Name)</h2>
 @Html.ActionLink("Add new member", "add", "users", null, new { @class="popup"})
 <table class="tblGrid table">
     <thead>
@@ -24,6 +24,24 @@
                 <td>@member.EmailAddress</td>
                 <td>@member.JoinedDate</td>
                 <td><span title="@member.LastLoginDate (UTC time)" class="relativeTime">@member.LastLoginDate</span></td>
+            </tr>
+        }
+    </tbody>
+</table>
+<h3>Lazy friends who hasn't joined yet</h3>
+<table class="table table-condensed">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Date Invited</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var member in Model.MembersInvited)
+        {
+            <tr>
+                <td><img class="img-team-member" src="@member.AvatarHash?s=30"> @member.EmailAddress</td>
+                <td><span title="@member.DateInvited (UTC time)" class="relativeTime">@member.DateInvited</span></td>
             </tr>
         }
     </tbody>

@@ -1,4 +1,5 @@
 ﻿
+var gIssueDetailConnectionID = "";
 var issueDetailApp = angular.module('issueDetialApp', ['ngSanitize']);
 issueDetailApp.controller("IssueDetailsCtrl", function ($scope, $http) {
     $scope.hover = false;
@@ -30,7 +31,9 @@ issueDetailApp.controller("IssueDetailsCtrl", function ($scope, $http) {
             });
         }
     };
-    var chat = $.connection.issuesHub;       
+    var chat = $.connection.issuesHub;
+    console.log("connection");
+    console.log(chat);
     chat.client.addNewComment = function (comment) {        
         $scope.comments.push(comment);
         $scope.commentCount++;
@@ -38,6 +41,8 @@ issueDetailApp.controller("IssueDetailsCtrl", function ($scope, $http) {
     };
     $.connection.hub.start().done(function () {           
         chat.server.subscribeToTeam($("#TeamID").val())
+        gIssueDetailConnectionID=$.connection.hub.id;
+        console.log("connection id " + gIssueDetailConnectionID);
     })  
 
 });

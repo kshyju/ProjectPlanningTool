@@ -10,7 +10,7 @@
                 <span class="cmntAuthorName">{{comment.AuthorName}}</span>
                 <span class="commentmetadata" title="">{{comment.CreatedDateRelative | date:'medium'}}</span>
                 <div class="right-links">
-                   <a class="comment-delete quite" title="Delete comment" ng-click="removeComment(comment,@Model.ID,$event)" href="#">Delete</a>
+                    <a class="comment-delete quite" ng-show="comment.IsOwner" title="Delete comment" ng-click="removeComment(comment,@Model.ID,$event)" href="#">Delete</a>
                 </div>
             </div>
             <div class="comment-body">

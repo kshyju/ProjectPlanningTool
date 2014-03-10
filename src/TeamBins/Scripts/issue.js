@@ -131,7 +131,8 @@ $(function () {
                 type: "post",
                 data: {
                     CommentBody: $("#newComment").val(),
-                    IssueID: $("#ID").val()
+                    IssueID: $("#ID").val(),
+                    Connection : gIssueDetailConnectionID
                 },
                 success: function (res, textStatus, jqXHR) {                   
                     $("#newComment").val("");

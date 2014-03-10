@@ -400,7 +400,7 @@ namespace TechiesWeb.TeamBins.Controllers
 
         [HttpPost]
         [VerifyLogin]
-        public ActionResult Comment(NewIssueCommentVM model)
+        public ActionResult Comment(NewIssueCommentVM model, string Connection)
         {
             try
             {
@@ -419,8 +419,13 @@ namespace TechiesWeb.TeamBins.Controllers
                         var context = GlobalHost.ConnectionManager.GetHubContext<IssuesHub>();                        
                         context.Clients.Group(TeamID.ToString()).addNewTeamActivity(activityVM);
 
-                        var commentVM = new CommentService(repo, SiteBaseURL).GetCommentVM(comment.ID);
-                        context.Clients.Group(TeamID.ToString()).addNewComment(commentVM);
+                        var commentVM = issueService.GetIssueCommentVM(UserID, comment);
+                        commentVM.IsOwner = false;
+                        string[] excludedConn = new string[] { Connection };
+                        context.Clients.Groups(new string[] {TeamID.ToString()}, excludedConn).addNewComment(commentVM);
+
+                        commentVM.IsOwner = true;
+                        context.Clients.Client(Connection).addNewComment(commentVM);
 
                         issueService.SendEmailNotificaionForNewComment(comment, comment.Issue, TeamID, UserID, SiteBaseURL);
 
@@ -509,7 +514,7 @@ namespace TechiesWeb.TeamBins.Controllers
 
         public JsonResult comments(int id)
         {            
-            return Json(issueService.GetIssueCommentVMs(id),JsonRequestBehavior.AllowGet);            
+            return Json(issueService.GetIssueCommentVMs(id,UserID),JsonRequestBehavior.AllowGet);            
         }
 
         [HttpPost]

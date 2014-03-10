@@ -358,19 +358,26 @@ namespace TeamBins.Services
             return activityVM;
         }
                
-        public List<CommentVM> GetIssueCommentVMs(int id)
+        public List<CommentVM> GetIssueCommentVMs(int id,int currentUserId)
         {
             var commentVMList=new List<CommentVM>();
             var commentList = repo.GetCommentsForIssue(id);
             foreach (var item in commentList)
             {
-                var commentVM = new CommentVM { ID = item.ID, CommentBody = item.CommentText, AuthorName = item.Author.FirstName, CreativeDate = item.CreatedDate.ToString("g") };
-                commentVM.CommentBody = commentVM.CommentBody.ConvertUrlsToLinks();
-                commentVM.AvatarHash = UserService.GetAvatarUrl(item.Author.Avatar, 42);
-                commentVM.CreatedDateRelative = item.CreatedDate.ToJSONFriendlyDateTime();//.ToRelativeDateTime();
+                var commentVM = GetIssueCommentVM(currentUserId, item);
                 commentVMList.Add(commentVM);
             }
             return commentVMList;
+        }
+
+        public CommentVM GetIssueCommentVM(int currentUserId, Comment item)
+        {
+            var commentVM = new CommentVM { ID = item.ID, CommentBody = item.CommentText, AuthorName = item.Author.FirstName, CreativeDate = item.CreatedDate.ToString("g") };
+            commentVM.CommentBody = commentVM.CommentBody.ConvertUrlsToLinks();
+            commentVM.AvatarHash = UserService.GetAvatarUrl(item.Author.Avatar, 42);
+            commentVM.CreatedDateRelative = item.CreatedDate.ToJSONFriendlyDateTime();//.ToRelativeDateTime();
+            commentVM.IsOwner = item.CreatedByID == currentUserId;
+            return commentVM;
         }
         
         public Activity SaveActivity(IActivity activity)

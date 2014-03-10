@@ -26,7 +26,7 @@ namespace TechiesWeb.TeamBins.Controllers
                 var team = repo.GetTeam(TeamID);
                 var teamVM = new TeamVM { Name = team.Name, ID = team.ID };
 
-                var teamMembers = team.TeamMembers.ToList();
+                var teamMembers = team.TeamMembers.OrderBy(s=>s.Member.FirstName).ToList();
                 foreach (var member in teamMembers)
                 {
                     var memberVM = new MemberVM();
@@ -39,6 +39,14 @@ namespace TechiesWeb.TeamBins.Controllers
 
                     teamVM.Members.Add(memberVM);
                 }
+
+                var membersNotJoinedList = repo.GetTeamMembersWhoHasntJoined(TeamID).OrderBy(s=>s.EmailAddress).ToList();
+                foreach (var member in membersNotJoinedList)
+                {
+                    var invitation = new MemberInvitation { EmailAddress = member.EmailAddress, DateInvited = member.CreatedDate.ToString("g") };
+                    invitation.AvatarHash = UserService.GetImageSource(member.EmailAddress);
+                    teamVM.MembersInvited.Add(invitation);
+                }  
                 return View(teamVM);
             }
             catch (Exception ex)

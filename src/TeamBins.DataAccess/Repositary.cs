@@ -14,6 +14,11 @@ namespace TeamBins.DataAccess
         {
            db = new TeamEntities();
         }
+        public IEnumerable<TeamMemberRequest> GetTeamMembersWhoHasntJoined(int teamId)
+        {
+            return db.TeamMemberRequests.Where(s => !db.TeamMembers.Where(p => p.TeamID == teamId).Any(d => d.Member.EmailAddress == s.EmailAddress));
+
+        }
         public IQueryable<User> GetNonTeamMembers(int teamId, string searchKey)
         {
             throw new NotImplementedException();
@@ -459,7 +464,7 @@ namespace TeamBins.DataAccess
 
         public Comment GetComment(int commentId)
         {
-            return db.Comments.Where(s => s.ID == commentId).Include(s=>s.Issue).FirstOrDefault();
+            return db.Comments.Where(s => s.ID == commentId).Include(s=>s.Issue).Include(s=>s.Author).FirstOrDefault();
         }
 
         public IEnumerable<Activity> GetTeamActivity(int teamId)

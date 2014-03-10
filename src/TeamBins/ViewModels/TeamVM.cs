@@ -16,25 +16,35 @@ namespace TechiesWeb.TeamBins.ViewModels
         }
     }
 
+    
+
     public class TeamVM
     {
         public int ID { set; get; }
         public string Name { set; get; }
         public int MemberCount { set; get; }
         public List<MemberVM> Members { set; get; }
+        public List<MemberInvitation> MembersInvited { set; get; }
         public bool IsTeamOwner { set; get; }
         public TeamVM()
         {
             Members = new List<MemberVM>();
-            Visibilities = new List<SelectListItem>();
-        }
-        public List<SelectListItem> Visibilities { set; get; }
-        public string SelectedVisibility { set; get; }
+            MembersInvited = new List<MemberInvitation>();           
+        }        
+    }
+    public class MemberInvitation
+    {
+        public string EmailAddress { set; get; }
+        public string DateInvited { set; get; }
+        public string AvatarHash { set; get; }
     }
     public class MemberVM
     {
         public int MemberID { set; get; }
         public string Name { set; get; }
+        [Required]
+        [DataType(DataType.EmailAddress)]
+        [StringLength(100)]
         public string EmailAddress { set; get; }
         public string EmailHash { set; get; }
         public string JoinedDate { set; get; }
@@ -56,7 +66,7 @@ namespace TechiesWeb.TeamBins.ViewModels
         public string AvatarHash { set; get; }
         public string CreatedDateRelative  {set;get;}
         public string CreativeDate { set;get;}
-
+        public bool IsOwner { set; get; }
     }
     public class TeamActivityVM
     {

@@ -279,5 +279,10 @@ namespace TeamBins.Tests
         {
             throw new System.NotImplementedException();
         }
+
+        public IEnumerable<TeamMemberRequest> GetTeamMembersWhoHasntJoined(int teamId)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

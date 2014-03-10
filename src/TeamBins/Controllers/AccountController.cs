@@ -84,6 +84,7 @@ namespace TechiesWeb.TeamBins.Controllers
                     if (user == null)
                     {
                         var newUser = new User { EmailAddress = model.Email, FirstName = model.Name, Password = model.Password };
+                        newUser.Avatar = UserService.GetGravatarHash(model.Email);
                         // SecurityService.SetNewPassword(newUser, model.Password); 
                        
                         var result = repo.SaveUser(newUser);
