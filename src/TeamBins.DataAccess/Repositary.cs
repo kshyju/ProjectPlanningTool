@@ -14,6 +14,16 @@ namespace TeamBins.DataAccess
         {
            db = new TeamEntities();
         }
+        async Task SaveDefaultTeam(int userId, int teamId)
+        {
+            var user = await db.Users.FirstOrDefaultAsync(s => s.ID == userId);
+            if (user != null)
+            {
+                user.DefaultTeamID =teamId;
+                db.Entry(user).State = EntityState.Modified;
+                db.SaveChangesAsync();
+            }
+        }
         public IEnumerable<TeamMemberRequest> GetTeamMembersWhoHasntJoined(int teamId)
         {
             return db.TeamMemberRequests.Where(s => !db.TeamMembers.Where(p => p.TeamID == teamId).Any(d => d.Member.EmailAddress == s.EmailAddress));

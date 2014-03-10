@@ -10,6 +10,9 @@ namespace TeamBins.DataAccess
 {
     public interface IRepositary : IDisposable  
     {
+        void SaveDefaultTeam(int userId, int teamId);
+
+
         IEnumerable<TeamMemberRequest> GetTeamMembersWhoHasntJoined(int teamId);
         IEnumerable<User> GetNonTeamMemberUsers(int teamId, string searchKey);
         IQueryable<TeamMember> GetTeamMembers(int teamId);

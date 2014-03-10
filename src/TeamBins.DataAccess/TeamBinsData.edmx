@@ -123,6 +123,10 @@
             <End Role="Team" EntitySet="Team" />
             <End Role="TeamMemberRequest" EntitySet="TeamMemberRequest" />
           </AssociationSet>
+          <AssociationSet Name="FK_User_Team" Association="TeamBinsModel.Store.FK_User_Team">
+            <End Role="Team" EntitySet="Team" />
+            <End Role="User" EntitySet="User" />
+          </AssociationSet>
           <AssociationSet Name="FK_UserNotificationSubscription_NotificationType" Association="TeamBinsModel.Store.FK_UserNotificationSubscription_NotificationType">
             <End Role="NotificationType" EntitySet="NotificationType" />
             <End Role="UserNotificationSubscription" EntitySet="UserNotificationSubscription" />
@@ -304,6 +308,7 @@
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="LastLoginDate" Type="datetime" />
           <Property Name="Avatar" Type="varchar" MaxLength="100" />
+          <Property Name="DefaultTeamID" Type="int" />
         </EntityType>
         <EntityType Name="UserNotificationSubscription">
           <Key>
@@ -616,6 +621,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_User_Team">
+          <End Role="Team" Type="TeamBinsModel.Store.Team" Multiplicity="0..1" />
+          <End Role="User" Type="TeamBinsModel.Store.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Team">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="DefaultTeamID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_UserNotificationSubscription_NotificationType">
           <End Role="NotificationType" Type="TeamBinsModel.Store.NotificationType" Multiplicity="1" />
           <End Role="UserNotificationSubscription" Type="TeamBinsModel.Store.UserNotificationSubscription" Multiplicity="*" />
@@ -789,6 +806,10 @@
           <AssociationSet Name="FK_UserNotificationSubscription_User" Association="TeamBinsModel.FK_UserNotificationSubscription_User">
             <End Role="User" EntitySet="Users" />
             <End Role="UserNotificationSubscription" EntitySet="UserNotificationSubscriptions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Team" Association="TeamBinsModel.FK_User_Team">
+            <End Role="Team" EntitySet="Teams" />
+            <End Role="User" EntitySet="Users" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="Category">
@@ -1038,6 +1059,8 @@
           <Property Name="LastLoginDate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="UserNotificationSubscriptions" Relationship="TeamBinsModel.FK_UserNotificationSubscription_User" FromRole="User" ToRole="UserNotificationSubscription" />
           <Property Type="String" Name="Avatar" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="DefaultTeamID" />
+          <NavigationProperty Name="Team" Relationship="TeamBinsModel.FK_User_Team" FromRole="User" ToRole="Team" />
           </EntityType>
         <Association Name="FK_Activity_User">
           <End Type="TeamBinsModel.User" Role="User" Multiplicity="1" />
@@ -1221,6 +1244,7 @@
           <NavigationProperty Name="TeamMembers" Relationship="TeamBinsModel.FK_TeamMember_Team" FromRole="Team" ToRole="TeamMember" />
           <NavigationProperty Name="TeamMemberRequests" Relationship="TeamBinsModel.FK_TeamMemberRequest_Team" FromRole="Team" ToRole="TeamMemberRequest" />
           <NavigationProperty Name="UserNotificationSubscriptions" Relationship="TeamBinsModel.FK_UserNotificationSubscription_Team" FromRole="Team" ToRole="UserNotificationSubscription" />
+          <NavigationProperty Name="Users" Relationship="TeamBinsModel.FK_User_Team" FromRole="Team" ToRole="User" />
         </EntityType>
         <Association Name="FK_Activity_Team">
           <End Type="TeamBinsModel.Team" Role="Team" Multiplicity="1" />
@@ -1375,6 +1399,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_User_Team">
+          <End Type="TeamBinsModel.Team" Role="Team" Multiplicity="0..1" />
+          <End Type="TeamBinsModel.User" Role="User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Team">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="DefaultTeamID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1503,6 +1539,7 @@
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="TeamBinsModel.User">
               <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="DefaultTeamID" ColumnName="DefaultTeamID" />
                 <ScalarProperty Name="Avatar" ColumnName="Avatar" />
                 <ScalarProperty Name="LastLoginDate" ColumnName="LastLoginDate" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />

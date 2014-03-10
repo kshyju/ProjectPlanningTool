@@ -132,7 +132,7 @@ $(function () {
                 data: {
                     CommentBody: $("#newComment").val(),
                     IssueID: $("#ID").val(),
-                    Connection : gIssueDetailConnectionID
+                    Connection: IssueDetails.gIssueDetailConnectionID
                 },
                 success: function (res, textStatus, jqXHR) {                   
                     $("#newComment").val("");

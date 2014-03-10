@@ -21,6 +21,7 @@ namespace TeamBins.DataAccess
             this.TeamMembers = new HashSet<TeamMember>();
             this.TeamMemberRequests = new HashSet<TeamMemberRequest>();
             this.UserNotificationSubscriptions = new HashSet<UserNotificationSubscription>();
+            this.Users = new HashSet<User>();
         }
     
         public int ID { get; set; }
@@ -34,5 +35,6 @@ namespace TeamBins.DataAccess
         public virtual ICollection<TeamMember> TeamMembers { get; set; }
         public virtual ICollection<TeamMemberRequest> TeamMemberRequests { get; set; }
         public virtual ICollection<UserNotificationSubscription> UserNotificationSubscriptions { get; set; }
+        public virtual ICollection<User> Users { get; set; }
     }
 }

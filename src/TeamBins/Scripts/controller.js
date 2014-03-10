@@ -1,5 +1,6 @@
-﻿
-var gIssueDetailConnectionID = "";
+﻿var IssueDetails = IssueDetails || {};
+var IssueDetails.gIssueDetailConnectionID = "";
+
 var issueDetailApp = angular.module('issueDetialApp', ['ngSanitize']);
 issueDetailApp.controller("IssueDetailsCtrl", function ($scope, $http) {
     $scope.hover = false;

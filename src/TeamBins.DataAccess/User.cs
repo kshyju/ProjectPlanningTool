@@ -41,6 +41,7 @@ namespace TeamBins.DataAccess
         public System.DateTime CreatedDate { get; set; }
         public Nullable<System.DateTime> LastLoginDate { get; set; }
         public string Avatar { get; set; }
+        public Nullable<int> DefaultTeamID { get; set; }
     
         public virtual ICollection<Activity> Activities { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
@@ -56,5 +57,6 @@ namespace TeamBins.DataAccess
         public virtual ICollection<Team> Teams { get; set; }
         public virtual ICollection<PasswordResetRequest> PasswordResetRequests { get; set; }
         public virtual ICollection<UserNotificationSubscription> UserNotificationSubscriptions { get; set; }
+        public virtual Team Team { get; set; }
     }
 }

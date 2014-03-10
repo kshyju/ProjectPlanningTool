@@ -51,6 +51,7 @@
         <AssociationConnector Association="TeamBinsModel.FK_UserNotificationSubscription_NotificationType" />
         <AssociationConnector Association="TeamBinsModel.FK_UserNotificationSubscription_Team" />
         <AssociationConnector Association="TeamBinsModel.FK_UserNotificationSubscription_User" />
+        <AssociationConnector Association="TeamBinsModel.FK_User_Team" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
