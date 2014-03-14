@@ -14,7 +14,7 @@ namespace TeamBins.DataAccess
         {
            db = new TeamEntities();
         }
-        async Task SaveDefaultTeam(int userId, int teamId)
+        public async void SaveDefaultTeam(int userId, int teamId)
         {
             var user = await db.Users.FirstOrDefaultAsync(s => s.ID == userId);
             if (user != null)
@@ -90,12 +90,12 @@ namespace TeamBins.DataAccess
             db.SaveChanges();
         }
 
-        public void SaveLastLogin(int userId)
+        public async void SaveLastLogin(int userId)
         {
-            var user = db.Users.FirstOrDefault(s=>s.ID==userId);
+            var user = await db.Users.FirstOrDefaultAsync(s=>s.ID==userId);
             user.LastLoginDate = DateTime.UtcNow;
             db.Entry(user).State = EntityState.Modified;
-            db.SaveChanges();
+            db.SaveChangesAsync();
         }
         public void  SavePasswordResetRequest(PasswordResetRequest request)
         {

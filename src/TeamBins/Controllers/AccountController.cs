@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using TeamBins.DataAccess;
 using TeamBins.Services;
@@ -133,7 +134,7 @@ namespace TechiesWeb.TeamBins.Controllers
         }
        
         [HttpPost]
-        public ActionResult Login(LoginVM model)
+        public async Task<ActionResult> Login(LoginVM model)
         {
             try
             {
@@ -145,11 +146,10 @@ namespace TechiesWeb.TeamBins.Controllers
                         //string hashed = SecurityService.GetPasswordHash(model.Password);
                         // var s= PasswordHash.ValidatePassword(model.Password,user.HA);
                         if (user.Password == model.Password)
-                        {
-                            var teamMember = user.TeamMembers1.Where(s => s.MemberID == user.ID).FirstOrDefault();
-                            SetUserIDToSession(user.ID, teamMember.TeamID, user.FirstName);
-
+                        { 
                             repo.SaveLastLogin(user.ID);
+                            var teamMember = user.TeamMembers1.Where(s => s.MemberID == user.ID).FirstOrDefault();
+                            SetUserIDToSession(user.ID, teamMember.TeamID, user.FirstName);                           
 
                             return RedirectToAction("index", "dashboard");
                         }

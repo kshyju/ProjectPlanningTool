@@ -284,5 +284,10 @@ namespace TeamBins.Tests
         {
             throw new System.NotImplementedException();
         }
+
+        public void SaveDefaultTeam(int userId, int teamId)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

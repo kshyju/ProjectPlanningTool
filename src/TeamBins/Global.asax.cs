@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StackExchange.Profiling;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -11,6 +12,15 @@ namespace TeamBins
 {
     public class MvcApplication : System.Web.HttpApplication
     {
+        protected void Application_BeginRequest()
+        {
+            if (Request.IsLocal) { MiniProfiler.Start(); } //or any number of other checks, up to you 
+        }
+
+        protected void Application_EndRequest()
+        {
+            MiniProfiler.Stop();            
+        }
         protected void Application_Start()
         {
             ViewEngines.Engines.Clear();

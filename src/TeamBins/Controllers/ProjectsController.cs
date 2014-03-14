@@ -1,4 +1,6 @@
-﻿using System;
+﻿using StackExchange.Profiling;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using TeamBins.DataAccess;
@@ -24,20 +26,32 @@ namespace TechiesWeb.TeamBins.Controllers
         {
             try
             {
+                var profiler = MiniProfiler.Current;
                 var vm = new TeamProjectListVM();
-                var projectList = repo.GetProjects(TeamID).Where(s => s.TeamID == TeamID).ToList(); ;
-
-                var teamMember = repo.GetTeamMember(UserID, TeamID);
-
-                foreach (var project in projectList)
+                List<Project> projectList = new List<Project>();
+                TeamMember teamMember = new TeamMember();
+                using (profiler.Step("Getting list of projects"))
                 {
-                    var projectVM = new ProjectVM { Name = project.Name, ID = project.ID };
-                    if (teamMember.DefaultProjectID.HasValue)
-                        projectVM.IsDefaultProject = project.ID == teamMember.DefaultProjectID.Value;
-
-                    vm.Projects.Add(projectVM);
+                    projectList = repo.GetProjects(TeamID).ToList(); ;
                 }
-                return View(vm);
+                    using (profiler.Step("Getting Team member"))
+                    {
+                         teamMember = repo.GetTeamMember(UserID, TeamID);
+                    }
+                        using (profiler.Step("Mapping to ViewModels"))
+                        {
+                            foreach (var project in projectList)
+                            {
+                                var projectVM = new ProjectVM { Name = project.Name, ID = project.ID };
+                                if (teamMember.DefaultProjectID.HasValue)
+                                    projectVM.IsDefaultProject = project.ID == teamMember.DefaultProjectID.Value;
+
+                                vm.Projects.Add(projectVM);
+                            }
+                        }
+                    
+                
+                return View("~/Views/Projects/Index.cshtml",vm);
             }
             catch (Exception ex)
             {
