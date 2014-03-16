@@ -230,7 +230,7 @@ namespace TeamBins.Tests
             throw new System.NotImplementedException();
         }
 
-        public void SaveLastLogin(int userId)
+        public void SaveLastLoginAsync(int userId)
         {
             throw new System.NotImplementedException();
         }

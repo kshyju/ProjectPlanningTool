@@ -29,6 +29,7 @@ namespace TechiesWeb.TeamBins.Controllers
                 {
                     //User switched team from the header menu
                     UpdateTeam(teamid.Value);
+                    repo.SaveDefaultTeam(UserID, teamid.Value);
                 }
                 var vm = new DashBoardVM { TeamID = TeamID };
                 var projectList = repo.GetProjects(TeamID).Where(s => s.TeamID == TeamID).ToList();

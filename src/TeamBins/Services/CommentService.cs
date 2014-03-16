@@ -40,7 +40,7 @@ namespace TeamBins.Services
             {
                 activityVM.Activity = activity.ActivityDesc+" on";
                 activityVM.ObjectTite = activity.OldState;
-                var seoFriendlyIssueTitle = activity.OldState.Replace(" ", "-");
+                var seoFriendlyIssueTitle = activity.OldState.Replace(" ", "-").Replace("/","-");
                 if (seoFriendlyIssueTitle.Length > 40)
                     seoFriendlyIssueTitle = seoFriendlyIssueTitle.Substring(0, 39);
 

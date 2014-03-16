@@ -14,19 +14,22 @@ namespace TeamBins.DataAccess
         {
            db = new TeamEntities();
         }
-        public async void SaveDefaultTeam(int userId, int teamId)
+        public void SaveDefaultTeam(int userId, int teamId)
         {
-            var user = await db.Users.FirstOrDefaultAsync(s => s.ID == userId);
+            var user = db.Users.FirstOrDefault(s => s.ID == userId);
             if (user != null)
             {
                 user.DefaultTeamID =teamId;
                 db.Entry(user).State = EntityState.Modified;
-                db.SaveChangesAsync();
+                db.SaveChanges();
             }
         }
         public IEnumerable<TeamMemberRequest> GetTeamMembersWhoHasntJoined(int teamId)
         {
-            return db.TeamMemberRequests.Where(s => !db.TeamMembers.Where(p => p.TeamID == teamId).Any(d => d.Member.EmailAddress == s.EmailAddress));
+            return db.TeamMemberRequests
+                .Where(b=>b.TeamID==teamId)
+                .Where(s =>  !db.TeamMembers.Where(p => p.TeamID == teamId)
+                                                .Any(d => d.Member.EmailAddress == s.EmailAddress));
 
         }
         public IQueryable<User> GetNonTeamMembers(int teamId, string searchKey)
@@ -90,12 +93,12 @@ namespace TeamBins.DataAccess
             db.SaveChanges();
         }
 
-        public async void SaveLastLogin(int userId)
+        public void SaveLastLoginAsync(int userId)
         {
-            var user = await db.Users.FirstOrDefaultAsync(s=>s.ID==userId);
+            var user = db.Users.FirstOrDefault(s=>s.ID==userId);
             user.LastLoginDate = DateTime.UtcNow;
             db.Entry(user).State = EntityState.Modified;
-            db.SaveChangesAsync();
+            db.SaveChanges();
         }
         public void  SavePasswordResetRequest(PasswordResetRequest request)
         {

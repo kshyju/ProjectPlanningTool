@@ -147,9 +147,19 @@ namespace TechiesWeb.TeamBins.Controllers
                         // var s= PasswordHash.ValidatePassword(model.Password,user.HA);
                         if (user.Password == model.Password)
                         { 
-                            repo.SaveLastLogin(user.ID);
-                            var teamMember = user.TeamMembers1.Where(s => s.MemberID == user.ID).FirstOrDefault();
-                            SetUserIDToSession(user.ID, teamMember.TeamID, user.FirstName);                           
+                            repo.SaveLastLoginAsync(user.ID);
+                            int userDefaultTeamId = 0;
+                            if (user.DefaultTeamID.HasValue)
+                            {
+                                userDefaultTeamId = user.DefaultTeamID.Value;
+                            }
+                            else
+                            {
+                                var teamMember = user.TeamMembers1.Where(s => s.MemberID == user.ID).FirstOrDefault();
+                                userDefaultTeamId = teamMember.TeamID;
+                            }
+
+                            SetUserIDToSession(user.ID, userDefaultTeamId, user.FirstName);                           
 
                             return RedirectToAction("index", "dashboard");
                         }

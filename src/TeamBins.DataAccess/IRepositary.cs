@@ -21,7 +21,7 @@ namespace TeamBins.DataAccess
         IEnumerable<User> GetSubscribers(int teamId, string notificationtypeCode);
         IEnumerable<NotificationType> GetNotificationTypes();
         void SaveUserNotificationSubscription(UserNotificationSubscription subscription);
-        void SaveLastLogin(int userId);
+        void SaveLastLoginAsync(int userId);
         void SavePasswordResetRequest(PasswordResetRequest request);
         PasswordResetRequest GetPasswordResetRequest(string activationCode);
         bool DeleteProject(int projectId);
