@@ -13,11 +13,6 @@ namespace TeamBins.DataAccess
         
     }
 
-    public interface IUserRepository
-    {
-        
-    }
-
     public interface IRepositary : IDisposable  
     {
         void SaveDefaultTeam(int userId, int teamId);

@@ -221,8 +221,10 @@
     <Compile Include="Services\IActivity.cs" />
     <Compile Include="Services\CommentService.cs" />
     <Compile Include="Services\IssueService.cs" />
+    <Compile Include="Services\IUserAccountManager.cs" />
     <Compile Include="Services\ProjectService.cs" />
     <Compile Include="Services\SecurityService.cs" />
+    <Compile Include="Services\UserAccountManager.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\AccountSignupVM.cs" />
@@ -421,6 +423,10 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TeamBins.Common\TeamBins.Common.csproj">
+      <Project>{E4DE363A-F570-43CA-A26D-6D022819FD0A}</Project>
+      <Name>TeamBins.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TeamBins.DataAccess\TeamBins.DataAccess.csproj">
       <Project>{381ceafa-e0c2-4d2f-8454-e8aa7a264096}</Project>
       <Name>TeamBins.DataAccess</Name>
