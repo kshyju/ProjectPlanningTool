@@ -723,7 +723,8 @@ ul.navtab
 {
 	list-style:none;	
     overflow:auto; margin:0px;padding: 5px 16px !IMPORTANT;
-    width:300px;float:left;
+    /*width:300px;*/
+    float:left;
 }
 .spinner {
     width:100px;float:left;
@@ -1093,3 +1094,6 @@ color: #111;
 .comment-body a {
     color:black; text-decoration:underline;
 }
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}   
