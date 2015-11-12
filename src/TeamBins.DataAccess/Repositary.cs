@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using TeamBins.DataAccess;
 namespace TeamBins.DataAccess
 {    
+
     public class Repositary : IRepositary
     {
         private TeamEntities db;

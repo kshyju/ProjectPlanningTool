@@ -5,9 +5,19 @@ using System.Linq;
 using System.Threading.Tasks;
 
 
-
 namespace TeamBins.DataAccess
 {
+   
+    public interface IProjectRepository
+    {
+        
+    }
+
+    public interface IUserRepository
+    {
+        
+    }
+
     public interface IRepositary : IDisposable  
     {
         void SaveDefaultTeam(int userId, int teamId);
