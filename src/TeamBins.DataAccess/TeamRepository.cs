@@ -27,13 +27,12 @@ namespace TeamBins.DataAccess
             return null;
         }
 
-        public void SaveTeam(TeamDto team)
+        public int SaveTeam(TeamDto team)
         {
             Team teamEntity = null;
             if (team.Id == 0)
             {
-                teamEntity= new Team();
-                teamEntity.CreatedDate = DateTime.UtcNow;
+                teamEntity = new Team {CreatedDate = DateTime.UtcNow};
                 db.Teams.Add(teamEntity);
             }
             else
@@ -46,7 +45,15 @@ namespace TeamBins.DataAccess
                 }
             }
             db.SaveChanges();
+            return teamEntity.ID;
         }
 
+        public void SaveTeamMember(int teamId, int memberId, int createdById)
+        {
+            var teamMember = new TeamMember { MemberID = memberId, TeamID = teamId, CreatedByID = createdById };
+            teamMember.CreatedDate = DateTime.UtcNow;
+            db.TeamMembers.Add(teamMember);
+            db.SaveChanges();
+        }
     }
 }

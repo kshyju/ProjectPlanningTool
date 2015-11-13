@@ -14,7 +14,7 @@ namespace TechiesWeb.TeamBins.Controllers
 {
     public class AccountController : BaseController
     {
-        IUserAccountManager accountManager;
+        readonly IUserAccountManager accountManager;
 
         UserService userService;
         public AccountController()
@@ -83,24 +83,15 @@ namespace TechiesWeb.TeamBins.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var user = repo.GetUser(model.Email);
-                    if (user == null)
+                    var accountExists = accountManager.DoesAccountExist(model.Email);
+                    if (!accountExists)
                     {
                         var newUser = new UserAccountDto { EmailAddress = model.Email, Name = model.Name, Password = model.Password };
-                        var newUserId = accountManager.SaveUser(newUser);
-
-
-                        var team = new Team { Name = newUser.Name.Replace(" ", "-"), CreatedByID = newUserId };
-                        if (team.Name.Length > 19)
-                            team.Name = team.Name.Substring(0, 19);
-
-                        repo.SaveTeam(team);
-
-                        var teamMember = new TeamMember { MemberID = newUserId, TeamID = team.ID, CreatedByID = newUserId };
-                        repo.SaveTeamMember(teamMember);
-                        if (teamMember.ID > 0)
+                        var userSession = accountManager.CreateUserAccount(newUser);
+                        
+                        if (userSession.UserId > 0)
                         {
-                            SetUserIDToSession(newUserId, team.ID, model.Name);
+                            SetUserIDToSession(userSession);
                         }
 
                         if (!String.IsNullOrEmpty(model.ReturnUrl))
@@ -139,26 +130,17 @@ namespace TechiesWeb.TeamBins.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var user = repo.GetUser(model.Email);
+                    var user = accountManager.GetUser(model.Email);
                     if (user != null)
                     {
                         //string hashed = SecurityService.GetPasswordHash(model.Password);
                         // var s= PasswordHash.ValidatePassword(model.Password,user.HA);
                         if (user.Password == model.Password)
                         {
-                            repo.SaveLastLoginAsync(user.ID);
-                            int userDefaultTeamId = 0;
-                            if (user.DefaultTeamID.HasValue)
-                            {
-                                userDefaultTeamId = user.DefaultTeamID.Value;
-                            }
-                            else
-                            {
-                                var teamMember = user.TeamMembers1.Where(s => s.MemberID == user.ID).FirstOrDefault();
-                                userDefaultTeamId = teamMember.TeamID;
-                            }
-
-                            SetUserIDToSession(user.ID, userDefaultTeamId, user.FirstName);
+                            repo.SaveLastLoginAsync(user.Id);
+                            int userDefaultTeamId = user.DefaultTeamId.HasValue?user.DefaultTeamId.Value : 0;
+                            
+                            SetUserIDToSession(user.Id, userDefaultTeamId, user.Name);
 
                             return RedirectToAction("index", "dashboard");
                         }

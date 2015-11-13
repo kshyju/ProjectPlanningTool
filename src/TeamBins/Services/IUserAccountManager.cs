@@ -4,6 +4,9 @@ namespace TeamBins.Services
 {
     public interface IUserAccountManager
     {
-        int SaveUser(UserAccountDto userAccount);
+        bool DoesAccountExist(string email);
+        LoggedInSessionInfo CreateUserAccount(UserAccountDto userAccount);
+
+        UserAccountDto GetUser(string email);
     }
 }

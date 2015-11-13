@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Web.Mvc;
+using TeamBins.Common;
 using TeamBins.DataAccess;
 using TechiesWeb.TeamBibs.Helpers.Logging;
 
@@ -41,6 +42,14 @@ namespace TechiesWeb.TeamBins.Controllers
             Session["TB_TeamID"] = teamId;
             Session["TB_NickName"] = nickName;
         }
+
+        protected void SetUserIDToSession(LoggedInSessionInfo sessionInfo)
+        {
+            Session["TB_UserID"] = sessionInfo.UserId;
+            Session["TB_TeamID"] = sessionInfo.TeamId;
+            Session["TB_NickName"] = sessionInfo.UserDisplayName;
+        }
+
         protected bool CreateAndEditMode
         {
             get

@@ -5,6 +5,8 @@ namespace TeamBins.DataAccess
     public interface ITeamRepository
     {
         TeamDto GetTeam(int teamId);
-        void SaveTeam(TeamDto team);
+        int SaveTeam(TeamDto team);
+
+        void SaveTeamMember(int teamId, int memberId, int createdById);
     }
 }
