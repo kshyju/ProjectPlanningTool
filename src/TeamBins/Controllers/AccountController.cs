@@ -17,9 +17,10 @@ namespace TechiesWeb.TeamBins.Controllers
         readonly IUserAccountManager accountManager;
 
         UserService userService;
-        public AccountController()
+        public AccountController(IUserAccountManager accountManager)
         {
             userService = new UserService(repo);
+            this.accountManager = accountManager;
         }
 
         public AccountController(IRepositary repositary, IUserAccountManager accountManager) : base(repositary)
@@ -138,7 +139,7 @@ namespace TechiesWeb.TeamBins.Controllers
                         if (user.Password == model.Password)
                         {
                             repo.SaveLastLoginAsync(user.Id);
-                            int userDefaultTeamId = user.DefaultTeamId.HasValue?user.DefaultTeamId.Value : 0;
+                            int userDefaultTeamId = user.DefaultTeamId ?? 0;
                             
                             SetUserIDToSession(user.Id, userDefaultTeamId, user.Name);
 

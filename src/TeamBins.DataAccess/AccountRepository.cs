@@ -40,6 +40,7 @@ namespace TeamBins.DataAccess
             var userEntity = new User();
             userEntity.FirstName = userAccount.Name;
             userEntity.EmailAddress = userAccount.EmailAddress;
+            userEntity.Password = userAccount.Password;
             userEntity.Avatar = userAccount.GravatarUrl;
             userEntity.CreatedDate = DateTime.UtcNow;
 

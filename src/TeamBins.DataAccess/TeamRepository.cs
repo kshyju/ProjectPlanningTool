@@ -32,7 +32,7 @@ namespace TeamBins.DataAccess
             Team teamEntity = null;
             if (team.Id == 0)
             {
-                teamEntity = new Team {CreatedDate = DateTime.UtcNow};
+                teamEntity = new Team {CreatedDate = DateTime.UtcNow, Name = team.Name, CreatedByID = team.CreatedById};
                 db.Teams.Add(teamEntity);
             }
             else
