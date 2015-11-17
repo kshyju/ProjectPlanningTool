@@ -27,49 +27,10 @@ namespace TechiesWeb.TeamBins.Controllers
         {
             this.accountManager = accountManager;
         }
-        public ActionResult NotificationSettings()
-        {
-            var vm = new UserEmailNotificationSettingsVM { TeamID = TeamID };
-            var userSubscriptions = repo.GetUser(UserID).UserNotificationSubscriptions.ToList();
-
-            var notificationTypes = repo.GetNotificationTypes().ToList();
-            foreach (var item in notificationTypes)
-            {
-                var emailSubscription = new EmailSubscriptionVM { NotificationTypeID = item.ID, Name = item.Name };
-                emailSubscription.IsSelected = userSubscriptions.Any(s => s.UserID == UserID && s.TeamID == TeamID && s.NotificationTypeID == item.ID && s.Subscribed == true);
-                vm.EmailSubscriptions.Add(emailSubscription);
-            }
-
-            return View(vm);
-        }
-        [HttpPost]
-        public ActionResult NotificationSettings(UserEmailNotificationSettingsVM model)
-        {
-            try
-            {
-                foreach (var setting in model.EmailSubscriptions)
-                {
-                    var userNotification = new UserNotificationSubscription { TeamID = TeamID, UserID = UserID };
-                    userNotification.Subscribed = setting.IsSelected;
-                    userNotification.ModifiedDate = DateTime.UtcNow;
-                    userNotification.NotificationTypeID = setting.NotificationTypeID;
-                    repo.SaveUserNotificationSubscription(userNotification);
-                }
-                var msg = new AlertMessageStore();
-                msg.AddMessage("success", "Notification Settings updated successfully");
-                TempData["AlertMessages"] = msg;
-                return RedirectToAction("NotificationSettings");
-            }
-            catch (Exception ex)
-            {
-                log.Error(ex);
-                return View("Error");
-            }
-        }
 
         public ActionResult Index()
         {
-            return View();
+            return RedirectToAction("Login");
         }
 
         public ActionResult Join(string returnurl = "")
@@ -89,7 +50,7 @@ namespace TechiesWeb.TeamBins.Controllers
                     {
                         var newUser = new UserAccountDto { EmailAddress = model.Email, Name = model.Name, Password = model.Password };
                         var userSession = accountManager.CreateUserAccount(newUser);
-                        
+
                         if (userSession.UserId > 0)
                         {
                             SetUserIDToSession(userSession);
@@ -134,13 +95,11 @@ namespace TechiesWeb.TeamBins.Controllers
                     var user = accountManager.GetUser(model.Email);
                     if (user != null)
                     {
-                        //string hashed = SecurityService.GetPasswordHash(model.Password);
-                        // var s= PasswordHash.ValidatePassword(model.Password,user.HA);
                         if (user.Password == model.Password)
                         {
-                            repo.SaveLastLoginAsync(user.Id);
+                            await accountManager.SaveLastLoginAsync(user.Id);
                             int userDefaultTeamId = user.DefaultTeamId ?? 0;
-                            
+
                             SetUserIDToSession(user.Id, userDefaultTeamId, user.Name);
 
                             return RedirectToAction("index", "dashboard");
@@ -156,6 +115,47 @@ namespace TechiesWeb.TeamBins.Controllers
             }
             return View(model);
         }
+
+        public ActionResult NotificationSettings()
+        {
+            var vm = new UserEmailNotificationSettingsVM { TeamID = TeamID };
+            var userSubscriptions = repo.GetUser(UserID).UserNotificationSubscriptions.ToList();
+
+            var notificationTypes = repo.GetNotificationTypes().ToList();
+            foreach (var item in notificationTypes)
+            {
+                var emailSubscription = new EmailSubscriptionVM { NotificationTypeID = item.ID, Name = item.Name };
+                emailSubscription.IsSelected = userSubscriptions.Any(s => s.UserID == UserID && s.TeamID == TeamID && s.NotificationTypeID == item.ID && s.Subscribed == true);
+                vm.EmailSubscriptions.Add(emailSubscription);
+            }
+
+            return View(vm);
+        }
+        [HttpPost]
+        public ActionResult NotificationSettings(UserEmailNotificationSettingsVM model)
+        {
+            try
+            {
+                foreach (var setting in model.EmailSubscriptions)
+                {
+                    var userNotification = new UserNotificationSubscription { TeamID = TeamID, UserID = UserID };
+                    userNotification.Subscribed = setting.IsSelected;
+                    userNotification.ModifiedDate = DateTime.UtcNow;
+                    userNotification.NotificationTypeID = setting.NotificationTypeID;
+                    repo.SaveUserNotificationSubscription(userNotification);
+                }
+                var msg = new AlertMessageStore();
+                msg.AddMessage("success", "Notification Settings updated successfully");
+                TempData["AlertMessages"] = msg;
+                return RedirectToAction("NotificationSettings");
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                return View("Error");
+            }
+        }
+
 
         public ActionResult reset(string id)
         {
@@ -178,22 +178,14 @@ namespace TechiesWeb.TeamBins.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var user = repo.GetUser(model.Email);
-                    if (user != null)
+                    var result = accountManager.ProcessPasswordRecovery(model.Email);
+                    if (result != null)
                     {
-                        var passwordResetRequest = new PasswordResetRequest { UserID = user.ID };
-                        passwordResetRequest.ActivationCode = Guid.NewGuid().ToString("n") + user.ID;
-                        repo.SavePasswordResetRequest(passwordResetRequest);
-
-                        var resetRequest = repo.GetPasswordResetRequest(passwordResetRequest.ActivationCode);
-                        userService = new UserService(repo, SiteBaseURL);
-                        userService.SendResetPasswordEmail(resetRequest);
-
                         return RedirectToAction("forgotpasswordemailsent");
                     }
                     ModelState.AddModelError("", "We do not see an account with that email address!");
+                    return View();
                 }
-                return View();
             }
             catch (Exception ex)
             {
@@ -204,15 +196,11 @@ namespace TechiesWeb.TeamBins.Controllers
 
         public ActionResult ResetPassword(string id)
         {
-            //coming from the password reset link received in email
-            var passwordResetRequest = repo.GetPasswordResetRequest(id);
-            if (passwordResetRequest != null)
+            var resetPasswordRequest = accountManager.GetResetPaswordRequest(id);
+
+            if (resetPasswordRequest != null)
             {
-                var user = repo.GetUser(passwordResetRequest.UserID);
-                if (user != null)
-                {
-                    return View(new ResetPasswordVM { ActivationCode = passwordResetRequest.ActivationCode });
-                }
+                return View(new ResetPasswordVM { ActivationCode = resetPasswordRequest.ActivationCode });
             }
             return View("NotFound");
         }
@@ -222,21 +210,11 @@ namespace TechiesWeb.TeamBins.Controllers
         {
             if (ModelState.IsValid)
             {
-                var passwordRequest = repo.GetPasswordResetRequest(model.ActivationCode);
-                if (passwordRequest != null)
+                var updatePasswordResult = accountManager.ResetPassword(model.ActivationCode, model.Password);
+                if (updatePasswordResult)
                 {
-                    var user = repo.GetUser(passwordRequest.UserID);
-                    if (user != null)
-                    {
-                        user.Password = model.Password;
-                        var result = repo.SaveUser(user);
-                        if (result.Status)
-                        {
-                            return RedirectToAction("passwordupdated");
-                        }
-                    }
+                    return RedirectToAction("passwordupdated");
                 }
-
             }
             return View(model);
 
@@ -245,6 +223,9 @@ namespace TechiesWeb.TeamBins.Controllers
         {
             return View();
         }
+
+
+
         public ActionResult Profile()
         {
             var user = repo.GetUser(UserID);

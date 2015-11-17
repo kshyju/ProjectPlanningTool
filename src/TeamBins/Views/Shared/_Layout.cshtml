@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title | TeamBins</title>
     @Styles.Render("~/Content/css")
-   <script src="~/Scripts/jquery-2.0.3.min.js"></script>   
+    <script src="~/Scripts/jquery-2.1.4.min.js"></script>
+
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
     <link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" />
     <script src="~/Scripts/bootstrap.min.js"></script>
@@ -15,8 +16,8 @@
 </head>
 @using TechiesWeb.TeamBins.HelperMethods
 <body>
-    <div>      
-        @Html.Action("MenuHeader", "Users")       
+    <div>
+        @Html.Action("MenuHeader", "Users")
         @Html.AlertMessages()
         <div class="content">
             <div class="central">
@@ -31,9 +32,9 @@
                 $('<div id="modal" class="modal fade">' + data + '</div>').modal();
             });
         }
-        $(function () {            
+        $(function () {
             $(document).on("click", "a.popup", function (e) {
-                e.preventDefault();                         
+                e.preventDefault();
                 ShowModel($(this).attr("href"));
             });
             $("a.a-current-team").click(function (e) {
@@ -49,12 +50,11 @@
                 }
             });
             setTimeout(function () { $('#success-message').slideUp(300); }, 6000);
-            
+
 
         });
     </script>
     <!--Google analytics-->
-
     <!--Google analytics ends-->
 </body>
 </html>

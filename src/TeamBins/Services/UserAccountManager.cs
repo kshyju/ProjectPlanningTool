@@ -1,4 +1,7 @@
+using System;
+using System.Threading.Tasks;
 using TeamBins.Common;
+using TeamBins.Common.ViewModels;
 using TeamBins.DataAccess;
 
 namespace TeamBins.Services
@@ -7,10 +10,12 @@ namespace TeamBins.Services
     {
         ITeamRepository teamRepository;
         readonly IAccountRepository accountRepository;
-        public UserAccountManager(IAccountRepository accountRepository, ITeamRepository teamRepository)
+        IUserAccountEmailManager userAccountEmailManager;
+        public UserAccountManager(IAccountRepository accountRepository, ITeamRepository teamRepository,IUserAccountEmailManager userAccountEmailManager)
         {
             this.accountRepository = accountRepository;
             this.teamRepository = teamRepository;
+            this.userAccountEmailManager = userAccountEmailManager;
         }
 
         public bool DoesAccountExist(string email)
@@ -20,6 +25,29 @@ namespace TeamBins.Services
         public UserAccountDto GetUser(string email)
         {
             return accountRepository.GetUser(email);
+        }
+
+        public ResetPaswordRequestDto ProcessPasswordRecovery(string email)
+        {
+            var user = accountRepository.GetUser(email);
+            if (user != null)
+            {
+                var uniqueLink = Guid.NewGuid().ToString("n") + user.Id;
+                accountRepository.SavePasswordResetRequest(user, uniqueLink);
+
+                userAccountEmailManager.SendResetPasswordEmail(user, uniqueLink);
+                return new ResetPaswordRequestDto {};
+            }
+            return null;
+        }
+
+        public ResetPaswordRequestDto GetResetPaswordRequest(string id)
+        {
+            return accountRepository.GetResetPaswordRequest(id);
+        }
+        public async Task SaveLastLoginAsync(int userId)
+        {
+            await accountRepository.SaveLastLoginAsync(userId);
         }
 
         public LoggedInSessionInfo CreateUserAccount(UserAccountDto userAccount)
@@ -40,6 +68,17 @@ namespace TeamBins.Services
             userSession.UserId = userId;
             userSession.UserDisplayName = userAccount.Name;
             return userSession;
+        }
+
+        public bool ResetPassword(string resetPasswordLink,string password)
+        {
+            var request = accountRepository.GetResetPaswordRequest(resetPasswordLink);
+            if (request != null)
+            {
+                accountRepository.UpdatePassword(password,request.UserId);
+                return true;
+            }
+            return false;
         }
     }
 }

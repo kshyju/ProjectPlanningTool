@@ -94,13 +94,7 @@ namespace TeamBins.DataAccess
             db.SaveChanges();
         }
 
-        public void SaveLastLoginAsync(int userId)
-        {
-            var user = db.Users.FirstOrDefault(s=>s.ID==userId);
-            user.LastLoginDate = DateTime.UtcNow;
-            db.Entry(user).State = EntityState.Modified;
-            db.SaveChanges();
-        }
+
         public void  SavePasswordResetRequest(PasswordResetRequest request)
         {
             try

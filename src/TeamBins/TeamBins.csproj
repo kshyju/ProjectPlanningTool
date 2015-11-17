@@ -239,9 +239,11 @@
     <Compile Include="Services\CommentService.cs" />
     <Compile Include="Services\IProjectManager.cs" />
     <Compile Include="Services\IssueService.cs" />
+    <Compile Include="Services\IUserAccountEmailManager.cs" />
     <Compile Include="Services\IUserAccountManager.cs" />
     <Compile Include="Services\ProjectService.cs" />
     <Compile Include="Services\SecurityService.cs" />
+    <Compile Include="Services\UserAccountEmailManager.cs" />
     <Compile Include="Services\UserAccountManager.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="Startup.cs" />
