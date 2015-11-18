@@ -2,17 +2,10 @@
     ViewBag.Title = "Settings";
 }
 @using TechiesWeb.TeamBins.HelperMethods
-@model TechiesWeb.TeamBins.ViewModels.DefaultIssueSettings
-<div class="page">
-    <h2>EditProfile</h2>
-  
-    <div class="tabbable tabs-left">
-        <ul class="nav nav-tabs">
-            <li><a href="@Url.Action("EditProfile","Account")">Profile</a></li>
-            <li><a href="@Url.Action("Password","Account")">Password</a></li>
-            <li class="active"><a href="#">Default Issue Settings</a></li>
-            <li><a href="@Url.Action("NotificationSettings","Account")">Notification Settings</a></li>
-        </ul>
+@model TeamBins.Common.ViewModels.DefaultIssueSettings
+<div>
+    <h3>Issue Settings</h3>
+
         <div class="tab-content">
             <div class="tab-pane active">
                 @Html.ValidationSummary()
@@ -34,7 +27,7 @@
             </div>
 
 
-        </div>
+       
     </div>
 
 </div>

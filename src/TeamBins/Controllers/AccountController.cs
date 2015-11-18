@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using TeamBins.Common;
+using TeamBins.Common.ViewModels;
 using TeamBins.DataAccess;
 using TeamBins.Services;
 using TechiesWeb.TeamBins.Infrastructure;
@@ -15,11 +16,9 @@ namespace TechiesWeb.TeamBins.Controllers
     public class AccountController : BaseController
     {
         readonly IUserAccountManager accountManager;
-
-        UserService userService;
+       
         public AccountController(IUserAccountManager accountManager)
         {
-            userService = new UserService(repo);
             this.accountManager = accountManager;
         }
 
@@ -223,124 +222,13 @@ namespace TechiesWeb.TeamBins.Controllers
         {
             return View();
         }
-
-
-
-        public ActionResult Profile()
-        {
-            var user = repo.GetUser(UserID);
-            if (user != null)
-            {
-                var vm = new EditProfileVM { Name = user.FirstName, Email = user.EmailAddress };
-                return View(vm);
-            }
-            return View("NotFound");
-        }
-
+        
         public ActionResult Logout()
         {
             Session.Abandon();
             return RedirectToAction("login", "account");
         }
 
-        public ActionResult EditProfile()
-        {
-            var user = repo.GetUser(UserID);
-            if (user != null)
-            {
-                var vm = new EditProfileVM { Name = user.FirstName, Email = user.EmailAddress };
-
-
-                return View(vm);
-            }
-            return View("NotFound");
-        }
-
-
-        [HttpPost]
-        public ActionResult EditProfile(EditProfileVM model)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = repo.GetUser(UserID);
-                if (user != null)
-                {
-                    user.FirstName = model.Name;
-                    var result = repo.SaveUser(user);
-                    if (result.Status)
-                    {
-                        var msg = new AlertMessageStore();
-                        msg.AddMessage("success", "Profile updated successfully");
-                        TempData["AlertMessages"] = msg;
-                        return RedirectToAction("editprofile");
-                    }
-                }
-            }
-            return View(model);
-        }
-
-        public ActionResult Password()
-        {
-            var vm = new ChangePasswordVM();
-            return View(vm);
-        }
-
-        [HttpPost]
-        public ActionResult Password(ChangePasswordVM model)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = repo.GetUser(UserID);
-                if (user != null && user.Password == model.Password)
-                {
-                    user.Password = model.Password;
-                    var result = repo.SaveUser(user);
-                    if (result.Status)
-                    {
-                        var msg = new AlertMessageStore();
-                        msg.AddMessage("success", "Password updated successfully");
-                        TempData["AlertMessages"] = msg;
-                    }
-                }
-            }
-            return View(model);
-        }
-
-        public ActionResult Settings()
-        {
-            var vm = new DefaultIssueSettings { Projects = GetProjectListItem() };
-            var userService = new UserService(repo, SiteBaseURL);
-            vm.SelectedProject = userService.GetDefaultProjectForCurrentTeam(UserID, TeamID);
-            return View(vm);
-        }
-
-        [HttpPost]
-        public ActionResult Settings(DefaultIssueSettings model)
-        {
-            if (ModelState.IsValid)
-            {
-                var result = userService.SaveDefaultProjectForTeam(UserID, TeamID, model.SelectedProject);
-                if (result)
-                {
-                    var msg = new AlertMessageStore();
-                    msg.AddMessage("success", "Settings updated successfully");
-                    TempData["AlertMessages"] = msg;
-                    return RedirectToAction("settings");
-                }
-            }
-            model.Projects = GetProjectListItem();
-            return View(model);
-        }
-
-        private List<SelectListItem> GetProjectListItem()
-        {
-            var projects = repo.GetProjects(TeamID).
-                                Where(s => s.TeamID == TeamID).
-                                Select(c => new SelectListItem { Value = c.ID.ToString(), Text = c.Name }).
-                                ToList();
-
-            return projects;
-        }
-
+        
     }
 }

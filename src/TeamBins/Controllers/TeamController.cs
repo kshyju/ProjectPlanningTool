@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
+using TeamBins.Common;
 using TeamBins.DataAccess;
 using TeamBins.Helpers.Enums;
 using TeamBins.Services;
@@ -11,17 +12,18 @@ namespace TechiesWeb.TeamBins.Controllers
 {
    // [VerifyLogin]
     public class TeamController : BaseController
-    {       
+    {
+        ITeamManager teamManager;
        private IssueService issueService;
         public TeamController() {
             issueService=new IssueService(new Repositary(),UserID,TeamID);
         
         }
 
-        public TeamController(IRepositary repositary)
+        public TeamController(IRepositary repositary, ITeamManager teamManager)
             : base(repositary)
-        {            
-
+        {
+            this.teamManager = teamManager;
         }
 
      
@@ -29,16 +31,9 @@ namespace TechiesWeb.TeamBins.Controllers
         {
             try
             {
-                var teamListVM = new TeamListVM();
-                teamListVM.Teams = repo.GetTeams(UserID).Select(team => new TeamVM
-                {
-                    ID = team.ID,
-                    Name = team.Name,
-                    MemberCount = team.TeamMembers.Count(),
-                    IsTeamOwner = team.CreatedByID == UserID
-                }).ToList();
+                var teamListVm = new TeamListVM {Teams = teamManager.GetTeams()};
 
-                return View(teamListVM);
+                return View(teamListVm);
             }
             catch (Exception ex)
             {
@@ -53,7 +48,7 @@ namespace TechiesWeb.TeamBins.Controllers
             var team = repo.GetTeam(id);
             if (team != null)
             {
-                var vm = new TeamVM { ID = id, Name = team.Name };
+                var vm = new TeamVM { Id = id, Name = team.Name };
 
               /*  var teamMembers = team.TeamMembers;
                 foreach (var teamMember in teamMembers)
@@ -81,7 +76,7 @@ namespace TechiesWeb.TeamBins.Controllers
              var team = repo.GetTeam(id);
              if (team != null)
              {
-                 var vm = new TeamVM { Name = team.Name, ID = team.ID }; 
+                 var vm = new TeamVM { Name = team.Name, Id = team.ID }; 
                  return PartialView(vm);
              }
              return View("NotFound");
@@ -145,11 +140,11 @@ namespace TechiesWeb.TeamBins.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    Team team = new Team { Name = model.Name, ID = model.ID };
-                    bool isNew = (model.ID == 0);
+                    Team team = new Team { Name = model.Name, ID = model.Id };
+                    bool isNew = (model.Id == 0);
                     if (!isNew)
                     {
-                        team = repo.GetTeam(model.ID);
+                        team = repo.GetTeam(model.Id);
                         team.Name = model.Name;                       
                     }
                     else
@@ -171,7 +166,7 @@ namespace TechiesWeb.TeamBins.Controllers
             }
             catch(Exception ex)
             {
-                log.Error("Error updating team "+model.ID,ex);
+                log.Error("Error updating team "+model.Id, ex);
             }
             return Json(new { Status = "Error" });
         }    

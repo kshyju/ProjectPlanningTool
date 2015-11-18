@@ -71,6 +71,10 @@ namespace TeamBins.App_Start
             kernel.Bind<IUserAccountEmailManager>().To<UserAccountEmailManager>();
 
             kernel.Bind<IEmailTemplateRepository>().To<EmailTemplateRepository>();
+            kernel.Bind<IUserSessionHelper>().To<UserSessionHelper>();
+            kernel.Bind<IProjectRepository>().To<ProjectRepository>();
+            kernel.Bind<ITeamManager>().To<TeamManager>();
+            kernel.Bind<IRepositary>().To<Repositary>();
 
         }        
     }

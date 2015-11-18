@@ -10,7 +10,7 @@ namespace TeamBins.DataAccess
         bool DoesAccountExist(string email);
 
         UserAccountDto GetUser(string email);
-
+        UserAccountDto GetUser(int userId);
 
         Task SaveLastLoginAsync(int userId);
 
@@ -19,5 +19,9 @@ namespace TeamBins.DataAccess
         ResetPaswordRequestDto GetResetPaswordRequest(string id);
 
         void UpdatePassword(string password, int userId);
+        UserEmailNotificationSettingsVM GetUserNotificationSettings(int userId, int teamId);
+        int? GetDefaultProjectForIssues(int userId, int teamId);
+
+        void UpdateProfile(UserAccountDto userAccountDto);
     }
 }

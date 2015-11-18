@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using TeamBins.Common;
 using TeamBins.DataAccess;
 using TechiesWeb.TeamBins.ViewModels;
 using TechiesWeb.TeamBins.ExtensionMethods;

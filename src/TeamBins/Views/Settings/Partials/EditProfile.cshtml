@@ -1,22 +1,17 @@
-﻿@model TechiesWeb.TeamBins.ViewModels.EditProfileVM
+﻿@model TeamBins.Common.ViewModels.EditProfileVm
 @{
     ViewBag.Title = "Edit Profile";
 }
 @using TechiesWeb.TeamBins.HelperMethods
 <div class="page">
-    <h2>Edit Profile</h2>
+    <h3>Edit Profile</h3>
    
     <div class="tabbable tabs-left">
-        <ul class="nav nav-tabs">
-            <li class="active"><a href="#">Profile</a></li>
-            <li><a href="@Url.Action("password","account")">Password</a></li>
-            <li><a href="@Url.Action("settings", "account")">Default Issue Settings</a></li>
-            <li><a href="@Url.Action("notificationSettings", "account")">Notification Settings</a></li>
-        </ul>
+      
         <div class="tab-content">
             <div class="tab-pane active" >
                 @Html.ValidationSummary()
-                @using(Html.BeginForm())
+                @using(Html.BeginForm("EditProfile","Settings"))
                 {
                 <table>
                     <tr>

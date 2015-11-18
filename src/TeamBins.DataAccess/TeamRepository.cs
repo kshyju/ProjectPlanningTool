@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using TeamBins.Common;
@@ -25,6 +26,27 @@ namespace TeamBins.DataAccess
                 };
             }
             return null;
+        }
+
+        public List<TeamDto> GetTeams(int userId)
+        {
+            return db.TeamMembers.Where(s => s.MemberID == userId)
+                .Select(x => new TeamDto
+                {
+                    Id = x.Team.ID, Name = x.Team.Name , IsRequestingUserTeamOwner = x.CreatedByID==userId,
+                    MemberCount = x.Team.TeamMembers.Count()
+                }).ToList();
+        }
+
+        public void SaveDefaultProject(int userId, int teamId, int? selectedProject)
+        {
+            var teamMember = db.TeamMembers.FirstOrDefault(s => s.MemberID == userId && s.TeamID == teamId);
+            if (teamMember != null)
+            {
+                teamMember.DefaultProjectID = selectedProject;
+                db.Entry(teamMember).State = EntityState.Modified;
+                db.SaveChanges();
+            }
         }
 
         public int SaveTeam(TeamDto team)
@@ -55,5 +77,17 @@ namespace TeamBins.DataAccess
             db.TeamMembers.Add(teamMember);
             db.SaveChanges();
         }
+
+        public void SaveDefaultTeamForUser(int userId, int teamId)
+        {
+            var user = db.Users.FirstOrDefault(s => s.ID == userId);
+            if (user != null)
+            {
+                user.DefaultTeamID = teamId;
+                db.Entry(user).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+        }
+
     }
 }

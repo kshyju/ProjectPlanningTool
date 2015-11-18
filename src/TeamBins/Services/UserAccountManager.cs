@@ -1,5 +1,8 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
+using System.Web.Mvc;
+using Glimpse.AspNet.Tab;
 using TeamBins.Common;
 using TeamBins.Common.ViewModels;
 using TeamBins.DataAccess;
@@ -11,11 +14,15 @@ namespace TeamBins.Services
         ITeamRepository teamRepository;
         readonly IAccountRepository accountRepository;
         IUserAccountEmailManager userAccountEmailManager;
-        public UserAccountManager(IAccountRepository accountRepository, ITeamRepository teamRepository,IUserAccountEmailManager userAccountEmailManager)
+        IUserSessionHelper userSessionHelper;
+        IProjectRepository projectRepository;
+        public UserAccountManager(IAccountRepository accountRepository, ITeamRepository teamRepository, IUserAccountEmailManager userAccountEmailManager, IUserSessionHelper userSessionHelper, IProjectRepository projectRepository)
         {
             this.accountRepository = accountRepository;
             this.teamRepository = teamRepository;
             this.userAccountEmailManager = userAccountEmailManager;
+            this.userSessionHelper = userSessionHelper;
+            this.projectRepository = projectRepository;
         }
 
         public bool DoesAccountExist(string email)
@@ -36,7 +43,7 @@ namespace TeamBins.Services
                 accountRepository.SavePasswordResetRequest(user, uniqueLink);
 
                 userAccountEmailManager.SendResetPasswordEmail(user, uniqueLink);
-                return new ResetPaswordRequestDto {};
+                return new ResetPaswordRequestDto { };
             }
             return null;
         }
@@ -52,7 +59,7 @@ namespace TeamBins.Services
 
         public LoggedInSessionInfo CreateUserAccount(UserAccountDto userAccount)
         {
-            var userSession = new LoggedInSessionInfo {};
+            var userSession = new LoggedInSessionInfo { };
             userAccount.GravatarUrl = UserService.GetGravatarHash(userAccount.EmailAddress);
             var userId = accountRepository.Save(userAccount);
 
@@ -62,7 +69,9 @@ namespace TeamBins.Services
                 team.Name = team.Name.Substring(0, 19);
 
             var teamId = teamRepository.SaveTeam(team);
-            teamRepository.SaveTeamMember(teamId,userId,userId);
+            teamRepository.SaveTeamMember(teamId, userId, userId);
+
+            teamRepository.SaveDefaultTeamForUser(userId,teamId);
 
             userSession.TeamId = teamId;
             userSession.UserId = userId;
@@ -70,15 +79,48 @@ namespace TeamBins.Services
             return userSession;
         }
 
-        public bool ResetPassword(string resetPasswordLink,string password)
+        public bool ResetPassword(string resetPasswordLink, string password)
         {
             var request = accountRepository.GetResetPaswordRequest(resetPasswordLink);
-            if (request != null)
-            {
-                accountRepository.UpdatePassword(password,request.UserId);
-                return true;
-            }
-            return false;
+            if (request == null) return false;
+            accountRepository.UpdatePassword(password, request.UserId);
+            return true;
+        }
+
+        public void UpdateProfile(EditProfileVm model)
+        {
+            accountRepository.UpdateProfile(new UserAccountDto {Name = model.Name, EmailAddress = model.Email});
+        }
+
+        public void UpdatePassword(ChangePasswordVM model)
+        {
+            accountRepository.UpdatePassword(model.Password, userSessionHelper.UserId);
+        }
+
+        public EditProfileVm GetUserProfile()
+        {
+            var user = accountRepository.GetUser(userSessionHelper.UserId);
+            if (user == null) return null;
+            return new EditProfileVm { Name = user.Name, Email = user.EmailAddress };
+        }
+
+        public UserEmailNotificationSettingsVM GetNotificationSettings()
+        {
+            return  accountRepository.GetUserNotificationSettings(userSessionHelper.UserId,userSessionHelper.TeamId);
+        }
+
+        public DefaultIssueSettings GetIssueSettingsForUser()
+        {
+            var vm = new DefaultIssueSettings();
+            vm.Projects = projectRepository.GetProjects(userSessionHelper.TeamId).Select(s=> new SelectListItem { Value = s.Id.ToString(), Text = s.Name}).ToList();
+            vm.SelectedProject =  accountRepository.GetDefaultProjectForIssues(userSessionHelper.UserId, userSessionHelper.TeamId);
+
+            return vm;
+        }
+
+        public void SaveDefaultProjectForTeam(int? selectedProject)
+        {
+            teamRepository.SaveDefaultProject(userSessionHelper.UserId, userSessionHelper.TeamId, selectedProject);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿@model TechiesWeb.TeamBins.ViewModels.TeamVM
+﻿@model TeamBins.Common.TeamVM
 @{
     ViewBag.Title = "Edit "+Model.Name;
 }
@@ -20,7 +20,7 @@
                     <td>@Html.TextBoxFor(x=>x.Name)</td>
                 </tr>
                 </table>
-                @Html.HiddenFor(s=>s.ID)
+                @Html.HiddenFor(s=>s.Id)
             </div>
             <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

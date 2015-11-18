@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using System.Web.Mvc;
+using TeamBins.Common;
 using TeamBins.DataAccess;
 using TeamBins.Services;
 using TechiesWeb.TeamBins.ViewModels;
@@ -24,7 +25,7 @@ namespace TechiesWeb.TeamBins.Controllers
             try
             {
                 var team = repo.GetTeam(TeamID);
-                var teamVM = new TeamVM { Name = team.Name, ID = team.ID };
+                var teamVM = new TeamVM { Name = team.Name, Id = team.ID };
 
                 var teamMembers = team.TeamMembers.OrderBy(s=>s.Member.FirstName).ToList();
                 foreach (var member in teamMembers)
@@ -156,7 +157,7 @@ namespace TechiesWeb.TeamBins.Controllers
                     var teams = repo.GetTeams(UserID).ToList();
                     foreach (var team in teams)
                     {
-                        var teamVM = new TeamVM { ID = team.ID, Name = team.Name };
+                        var teamVM = new TeamVM { Id = team.ID, Name = team.Name };
                         vm.Teams.Add(teamVM);
                         if (team.ID == TeamID)
                             vm.CurrentTeamName = team.Name;

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using TeamBins;
+using TeamBins.Common;
 using TeamBins.DataAccess;
 using TeamBins.Helpers.Enums;
 using TeamBins.Helpers.Infrastructure;

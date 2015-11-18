@@ -1,7 +1,7 @@
 ﻿@{
     ViewBag.Title = "Index";
 }
-@model TechiesWeb.TeamBins.ViewModels.TeamListVM
+@model TeamBins.Common.TeamListVM
 <h2>Teams</h2>
 <div>
    @Html.ActionLink("Add", "Add", "Team", null, new { @class = "popup" })
@@ -16,9 +16,10 @@
     {
         <tr>
             <td>
-                @if (team.IsTeamOwner)
+
+                @if (team.IsRequestingUserTeamOwner)
                 {
-                    @Html.ActionLink(team.Name, "edit", "Team", new { id = team.ID }, new { @class = "popup" })
+                    @Html.ActionLink(team.Name, "edit", "Team", new {id = team.Id}, new {@class = "popup"})
                 }
                 else
                 {
@@ -26,7 +27,7 @@
                 }
             </td>
             <td>
-                @(team.IsTeamOwner ? "Team Admin" : "Team Member")
+                @(team.IsRequestingUserTeamOwner ? "Team Admin" : "Team Member")
             </td>
             <td>@Html.ActionLink(team.MemberCount.ToString(),"index","users",null,null)</td>
         </tr>

@@ -2,6 +2,7 @@
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 using TeamBins.Common;
 using TeamBins.Common.ViewModels;
 
@@ -15,6 +16,23 @@ namespace TeamBins.DataAccess
             db = new TeamEntities();
         }
 
+        public UserAccountDto GetUser(int userId)
+        {
+            var user = db.Users.FirstOrDefault(s => s.ID == userId);
+            if (user != null)
+            {
+                return new UserAccountDto
+                {
+                    Id = user.ID,
+                    Name = user.FirstName,
+                    EmailAddress = user.EmailAddress,
+                    Password = user.Password,
+                    GravatarUrl = user.Avatar,
+                    DefaultTeamId = user.DefaultTeamID
+                };
+            }
+            return null;
+        }
         public UserAccountDto GetUser(string email)
         {
             var user = db.Users.FirstOrDefault(s => s.EmailAddress == email);
@@ -22,6 +40,7 @@ namespace TeamBins.DataAccess
             {
                 return new UserAccountDto
                 {
+                    Id = user.ID,
                     Name = user.FirstName,
                     EmailAddress = user.EmailAddress,
                     Password = user.Password,
@@ -52,6 +71,7 @@ namespace TeamBins.DataAccess
             return userEntity.ID;
 
         }
+
 
 
         public async Task SaveLastLoginAsync(int userId)
@@ -103,6 +123,46 @@ namespace TeamBins.DataAccess
                 db.Entry(user).State = EntityState.Modified;
                 db.SaveChanges();
             }
+        }
+
+        public void UpdateProfile(UserAccountDto userAccountDto)
+        {
+            var user = db.Users.FirstOrDefault(s => s.ID == userAccountDto.Id);
+            if (user != null)
+            {
+                user.FirstName = userAccountDto.Name;
+                user.EmailAddress = userAccountDto.EmailAddress;
+                db.Entry(user).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+        }
+
+        public UserEmailNotificationSettingsVM GetUserNotificationSettings(int userId,int teamId)
+        {
+            var userSubscriptions = new UserEmailNotificationSettingsVM();
+            userSubscriptions.EmailSubscriptions = db.NotificationTypes.Select(s => new EmailSubscriptionVM {NotificationTypeID = s.ID, Name = s.Name}).ToList();
+
+            var user = db.Users.FirstOrDefault(s => s.ID == userId);
+            if (user != null && user.UserNotificationSubscriptions.Any())
+            {
+                var userSubScriptions = user.UserNotificationSubscriptions.ToList();
+                foreach (var emailSubscriptionVm in userSubscriptions.EmailSubscriptions)
+                {
+                    emailSubscriptionVm.IsSelected =
+                        userSubScriptions.Any(
+                            s =>
+                                s.NotificationTypeID == emailSubscriptionVm.NotificationTypeID && s.TeamID == teamId &&
+                                s.Subscribed);
+                }
+                
+            }
+            return userSubscriptions;
+        }
+
+        public int? GetDefaultProjectForIssues(int userId, int teamId)
+        {
+            var teamMember =db.TeamMembers.FirstOrDefault(s => s.TeamID == teamId && s.MemberID == userId);
+            return teamMember?.DefaultProjectID;
         }
     }
 }

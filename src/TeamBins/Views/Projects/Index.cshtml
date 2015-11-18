@@ -7,7 +7,7 @@
     <h2>Projects</h2>
        @if (Model.Projects.Count > 0)
 {
-     @Html.ActionLink("Add New", "Add", "Projects", new { id=Model.TeamID}, new { @class = "aPopup" })
+     @Html.ActionLink("Add New", "Add", "Projects", new { id=Model.TeamID}, new { @class = "popup" })
 
     <table class="tblGrid table">
         <thead>
@@ -25,8 +25,8 @@
                         }
                     </td>
                     <td>
-                        @Html.ActionLink("Edit", "Edit", "Projects", new { id = @project.ID }, new { @class = "aPopup" }) |
-                        @Html.ActionLink("Delete", "DeleteConfirm", "Projects", new { id = project.ID }, new { @class = "aPopup delete", @data_id = project.ID })
+                        @Html.ActionLink("Edit", "Edit", "Projects", new { id = @project.ID }, new { @class = "popup" }) |
+                        @Html.ActionLink("Delete", "DeleteConfirm", "Projects", new { id = project.ID }, new { @class = "popup delete", @data_id = project.ID })
                     </td>
                 </tr>
             }
@@ -37,7 +37,7 @@
        {
   <div>
     <p>No projects found ! you need to create atleast one project before you start creating issues.</p>
-    @Html.ActionLink("Create a project now", "Add", "Projects", new { id = Model.TeamID }, new { @class = "aPopup" })
+    @Html.ActionLink("Create a project now", "Add", "Projects", new { id = Model.TeamID }, new { @class = "popup" })
 
 
   </div>
@@ -56,13 +56,7 @@
             $('#delConfirm').modal('show');
         });
 
-        //Show popup on clicking the link
-        $(document).on("click", "a.aPopup", function (e) {
-            e.preventDefault();
-            var _this = $(this);
-            $('#modal').modal({ remote: _this.attr("href") });           
-        });
-
+        
         $(document).on("click", "#btnSaveProject", function (e) {
             e.preventDefault();
             $.post($(this).closest("form").attr("action"), $(this).closest("form").serialize(), function (res) {

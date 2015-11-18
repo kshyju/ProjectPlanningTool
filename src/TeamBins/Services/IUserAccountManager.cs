@@ -21,5 +21,12 @@ namespace TeamBins.Services
         bool ResetPassword(string resetPasswordLink,string password);
 
         // ResetPasswordVM 
+        EditProfileVm GetUserProfile();
+        UserEmailNotificationSettingsVM GetNotificationSettings();
+        DefaultIssueSettings GetIssueSettingsForUser();
+
+        void UpdateProfile(EditProfileVm model);
+        void UpdatePassword(ChangePasswordVM model);
+        void SaveDefaultProjectForTeam(int? selectedProject);
     }
 }

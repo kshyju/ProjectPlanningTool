@@ -25,7 +25,7 @@ namespace TeamBins.Services
             SiteBaseURL = siteBaseUrl;
         }
        
-        public bool SaveDefaultProjectForTeam(int userId,int teamId, int defaultProjectId)
+        public bool SaveDefaultProjectForTeam(int userId,int teamId, int? defaultProjectId)
         {
             var teamMember = repo.GetTeamMember(userId, teamId);
             if (teamMember != null)
