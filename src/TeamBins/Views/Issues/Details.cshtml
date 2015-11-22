@@ -28,7 +28,7 @@
                 <span>, Last Modified by @Model.LastModifiedBy on @Model.LastModifiedDate</span>
             }
             </div>       
-            <div id="issueStatus">Status <span class="@Model.StatusCode">@Model.Status</span></div>  
+            <div id="issueStatus">StatusName <span class="@Model.StatusNameCode">@Model.StatusName</span></div>  
             <div id="issueStatus">Project <span class="">@Model.Project</span></div>                  
         </div>
         <div class="divDetail">
@@ -68,7 +68,7 @@
                 </div>
             }
             </div>
-            <div class="issue-detail-item">Type : @Model.Category</div>
+            <div class="issue-detail-item">Type : @Model.CategoryName</div>
             <div class="issue-detail-item">Priority: @Model.Priority</div>
         </div>
         <div class="right-detail-items ">

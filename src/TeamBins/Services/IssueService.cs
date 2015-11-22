@@ -3,13 +3,15 @@ using System.Linq;
 using TeamBins.DataAccess;
 using TechiesWeb.TeamBins.ViewModels;
 using System;
-using TeamBins.Helpers.Enums;
+
 using TechiesWeb.TeamBins.ExtensionMethods;
 using SmartPlan.ViewModels;
 using TechiesWeb.TeamBins.Infrastructure;
 using TechiesWeb.TeamBibs.Helpers.Logging;
 using System.Text.RegularExpressions;
 using TeamBins.Common;
+using TeamBins.Common.Infrastructure.Enums.TeamBins.Helpers.Enums;
+using TeamBins.Common.ViewModels;
 
 namespace TeamBins.Services
 {
@@ -203,10 +205,10 @@ namespace TeamBins.Services
             var issueVM = new IssueVM { ID = bug.ID, Title = bug.Title, Description = bug.Description };
             issueVM.OpenedBy = bug.CreatedBy.FirstName;
             issueVM.Priority = bug.Priority.Name;
-            issueVM.Status = bug.Status.Name;
-            issueVM.Category = bug.Category.Name;
+            issueVM.StatusName = bug.Status.Name;
+            issueVM.CategoryName = bug.Category.Name;
             issueVM.Project = (bug.Project!=null?bug.Project.Name:"");
-            issueVM.CreatedDate = bug.CreatedDate.ToShortDateString();
+            issueVM.CreatedDate = bug.CreatedDate;
             return issueVM;
         }
 

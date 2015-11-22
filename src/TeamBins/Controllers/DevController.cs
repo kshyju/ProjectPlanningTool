@@ -3,14 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using StackExchange.Exceptional;
 using TeamBins.DataAccess;
 using TeamBins.Services;
 
 namespace TechiesWeb.TeamBins.Controllers
 {
-    [VerifyLogin]
+    //[VerifyLogin]
     public class DevController : BaseController
-    {       
+    {
+        public ActionResult Exceptions()
+        {
+            var context = System.Web.HttpContext.Current;
+            var page = new HandlerFactory().GetHandler(context, Request.RequestType, Request.Url.ToString(), Request.PathInfo);
+            page.ProcessRequest(context);
+
+            return null;
+        }
+
         public ActionResult Index()
         {
             return View();

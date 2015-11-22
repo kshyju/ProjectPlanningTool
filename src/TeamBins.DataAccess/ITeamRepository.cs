@@ -13,5 +13,6 @@ namespace TeamBins.DataAccess
         List<TeamDto> GetTeams(int userId);
 
         void SaveDefaultTeamForUser(int userId, int teamId);
+        MemberVM GetTeamMember(int teamId, int userId);
     }
 }

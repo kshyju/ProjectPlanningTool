@@ -32,7 +32,7 @@ namespace TeamBins.Common
         }
     }
 
-
+    
 
     public class TeamVM : TeamDto
     {
@@ -65,6 +65,8 @@ namespace TeamBins.Common
         public string AvatarHash { set; get; }
         public string JobTitle { set; get; }
         public string LastLoginDate { set; get; }
+
+        public int? DefaultProjectId { set; get; }
     }
     public class AddTeamMemberRequestVM : MemberVM
     {

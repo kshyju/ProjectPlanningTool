@@ -21,6 +21,7 @@ namespace TeamBins.DataAccess
     
         public int ID { get; set; }
         public string Name { get; set; }
+        public string Code { get; set; }
     
         public virtual ICollection<Issue> Issues { get; set; }
     }

@@ -1,4 +1,4 @@
-﻿@model SmartPlan.ViewModels.DashBoardVM
+﻿@model TeamBins.Common.ViewModels.DashBoardVM
 @{
     ViewBag.Title = "Dashboard";
 }
@@ -125,7 +125,7 @@ dashboardApp.controller("dashboardCtrl", function ($scope, $http) {
         $scope.$apply();           
     };        
     $.connection.hub.start().done(function () {
-        chat.server.subscribeToTeam($("#TeamID").val())
+        chat.server.subscribeToTeam($("#TeamID").val());
     })
 });
 

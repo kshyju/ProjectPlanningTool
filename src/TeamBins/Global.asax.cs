@@ -7,6 +7,7 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using StackExchange.Exceptional;
 
 namespace TeamBins
 {
@@ -36,6 +37,17 @@ namespace TeamBins
 
             log4net.Config.XmlConfigurator.Configure();
            // RouteTable.Routes.MapHubs();
+        }
+
+        void Application_Error(object sender, EventArgs e)
+        {
+            // Code that runs when an unhandled error occurs
+
+            // Get the exception object.
+            Exception exc = Server.GetLastError();
+            ErrorStore.LogException(exc, null);
+
+            Server.ClearError();
         }
     }
 }

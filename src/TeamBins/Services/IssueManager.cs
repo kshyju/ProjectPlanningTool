@@ -1,0 +1,133 @@
+using SmartPlan.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Web;
+using TeamBins.Common;
+using TeamBins.Common.Infrastructure.Enums.TeamBins.Helpers.Enums;
+using TeamBins.Common.ViewModels;
+using TeamBins.DataAccess;
+using TechiesWeb.TeamBins.ExtensionMethods;
+using TechiesWeb.TeamBins.Infrastructure;
+using TechiesWeb.TeamBins.ViewModels;
+
+namespace TeamBins.Services
+{
+
+    public class IssueManager : IIssueManager
+    {
+        IIssueRepository issueRepository;
+        IUserSessionHelper userSessionHelper;
+        IActivityRepository activityRepository;
+        public IssueManager(IIssueRepository issueRepository, IUserSessionHelper userSessionHelper, IActivityRepository activityRepository)
+        {
+            this.userSessionHelper = userSessionHelper;
+            this.issueRepository = issueRepository;
+            this.activityRepository = activityRepository;
+        }
+
+        public IEnumerable<IssueVM> GetIssues(List<int> statusIds, int count)
+        {
+            return issueRepository.GetIssues(statusIds, count);
+        }
+
+        public IssueDetailVM SaveIssue(CreateIssue issue, List<HttpPostedFileBase> files)
+        {
+            var previousVersion = issueRepository.GetIssue(issue.ID);
+
+            issue.TeamID = userSessionHelper.TeamId;
+            issue.CreatedByID = userSessionHelper.UserId;
+            issue.ProjectID = GetDefaultProjectId();
+
+
+            var issueId = issueRepository.SaveIssue(issue);
+            return issueRepository.GetIssue(issueId);
+
+            //Activity entry
+         //  return SaveActivity(issue, previousVersion, newVersion);
+        }
+
+
+       
+
+        private int GetDefaultProjectId()
+        {
+            var teamMember = new TeamRepository().GetTeamMember(userSessionHelper.TeamId, userSessionHelper.UserId);
+            if (teamMember != null)
+            {
+                return teamMember.DefaultProjectId.Value;
+            }
+            throw new MissingSettingsException("Default project is missing","Default Project");
+        }
+
+        public ActivityDto SaveActivity(CreateIssue model, IssueDetailVM previousVersion, IssueDetailVM newVersion)
+        {
+            bool isStateChanged = false;
+            var activity = new ActivityDto() { ObjectId = newVersion.ID, ObjectType = "Issue"};
+
+            if (previousVersion == null)
+            {
+                activity.ObjectUrl = "issue/" + newVersion.ID;
+                //activity.CreatedBy = 
+                activity.Description = "Created";
+                activity.NewState = model.Title;
+                isStateChanged = true;
+            }
+            else
+            {
+                if (previousVersion.Status.Id != newVersion.Status.Id)
+                {
+                    // status of issue updated
+                    activity.OldState = model.Title;
+                    activity.Description = "Changed status";
+                    activity.NewState = newVersion.Status.Name;
+                    isStateChanged = true;
+                }
+            }
+
+            activity.TeamId = userSessionHelper.TeamId;
+            
+            activity.CreatedBy = new UserDto {Id = userSessionHelper.UserId};
+
+            if (isStateChanged)
+            {
+                activityRepository.Save(activity);
+                return activity;
+            }
+            return null;
+        }
+
+        public ActivityVM GetActivityVM(Activity activity)
+        {
+            var activityVM = new ActivityVM() { Id = activity.ID, Author = activity.User.FirstName, CreatedDate = activity.CreatedDate.ToJSONFriendlyDateTime() };
+            if (activity.ActivityDesc.ToUpper() == "CREATED")
+            {
+                activityVM.Activity = activity.ActivityDesc;
+                activityVM.ObjectTite = activity.NewState;
+            }
+            else if (activity.ActivityDesc.ToUpper() == "CHANGED STATUS")
+            {
+                activityVM.Activity = "changed status of";
+                activityVM.ObjectTite = activity.OldState;
+                activityVM.NewState = "to " + activity.NewState;
+            }
+            else if (activity.ActivityDesc.ToUpper() == "DUE DATE UPDATED")
+            {
+                activityVM.Activity = "updated due date of";
+                activityVM.ObjectTite = activity.OldState;
+                activityVM.NewState = "to " + activity.NewState;
+            }
+            activityVM.ObjectURL = String.Format("{0}Issues/{1}", "", activity.ObjectID);
+            return activityVM;
+        }
+
+        public DashBoardItemSummaryVM GetDashboardSummaryVM(int teamId)
+        {
+            return issueRepository.GetDashboardSummaryVM(userSessionHelper.TeamId);
+        }
+
+        public IssueDetailVM GetIssue(int id)
+        {
+            return issueRepository.GetIssue(id);
+        }
+    }
+}

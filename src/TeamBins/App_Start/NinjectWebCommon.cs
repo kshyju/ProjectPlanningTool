@@ -74,7 +74,11 @@ namespace TeamBins.App_Start
             kernel.Bind<IUserSessionHelper>().To<UserSessionHelper>();
             kernel.Bind<IProjectRepository>().To<ProjectRepository>();
             kernel.Bind<ITeamManager>().To<TeamManager>();
+            kernel.Bind<IProjectManager>().To<ProjectManager>();
             kernel.Bind<IRepositary>().To<Repositary>();
+            kernel.Bind<IIssueRepository>().To<IssueRepository>();
+            kernel.Bind<IIssueManager>().To<IssueManager>();
+            kernel.Bind<IActivityRepository>().To<ActivityRepository>();
 
         }        
     }

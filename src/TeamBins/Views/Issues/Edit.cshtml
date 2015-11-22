@@ -21,9 +21,9 @@
                         <td>
                             @Html.DropDownListFor(x => x.SelectedProject, Model.Projects, "select", new { @class="kendoDropDown" })
                         </td>
-                        <th>Category</th>
+                        <th>CategoryName</th>
                         <td>
-                            @Html.DropDownListFor(x => x.SelectedCategory, Model.Categories, "select", new { @class="kendoDropDown" })
+                            @Html.DropDownListFor(x => x.SelectedCategoryName, Model.Categories, "select", new { @class="kendoDropDown" })
                         </td>
                     </tr>
                     <tr>
@@ -31,7 +31,7 @@
                         <td>
                             @Html.DropDownListFor(x => x.SelectedPriority, Model.Priorities, "select", new { @class="kendoDropDown" })
                         </td>
-                        <th>Status</th>
+                        <th>StatusName</th>
                         <td>
                             <span class="spanDefault">
                                 New

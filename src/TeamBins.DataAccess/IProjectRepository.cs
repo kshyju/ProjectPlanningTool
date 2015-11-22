@@ -8,6 +8,7 @@ namespace TeamBins.DataAccess
     public interface IProjectRepository
     {
         IEnumerable<ProjectDto> GetProjects(int teamId);
+        bool DoesProjectsExist(int teamId);
     }
 
     public class ProjectRepository : IProjectRepository
@@ -17,6 +18,12 @@ namespace TeamBins.DataAccess
         {
             db = new TeamEntities();
         }
+
+        public bool DoesProjectsExist(int teamId)
+        {
+            return db.Projects.Any(s => s.TeamID == teamId);
+        }
+
         public IEnumerable<ProjectDto> GetProjects(int teamId)
         {
             return db.Projects.Where(s => s.TeamID == teamId)

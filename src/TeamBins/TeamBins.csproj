@@ -223,11 +223,13 @@
     <Compile Include="Controllers\DevController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImageController.cs" />
+    <Compile Include="Controllers\IssueApiController.cs" />
     <Compile Include="Controllers\IssuesController.cs" />
     <Compile Include="Controllers\ProjectsController.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Controllers\SettingsController.cs" />
+    <Compile Include="Controllers\TeamApiController.cs" />
     <Compile Include="Controllers\TeamController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="GlimpseSecurityPolicy.cs" />
@@ -246,7 +248,9 @@
     <Compile Include="Hubs\IssuesHub.cs" />
     <Compile Include="Services\IActivity.cs" />
     <Compile Include="Services\CommentService.cs" />
+    <Compile Include="Services\IIssueManager.cs" />
     <Compile Include="Services\IProjectManager.cs" />
+    <Compile Include="Services\IssueManager.cs" />
     <Compile Include="Services\IssueService.cs" />
     <Compile Include="Services\ITeamManager.cs" />
     <Compile Include="Services\IUserAccountEmailManager.cs" />
@@ -363,6 +367,7 @@
     <Content Include="Scripts\errors.json" />
     <Content Include="Scripts\angular.min.js.map" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
+    <Content Include="Scripts\IssueListController.js" />
     <Content Include="Scripts\jquery-2.1.4.js" />
     <Content Include="Scripts\jquery-2.1.4.min.js" />
     <Content Include="Scripts\jquery-2.1.4.min.map" />

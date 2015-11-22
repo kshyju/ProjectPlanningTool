@@ -89,5 +89,11 @@ namespace TeamBins.DataAccess
             }
         }
 
+        public MemberVM GetTeamMember(int teamId, int userId)
+        {
+            var teamMember = db.TeamMembers.FirstOrDefault(s => s.MemberID == userId && s.TeamID == teamId);
+            return new MemberVM {DefaultProjectId = teamMember.DefaultProjectID};
+
+        }
     }
 }

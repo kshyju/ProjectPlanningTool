@@ -26,9 +26,9 @@
                                             <td>
                                                 @Html.DropDownListFor(x => x.SelectedProject, Model.Projects, "Select", new { @class = "kendoDropDown" })
                                             </td>
-                                            <th>Category</th>
+                                            <th>CategoryName</th>
                                             <td>
-                                                @Html.DropDownListFor(x => x.SelectedCategory, Model.Categories, "Select", new { @class = "kendoDropDown" })
+                                                @Html.DropDownListFor(x => x.SelectedCategoryName, Model.Categories, "Select", new { @class = "kendoDropDown" })
                                             </td>
                                         </tr>
                                         <tr>
@@ -36,9 +36,9 @@
                                             <td>
                                                 @Html.DropDownListFor(x => x.SelectedPriority, Model.Priorities, "Select", new { @class = "kendoDropDown" })
                                             </td>
-                                            <th>Status</th>
+                                            <th>StatusName</th>
                                             <td>
-                                                @Html.DropDownListFor(x => x.SelectedStatus, Model.Statuses, "Select", new { @class = "kendoDropDown" })
+                                                @Html.DropDownListFor(x => x.SelectedStatusName, Model.StatusNamees, "Select", new { @class = "kendoDropDown" })
                                             </td>
                                         </tr>
                                         <tr>
@@ -46,7 +46,7 @@
                                             <td>
                                                 @Html.DropDownListFor(x => x.SelectedIteration, Model.Iterations, "Select", new { @class = "kendoDropDown" })
                                             </td>
-                                            <th>Status</th>
+                                            <th>StatusName</th>
                                             <td>
                                                
                                             </td>

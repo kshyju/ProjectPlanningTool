@@ -4,8 +4,10 @@ using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
 using TeamBins.Common;
+using TeamBins.Common.Infrastructure.Enums.TeamBins.Helpers.Enums;
+using TeamBins.Common.ViewModels;
 using TeamBins.DataAccess;
-using TeamBins.Helpers.Enums;
+
 using TeamBins.Services;
 using TechiesWeb.TeamBins.ViewModels;
 namespace TechiesWeb.TeamBins.Controllers
@@ -13,11 +15,14 @@ namespace TechiesWeb.TeamBins.Controllers
    // [VerifyLogin]
     public class TeamController : BaseController
     {
+      
+        IssueManager issueManager;
         ITeamManager teamManager;
        private IssueService issueService;
-        public TeamController() {
+        public TeamController(IssueManager issueManager) {
             issueService=new IssueService(new Repositary(),UserID,TeamID);
-        
+            this.issueManager = issueManager;
+
         }
 
         public TeamController(IRepositary repositary, ITeamManager teamManager)
@@ -188,7 +193,7 @@ namespace TechiesWeb.TeamBins.Controllers
             {
                 var activityList = repo.GetTeamActivity(teamId).OrderByDescending(s => s.CreatedDate).Take(size).ToList();
 
-                ActivityVM activityVM = new ActivityVM();
+                var activityVM = new ActivityVM();
                 var issueService = new IssueService(repo, UserID, TeamID);
                 issueService.SiteBaseURL = SiteBaseURL;
                 var commentService = new CommentService(repo, SiteBaseURL);
@@ -197,6 +202,7 @@ namespace TechiesWeb.TeamBins.Controllers
                 {
                     if (item.ObjectType == ActivityObjectType.Issue.ToString())
                     {
+                       // issueManager.GetActivityVM()
                         activityVM = issueService.GetActivityVM(item);
                     }
                     else if (item.ObjectType == ActivityObjectType.IssueComment.ToString())
