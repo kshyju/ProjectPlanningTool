@@ -10,10 +10,10 @@ namespace TeamBins.DataAccess
 
     public class Repositary : IRepositary
     {
-        private TeamEntities db;
+        private TeamEntitiesConn db;
         public Repositary()
         {
-           db = new TeamEntities();
+           db = new TeamEntitiesConn();
         }
         public void SaveDefaultTeam(int userId, int teamId)
         {
@@ -472,7 +472,8 @@ namespace TeamBins.DataAccess
 
         public Comment GetComment(int commentId)
         {
-            return db.Comments.Where(s => s.ID == commentId).Include(s=>s.Issue).Include(s=>s.Author).FirstOrDefault();
+            return db.Comments.Where(s => s.ID == commentId)
+                .Include(s=>s.Issue).Include(s=>s.Author).FirstOrDefault();
         }
 
         public IEnumerable<Activity> GetTeamActivity(int teamId)
@@ -509,7 +510,7 @@ namespace TeamBins.DataAccess
         }
         public TeamMemberRequest GetTeamMemberRequest(string activationCode)
         {
-            return db.TeamMemberRequests.Include(s=>s.CreatedBy).Include(s=>s.Team).FirstOrDefault(s => s.ActivationCode == activationCode);
+            return db.TeamMemberRequests.Include(s=>s.User).Include(s=>s.Team).FirstOrDefault(s => s.ActivationCode == activationCode);
         }
 
         public IEnumerable<Team> GetTeams(int userId)

@@ -3,18 +3,29 @@ issueListApp.config(['$httpProvider', function ($httpProvider) {
     $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 }]);
 
-issueListApp.controller('IssueListCtrl', function ($scope, $http) {
+issueListApp.controller('IssueListCtrl', function ($scope, $http, issueService) {
     $scope.loading = true;
     $scope.activities = [];
     $scope.issuesList = [];
-    $http.get('../issues?size=25').success(function (data) {
-        $scope.issueList = data;
+
+
+    issueService.getIssues(25)
+        .then(function (response) {
+            $scope.issueList = response;
+            $scope.loading = false;
+        });
+
+    issueService.getActivityStream(25)
+    .then(function (response) {
+        $scope.activities = response;
         $scope.loading = false;
-        $("#tab-current").addClass("tab-selected");
     });
-    $http.get('../../team/stream/' + $("#TeamID").val() + "?size=6").success(function (data) {
-        $scope.activities = data;
-    });
+
+
+
+    //$http.get('../../team/stream/' + $("#TeamID").val() + "?size=6").success(function (data) {
+    //    $scope.activities = data;
+    //});
     $scope.create = function (e) {
         if (e.keyCode == 13) {
             if ($("#NewItemTitle").val() != "") {

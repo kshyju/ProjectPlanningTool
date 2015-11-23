@@ -13,10 +13,10 @@ namespace TeamBins.DataAccess
 
     public class ProjectRepository : IProjectRepository
     {
-        private readonly TeamEntities db;
+        private readonly TeamEntitiesConn db;
         public ProjectRepository()
         {
-            db = new TeamEntities();
+            db = new TeamEntitiesConn();
         }
 
         public bool DoesProjectsExist(int teamId)

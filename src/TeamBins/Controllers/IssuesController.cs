@@ -116,6 +116,7 @@ namespace TechiesWeb.TeamBins.Controllers
         [HttpPost]
         [VerifyLogin]
         public ActionResult Add(CreateIssue model, List<HttpPostedFileBase> files)
+
         {
             try
             {
@@ -251,7 +252,7 @@ namespace TechiesWeb.TeamBins.Controllers
                 bugVm.ProjectID = bug.ProjectID;
                 bugVm.TeamID = bug.TeamID;
                 bugVm.StatusName = bug.Status.Name;
-                bugVm.Priority = bug.Priority.Name;
+                bugVm.PriorityName = bug.Priority.Name;
                 bugVm.StatusCode = bug.Status.Name;
                 if (bug.ModifiedDate.HasValue && bug.ModifiedDate.Value > DateTime.MinValue && bug.ModifiedBy != null)
                 {

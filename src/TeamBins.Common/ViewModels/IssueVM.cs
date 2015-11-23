@@ -59,6 +59,7 @@ namespace TeamBins.Common.ViewModels
             Comments = new List<CommentVM>();
         }
 
+       public KeyValueItem Priority { set; get; }
         public KeyValueItem Status { set; get; }
         public KeyValueItem Category { set; get; }
 
@@ -71,7 +72,7 @@ namespace TeamBins.Common.ViewModels
         [DataType(DataType.MultilineText)]
         [AllowHtml]
         public string Description { set; get; }
-        public string Priority { set; get; }
+        public string PriorityName { set; get; }
         public string CategoryName { set; get; }
         public string StatusName { set; get; }
         public string StatusCode { set; get; }
@@ -81,7 +82,7 @@ namespace TeamBins.Common.ViewModels
         public string Project { get; set; }
         public DateTime CreatedDate { set; get; }
         public string IssueDueDate { set; get; }
-
+        public UserDto Author { get; set; }
     }
 
     public class DocumentVM

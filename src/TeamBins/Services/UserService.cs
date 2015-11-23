@@ -115,7 +115,7 @@ namespace TeamBins.Services
                 string joinLink = String.Format("{0}Account/Join?returnurl={1}", SiteBaseURL, teamMemberRequest.ActivationCode);
                 emailBody = emailBody.Replace("@teamName", teamMemberRequest.Team.Name);
                 emailBody = emailBody.Replace("@joinUrl", joinLink);
-                emailBody=emailBody.Replace("@inviter", teamMemberRequest.CreatedBy.FirstName);
+                emailBody=emailBody.Replace("@inviter", teamMemberRequest.User.FirstName);
                 email.Body = emailBody;
                 email.Subject=emailSubject;
                 email.Send();

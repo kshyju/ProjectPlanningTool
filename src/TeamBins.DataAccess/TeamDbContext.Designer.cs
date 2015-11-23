@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'C:\Shyju\OSS\ProjectPlanningTool\src\TeamBins.DataAccess\TeamBinsData.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\Shyju\OSS\ProjectPlanningTool\src\TeamBins.DataAccess\TeamDbContext.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

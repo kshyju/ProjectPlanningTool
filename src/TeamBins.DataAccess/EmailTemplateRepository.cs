@@ -5,10 +5,10 @@ namespace TeamBins.DataAccess
 {
     public class EmailTemplateRepository : IEmailTemplateRepository
     {
-        private readonly TeamEntities db;
+        private readonly TeamEntitiesConn db;
         public EmailTemplateRepository()
         {
-            db = new TeamEntities();
+            db = new TeamEntitiesConn();
         }
         public EmailTemplateDto GetEmailTemplate(string templateName)
         {

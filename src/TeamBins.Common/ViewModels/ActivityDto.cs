@@ -67,7 +67,7 @@ namespace TeamBins.Common.ViewModels
         public int TeamId { set; get; }
 
         public string Description { set; get; }
-        public UserDto CreatedBy { set; get; }
+        public UserDto Actor  { set; get; }
 
         public string ObjectUrl { set; get; }
 

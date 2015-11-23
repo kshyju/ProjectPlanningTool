@@ -10,10 +10,10 @@ namespace TeamBins.DataAccess
 {
     public class AccountRepository : IAccountRepository
     {
-        private readonly TeamEntities db;
+        private readonly TeamEntitiesConn db;
         public AccountRepository()
         {
-            db = new TeamEntities();
+            db = new TeamEntitiesConn();
         }
 
         public UserAccountDto GetUser(int userId)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TeamBins.Common;
 using TeamBins.Common.Infrastructure.Enums.TeamBins.Helpers.Enums;
 using TeamBins.Common.ViewModels;
 
@@ -9,7 +10,7 @@ namespace TeamBins.DataAccess
 
     public interface IIssueRepository
     {
-        IEnumerable<IssueVM> GetIssues(List<int> statusIds, int count);
+        IEnumerable<IssueDetailVM> GetIssues(List<int> statusIds, int count);
         IssueDetailVM GetIssue(int id);
         int SaveIssue(CreateIssue issue);
         DashBoardItemSummaryVM GetDashboardSummaryVM(int teamId);
@@ -21,7 +22,7 @@ namespace TeamBins.DataAccess
 
         public int SaveIssue(CreateIssue issue)
         {
-            using (var db = new TeamEntities())
+            using (var db = new TeamEntitiesConn())
             {
                 var issueEntity = new Issue { Title = issue.Title, Description = issue.Description };
                 issueEntity.ProjectID = issue.ProjectID;
@@ -39,9 +40,15 @@ namespace TeamBins.DataAccess
                 }
                 if (issueEntity.StatusID == 0)
                 {
-                    //TO DO  : User CODE
-                    var status = db.Status.FirstOrDefault(s => s.Name == "New");
+                   
+                    var status = db.Status.FirstOrDefault(s => s.Code == "New");
                     issueEntity.StatusID = status.ID;
+                }
+                if (issueEntity.PriorityID == 0)
+                {
+                 
+                    var priority = db.Priorities.FirstOrDefault(s => s.Code == "Normal");
+                    issueEntity.PriorityID = priority.ID;
                 }
 
 
@@ -52,7 +59,7 @@ namespace TeamBins.DataAccess
         }
         public IssueDetailVM GetIssue(int id)
         {
-            using (var db = new TeamEntities())
+            using (var db = new TeamEntitiesConn())
             {
                 var issue = db.Issues.FirstOrDefault(s => s.ID == id);
                 if (issue != null)
@@ -62,6 +69,8 @@ namespace TeamBins.DataAccess
                         ID = issue.ID,
                         Title = issue.Title,
                         Description = issue.Description,
+                        Author = new UserDto {  Id = issue.CreatedBy.ID, Name = issue.CreatedBy.FirstName},
+                       // Priority = new KeyValueItem {  Id = issue.P.ID, Name = issue.Priority.Name}, 
                         // TeamID = issue.TeamId,
                         Status = new KeyValueItem { Id = issue.Category.ID, Name = issue.Status.Name },
                         Category = new KeyValueItem { Id = issue.Category.ID, Name = issue.Category.Name }
@@ -74,7 +83,7 @@ namespace TeamBins.DataAccess
 
         //var issueVM = new IssueVM { ID = bug.ID, Title = bug.Title, Description = bug.Description };
         //issueVM.OpenedBy = bug.CreatedBy.FirstName;
-        //    issueVM.Priority = bug.Priority.Name;
+        //    issueVM.PriorityName = bug.PriorityName.Name;
         //    issueVM.StatusName = bug.StatusName.Name;
         //    issueVM.CategoryName = bug.CategoryName.Name;
         //    issueVM.Project = (bug.Project!=null?bug.Project.Name:"");
@@ -84,7 +93,7 @@ namespace TeamBins.DataAccess
         public DashBoardItemSummaryVM GetDashboardSummaryVM(int teamId)
         {
             var vm = new DashBoardItemSummaryVM();
-            using (var db = new TeamEntities())
+            using (var db = new TeamEntitiesConn())
             {
                 var statusCounts = db.Issues
                     .Where(s=>s.TeamID==teamId)
@@ -102,21 +111,23 @@ namespace TeamBins.DataAccess
             return vm;
         }
 
-        public IEnumerable<IssueVM> GetIssues(List<int> statusIds, int count)
+        public IEnumerable<IssueDetailVM> GetIssues(List<int> statusIds, int count)
         {
-            using (var db = new TeamEntities())
+            using (var db = new TeamEntitiesConn())
             {
                 
                 return db.Issues.Where(s => statusIds.Contains(s.StatusID)).OrderByDescending(s => s.CreatedDate)
                     .Take(count)
-                    .Select(s => new IssueVM
+                    .Select(s => new IssueDetailVM
                     {
                         ID = s.ID,
                         Title = s.Title,
                         Description = s.Description,
-                        Priority = s.Priority.Name,
+                        PriorityName = s.Priority.Name,
                         StatusName = s.Status.Name,
                         CategoryName = s.Category.Name,
+                        Priority =   new KeyValueItem {  Name = s.Priority.Name},
+                        Author = new UserDto {  Id = s.CreatedBy.ID, Name = s.CreatedBy.FirstName},
                         Project = s.Project.Name,
                         CreatedDate = s.CreatedDate
                     }).ToList();

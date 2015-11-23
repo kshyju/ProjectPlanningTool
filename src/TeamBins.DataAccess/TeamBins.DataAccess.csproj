@@ -62,20 +62,20 @@
   <ItemGroup>
     <Compile Include="AccountRepository.cs" />
     <Compile Include="Activity.cs">
-      <DependentUpon>TeamBinsData.tt</DependentUpon>
+      <DependentUpon>TeamDbContext.tt</DependentUpon>
     </Compile>
     <Compile Include="AppConfiguration.cs" />
     <Compile Include="Category.cs">
-      <DependentUpon>TeamBinsData.tt</DependentUpon>
+      <DependentUpon>TeamDbContext.tt</DependentUpon>
     </Compile>
     <Compile Include="Comment.cs">
-      <DependentUpon>TeamBinsData.tt</DependentUpon>
+      <DependentUpon>TeamDbContext.tt</DependentUpon>
     </Compile>
     <Compile Include="Document.cs">
-      <DependentUpon>TeamBinsData.tt</DependentUpon>
+      <DependentUpon>TeamDbContext.tt</DependentUpon>
     </Compile>
     <Compile Include="EmailTemplate.cs">
-      <DependentUpon>TeamBinsData.tt</DependentUpon>
+      <DependentUpon>TeamDbContext.tt</DependentUpon>
     </Compile>
     <Compile Include="EmailTemplateRepository.cs" />
     <Compile Include="IAccountRepository.cs" />
@@ -86,86 +86,76 @@
     <Compile Include="IProjectRepository.cs" />
     <Compile Include="IRepositary.cs" />
     <Compile Include="Issue.cs">
-      <DependentUpon>TeamBinsData.tt</DependentUpon>
+      <DependentUpon>TeamDbContext.tt</DependentUpon>
     </Compile>
     <Compile Include="Issue1.cs" />
     <Compile Include="IssueMember.cs">
-      <DependentUpon>TeamBinsData.tt</DependentUpon>
+      <DependentUpon>TeamDbContext.tt</DependentUpon>
     </Compile>
     <Compile Include="ITeamRepository.cs" />
     <Compile Include="NotificationType.cs">
-      <DependentUpon>TeamBinsData.tt</DependentUpon>
+      <DependentUpon>TeamDbContext.tt</DependentUpon>
     </Compile>
     <Compile Include="OperationStatus.cs" />
     <Compile Include="PasswordResetRequest.cs">
-      <DependentUpon>TeamBinsData.tt</DependentUpon>
+      <DependentUpon>TeamDbContext.tt</DependentUpon>
     </Compile>
     <Compile Include="Priority.cs">
-      <DependentUpon>TeamBinsData.tt</DependentUpon>
+      <DependentUpon>TeamDbContext.tt</DependentUpon>
     </Compile>
     <Compile Include="Project.cs">
-      <DependentUpon>TeamBinsData.tt</DependentUpon>
+      <DependentUpon>TeamDbContext.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositary.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Status.cs">
-      <DependentUpon>TeamBinsData.tt</DependentUpon>
+      <DependentUpon>TeamDbContext.tt</DependentUpon>
     </Compile>
     <Compile Include="Team.cs">
-      <DependentUpon>TeamBinsData.tt</DependentUpon>
+      <DependentUpon>TeamDbContext.tt</DependentUpon>
     </Compile>
-    <Compile Include="TeamBinsData.Context.cs">
+    <Compile Include="TeamDbContext.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>TeamBinsData.Context.tt</DependentUpon>
+      <DependentUpon>TeamDbContext.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="TeamBinsData.cs">
+    <Compile Include="TeamDbContext.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>TeamBinsData.tt</DependentUpon>
+      <DependentUpon>TeamDbContext.tt</DependentUpon>
     </Compile>
-    <Compile Include="TeamBinsData.Designer.cs">
+    <Compile Include="TeamDbContext.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>TeamBinsData.edmx</DependentUpon>
+      <DependentUpon>TeamDbContext.edmx</DependentUpon>
     </Compile>
     <Compile Include="TeamMember.cs">
-      <DependentUpon>TeamBinsData.tt</DependentUpon>
+      <DependentUpon>TeamDbContext.tt</DependentUpon>
     </Compile>
     <Compile Include="TeamMemberRequest.cs">
-      <DependentUpon>TeamBinsData.tt</DependentUpon>
+      <DependentUpon>TeamDbContext.tt</DependentUpon>
     </Compile>
     <Compile Include="TeamRepository.cs" />
     <Compile Include="User.cs">
-      <DependentUpon>TeamBinsData.tt</DependentUpon>
+      <DependentUpon>TeamDbContext.tt</DependentUpon>
     </Compile>
     <Compile Include="UserNotificationSubscription.cs">
-      <DependentUpon>TeamBinsData.tt</DependentUpon>
+      <DependentUpon>TeamDbContext.tt</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-    <EntityDeploy Include="TeamBinsData.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>TeamBinsData.Designer.cs</LastGenOutput>
-    </EntityDeploy>
     <None Include="packages.config" />
-    <None Include="TeamBinsData.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>TeamBinsData.edmx</DependentUpon>
-      <LastGenOutput>TeamBinsData.Context.cs</LastGenOutput>
-    </None>
-    <None Include="TeamBinsData.edmx.diagram">
-      <DependentUpon>TeamBinsData.edmx</DependentUpon>
-    </None>
-    <None Include="TeamBinsData.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>TeamBinsData.edmx</DependentUpon>
-      <LastGenOutput>TeamBinsData.cs</LastGenOutput>
+    <EntityDeploy Include="TeamDbContext.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>TeamDbContext.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="TeamDbContext.edmx.diagram">
+      <DependentUpon>TeamDbContext.edmx</DependentUpon>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -179,6 +169,16 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="DBBackup\readme.txt" />
+    <Content Include="TeamDbContext.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>TeamDbContext.edmx</DependentUpon>
+      <LastGenOutput>TeamDbContext.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="TeamDbContext.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>TeamDbContext.edmx</DependentUpon>
+      <LastGenOutput>TeamDbContext.cs</LastGenOutput>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

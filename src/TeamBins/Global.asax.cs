@@ -47,7 +47,7 @@ namespace TeamBins
             Exception exc = Server.GetLastError();
             ErrorStore.LogException(exc, null);
 
-            Server.ClearError();
+         //   Server.ClearError();
         }
     }
 }

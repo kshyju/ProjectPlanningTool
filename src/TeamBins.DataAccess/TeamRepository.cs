@@ -8,10 +8,10 @@ namespace TeamBins.DataAccess
 {
     public class TeamRepository : ITeamRepository
     {
-        private TeamEntities db;
+        private TeamEntitiesConn db;
         public TeamRepository()
         {
-            db = new TeamEntities();
+            db = new TeamEntitiesConn();
         }
 
         public TeamDto GetTeam(int teamId)

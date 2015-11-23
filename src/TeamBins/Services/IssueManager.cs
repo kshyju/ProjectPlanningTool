@@ -69,7 +69,7 @@ namespace TeamBins.Services
                 activity.ObjectUrl = "issue/" + newVersion.ID;
                 //activity.CreatedBy = 
                 activity.Description = "Created";
-                activity.NewState = model.Title;
+                activity.ObjectTite = model.Title;
                 isStateChanged = true;
             }
             else
@@ -77,21 +77,25 @@ namespace TeamBins.Services
                 if (previousVersion.Status.Id != newVersion.Status.Id)
                 {
                     // status of issue updated
-                    activity.OldState = model.Title;
                     activity.Description = "Changed status";
                     activity.NewState = newVersion.Status.Name;
+                    activity.OldState = previousVersion.Status.Name;
+                    activity.ObjectTite = newVersion.Title;
                     isStateChanged = true;
                 }
+               
+
             }
 
             activity.TeamId = userSessionHelper.TeamId;
             
-            activity.CreatedBy = new UserDto {Id = userSessionHelper.UserId};
+            activity.Actor = new UserDto {Id = userSessionHelper.UserId};
 
             if (isStateChanged)
             {
-                activityRepository.Save(activity);
-                return activity;
+                var newId = activityRepository.Save(activity);
+                return activityRepository.GetActivityItem(newId);
+                
             }
             return null;
         }
