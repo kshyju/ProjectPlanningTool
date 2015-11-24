@@ -80,8 +80,9 @@ namespace TeamBins.Common
         public string AuthorName { set; get; }
         public string AvatarHash { set; get; }
         public string CreatedDateRelative { set; get; }
-        public string CreativeDate { set; get; }
+        public DateTime CreativeDate { set; get; }
         public bool IsOwner { set; get; }
+        public UserDto Author { set; get; }
     }
     public class TeamActivityVM
     {

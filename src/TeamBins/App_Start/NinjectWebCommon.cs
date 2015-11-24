@@ -79,6 +79,8 @@ namespace TeamBins.App_Start
             kernel.Bind<IIssueRepository>().To<IssueRepository>();
             kernel.Bind<IIssueManager>().To<IssueManager>();
             kernel.Bind<IActivityRepository>().To<ActivityRepository>();
+            kernel.Bind<ICommentRepository>().To<CommentRepository>();
+            kernel.Bind<ICommentManager>().To<CommentManager>();
 
         }        
     }

@@ -260,7 +260,7 @@ namespace TechiesWeb.TeamBins.Controllers
                     bugVm.LastModifiedBy = bug.ModifiedBy.FirstName;
                 }
 
-                bugVm.Iteration = ProjectService.GetIterationName(bug.Location);
+               
                 if (bug.DueDate.HasValue)
                     bugVm.IssueDueDate = (bug.DueDate.Value.Year > 2000 ? bug.DueDate.Value.ToShortDateString() : "");
 
@@ -278,8 +278,8 @@ namespace TechiesWeb.TeamBins.Controllers
                 }
 
                 //Get Members
-                issueService.LoadIssueMembers(issueId, bugVm, UserID);
-                issueService.SetUserPermissionsForIssue(bugVm, UserID, TeamID);
+                //issueService.LoadIssueMembers(issueId, bugVm, UserID);
+               // issueService.SetUserPermissionsForIssue(bugVm, UserID, TeamID);
                 return View(bugVm);
             }
             catch (Exception ex)

@@ -52,7 +52,7 @@
                     <td><div class="issue-icon-{{issue.Category}}" title="{{issue.CategoryName}}"></div></td>
                     <td><a href="~/issues/{{issue.ID}}">{{issue.Title}}</a></td>
                     <td>{{issue.Author.Name}}</td>
-                    <td>{{issue.PriorityName}}</td>
+                    <td>{{issue.Priority.Name}}</td>
                     <td>{{issue.Status.Name}}</td>
                     <td>{{issue.CreatedDate | date:'medium'}} </td>
                 </tr>

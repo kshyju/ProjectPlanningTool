@@ -28,6 +28,8 @@ namespace TeamBins
             var razorViewEngine = new RazorViewEngine();
             ViewEngines.Engines.Add(razorViewEngine);
 
+
+
             AreaRegistration.RegisterAllAreas();
 
             GlobalConfiguration.Configure(WebApiConfig.Register);

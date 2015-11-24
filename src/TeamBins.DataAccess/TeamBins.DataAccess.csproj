@@ -81,6 +81,7 @@
     <Compile Include="IAccountRepository.cs" />
     <Compile Include="IActivity.cs" />
     <Compile Include="IActivityRepository.cs" />
+    <Compile Include="ICommentRepository.cs" />
     <Compile Include="IEmailTemplateRepository.cs" />
     <Compile Include="IIssueRepository.cs" />
     <Compile Include="IProjectRepository.cs" />

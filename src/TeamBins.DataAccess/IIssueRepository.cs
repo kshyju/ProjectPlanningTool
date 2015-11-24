@@ -16,6 +16,7 @@ namespace TeamBins.DataAccess
         DashBoardItemSummaryVM GetDashboardSummaryVM(int teamId);
     }
 
+  
 
     public class IssueRepository : IIssueRepository
     {
@@ -40,13 +41,14 @@ namespace TeamBins.DataAccess
                 }
                 if (issueEntity.StatusID == 0)
                 {
-                   
+
                     var status = db.Status.FirstOrDefault(s => s.Code == "New");
                     issueEntity.StatusID = status.ID;
                 }
-                if (issueEntity.PriorityID == 0)
+                if (issueEntity.PriorityID==null)
                 {
-                 
+
+
                     var priority = db.Priorities.FirstOrDefault(s => s.Code == "Normal");
                     issueEntity.PriorityID = priority.ID;
                 }
@@ -69,12 +71,18 @@ namespace TeamBins.DataAccess
                         ID = issue.ID,
                         Title = issue.Title,
                         Description = issue.Description,
-                        Author = new UserDto {  Id = issue.CreatedBy.ID, Name = issue.CreatedBy.FirstName},
-                       // Priority = new KeyValueItem {  Id = issue.P.ID, Name = issue.Priority.Name}, 
+                        Author = new UserDto { Id = issue.CreatedBy.ID, Name = issue.CreatedBy.FirstName },
+                        // Priority = new KeyValueItem {  Id = issue.P.ID, Name = issue.Priority.Name}, 
                         // TeamID = issue.TeamId,
                         Status = new KeyValueItem { Id = issue.Category.ID, Name = issue.Status.Name },
+                        CreatedDate = issue.CreatedDate,
                         Category = new KeyValueItem { Id = issue.Category.ID, Name = issue.Category.Name }
+                       
                     };
+                    if (issue.Priority != null)
+                    {
+                        issueDto.Priority = new KeyValueItem {Id = issue.Priority.ID, Name = issue.Priority.Name};
+                    }
                     return issueDto;
                 }
             }
@@ -96,18 +104,18 @@ namespace TeamBins.DataAccess
             using (var db = new TeamEntitiesConn())
             {
                 var statusCounts = db.Issues
-                    .Where(s=>s.TeamID==teamId)
+                    .Where(s => s.TeamID == teamId)
                     .GroupBy(d => d.Status, g => g.ID, (k, i) => new
                 ItemCount
-                {
-                    ItemId = k.ID,
-                    ItemName = k.Name,
-                    Count = i.Count()
-                }).ToList();
+                    {
+                        ItemId = k.ID,
+                        ItemName = k.Name,
+                        Count = i.Count()
+                    }).ToList();
 
                 vm.IssueCountsByStatus = statusCounts;
             }
-            
+
             return vm;
         }
 
@@ -115,8 +123,8 @@ namespace TeamBins.DataAccess
         {
             using (var db = new TeamEntitiesConn())
             {
-                
-                return db.Issues.Where(s => statusIds.Contains(s.StatusID)).OrderByDescending(s => s.CreatedDate)
+
+                return db.Issues.AsNoTracking().Where(s => statusIds.Contains(s.StatusID)).OrderByDescending(s => s.CreatedDate)
                     .Take(count)
                     .Select(s => new IssueDetailVM
                     {
@@ -126,9 +134,10 @@ namespace TeamBins.DataAccess
                         PriorityName = s.Priority.Name,
                         StatusName = s.Status.Name,
                         CategoryName = s.Category.Name,
-                        Priority =   new KeyValueItem {  Name = s.Priority.Name},
-                        Author = new UserDto {  Id = s.CreatedBy.ID, Name = s.CreatedBy.FirstName},
+                        Priority = new KeyValueItem { Name = s.Priority.Name },
+                        Author = new UserDto { Id = s.CreatedBy.ID, Name = s.CreatedBy.FirstName },
                         Project = s.Project.Name,
+                        Status =  new KeyValueItem {  Name = s.Status.Name},
                         CreatedDate = s.CreatedDate
                     }).ToList();
             }

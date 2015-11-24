@@ -394,6 +394,8 @@ namespace TeamBins.DataAccess
         }
         public Issue GetIssue(int issueId)
         {
+            
+
             return db.Issues.Include(s => s.Priority).Include(x => x.Status).Include(s => s.Category).Include(s => s.CreatedBy).Include(s=>s.ModifiedBy).FirstOrDefault(s => s.ID == issueId && s.Active == true);
         }
   /*

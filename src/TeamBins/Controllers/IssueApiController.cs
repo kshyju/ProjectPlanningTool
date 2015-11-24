@@ -6,36 +6,36 @@ using System.Net.Http;
 using System.Web;
 using System.Web.Http;
 using TeamBins.Common.ViewModels;
+using TeamBins.Services;
 
 namespace TeamBins.Controllers
 {
     public class IssueApiController : ApiController
     {
+        IssueManager issueManager;
+        ICommentManager commentManager;
+        public IssueApiController(IssueManager issueManager,ICommentManager commentManager)
+        {
+            this.issueManager = issueManager;
+            this.commentManager = commentManager;
+        }
         // GET api/<controller>
-        public IEnumerable<string> Get()
+
+        [Route("api/issues/{count}")]
+        [HttpGet]
+        public HttpResponseMessage Get(int count=50)
         {
-            return new string[] { "value1", "value2" };
+            var statusIds = new List<int> { 1, 2, 3, 4 };
+            var issueVMs = issueManager.GetIssues(statusIds, 50).ToList();
+            return Request.CreateResponse(HttpStatusCode.OK,issueVMs);
         }
 
-        // GET api/<controller>/5
-        public string Get(int id)
+        [Route("api/issues/{id}/comments")]
+        [HttpGet]
+        public HttpResponseMessage GetComments(int id)
         {
-            return "value";
-        }
-
-        // POST api/<controller>
-        public void Post(CreateIssue model, List<HttpPostedFileBase> files)
-        {
-        }
-
-        // PUT api/<controller>/5
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE api/<controller>/5
-        public void Delete(int id)
-        {
+            var comments = commentManager.GetComments(id);
+            return Request.CreateResponse(HttpStatusCode.OK, comments);
         }
     }
 }

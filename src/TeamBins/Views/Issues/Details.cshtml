@@ -1,4 +1,4 @@
-﻿@model TechiesWeb.TeamBins.ViewModels.IssueDetailVM
+﻿@model TeamBins.Common.ViewModels.IssueDetailVM
 @{   
     ViewBag.Title = "Issue #"+Model.ID;
 }
@@ -28,7 +28,7 @@
                 <span>, Last Modified by @Model.LastModifiedBy on @Model.LastModifiedDate</span>
             }
             </div>       
-            <div id="issueStatus">StatusName <span class="@Model.StatusNameCode">@Model.StatusName</span></div>  
+            <div id="issueStatus">StatusName <span class="@Model.StatusCode">@Model.StatusName</span></div>  
             <div id="issueStatus">Project <span class="">@Model.Project</span></div>                  
         </div>
         <div class="divDetail">

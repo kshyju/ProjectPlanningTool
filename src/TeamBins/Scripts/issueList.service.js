@@ -7,7 +7,7 @@
 
 
     function getIssues(count) {
-        return $http.get('issues?size=' + count)
+        return $http.get('api/issues/' + count)
       .then(getIssuesCompleted)
       .catch(getIssuesFailed);
 
