@@ -8,6 +8,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular-sanitize.min.js"></script>
 <script src="~/Scripts/controller.js"></script>
 <script src="~/Scripts/issue.js"></script>
+<script src="~/Scripts/issueDetail.service.js"></script>
 <script src="~/Scripts/jquery.signalR-2.0.2.min.js"></script>
 <script src="~/signalr/hubs"></script>
 
@@ -18,7 +19,7 @@
         @Html.ActionLink("Delete", "Delete", "Issues", new { id = Model.ID }, new { @class = "toolLink popup" })          
     </div>
 }
-<div class="divPageContent" ng-app="issueDetialApp" ng-controller="IssueDetailsCtrl">
+<div class="divPageContent" ng-app="issueDetialApp" ng-controller="IssueDetailsCtrl as vm">
     <div class="divLeft">
         <h2>@Model.Title</h2>
         <div id="issueMeta">
@@ -97,4 +98,7 @@
     var issueCommentsUrl = "@Url.Action("comments","Issues")";
     var issueDeleteUrl = "@Url.Action("delete","issues")";
     var issuesUrl = "@Url.Action("index","issues")";
+
+    angular.module("issueDetialApp").value("issue", { id: @Model.ID });
+
 </script>

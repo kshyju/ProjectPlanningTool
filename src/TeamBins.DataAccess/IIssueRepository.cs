@@ -83,6 +83,14 @@ namespace TeamBins.DataAccess
                     {
                         issueDto.Priority = new KeyValueItem {Id = issue.Priority.ID, Name = issue.Priority.Name};
                     }
+
+
+                    if (issue.ModifiedDate.HasValue && issue.ModifiedDate.Value > DateTime.MinValue && issue.ModifiedBy != null)
+                    {
+                        issueDto.LastModifiedDate = issue.ModifiedDate.Value.ToString("g");
+                        issueDto.LastModifiedBy = issue.ModifiedBy.FirstName;
+                    }
+
                     return issueDto;
                 }
             }

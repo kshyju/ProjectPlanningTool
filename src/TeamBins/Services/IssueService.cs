@@ -219,6 +219,7 @@ namespace TeamBins.Services
         {
             if(currentUserId>0)
             {
+                
                 var teamMember = repo.GetTeamMember(currentUserId, teamId);
                 if(teamMember!=null)
                 {

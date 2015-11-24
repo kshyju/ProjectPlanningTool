@@ -243,22 +243,25 @@ namespace TechiesWeb.TeamBins.Controllers
 
 
                 IssueDetailVM bugVm = new IssueDetailVM { ID = bug.ID, Title = bug.Title };
-                bugVm.Description = (bug.Description == null ? "" : bug.Description.ConvertUrlsToLinks());
-                bugVm.CreatedDate = bug.CreatedDate;
-                bugVm.OpenedBy = bug.CreatedBy.FirstName;
-                bugVm.Title = bug.Title;
-                bugVm.Project = bug.Project.Name;
-                bugVm.CategoryName = bug.Category.Name;
-                bugVm.ProjectID = bug.ProjectID;
-                bugVm.TeamID = bug.TeamID;
-                bugVm.StatusName = bug.Status.Name;
-                bugVm.PriorityName = bug.Priority.Name;
-                bugVm.StatusCode = bug.Status.Name;
-                if (bug.ModifiedDate.HasValue && bug.ModifiedDate.Value > DateTime.MinValue && bug.ModifiedBy != null)
-                {
-                    bugVm.LastModifiedDate = bug.ModifiedDate.Value.ToString("g");
-                    bugVm.LastModifiedBy = bug.ModifiedBy.FirstName;
-                }
+
+                bugVm = issueManager.GetIssue(id);
+
+                //bugVm.Description = (bug.Description == null ? "" : bug.Description.ConvertUrlsToLinks());
+                //bugVm.CreatedDate = bug.CreatedDate;
+                //bugVm.OpenedBy = bug.CreatedBy.FirstName;
+                //bugVm.Title = bug.Title;
+                //bugVm.Project = bug.Project.Name;
+                //bugVm.CategoryName = bug.Category.Name;
+                //bugVm.ProjectID = bug.ProjectID;
+                //bugVm.TeamID = bug.TeamID;
+                //bugVm.StatusName = bug.Status.Name;
+                //bugVm.PriorityName = bug.Priority.Name;
+                //bugVm.StatusCode = bug.Status.Name;
+                //if (bug.ModifiedDate.HasValue && bug.ModifiedDate.Value > DateTime.MinValue && bug.ModifiedBy != null)
+                //{
+                //    bugVm.LastModifiedDate = bug.ModifiedDate.Value.ToString("g");
+                //    bugVm.LastModifiedBy = bug.ModifiedBy.FirstName;
+                //}
 
                
                 if (bug.DueDate.HasValue)
@@ -279,6 +282,7 @@ namespace TechiesWeb.TeamBins.Controllers
 
                 //Get Members
                 //issueService.LoadIssueMembers(issueId, bugVm, UserID);
+               
                // issueService.SetUserPermissionsForIssue(bugVm, UserID, TeamID);
                 return View(bugVm);
             }
