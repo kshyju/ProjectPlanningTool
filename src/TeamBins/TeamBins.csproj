@@ -254,9 +254,11 @@
     <Compile Include="Helpers\Logging\ILogger.cs" />
     <Compile Include="Helpers\Logging\Logger.cs" />
     <Compile Include="Hubs\IssuesHub.cs" />
+    <Compile Include="Services\CommentEmailManager.cs" />
     <Compile Include="Services\CommentManager.cs" />
     <Compile Include="Services\IActivity.cs" />
     <Compile Include="Services\CommentService.cs" />
+    <Compile Include="Services\ICommentEmailManager.cs" />
     <Compile Include="Services\IIssueManager.cs" />
     <Compile Include="Services\IProjectManager.cs" />
     <Compile Include="Services\IssueManager.cs" />

@@ -1,9 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using TeamBins.Common;
 using TeamBins.Common.ViewModels;
 
 namespace TeamBins.DataAccess
 {
+
     public interface IAccountRepository
     {
         int Save(UserAccountDto userAccount);

@@ -69,10 +69,11 @@ namespace TeamBins.DataAccess
                 }
             }
         }
-        public IEnumerable<User> GetSubscribers(int teamId,string notificationtypeCode)
-        {
-            return db.UserNotificationSubscriptions.Where(s => s.NotificationType.Code == notificationtypeCode && s.TeamID==teamId).Select(s => s.User);
-        }
+        //public IEnumerable<User> GetSubscribers(int teamId,string notificationtypeCode)
+        //{
+        //    return db.UserNotificationSubscriptions
+        //        .Where(s => s.NotificationType.Code == notificationtypeCode && s.TeamID==teamId).Select(s => s.User);
+        //}
         public IEnumerable<NotificationType> GetNotificationTypes()
         {
             return db.NotificationTypes;

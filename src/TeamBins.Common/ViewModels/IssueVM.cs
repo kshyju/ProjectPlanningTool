@@ -62,6 +62,7 @@ namespace TeamBins.Common.ViewModels
        public KeyValueItem Priority { set; get; }
         public KeyValueItem Status { set; get; }
         public KeyValueItem Category { set; get; }
+        public KeyValueItem Project { set; get; }
 
     }
 
@@ -79,7 +80,7 @@ namespace TeamBins.Common.ViewModels
         public string OpenedBy { set; get; }
         public string LastModifiedBy { set; get; }
         public string Iteration { set; get; }
-        public string Project { get; set; }
+        public string ProjectName { get; set; }
         public DateTime CreatedDate { set; get; }
         public string IssueDueDate { set; get; }
         public UserDto Author { get; set; }

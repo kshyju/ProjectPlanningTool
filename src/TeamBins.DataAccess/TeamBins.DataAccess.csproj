@@ -145,6 +145,7 @@
     <Compile Include="UserNotificationSubscription.cs">
       <DependentUpon>TeamDbContext.tt</DependentUpon>
     </Compile>
+    <Compile Include="UserRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

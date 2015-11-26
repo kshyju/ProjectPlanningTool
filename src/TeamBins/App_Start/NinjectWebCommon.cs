@@ -81,6 +81,7 @@ namespace TeamBins.App_Start
             kernel.Bind<IActivityRepository>().To<ActivityRepository>();
             kernel.Bind<ICommentRepository>().To<CommentRepository>();
             kernel.Bind<ICommentManager>().To<CommentManager>();
+            kernel.Bind<IUserRepository>().To<UserRepository>();
 
         }        
     }

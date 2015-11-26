@@ -25,5 +25,12 @@ namespace TeamBins.Common.Infrastructure.Enums
             Issue,
             IssueComment
         }
+
+        public enum NotificationTypeCode
+        {
+            NewComment,
+            NewIssue
+        }
+
     }
 }

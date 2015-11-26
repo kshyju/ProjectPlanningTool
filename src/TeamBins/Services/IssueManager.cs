@@ -15,14 +15,16 @@ namespace TeamBins.Services
 
     public class IssueManager : IIssueManager
     {
+        ITeamRepository teamRepository;
         IIssueRepository issueRepository;
         IUserSessionHelper userSessionHelper;
         IActivityRepository activityRepository;
-        public IssueManager(IIssueRepository issueRepository, IUserSessionHelper userSessionHelper, IActivityRepository activityRepository)
+        public IssueManager(IIssueRepository issueRepository, IUserSessionHelper userSessionHelper, IActivityRepository activityRepository, ITeamRepository teamRepository)
         {
             this.userSessionHelper = userSessionHelper;
             this.issueRepository = issueRepository;
             this.activityRepository = activityRepository;
+            this.teamRepository = teamRepository;
         }
 
         public IEnumerable<IssueVM> GetIssues(List<int> statusIds, int count)
@@ -32,8 +34,7 @@ namespace TeamBins.Services
 
         public IssueDetailVM SaveIssue(CreateIssue issue, List<HttpPostedFileBase> files)
         {
-            var previousVersion = issueRepository.GetIssue(issue.ID);
-
+           
             issue.TeamID = userSessionHelper.TeamId;
             issue.CreatedByID = userSessionHelper.UserId;
             issue.ProjectID = GetDefaultProjectId();
@@ -43,11 +44,18 @@ namespace TeamBins.Services
             return issueRepository.GetIssue(issueId);
 
             //Activity entry
-         //  return SaveActivity(issue, previousVersion, newVersion);
+            //  return SaveActivity(issue, previousVersion, newVersion);
         }
 
 
-       
+        private void SetUserEditPermissionsForIssue(IssueDetailVM issueVm)
+        {
+            if (userSessionHelper.UserId > 0)
+            {
+                var teamMember = teamRepository.GetTeamMember(issueVm.TeamID, userSessionHelper.UserId);
+                issueVm.IsEditableForCurrentUser = teamMember != null;
+            }
+        }
 
         private int GetDefaultProjectId()
         {
@@ -56,13 +64,13 @@ namespace TeamBins.Services
             {
                 return teamMember.DefaultProjectId.Value;
             }
-            throw new MissingSettingsException("Default project is missing","Default Project");
+            throw new MissingSettingsException("Default project is missing", "Default Project");
         }
 
         public ActivityDto SaveActivity(CreateIssue model, IssueDetailVM previousVersion, IssueDetailVM newVersion)
         {
             bool isStateChanged = false;
-            var activity = new ActivityDto() { ObjectId = newVersion.ID, ObjectType = "Issue"};
+            var activity = new ActivityDto() { ObjectId = newVersion.ID, ObjectType = "Issue" };
 
             if (previousVersion == null)
             {
@@ -83,19 +91,27 @@ namespace TeamBins.Services
                     activity.ObjectTite = newVersion.Title;
                     isStateChanged = true;
                 }
-               
+                else if (previousVersion.Category.Id != newVersion.Category.Id)
+                {
+                    activity.Description = "Changed category";
+                    activity.NewState = newVersion.Category.Name;
+                    activity.OldState = previousVersion.Category.Name;
+                    activity.ObjectTite = newVersion.Title;
+                    isStateChanged = true;
+                }
+
 
             }
 
             activity.TeamId = userSessionHelper.TeamId;
-            
-            activity.Actor = new UserDto {Id = userSessionHelper.UserId};
+
+            activity.Actor = new UserDto { Id = userSessionHelper.UserId };
 
             if (isStateChanged)
             {
                 var newId = activityRepository.Save(activity);
                 return activityRepository.GetActivityItem(newId);
-                
+
             }
             return null;
         }
@@ -131,7 +147,9 @@ namespace TeamBins.Services
 
         public IssueDetailVM GetIssue(int id)
         {
-            return issueRepository.GetIssue(id);
+            var issue = issueRepository.GetIssue(id);
+            SetUserEditPermissionsForIssue(issue);
+            return issue;
         }
     }
 }

@@ -17,7 +17,7 @@ namespace TeamBins.DataAccess
         IQueryable<TeamMember> GetTeamMembers(int teamId);
         IQueryable<User> GetUsers();
         void DeleteComment(int commentId);
-        IEnumerable<User> GetSubscribers(int teamId, string notificationtypeCode);
+       // IEnumerable<User> GetSubscribers(int teamId, string notificationtypeCode);
         IEnumerable<NotificationType> GetNotificationTypes();
         void SaveUserNotificationSubscription(UserNotificationSubscription subscription);
 

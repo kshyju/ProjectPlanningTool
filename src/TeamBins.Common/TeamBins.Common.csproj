@@ -78,7 +78,7 @@
   <ItemGroup>
     <Compile Include="BaseEntityDto.cs" />
     <Compile Include="EmailTemplateDto.cs" />
-    <Compile Include="Infrastructure\Enums\Class1.cs" />
+    <Compile Include="Infrastructure\Enums\Enums.cs" />
     <Compile Include="Infrastructure\UrlHelper.cs" />
     <Compile Include="ProjectDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

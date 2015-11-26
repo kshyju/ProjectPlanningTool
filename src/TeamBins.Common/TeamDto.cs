@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TeamBins.Common.ViewModels;
 
 namespace TeamBins.Common
 {
@@ -75,6 +76,7 @@ namespace TeamBins.Common
 
     public class CommentVM
     {
+        public int IssueId;
         public int ID { set; get; }
         public string CommentBody { set; get; }
         public string AuthorName { set; get; }
@@ -83,6 +85,7 @@ namespace TeamBins.Common
         public DateTime CreativeDate { set; get; }
         public bool IsOwner { set; get; }
         public UserDto Author { set; get; }
+        public IssueVM Issue { set; get; }
     }
     public class TeamActivityVM
     {

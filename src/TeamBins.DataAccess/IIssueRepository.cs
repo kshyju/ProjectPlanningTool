@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using TeamBins.Common;
 using TeamBins.Common.Infrastructure.Enums.TeamBins.Helpers.Enums;
@@ -23,17 +24,32 @@ namespace TeamBins.DataAccess
 
         public int SaveIssue(CreateIssue issue)
         {
+            Issue issueEntity = null;
             using (var db = new TeamEntitiesConn())
             {
-                var issueEntity = new Issue { Title = issue.Title, Description = issue.Description };
+
+                if (issue.ID > 0)
+                {
+                    issueEntity = db.Issues.FirstOrDefault(s => s.ID == issue.ID);
+                    if (issueEntity == null)
+                    {
+                        return 0;
+                    }
+                }
+                else
+                {
+                    issueEntity = new Issue();
+                }
+                issueEntity.Title = issue.Title;
+                issueEntity.Description = issue.Description;
                 issueEntity.ProjectID = issue.ProjectID;
                 issueEntity.TeamID = issue.TeamID;
                 issueEntity.CategoryID = issue.SelectedCategory;
-                issueEntity.CreatedDate = DateTime.UtcNow;
-                issueEntity.Active = true;
+                
                 issueEntity.CreatedByID = issue.CreatedByID;
                 issueEntity.Location = issue.Iteration;
                 issueEntity.StatusID = issue.SelectedStatus;
+                issueEntity.PriorityID = issue.SelectedPriority;
 
                 if (issueEntity.CategoryID == 0)
                 {
@@ -45,16 +61,27 @@ namespace TeamBins.DataAccess
                     var status = db.Status.FirstOrDefault(s => s.Code == "New");
                     issueEntity.StatusID = status.ID;
                 }
-                if (issueEntity.PriorityID==null)
+                if (issueEntity.PriorityID==null || issueEntity.PriorityID.Value==0)
                 {
-
-
                     var priority = db.Priorities.FirstOrDefault(s => s.Code == "Normal");
                     issueEntity.PriorityID = priority.ID;
                 }
 
+                if (issue.ID == 0)
+                {
+                    issueEntity.CreatedDate = DateTime.UtcNow;
+                    issueEntity.Active = true;
+                    db.Issues.Add(issueEntity);
+                }
+                else
+                {
+                    issueEntity.ModifiedDate = DateTime.Now;
+                    issueEntity.ModifiedByID = issue.CreatedByID;
 
-                db.Issues.Add(issueEntity);
+                    db.Entry(issueEntity).State = EntityState.Modified;
+                    
+                }
+               
                 db.SaveChanges();
                 return issueEntity.ID;
             }
@@ -70,10 +97,10 @@ namespace TeamBins.DataAccess
                     {
                         ID = issue.ID,
                         Title = issue.Title,
-                        Description = issue.Description,
+                        Description = issue.Description ?? string.Empty,
                         Author = new UserDto { Id = issue.CreatedBy.ID, Name = issue.CreatedBy.FirstName },
-                        // Priority = new KeyValueItem {  Id = issue.P.ID, Name = issue.Priority.Name}, 
-                        // TeamID = issue.TeamId,
+                        Project = new KeyValueItem { Id = issue.Project.ID, Name = issue.Project.Name },
+                        TeamID = issue.TeamID,
                         Status = new KeyValueItem { Id = issue.Category.ID, Name = issue.Status.Name },
                         CreatedDate = issue.CreatedDate,
                         Category = new KeyValueItem { Id = issue.Category.ID, Name = issue.Category.Name }
@@ -144,8 +171,9 @@ namespace TeamBins.DataAccess
                         CategoryName = s.Category.Name,
                         Priority = new KeyValueItem { Name = s.Priority.Name },
                         Author = new UserDto { Id = s.CreatedBy.ID, Name = s.CreatedBy.FirstName },
-                        Project = s.Project.Name,
+                      //  Project = s.Project.Name,
                         Status =  new KeyValueItem {  Name = s.Status.Name},
+                        Project = new KeyValueItem { Id = s.Project.ID,Name = s.Project.Name },
                         CreatedDate = s.CreatedDate
                     }).ToList();
             }

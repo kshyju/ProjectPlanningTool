@@ -29,8 +29,8 @@
                 <span>, Last Modified by @Model.LastModifiedBy on @Model.LastModifiedDate</span>
             }
             </div>       
-            <div id="issueStatus">StatusName <span class="@Model.StatusCode">@Model.StatusName</span></div>  
-            <div id="issueStatus">Project <span class="">@Model.Project</span></div>                  
+            <div id="issueStatus">Status<span class="@Model.StatusCode">@Model.Status.Name</span></div>  
+            <div id="issueStatus">Project <span class="">@Model.Project.Name</span></div>                  
         </div>
         <div class="divDetail">
             <div class="divDescr">@Html.Raw(Model.Description.Replace("\n", "</br>"))
@@ -42,7 +42,7 @@
                 </div>
             }
             </div>
-            @if(Model.Attachments.Count()>0)
+            @if(Model.Attachments.Any())
             {
             <div id="attachmentHolder">
                 <h5>Other Attachements</h5>
@@ -69,12 +69,10 @@
                 </div>
             }
             </div>
-            <div class="issue-detail-item">Type : @Model.CategoryName</div>
-            <div class="issue-detail-item">PriorityName: @Model.PriorityName</div>
+            <div class="issue-detail-item">Type : @Model.Category.Name</div>
+            <div class="issue-detail-item">Priority: @Model.Priority.Name</div>
         </div>
-        <div class="right-detail-items ">
-            In <span>@Model.Iteration</span>
-        </div>
+        
         <div id="members"  class="changableWidget right-detail-items">
             @Html.Partial("Partial/Members",Model)
         </div>

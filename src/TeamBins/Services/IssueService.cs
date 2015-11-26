@@ -202,12 +202,12 @@ namespace TeamBins.Services
 
         public IssueVM GetIssueVM(Issue bug)
         {
-            var issueVM = new IssueVM { ID = bug.ID, Title = bug.Title, Description = bug.Description };
+            var issueVM = new IssueDetailVM { ID = bug.ID, Title = bug.Title, Description = bug.Description };
             issueVM.OpenedBy = bug.CreatedBy.FirstName;
             issueVM.PriorityName = bug.Priority.Name;
             issueVM.StatusName = bug.Status.Name;
             issueVM.CategoryName = bug.Category.Name;
-            issueVM.Project = (bug.Project!=null?bug.Project.Name:"");
+            issueVM.ProjectName = (bug.Project!=null?bug.Project.Name:"");
             issueVM.CreatedDate = bug.CreatedDate;
             return issueVM;
         }

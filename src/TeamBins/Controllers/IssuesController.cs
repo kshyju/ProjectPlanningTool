@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using StackExchange.Exceptional;
@@ -20,6 +21,7 @@ namespace TechiesWeb.TeamBins.Controllers
 {
     public class IssuesController : BaseController
     {
+        ICommentManager commentManager;
         private readonly IProjectManager projectManager;
         private IIssueManager issueManager;
         private IssueService issueService;
@@ -29,11 +31,12 @@ namespace TechiesWeb.TeamBins.Controllers
             issueService = new IssueService(new Repositary(), UserID, TeamID);
         }
 
-        public IssuesController(IRepositary repositary, IIssueManager issueManager, IProjectManager projectManager,IUserSessionHelper userSessionHelper) : base(repositary)
+        public IssuesController(IRepositary repositary, IIssueManager issueManager, IProjectManager projectManager, IUserSessionHelper userSessionHelper, ICommentManager commentManager) : base(repositary)
         {
             this.issueManager = issueManager;
             this.projectManager = projectManager;
             this.userSessionHelper = userSessionHelper;
+            this.commentManager = commentManager;
         }
 
         #region public methods
@@ -72,8 +75,8 @@ namespace TechiesWeb.TeamBins.Controllers
         {
             try
             {
-                var statusIds = new List<int> {1, 2, 3, 4};
-                IssueListVM bugListVM = new IssueListVM {TeamID = userSessionHelper.TeamId};
+                var statusIds = new List<int> { 1, 2, 3, 4 };
+                IssueListVM bugListVM = new IssueListVM { TeamID = userSessionHelper.TeamId };
                 var projectExists = projectManager.DoesProjectsExist();
 
                 if (!projectExists)
@@ -124,17 +127,19 @@ namespace TechiesWeb.TeamBins.Controllers
                 {
                     var previousVersion = issueManager.GetIssue(model.ID);
                     var newVersion = issueManager.SaveIssue(model, files);
-                    var issueActivity= issueManager.SaveActivity(model, previousVersion, newVersion);
+                    var issueActivity = issueManager.SaveActivity(model, previousVersion, newVersion);
 
                     var context = GlobalHost.ConnectionManager.GetHubContext<IssuesHub>();
                     if (issueActivity != null)
                     {
                         context.Clients.Group(TeamID.ToString()).addNewTeamActivity(issueActivity);
                         context.Clients.Group(TeamID.ToString()).addIssueToIssueList(newVersion);
+
+                        //update the dashboard
+                        var dashboardSummary = issueManager.GetDashboardSummaryVM(issueActivity.TeamId);
+
+                        context.Clients.Group(TeamID.ToString()).updateDashboardSummary(dashboardSummary);
                     }
-                    //update the dashboard
-                    var dashboardSummary = issueManager.GetDashboardSummaryVM(issueActivity.TeamId);
-                    context.Clients.Group(TeamID.ToString()).updateDashboardSummary(dashboardSummary);
                     if (Request.IsAjaxRequest())
                     {
                         if (model.ID == 0)
@@ -263,7 +268,7 @@ namespace TechiesWeb.TeamBins.Controllers
                 //    bugVm.LastModifiedBy = bug.ModifiedBy.FirstName;
                 //}
 
-               
+
                 if (bug.DueDate.HasValue)
                     bugVm.IssueDueDate = (bug.DueDate.Value.Year > 2000 ? bug.DueDate.Value.ToShortDateString() : "");
 
@@ -282,8 +287,8 @@ namespace TechiesWeb.TeamBins.Controllers
 
                 //Get Members
                 //issueService.LoadIssueMembers(issueId, bugVm, UserID);
-               
-               // issueService.SetUserPermissionsForIssue(bugVm, UserID, TeamID);
+
+                // issueService.SetUserPermissionsForIssue(bugVm, UserID, TeamID);
                 return View(bugVm);
             }
             catch (Exception ex)
@@ -380,7 +385,7 @@ namespace TechiesWeb.TeamBins.Controllers
 
         [HttpPost]
         [VerifyLogin]
-        public ActionResult Comment(NewIssueCommentVM model, string Connection)
+        public Task<ActionResult> Comment(NewIssueCommentVM model, string Connection)
         {
             try
             {
@@ -388,28 +393,29 @@ namespace TechiesWeb.TeamBins.Controllers
                 {
 
                     model.CommentBody = HttpUtility.HtmlEncode(model.CommentBody);
-                    var comment = new Comment { CommentText = model.CommentBody, IssueID = model.IssueID, CreatedByID = UserID, CreatedDate = DateTime.Now };
-                    var res = repo.SaveComment(comment);
-                    comment = repo.GetComment(comment.ID);
-                    var activity = issueService.SaveActivity(comment, TeamID);
-                    if (activity != null)
+                    var comment = new CommentVM
                     {
-                        var activityVM = new CommentService(repo, SiteBaseURL).GetActivityVM(activity);
+                        CommentBody = model.CommentBody,
+                        IssueId = model.IssueID,
+                        Author = new UserDto { Id = UserID }
+                    };
 
-                        var context = GlobalHost.ConnectionManager.GetHubContext<IssuesHub>();
-                        context.Clients.Group(TeamID.ToString()).addNewTeamActivity(activityVM);
+                    var commentId = commentManager.SaveComment(comment);
 
-                        var commentVM = issueService.GetIssueCommentVM(UserID, comment);
-                        commentVM.IsOwner = false;
-                        string[] excludedConn = new string[] { Connection };
-                        context.Clients.Groups(new string[] { TeamID.ToString() }, excludedConn).addNewComment(commentVM);
+                    var newCommentVm = commentManager.GetComment(commentId);
+                    var context = GlobalHost.ConnectionManager.GetHubContext<IssuesHub>();
 
-                        commentVM.IsOwner = true;
-                        context.Clients.Client(Connection).addNewComment(commentVM);
+                    //Send to all other users except the Author.
+                    newCommentVm.IsOwner = false;
+                    string[] excludedConn = new string[] { Connection };
+                    context.Clients.Groups(new string[] { TeamID.ToString() }, excludedConn).addNewComment(newCommentVm);
 
-                        issueService.SendEmailNotificaionForNewComment(comment, comment.Issue, TeamID, UserID, SiteBaseURL);
+                    //Send to the author
+                    newCommentVm.IsOwner = true;
+                    context.Clients.Client(Connection).addNewComment(newCommentVm);
 
-                    }
+                    await commentManager.SendEmailNotificaionForNewComment(comment);
+
                     return Json(new { Status = "Success", NewCommentID = res.OperationID });
                 }
                 return Json(new { Status = "Error" });
@@ -492,10 +498,7 @@ namespace TechiesWeb.TeamBins.Controllers
             }
         }
 
-        public JsonResult comments(int id)
-        {
-            return Json(issueService.GetIssueCommentVMs(id, UserID), JsonRequestBehavior.AllowGet);
-        }
+
 
         [HttpPost]
         [VerifyLogin]
@@ -529,7 +532,7 @@ namespace TechiesWeb.TeamBins.Controllers
         private IssueListVM GetBugList(string iteration, int teamId, int size = 25)
         {
             var vm = new IssueListVM { CurrentTab = iteration, TeamID = teamId };
-            var statusIds = new List<int> {1,2,3,4};
+            var statusIds = new List<int> { 1, 2, 3, 4 };
             List<IssueVM> issueList = issueManager.GetIssues(statusIds, size).ToList();
             vm.Bugs = issueList;
             return vm;

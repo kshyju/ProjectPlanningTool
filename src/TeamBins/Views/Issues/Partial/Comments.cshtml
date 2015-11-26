@@ -2,12 +2,12 @@
 <h4>{{vm.comments.length}} comments</h4> 
 <div id="commentList" > 
     <div class="commentItem" ng-repeat="comment in vm.comments">          
-        <img ng-src="{{comment.AvatarHash}}" />    
+        <img ng-src="{{comment.Author.GravatarUrl}}" />    
         <div class="commentItemBody" >
             <div class="comment-rightpart">
            
             <div class="comment-header">
-                <span class="cmntAuthorName">{{comment.AuthorName}}</span>
+                <span class="cmntAuthorName">{{comment.Author.Name}}</span>
                 <span class="commentmetadata" title="">{{comment.CreatedDateRelative | date:'medium'}}</span>
                 <div class="right-links">
                     <a class="comment-delete quite" ng-show="comment.IsOwner" title="Delete comment" ng-click="vm.removeComment(comment,@Model.ID,$event)" href="#">Delete</a>

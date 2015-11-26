@@ -30,7 +30,8 @@ namespace TechiesWeb.TeamBins.Infrastructure
             ToAddress = new List<string>();
         }
         public void Send()
-        {           
+        {
+           
             try
             {
                 MailMessage mail = new MailMessage();
@@ -60,7 +61,7 @@ namespace TechiesWeb.TeamBins.Infrastructure
                 smtp.Credentials = basicCredential;
                 smtp.EnableSsl = true;
 
-                smtp.Send(mail);
+               // smtp.Send(mail);
             }
             catch (Exception ex)
             {
