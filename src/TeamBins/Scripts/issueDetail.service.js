@@ -2,12 +2,32 @@
 
     return {
         getComments: getComments,
-        getIssueMembers: getIssueMembers
+        getIssueMembers: getIssueMembers,
+        saveComment: saveComment
     }
 
+    function saveComment(commentText, issueId, signalRConnection) {
+        return $http.post('../issues/Comment', {
+            IssueID: issueId,
+            CommentBody: commentText,
+            Connection: signalRConnection
+        })
+    .then(saveCommentsCompleted)
+    .catch(saveCommentsFailed);
 
+        function saveCommentsCompleted(response) {
+            // console.log("r");
+            //console.log(response.data);
+            return response.data;
+        }
+
+        function saveCommentsFailed(error) {
+            console.log("error");
+            return error;
+        }
+    }
     function getComments(issueId) {
-        return $http.get('../api/issues/' + issueId+"/comments")
+        return $http.get('../api/issues/' + issueId + "/comments")
       .then(getCommentsCompleted)
       .catch(getCommentsFailed);
 
@@ -39,7 +59,7 @@
             return error;
         }
     }
-    
+
 }
 
 issueDetailService.$inject = ['$http'];

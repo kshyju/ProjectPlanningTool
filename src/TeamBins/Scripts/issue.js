@@ -62,30 +62,30 @@ $(function () {
     function () {
         $(this).find("a.hiddenChangeLink").hide();
     });
-    $("#saveComment").click(function (e) {
-        e.preventDefault();
-        var _this = $(this);
+    //$("#saveComment").click(function (e) {
+    //    e.preventDefault();
+    //    var _this = $(this);
        
-        if ($("#newComment").val() !== "") {
-            _this.attr("value", "Saving...").attr("disabled", true);
-            $.ajax({
-                url: "../../Issues/Comment",
-                type: "post",
-                data: {
-                    CommentBody: $("#newComment").val(),
-                    IssueID: $("#ID").val(),
-                    Connection: IssueDetails.gIssueDetailConnectionID
-                },
-                success: function (res, textStatus, jqXHR) {                   
-                    $("#newComment").val("");
-                    _this.attr("disabled", false).attr("value","Post");
-                }
-            });
-        }
-        else {
-            $("#newComment").focus();
-        }
-    });
+    //    if ($("#newComment").val() !== "") {
+    //        _this.attr("value", "Saving...").attr("disabled", true);
+    //        $.ajax({
+    //            url: "../../Issues/Comment",
+    //            type: "post",
+    //            data: {
+    //                CommentBody: $("#newComment").val(),
+    //                IssueID: $("#ID").val(),
+    //                Connection: IssueDetails.gIssueDetailConnectionID
+    //            },
+    //            success: function (res, textStatus, jqXHR) {                   
+    //                $("#newComment").val("");
+    //                _this.attr("disabled", false).attr("value","Post");
+    //            }
+    //        });
+    //    }
+    //    else {
+    //        $("#newComment").focus();
+    //    }
+    //});
     
 
     $("#issue-star").click(function (e) {

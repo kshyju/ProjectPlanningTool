@@ -8,6 +8,7 @@ var IssueDetailsCtrl = function($scope, $http, issueDetailService, issue) {
 
     var vm = this;
 
+    vm.newComment = "";
 
     vm.hover = false;
     vm.members = [];
@@ -24,6 +25,21 @@ var IssueDetailsCtrl = function($scope, $http, issueDetailService, issue) {
             vm.isEditableForCurrentUser = true;
         });
 
+    vm.saveComment = function () {
+       
+        if (vm.newComment != "") {
+            issueDetailService.saveComment(vm.newComment, vm.issue.id, IssueDetails.gIssueDetailConnectionID)
+                .then(function(response) {
+                    if (response.Status === "Success") {
+                        vm.newComment = "";
+                        vm.comments.push(response.Data);
+                    } else {
+                        alert("Failed!");
+                    }
+                });
+        }
+    }
+    
 
     vm.hover = function(member) {
         return member.ShowDelete = !member.ShowDelete;
@@ -38,7 +54,7 @@ var IssueDetailsCtrl = function($scope, $http, issueDetailService, issue) {
     vm.removeComment = function(comment, issueId, $event) {
         var yes = window.confirm("Are you sure to delete this comment ? This cannot be undone.");
         if (yes) {
-            $http.post("../../issues/removecomment", { id: comment.ID }).success(function(data) {
+            $http.post("../../api/comment/" + comment.ID+"/delete").success(function (data) {
                 if (data.Status === "Success") {
                     vm.comments.splice(vm.comments.indexOf(comment), 1);
                 }
@@ -46,9 +62,10 @@ var IssueDetailsCtrl = function($scope, $http, issueDetailService, issue) {
         }
     };
     var chat = $.connection.issuesHub;
-    chat.client.addNewComment = function(comment) {
+    chat.client.addNewComment = function (comment) {
+       
         vm.comments.push(comment);
-        vm.commentCount++;
+
         vm.$apply();
     };
     $.connection.hub.start().done(function() {

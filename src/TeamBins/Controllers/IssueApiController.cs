@@ -37,5 +37,6 @@ namespace TeamBins.Controllers
             var comments = commentManager.GetComments(id);
             return Request.CreateResponse(HttpStatusCode.OK, comments);
         }
+
     }
 }

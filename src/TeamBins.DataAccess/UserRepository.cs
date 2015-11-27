@@ -9,12 +9,12 @@ namespace TeamBins.DataAccess
 {
     public class UserRepository : IUserRepository
     {
-        public Task<List<UserDto>> GetSubscribers(int teamId, NotificationTypeCode notificationType)
+        public async Task<List<UserDto>> GetSubscribers(int teamId, NotificationTypeCode notificationType)
         {
             using (var db = new TeamEntitiesConn())
             {
                 var notificationTypeCode = notificationType.ToString();
-                return db.UserNotificationSubscriptions.Where(s => s.NotificationType.Code == notificationTypeCode)
+                return await db.UserNotificationSubscriptions.Where(s => s.NotificationType.Code == notificationTypeCode)
                     .Select(x => new UserDto
                     {
                         EmailAddress = x.User.EmailAddress,

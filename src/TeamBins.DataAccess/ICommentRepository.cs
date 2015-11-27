@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using TeamBins.Common;
 using TeamBins.Common.ViewModels;
 
@@ -12,9 +13,24 @@ namespace TeamBins.DataAccess
         List<CommentVM> GetComments(int issueId);
         int Save(CommentVM comment);
         CommentVM GetComment(int commentId);
+        Task Delete(int id);
     }
     public class CommentRepository : ICommentRepository
     {
+        public async Task Delete(int id)
+        {
+            using (var db = new TeamEntitiesConn())
+            {
+                var c = db.Comments.FirstOrDefault(s => s.ID == id);
+                if (c != null)
+                {
+                    db.Comments.Remove(c);
+                    await db.SaveChangesAsync();
+                }
+
+            }
+        }
+
         public CommentVM GetComment(int commentId)
         {
             using (var db = new TeamEntitiesConn())

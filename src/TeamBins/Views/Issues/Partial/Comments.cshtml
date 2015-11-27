@@ -25,11 +25,12 @@
 <div id="addComment">
     <p>
         <b>Add a comment</b><br />
-        <textarea id="newComment" name="newComment" rows="3" cols="100%" maxlength="2000" style="height:50px;"  ></textarea>
+        <textarea id="newComment" name="newComment"  ng-model="vm.newComment"  rows="3" cols="100%" maxlength="2000" style="height:50px;"  ></textarea>
     </p>
     <p>
-        <input type="submit" id="saveComment" value="Post" />
-    </p>
+        <button ng-click="vm.saveComment()">
+            Post1
+        </button></p>
 </div>    
 }   
     

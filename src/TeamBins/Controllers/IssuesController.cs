@@ -385,7 +385,7 @@ namespace TechiesWeb.TeamBins.Controllers
 
         [HttpPost]
         [VerifyLogin]
-        public Task<ActionResult> Comment(NewIssueCommentVM model, string Connection)
+        public async Task<ActionResult> Comment(NewIssueCommentVM model, string Connection)
         {
             try
             {
@@ -410,13 +410,12 @@ namespace TechiesWeb.TeamBins.Controllers
                     string[] excludedConn = new string[] { Connection };
                     context.Clients.Groups(new string[] { TeamID.ToString() }, excludedConn).addNewComment(newCommentVm);
 
-                    //Send to the author
+                    //For Sending to the author
                     newCommentVm.IsOwner = true;
-                    context.Clients.Client(Connection).addNewComment(newCommentVm);
-
+                    
                     await commentManager.SendEmailNotificaionForNewComment(comment);
 
-                    return Json(new { Status = "Success", NewCommentID = res.OperationID });
+                    return Json(new { Status = "Success", Data = newCommentVm });
                 }
                 return Json(new { Status = "Error" });
             }
@@ -500,43 +499,13 @@ namespace TechiesWeb.TeamBins.Controllers
 
 
 
-        [HttpPost]
-        [VerifyLogin]
-        public JsonResult removecomment(int id)
-        {
-            try
-            {
-                var comment = repo.GetComment(id);
-                if (comment != null)
-                {
-                    if (comment.CreatedByID == UserID)
-                    {
-                        repo.DeleteComment(id);
-                        return Json(new { Status = "Success" });
-                    }
-                }
-                return Json(new { Status = "Error" });
-            }
-            catch (Exception ex)
-            {
-                log.Error("Error deleting comment " + id, ex);
-                return Json(new { Status = "Error" });
-            }
 
-        }
 
         #endregion public methods
 
         #region private methods
 
-        private IssueListVM GetBugList(string iteration, int teamId, int size = 25)
-        {
-            var vm = new IssueListVM { CurrentTab = iteration, TeamID = teamId };
-            var statusIds = new List<int> { 1, 2, 3, 4 };
-            List<IssueVM> issueList = issueManager.GetIssues(statusIds, size).ToList();
-            vm.Bugs = issueList;
-            return vm;
-        }
+        
 
 
         private void LoadDropDownsForCreate(CreateIssue viewModel)

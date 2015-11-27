@@ -17,6 +17,7 @@ namespace TeamBins.Services
         CommentVM GetComment(int id);
 
         Task SendEmailNotificaionForNewComment(CommentVM comment);
+        Task Delete(int id);
     }
     public class CommentManager : ICommentManager
     {
@@ -44,6 +45,7 @@ namespace TeamBins.Services
             var comments = commentRepository.GetComments(issueId);
             foreach (var commentVm in comments)
             {
+                commentVm.IsOwner = commentVm.Author.Id == userSessionHelper.UserId;
                 commentVm.Author.GravatarUrl = UserService.GetImageSource(commentVm.Author.EmailAddress, 42);
             }
             return comments;
@@ -52,6 +54,7 @@ namespace TeamBins.Services
         public CommentVM GetComment(int id)
         {
             var commentVm = commentRepository.GetComment(id);
+            commentVm.IsOwner = commentVm.Author.Id == userSessionHelper.UserId;
             commentVm.Author.GravatarUrl = UserService.GetImageSource(commentVm.Author.EmailAddress, 42);
             return commentVm;
         }
@@ -87,6 +90,9 @@ namespace TeamBins.Services
             await commentEmailManager.SendNewCommentEmail(comment,userSessionHelper.TeamId);
         }
 
-
+        public async Task Delete(int id)
+        {
+            await commentRepository.Delete(id);
+        }
     }
 }

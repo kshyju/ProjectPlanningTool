@@ -169,10 +169,10 @@ namespace TeamBins.DataAccess
                         PriorityName = s.Priority.Name,
                         StatusName = s.Status.Name,
                         CategoryName = s.Category.Name,
-                        Priority = new KeyValueItem { Name = s.Priority.Name },
+                        Priority = new KeyValueItem { Id = s.Project.ID, Name = s.Priority.Name },
                         Author = new UserDto { Id = s.CreatedBy.ID, Name = s.CreatedBy.FirstName },
                       //  Project = s.Project.Name,
-                        Status =  new KeyValueItem {  Name = s.Status.Name},
+                        Status =  new KeyValueItem { Id= s.Project.ID,  Name = s.Status.Name},
                         Project = new KeyValueItem { Id = s.Project.ID,Name = s.Project.Name },
                         CreatedDate = s.CreatedDate
                     }).ToList();
