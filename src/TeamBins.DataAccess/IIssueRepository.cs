@@ -158,7 +158,7 @@ namespace TeamBins.DataAccess
         {
             using (var db = new TeamEntitiesConn())
             {
-
+               
                 return db.Issues.AsNoTracking().Where(s => statusIds.Contains(s.StatusID)).OrderByDescending(s => s.CreatedDate)
                     .Take(count)
                     .Select(s => new IssueDetailVM

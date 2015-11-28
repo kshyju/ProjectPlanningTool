@@ -148,7 +148,10 @@ namespace TeamBins.Services
         public IssueDetailVM GetIssue(int id)
         {
             var issue = issueRepository.GetIssue(id);
-            SetUserEditPermissionsForIssue(issue);
+            if (issue != null)
+            {
+                SetUserEditPermissionsForIssue(issue);
+            }
             return issue;
         }
     }
