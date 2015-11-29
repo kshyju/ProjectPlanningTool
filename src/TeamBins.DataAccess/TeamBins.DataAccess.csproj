@@ -114,6 +114,9 @@
     <Compile Include="Status.cs">
       <DependentUpon>TeamDbContext.tt</DependentUpon>
     </Compile>
+    <Compile Include="StatusGroup.cs">
+      <DependentUpon>TeamDbContext.tt</DependentUpon>
+    </Compile>
     <Compile Include="Team.cs">
       <DependentUpon>TeamDbContext.tt</DependentUpon>
     </Compile>

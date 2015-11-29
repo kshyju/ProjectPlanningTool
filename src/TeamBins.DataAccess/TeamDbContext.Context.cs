@@ -42,5 +42,6 @@ namespace TeamBins.DataAccess
         public virtual DbSet<TeamMemberRequest> TeamMemberRequests { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserNotificationSubscription> UserNotificationSubscriptions { get; set; }
+        public virtual DbSet<StatusGroup> StatusGroups { get; set; }
     }
 }

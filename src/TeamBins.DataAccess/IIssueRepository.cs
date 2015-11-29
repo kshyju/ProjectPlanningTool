@@ -15,6 +15,8 @@ namespace TeamBins.DataAccess
         IssueDetailVM GetIssue(int id);
         int SaveIssue(CreateIssue issue);
         DashBoardItemSummaryVM GetDashboardSummaryVM(int teamId);
+
+        IEnumerable<IssuesPerStatusGroup> GetIssuesGroupedByStatusGroup(List<int> statusIds, int count);
     }
 
   
@@ -154,13 +156,51 @@ namespace TeamBins.DataAccess
             return vm;
         }
 
+        public IEnumerable<IssuesPerStatusGroup> GetIssuesGroupedByStatusGroup(List<int> statusIds, int count)
+        {
+            using (var db = new TeamEntitiesConn())
+            {
+
+                return db.Status.Select(x => new IssuesPerStatusGroup
+                {
+                    GroupName =x.StatusGroup.Name,
+                    Issues = x.Issues.OrderByDescending(s=>s.CreatedDate)
+                    .Take(count)
+                    
+                    .Select(p => new IssueDetailVM
+                    {
+                        ID = p.ID,
+                        Title = p.Title,
+                        Description = p.Description,
+                        PriorityName = p.Priority.Name,
+                        StatusName = p.Status.Name,
+                        CategoryName = p.Category.Name,
+                        Category = new KeyValueItem { Id = p.Category.ID, Name = p.Category.Name },
+                        Priority = new KeyValueItem { Id = p.Project.ID, Name = p.Priority.Name },
+                        Author = new UserDto { Id = p.CreatedBy.ID, Name = p.CreatedBy.FirstName },
+                        Status = new KeyValueItem { Id = p.Project.ID, Name = p.Status.Name },
+                        Project = new KeyValueItem { Id = p.Project.ID, Name = p.Project.Name },
+                        CreatedDate = p.CreatedDate
+
+                    }).ToList()
+
+                });
+
+
+
+
+            }
+        }
+
         public IEnumerable<IssueDetailVM> GetIssues(List<int> statusIds, int count)
         {
             using (var db = new TeamEntitiesConn())
             {
                
-                return db.Issues.AsNoTracking().Where(s => statusIds.Contains(s.StatusID)).OrderByDescending(s => s.CreatedDate)
+                return db.Issues.AsNoTracking().Where(s => statusIds.Contains(s.StatusID))
+                    .OrderByDescending(s => s.CreatedDate)
                     .Take(count)
+                    
                     .Select(s => new IssueDetailVM
                     {
                         ID = s.ID,
@@ -169,13 +209,15 @@ namespace TeamBins.DataAccess
                         PriorityName = s.Priority.Name,
                         StatusName = s.Status.Name,
                         CategoryName = s.Category.Name,
+                        Category = new KeyValueItem { Id = s.Category.ID, Name = s.Category.Name },
                         Priority = new KeyValueItem { Id = s.Project.ID, Name = s.Priority.Name },
                         Author = new UserDto { Id = s.CreatedBy.ID, Name = s.CreatedBy.FirstName },
                       //  Project = s.Project.Name,
                         Status =  new KeyValueItem { Id= s.Project.ID,  Name = s.Status.Name},
                         Project = new KeyValueItem { Id = s.Project.ID,Name = s.Project.Name },
                         CreatedDate = s.CreatedDate
-                    }).ToList();
+                    })
+                    .ToList();
             }
         }
     }

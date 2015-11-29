@@ -37,7 +37,7 @@ namespace TeamBins.Common.ViewModels
 
     }
 
-   
+
 
     public class IssueDetailVM : IssueVM
     {
@@ -59,13 +59,23 @@ namespace TeamBins.Common.ViewModels
             Comments = new List<CommentVM>();
         }
 
-       public KeyValueItem Priority { set; get; }
+        public KeyValueItem Priority { set; get; }
         public KeyValueItem Status { set; get; }
         public KeyValueItem Category { set; get; }
         public KeyValueItem Project { set; get; }
 
     }
 
+    public class StatusGroupVm
+    {
+        public string Name { set; get; }
+        public List<IssueVM> Issues { set; get; }
+    }
+    public class IssuesPerStatusGroup
+    {
+        public string GroupName { set; get; }
+        public List<IssueDetailVM> Issues { set; get; }
+    }
     public class IssueVM
     {
         public int ID { set; get; }

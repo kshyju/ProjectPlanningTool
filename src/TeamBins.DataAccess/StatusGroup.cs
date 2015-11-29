@@ -12,21 +12,20 @@ namespace TeamBins.DataAccess
     using System;
     using System.Collections.Generic;
     
-    public partial class Status
+    public partial class StatusGroup
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Status()
+        public StatusGroup()
         {
-            this.Issues = new HashSet<Issue>();
+            this.Status = new HashSet<Status>();
         }
     
-        public int ID { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Code { get; set; }
-        public Nullable<int> StatusGroupId { get; set; }
+        public bool IsActive { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Issue> Issues { get; set; }
-        public virtual StatusGroup StatusGroup { get; set; }
+        public virtual ICollection<Status> Status { get; set; }
     }
 }

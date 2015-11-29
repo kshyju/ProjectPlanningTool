@@ -49,7 +49,7 @@
                 </tr>                
                 <tr ng-repeat="issue in issueList|orderBy:'ID':true" ng-class-odd="'trOdd'" ng-class-even="'trEven'">
                     <td>{{issue.ID}}</td>
-                    <td><div class="issue-icon-{{issue.Category}}" title="{{issue.CategoryName}}"></div></td>
+                    <td><div class="issue-icon-{{issue.Category.Name}}" title="{{issue.Category.Name}}"></div></td>
                     <td><a href="~/issues/{{issue.ID}}">{{issue.Title}}</a></td>
                     <td>{{issue.Author.Name}}</td>
                     <td>{{issue.Priority.Name}}</td>

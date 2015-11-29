@@ -132,6 +132,16 @@
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" />
           <Property Name="Code" Type="varchar" MaxLength="20" />
+          <Property Name="StatusGroupId" Type="int" />
+        </EntityType>
+        <EntityType Name="StatusGroup">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Code" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Team">
           <Key>
@@ -406,6 +416,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Status_StatusGroup">
+          <End Role="StatusGroup" Type="Self.StatusGroup" Multiplicity="0..1" />
+          <End Role="Status" Type="Self.Status" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StatusGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Status">
+              <PropertyRef Name="StatusGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Team_User">
           <End Role="User" Type="Self.User" Multiplicity="1" />
           <End Role="Team" Type="Self.Team" Multiplicity="*" />
@@ -551,6 +573,7 @@
           <EntitySet Name="Priority" EntityType="Self.Priority" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Project" EntityType="Self.Project" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Status" EntityType="Self.Status" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StatusGroup" EntityType="Self.StatusGroup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Team" EntityType="Self.Team" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TeamMember" EntityType="Self.TeamMember" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TeamMemberRequest" EntityType="Self.TeamMemberRequest" Schema="dbo" store:Type="Tables" />
@@ -627,6 +650,10 @@
           <AssociationSet Name="FK_Project_User" Association="Self.FK_Project_User">
             <End Role="User" EntitySet="User" />
             <End Role="Project" EntitySet="Project" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Status_StatusGroup" Association="Self.FK_Status_StatusGroup">
+            <End Role="StatusGroup" EntitySet="StatusGroup" />
+            <End Role="Status" EntitySet="Status" />
           </AssociationSet>
           <AssociationSet Name="FK_Team_User" Association="Self.FK_Team_User">
             <End Role="User" EntitySet="User" />
@@ -831,6 +858,8 @@
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Code" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Issues" Relationship="Self.FK_Issue_Status" FromRole="Status" ToRole="Issue" />
+          <Property Name="StatusGroupId" Type="Int32" />
+          <NavigationProperty Name="StatusGroup" Relationship="Team.Data.Entities.FK_Status_StatusGroup" FromRole="Status" ToRole="StatusGroup" />
         </EntityType>
         <EntityType Name="Team">
           <Key>
@@ -1402,7 +1431,34 @@
             <End Role="User" EntitySet="Users" />
             <End Role="UserNotificationSubscription" EntitySet="UserNotificationSubscriptions" />
           </AssociationSet>
+          <EntitySet Name="StatusGroups" EntityType="Team.Data.Entities.StatusGroup" />
+          <AssociationSet Name="FK_Status_StatusGroup" Association="Team.Data.Entities.FK_Status_StatusGroup">
+            <End Role="StatusGroup" EntitySet="StatusGroups" />
+            <End Role="Status" EntitySet="Status" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="StatusGroup">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Code" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Status" Relationship="Team.Data.Entities.FK_Status_StatusGroup" FromRole="StatusGroup" ToRole="Status" />
+        </EntityType>
+        <Association Name="FK_Status_StatusGroup">
+          <End Type="Team.Data.Entities.StatusGroup" Role="StatusGroup" Multiplicity="0..1" />
+          <End Type="Team.Data.Entities.Status" Role="Status" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StatusGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Status">
+              <PropertyRef Name="StatusGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1543,6 +1599,7 @@
           <EntitySetMapping Name="Status">
             <EntityTypeMapping TypeName="Team.Data.Entities.Status">
               <MappingFragment StoreEntitySet="Status">
+                <ScalarProperty Name="StatusGroupId" ColumnName="StatusGroupId" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Code" ColumnName="Code" />
@@ -1608,6 +1665,16 @@
                 <ScalarProperty Name="TeamID" ColumnName="TeamID" />
                 <ScalarProperty Name="Subscribed" ColumnName="Subscribed" />
                 <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StatusGroups">
+            <EntityTypeMapping TypeName="Team.Data.Entities.StatusGroup">
+              <MappingFragment StoreEntitySet="StatusGroup">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

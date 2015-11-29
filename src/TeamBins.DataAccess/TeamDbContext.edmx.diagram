@@ -51,6 +51,8 @@
         <AssociationConnector Association="Team.Data.Entities.FK_TeamMember_Member" ManuallyRouted="false" />
         <AssociationConnector Association="Team.Data.Entities.FK_TeamMemberRequest_CreatedBy" ManuallyRouted="false" />
         <AssociationConnector Association="Team.Data.Entities.FK_UserNotificationSubscription_User" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="Team.Data.Entities.StatusGroup" Width="1.5" PointX="3.75" PointY="40.25" />
+        <AssociationConnector Association="Team.Data.Entities.FK_Status_StatusGroup" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
