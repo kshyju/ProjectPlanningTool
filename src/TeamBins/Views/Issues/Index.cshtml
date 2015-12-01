@@ -14,24 +14,19 @@
         <div id="leftContentPane">
             <h2>Recent Issues</h2>
             <div class="btnBar">
-                <div id="quick_create">                    
-                        <input type="text" ng-keyup="create($event)" name="NewItemTitle" placeholder="Create Item" id="NewItemTitle" />
-                        <div id="default_items">
-                            <div class="default_item">
-                                <img class="default_item_img" src="~/Content/images/feature-icon.png" />
-                            </div>
-                        </div>                    
+                <div id="quick_create">
+                    <input type="text" ng-keyup="create($event)" name="NewItemTitle" placeholder="Create Item" id="NewItemTitle"/>
+                    <div id="default_items">
+                        <div class="default_item">
+                            <img class="default_item_img" src="~/Content/images/feature-icon.png"/>
+                        </div>
+                    </div>
                 </div>
+               
                 <div class="iterations">
                     <ul class="navtab">
-                        <li>
-                            <a href="#current" id="tab-current" ng-click="updateview('current', $event)" class="aIteration @(Model.CurrentTab=="Current"?"tab-selected":"")">Current</a>
-                        </li>
-                        <li>
-                            <a href="#backlog" id="tab-backlog"  ng-click="updateview('backlog', $event)" class="aIteration @(Model.CurrentTab=="Backlog"?"tab-selected":"")">Backlog</a>
-                        </li>
-                        <li>
-                            <a href="#completed"  id="tab-completed" ng-click="updateview('completed', $event)" class="aIteration @(Model.CurrentTab=="Completed"?"tab-selected":"")">Completed</a>
+                        <li ng-repeat="group in issuesGrouped">
+                            <a href="#current" id="tab-current" ng-click="updateview(group, $event)" class="aIteration" ng-class="{'tab-selected':group.GroupName==currentlyShowingGroup.GroupName}">{{group.GroupName}}</a>
                         </li>
                     </ul>
                     <div class="spinner" ng-show="loading"></div>
@@ -47,7 +42,7 @@
                     <th>StatusName</th>
                     <th>Opened Date</th>
                 </tr>                
-                <tr ng-repeat="issue in issueList|orderBy:'ID':true" ng-class-odd="'trOdd'" ng-class-even="'trEven'">
+                <tr ng-repeat="issue in currentlyShowingGroup.Issues|orderBy:'ID':true" ng-class-odd="'trOdd'" ng-class-even="'trEven'">
                     <td>{{issue.ID}}</td>
                     <td><div class="issue-icon-{{issue.Category.Name}}" title="{{issue.Category.Name}}"></div></td>
                     <td><a href="~/issues/{{issue.ID}}">{{issue.Title}}</a></td>

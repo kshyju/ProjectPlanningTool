@@ -154,5 +154,10 @@ namespace TeamBins.Services
             }
             return issue;
         }
+
+        public IEnumerable<IssuesPerStatusGroup> GetIssuesGroupedByStatusGroup(int count)
+        {
+            return issueRepository.GetIssuesGroupedByStatusGroup(count);
+        }
     }
 }

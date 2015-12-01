@@ -4,14 +4,21 @@ issueListApp.config(['$httpProvider', function ($httpProvider) {
 }]);
 
 issueListApp.controller('IssueListCtrl', function ($scope, $http, issueService) {
+
+    var vm = this;
+
     $scope.loading = true;
     $scope.activities = [];
     $scope.issuesList = [];
-
+    $scope.issuesGrouped = [];
+   
+    $scope.currentlyShowingGroup = {};
 
     issueService.getIssues(25)
         .then(function (response) {
-            $scope.issueList = response;
+            console.log(response);
+            $scope.issuesGrouped = response;
+            $scope.currentlyShowingGroup = response[0];
             $scope.loading = false;
         });
 
@@ -22,13 +29,9 @@ issueListApp.controller('IssueListCtrl', function ($scope, $http, issueService) 
     });
 
 
-
-    //$http.get('../../team/stream/' + $("#TeamID").val() + "?size=6").success(function (data) {
-    //    $scope.activities = data;
-    //});
     $scope.create = function (e) {
-        if (e.keyCode == 13) {
-            if ($("#NewItemTitle").val() != "") {
+        if (e.keyCode === 13) {
+            if ($("#NewItemTitle").val() !== "") {
                 $.post(addIssueUrl, { Title: $("#NewItemTitle").val() }, function (data) {
                     if (data.Status === "Error") {
                         alert(data.Message);
@@ -41,15 +44,10 @@ issueListApp.controller('IssueListCtrl', function ($scope, $http, issueService) 
         }
     };
 
-    $scope.updateview = function (iteration, $event) {
-        $scope.loading = true;
-        var _this = $("#" + $event.target.id);
-        $http.get('../issues?size=25&iteration=' + iteration).success(function (data) {
-            $scope.issueList = data;
-            $("a.aIteration").removeClass("tab-selected");
-            _this.addClass("tab-selected");
-            $scope.loading = false;
-        });
+    $scope.updateview = function (group, $event) {
+       
+        $scope.currentlyShowingGroup = group;
+        
     };
 
     var chat = $.connection.issuesHub;
@@ -61,8 +59,15 @@ issueListApp.controller('IssueListCtrl', function ($scope, $http, issueService) 
 
     chat.client.addIssueToIssueList = function (issue) {
         console.log(issue);
-        $scope.issueList.push(issue);
-        $scope.$apply();
+
+        angular.forEach($scope.issuesGrouped, function(value, key) {
+            if (value.GroupCode === issue.StatusGroupCode) {
+                value.Issues.push(issue);
+                $scope.$apply();
+            }
+        });
+
+       // $scope.issueList
     };
     $.connection.hub.start().done(function () {
         console.log($("#TeamID").val());

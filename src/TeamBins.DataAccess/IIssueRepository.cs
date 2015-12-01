@@ -16,7 +16,7 @@ namespace TeamBins.DataAccess
         int SaveIssue(CreateIssue issue);
         DashBoardItemSummaryVM GetDashboardSummaryVM(int teamId);
 
-        IEnumerable<IssuesPerStatusGroup> GetIssuesGroupedByStatusGroup(List<int> statusIds, int count);
+        IEnumerable<IssuesPerStatusGroup> GetIssuesGroupedByStatusGroup( int count);
     }
 
   
@@ -105,7 +105,8 @@ namespace TeamBins.DataAccess
                         TeamID = issue.TeamID,
                         Status = new KeyValueItem { Id = issue.Category.ID, Name = issue.Status.Name },
                         CreatedDate = issue.CreatedDate,
-                        Category = new KeyValueItem { Id = issue.Category.ID, Name = issue.Category.Name }
+                        Category = new KeyValueItem { Id = issue.Category.ID, Name = issue.Category.Name },
+                        StatusGroupCode = issue.Status.StatusGroup.Code
                        
                     };
                     if (issue.Priority != null)
@@ -156,40 +157,35 @@ namespace TeamBins.DataAccess
             return vm;
         }
 
-        public IEnumerable<IssuesPerStatusGroup> GetIssuesGroupedByStatusGroup(List<int> statusIds, int count)
+        public IEnumerable<IssuesPerStatusGroup> GetIssuesGroupedByStatusGroup(int count)
         {
             using (var db = new TeamEntitiesConn())
             {
 
-                return db.Status.Select(x => new IssuesPerStatusGroup
-                {
-                    GroupName =x.StatusGroup.Name,
-                    Issues = x.Issues.OrderByDescending(s=>s.CreatedDate)
-                    .Take(count)
-                    
-                    .Select(p => new IssueDetailVM
+                return db.Status.GroupBy(s => s.StatusGroup, s => s, (k, items) =>
+                    new IssuesPerStatusGroup
                     {
-                        ID = p.ID,
-                        Title = p.Title,
-                        Description = p.Description,
-                        PriorityName = p.Priority.Name,
-                        StatusName = p.Status.Name,
-                        CategoryName = p.Category.Name,
-                        Category = new KeyValueItem { Id = p.Category.ID, Name = p.Category.Name },
-                        Priority = new KeyValueItem { Id = p.Project.ID, Name = p.Priority.Name },
-                        Author = new UserDto { Id = p.CreatedBy.ID, Name = p.CreatedBy.FirstName },
-                        Status = new KeyValueItem { Id = p.Project.ID, Name = p.Status.Name },
-                        Project = new KeyValueItem { Id = p.Project.ID, Name = p.Project.Name },
-                        CreatedDate = p.CreatedDate
-
-                    }).ToList()
-
-                });
-
-
-
-
+                        GroupName = k.Name,
+                        GroupCode=k.Code,
+                        Issues = items.SelectMany(d => d.Issues)
+                            .Select(p => new IssueDetailVM
+                            {
+                                ID = p.ID,
+                                Title = p.Title,
+                                Description = p.Description,
+                                PriorityName = p.Priority.Name,
+                                StatusName = p.Status.Name,
+                                CategoryName = p.Category.Name,
+                                Category = new KeyValueItem { Id = p.Category.ID, Name = p.Category.Name },
+                                Priority = new KeyValueItem { Id = p.Project.ID, Name = p.Priority.Name },
+                                Author = new UserDto { Id = p.CreatedBy.ID, Name = p.CreatedBy.FirstName },
+                                Status = new KeyValueItem { Id = p.Project.ID, Name = p.Status.Name },
+                                Project = new KeyValueItem { Id = p.Project.ID, Name = p.Project.Name },
+                                CreatedDate = p.CreatedDate
+                            }).ToList()
+                    }).ToList();
             }
+
         }
 
         public IEnumerable<IssueDetailVM> GetIssues(List<int> statusIds, int count)

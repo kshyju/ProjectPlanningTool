@@ -63,7 +63,7 @@ namespace TeamBins.Common.ViewModels
         public KeyValueItem Status { set; get; }
         public KeyValueItem Category { set; get; }
         public KeyValueItem Project { set; get; }
-
+        public string StatusGroupCode { get; set; }
     }
 
     public class StatusGroupVm
@@ -73,6 +73,7 @@ namespace TeamBins.Common.ViewModels
     }
     public class IssuesPerStatusGroup
     {
+        public string GroupCode { set; get; }
         public string GroupName { set; get; }
         public List<IssueDetailVM> Issues { set; get; }
     }

@@ -5,6 +5,8 @@ using System.Net;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
+using StackExchange.Exceptional;
+using TeamBins.Common;
 using TeamBins.Common.ViewModels;
 using TeamBins.Services;
 
@@ -12,8 +14,8 @@ namespace TeamBins.Controllers
 {
     public class IssueApiController : ApiController
     {
-        IssueManager issueManager;
-        ICommentManager commentManager;
+        readonly IssueManager issueManager;
+        readonly ICommentManager commentManager;
         public IssueApiController(IssueManager issueManager,ICommentManager commentManager)
         {
             this.issueManager = issueManager;
@@ -25,16 +27,32 @@ namespace TeamBins.Controllers
         [HttpGet]
         public HttpResponseMessage Get(int count=50)
         {
-            var statusIds = new List<int> { 1, 2, 3, 4 };
-            var issueVMs = issueManager.GetIssues(statusIds, 50).ToList();
-            return Request.CreateResponse(HttpStatusCode.OK,issueVMs);
+            IEnumerable<IssuesPerStatusGroup> groupedIssues = new List<IssuesPerStatusGroup>();
+            try
+            {
+                groupedIssues = issueManager.GetIssuesGroupedByStatusGroup(count);
+            }
+            catch (Exception ex)
+            {
+                ErrorStore.LogException(ex, System.Web.HttpContext.Current);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, groupedIssues);
+
         }
 
         [Route("api/issues/{id}/comments")]
         [HttpGet]
         public HttpResponseMessage GetComments(int id)
         {
-            var comments = commentManager.GetComments(id);
+            IEnumerable<CommentVM> comments = new List<CommentVM>();
+            try
+            {
+                comments = commentManager.GetComments(id);
+            }
+            catch (Exception ex)
+            {
+                ErrorStore.LogException(ex, System.Web.HttpContext.Current);
+            }
             return Request.CreateResponse(HttpStatusCode.OK, comments);
         }
 
