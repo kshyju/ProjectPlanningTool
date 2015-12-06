@@ -7,28 +7,43 @@ var issueDetailApp = angular.module('issueDetialApp', ['ngSanitize']);
 var IssueDetailsCtrl = function($scope, $http, issueDetailService, issue) {
 
     var vm = this;
-
+    vm.issue = {};
     vm.newComment = "";
 
     vm.hover = false;
     vm.members = [];
     vm.issue = issue;
 
-    issueDetailService.getComments(vm.issue.id)
+    console.log(vm.issue);
+
+   
+
+    issueDetailService.getComments(vm.issue.Id)
         .then(function(data) {
             vm.comments = data;
         });
 
-    issueDetailService.getIssueMembers(vm.issue.id)
+    issueDetailService.getIssueMembers(vm.issue.Id)
         .then(function (data) {
             vm.members = data;
             vm.isEditableForCurrentUser = true;
         });
 
+
+    vm.starIssue = function() {
+        
+        issueDetailService.starIssue(vm.issue.Id)
+               .then(function (response) {
+
+                console.log(response);
+            });
+
+
+    }
     vm.saveComment = function () {
        
         if (vm.newComment != "") {
-            issueDetailService.saveComment(vm.newComment, vm.issue.id, IssueDetails.gIssueDetailConnectionID)
+            issueDetailService.saveComment(vm.newComment, vm.issue.Id, IssueDetails.gIssueDetailConnectionID)
                 .then(function(response) {
                     if (response.Status === "Success") {
                         vm.newComment = "";

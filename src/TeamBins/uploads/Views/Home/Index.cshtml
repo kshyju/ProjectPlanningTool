@@ -1,0 +1,63 @@
+﻿@{
+    ViewBag.Title = "TeamBins Project Management & Issue Tracking Tool";
+}
+
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">TeamBins</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <form class="navbar-form navbar-right" role="form">
+            
+            <a href="@Url.Action("login","account")"  class="btn btn-success">Sign in</a>
+          </form>
+        </div><!--/.navbar-collapse -->
+      </div>
+    </div>
+
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron issueHomeBg">
+      <div class="container">
+        <h1>Manage your projects with TeamBins</h1>
+        <p>TeamBins is a free web-based project management system developed using ASP.NET MVC framework. TeamBins can run on IIS and almost any browser should be able to function as a client.</p>
+        <p><a href="@Url.Action("about")" class="btn btn-primary btn-lg" role="button">Learn more &raquo;</a></p>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- Example row of columns -->
+      <div class="row">
+        <div class="col-md-4">
+          <h2>Bug Tracking</h2>
+          <p>Tracking your bugs with TeamBins is simple as long as you know how to use facebook or gmail !</p>
+          
+        </div>
+        <div class="col-md-4">
+          <h2>Planning</h2>
+          <p>Proper planning and communication is an essential thing in every software project an teambins make it easy for you. </p>
+         
+       </div>
+        <div class="col-md-4">
+          <h2>Collaboration</h2>
+          <p>TeamBins allows your team to work as a REAL TEAM with collaborative features.</p>
+          
+        </div>
+      </div>
+
+      <hr>
+
+      <footer>
+        <p>&copy; TeamBins is an open source project dedicated to the community.</p>
+      </footer>
+    <div>
+        Follow us on twitter to get instant updates about teambins <a href="http://www.twitter.com/teambins">@@teambins</a>
+    </div>
+    </div> <!-- /container -->
+

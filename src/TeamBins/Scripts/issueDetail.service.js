@@ -3,7 +3,30 @@
     return {
         getComments: getComments,
         getIssueMembers: getIssueMembers,
-        saveComment: saveComment
+        saveComment: saveComment,
+        starIssue: starIssue
+    }
+
+
+
+
+    function starIssue(issueId) {
+        return $http.post('../api/issues/' + issueId + '/star', {
+            IssueID: issueId
+        })
+.then(issueStarredCompleted)
+.catch(issueStarringFailed);
+
+        function issueStarredCompleted(response) {
+            // console.log("r");
+            //console.log(response.data);
+            return response.data;
+        }
+
+        function issueStarringFailed(error) {
+            console.log("error");
+            return error;
+        }
     }
 
     function saveComment(commentText, issueId, signalRConnection) {

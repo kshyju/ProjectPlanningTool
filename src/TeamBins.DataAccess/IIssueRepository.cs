@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using TeamBins.Common;
 using TeamBins.Common.Infrastructure.Enums.TeamBins.Helpers.Enums;
 using TeamBins.Common.ViewModels;
@@ -16,10 +17,11 @@ namespace TeamBins.DataAccess
         int SaveIssue(CreateIssue issue);
         DashBoardItemSummaryVM GetDashboardSummaryVM(int teamId);
 
-        IEnumerable<IssuesPerStatusGroup> GetIssuesGroupedByStatusGroup( int count);
+        IEnumerable<IssuesPerStatusGroup> GetIssuesGroupedByStatusGroup(int count);
+        Task<int> SaveIssueMember(int issueId, int userId, string relationShipType);
     }
 
-  
+
 
     public class IssueRepository : IIssueRepository
     {
@@ -30,9 +32,9 @@ namespace TeamBins.DataAccess
             using (var db = new TeamEntitiesConn())
             {
 
-                if (issue.ID > 0)
+                if (issue.Id > 0)
                 {
-                    issueEntity = db.Issues.FirstOrDefault(s => s.ID == issue.ID);
+                    issueEntity = db.Issues.FirstOrDefault(s => s.ID == issue.Id);
                     if (issueEntity == null)
                     {
                         return 0;
@@ -47,7 +49,7 @@ namespace TeamBins.DataAccess
                 issueEntity.ProjectID = issue.ProjectID;
                 issueEntity.TeamID = issue.TeamID;
                 issueEntity.CategoryID = issue.SelectedCategory;
-                
+
                 issueEntity.CreatedByID = issue.CreatedByID;
                 issueEntity.Location = issue.Iteration;
                 issueEntity.StatusID = issue.SelectedStatus;
@@ -63,13 +65,13 @@ namespace TeamBins.DataAccess
                     var status = db.Status.FirstOrDefault(s => s.Code == "New");
                     issueEntity.StatusID = status.ID;
                 }
-                if (issueEntity.PriorityID==null || issueEntity.PriorityID.Value==0)
+                if (issueEntity.PriorityID == null || issueEntity.PriorityID.Value == 0)
                 {
                     var priority = db.Priorities.FirstOrDefault(s => s.Code == "Normal");
                     issueEntity.PriorityID = priority.ID;
                 }
 
-                if (issue.ID == 0)
+                if (issue.Id == 0)
                 {
                     issueEntity.CreatedDate = DateTime.UtcNow;
                     issueEntity.Active = true;
@@ -81,9 +83,9 @@ namespace TeamBins.DataAccess
                     issueEntity.ModifiedByID = issue.CreatedByID;
 
                     db.Entry(issueEntity).State = EntityState.Modified;
-                    
+
                 }
-               
+
                 db.SaveChanges();
                 return issueEntity.ID;
             }
@@ -97,7 +99,7 @@ namespace TeamBins.DataAccess
                 {
                     var issueDto = new IssueDetailVM
                     {
-                        ID = issue.ID,
+                        Id = issue.ID,
                         Title = issue.Title,
                         Description = issue.Description ?? string.Empty,
                         Author = new UserDto { Id = issue.CreatedBy.ID, Name = issue.CreatedBy.FirstName },
@@ -107,11 +109,11 @@ namespace TeamBins.DataAccess
                         CreatedDate = issue.CreatedDate,
                         Category = new KeyValueItem { Id = issue.Category.ID, Name = issue.Category.Name },
                         StatusGroupCode = issue.Status.StatusGroup.Code
-                       
+
                     };
                     if (issue.Priority != null)
                     {
-                        issueDto.Priority = new KeyValueItem {Id = issue.Priority.ID, Name = issue.Priority.Name};
+                        issueDto.Priority = new KeyValueItem { Id = issue.Priority.ID, Name = issue.Priority.Name };
                     }
 
 
@@ -127,7 +129,7 @@ namespace TeamBins.DataAccess
             return null;
         }
 
-        //var issueVM = new IssueVM { ID = bug.ID, Title = bug.Title, Description = bug.Description };
+        //var issueVM = new IssueVM { Id = bug.Id, Title = bug.Title, Description = bug.Description };
         //issueVM.OpenedBy = bug.CreatedBy.FirstName;
         //    issueVM.PriorityName = bug.PriorityName.Name;
         //    issueVM.StatusName = bug.StatusName.Name;
@@ -166,11 +168,11 @@ namespace TeamBins.DataAccess
                     new IssuesPerStatusGroup
                     {
                         GroupName = k.Name,
-                        GroupCode=k.Code,
+                        GroupCode = k.Code,
                         Issues = items.SelectMany(d => d.Issues)
                             .Select(p => new IssueDetailVM
                             {
-                                ID = p.ID,
+                                Id = p.ID,
                                 Title = p.Title,
                                 Description = p.Description,
                                 PriorityName = p.Priority.Name,
@@ -192,14 +194,14 @@ namespace TeamBins.DataAccess
         {
             using (var db = new TeamEntitiesConn())
             {
-               
+
                 return db.Issues.AsNoTracking().Where(s => statusIds.Contains(s.StatusID))
                     .OrderByDescending(s => s.CreatedDate)
                     .Take(count)
-                    
+
                     .Select(s => new IssueDetailVM
                     {
-                        ID = s.ID,
+                        Id = s.ID,
                         Title = s.Title,
                         Description = s.Description,
                         PriorityName = s.Priority.Name,
@@ -208,12 +210,42 @@ namespace TeamBins.DataAccess
                         Category = new KeyValueItem { Id = s.Category.ID, Name = s.Category.Name },
                         Priority = new KeyValueItem { Id = s.Project.ID, Name = s.Priority.Name },
                         Author = new UserDto { Id = s.CreatedBy.ID, Name = s.CreatedBy.FirstName },
-                      //  Project = s.Project.Name,
-                        Status =  new KeyValueItem { Id= s.Project.ID,  Name = s.Status.Name},
-                        Project = new KeyValueItem { Id = s.Project.ID,Name = s.Project.Name },
+                        //  Project = s.Project.Name,
+                        Status = new KeyValueItem { Id = s.Project.ID, Name = s.Status.Name },
+                        Project = new KeyValueItem { Id = s.Project.ID, Name = s.Project.Name },
                         CreatedDate = s.CreatedDate
                     })
                     .ToList();
+            }
+        }
+
+        public async Task<int> SaveIssueMember(int issueId, int userId, string relationShipType)
+        {
+            using (var db = new TeamEntitiesConn())
+            {
+                var re =
+                    db.IssueMembers.FirstOrDefault(
+                        s => s.IssueID == issueId && s.MemberID == userId && s.RelationType == relationShipType);
+                if (re == null)
+                {
+                    re = new IssueMember
+                    {
+                        MemberID = userId,
+                        IssueID = issueId,
+                        CreatedByID = userId,
+                        CreatedDate = DateTime.UtcNow
+                    };
+                    db.IssueMembers.Add(re);
+                    await db.SaveChangesAsync();
+                    return 1;
+
+                }
+                else
+                {
+                    db.IssueMembers.Remove(re);
+                    await db.SaveChangesAsync();
+                    return 0;
+                }
             }
         }
     }

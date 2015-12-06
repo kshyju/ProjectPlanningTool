@@ -10,7 +10,7 @@
                 <span class="cmntAuthorName">{{comment.Author.Name}}</span>
                 <span class="commentmetadata" title="">{{comment.CreatedDateRelative | date:'medium'}}</span>
                 <div class="right-links">
-                    <a class="comment-delete quite" ng-show="comment.IsOwner" title="Delete comment" ng-click="vm.removeComment(comment,@Model.ID,$event)" href="#">Delete</a>
+                    <a class="comment-delete quite" ng-show="comment.IsOwner" title="Delete comment" ng-click="vm.removeComment(comment,@Model.Id,$event)" href="#">Delete</a>
                 </div>
             </div>
             <div class="comment-body">
@@ -28,8 +28,8 @@
         <textarea id="newComment" name="newComment"  ng-model="vm.newComment"  rows="3" cols="100%" maxlength="2000" style="height:50px;"  ></textarea>
     </p>
     <p>
-        <button ng-click="vm.saveComment()">
-            Post1
+        <button class="btn btn-primary" ng-click="vm.saveComment()">
+            Post
         </button></p>
 </div>    
 }   

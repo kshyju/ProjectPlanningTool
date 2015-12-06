@@ -23,6 +23,6 @@ namespace TeamBins.DataAccess
     
         public virtual Issue Issue { get; set; }
         public virtual User Member { get; set; }
-        public virtual User CreatedBy { get; set; }
+        public virtual User User1 { get; set; }
     }
 }

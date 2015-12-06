@@ -37,11 +37,11 @@ namespace TeamBins.DataAccess
         public virtual DbSet<Priority> Priorities { get; set; }
         public virtual DbSet<Project> Projects { get; set; }
         public virtual DbSet<Status> Status { get; set; }
+        public virtual DbSet<StatusGroup> StatusGroups { get; set; }
         public virtual DbSet<Team> Teams { get; set; }
         public virtual DbSet<TeamMember> TeamMembers { get; set; }
         public virtual DbSet<TeamMemberRequest> TeamMemberRequests { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserNotificationSubscription> UserNotificationSubscriptions { get; set; }
-        public virtual DbSet<StatusGroup> StatusGroups { get; set; }
     }
 }

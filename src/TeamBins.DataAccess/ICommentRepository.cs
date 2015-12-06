@@ -43,7 +43,7 @@ namespace TeamBins.DataAccess
                         CommentBody = comment.CommentText,
                         CreativeDate = comment.CreatedDate,
                         Author =  new UserDto { EmailAddress = comment.Author.EmailAddress, Name = comment.Author.FirstName },
-                        Issue =  new IssueVM {  ID = comment.Issue.ID, Title = comment.Issue.Title}
+                        Issue =  new IssueVM {  Id = comment.Issue.ID, Title = comment.Issue.Title}
                     };
                 }
             }

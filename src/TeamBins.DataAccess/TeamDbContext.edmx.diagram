@@ -5,54 +5,54 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="9a0b8e8591a846c5af34736953dd02c8" Name="Diagram1">
-        <EntityTypeShape EntityType="Team.Data.Entities.Activity" Width="1.5" PointX="5.25" PointY="24.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="Team.Data.Entities.Category" Width="1.5" PointX="6" PointY="33.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="Team.Data.Entities.Comment" Width="1.5" PointX="3" PointY="15.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="Team.Data.Entities.Document" Width="1.5" PointX="6" PointY="15.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="Team.Data.Entities.EmailTemplate" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="Team.Data.Entities.Issue" Width="1.5" PointX="8.25" PointY="25.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="Team.Data.Entities.IssueMember" Width="1.5" PointX="10.5" PointY="21.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="Team.Data.Entities.NotificationType" Width="1.5" PointX="3" PointY="21.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="Team.Data.Entities.PasswordResetRequest" Width="1.5" PointX="3" PointY="29.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="Team.Data.Entities.Priority" Width="1.5" PointX="6" PointY="35.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="Team.Data.Entities.Project" Width="1.5" PointX="3" PointY="32.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="Team.Data.Entities.Status" Width="1.5" PointX="6" PointY="38.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="Team.Data.Entities.Team" Width="1.5" PointX="3" PointY="35.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="Team.Data.Entities.TeamMember" Width="1.5" PointX="5.25" PointY="29" IsExpanded="true" />
-        <EntityTypeShape EntityType="Team.Data.Entities.TeamMemberRequest" Width="1.5" PointX="8.25" PointY="22.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="Team.Data.Entities.User" Width="1.5" PointX="0.75" PointY="14.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="Team.Data.Entities.UserNotificationSubscription" Width="1.5" PointX="5.25" PointY="21.125" IsExpanded="true" />
-        <AssociationConnector Association="Team.Data.Entities.FK_Activity_Team" ManuallyRouted="false" />
-        <AssociationConnector Association="Team.Data.Entities.FK_Activity_User" ManuallyRouted="false" />
-        <AssociationConnector Association="Team.Data.Entities.FK_Issue_Category" ManuallyRouted="false" />
-        <AssociationConnector Association="Team.Data.Entities.FK_Comment_Issue" ManuallyRouted="false" />
-        <AssociationConnector Association="Team.Data.Entities.FK_Comment_User" ManuallyRouted="false" />
-        <AssociationConnector Association="Team.Data.Entities.FK_Document_Issue" ManuallyRouted="false" />
-        <AssociationConnector Association="Team.Data.Entities.FK_Document_User" ManuallyRouted="false" />
-        <AssociationConnector Association="Team.Data.Entities.FK_Issue_Priority" ManuallyRouted="false" />
-        <AssociationConnector Association="Team.Data.Entities.FK_Issue_Project" ManuallyRouted="false" />
-        <AssociationConnector Association="Team.Data.Entities.FK_Issue_Status" ManuallyRouted="false" />
-        <AssociationConnector Association="Team.Data.Entities.FK_Issue_Team" ManuallyRouted="false" />
-        <AssociationConnector Association="Team.Data.Entities.FK_Issue_User" ManuallyRouted="false" />
-        <AssociationConnector Association="Team.Data.Entities.FK_Issue_User1" ManuallyRouted="false" />
-        <AssociationConnector Association="Team.Data.Entities.FK_IssueMember_Issue" ManuallyRouted="false" />
-        <AssociationConnector Association="Team.Data.Entities.FK_IssueMember_IssueMember" ManuallyRouted="false" />
-        <AssociationConnector Association="Team.Data.Entities.FK_IssueMember_User_CreatedBy" ManuallyRouted="false" />
-        <AssociationConnector Association="Team.Data.Entities.FK_UserNotificationSubscription_NotificationType" ManuallyRouted="false" />
-        <AssociationConnector Association="Team.Data.Entities.FK_PasswordResetRequest_User" ManuallyRouted="false" />
-        <AssociationConnector Association="Team.Data.Entities.FK_Project_User" ManuallyRouted="false" />
-        <AssociationConnector Association="Team.Data.Entities.FK_TeamMember_DefaultProject" ManuallyRouted="false" />
-        <AssociationConnector Association="Team.Data.Entities.FK_Team_User" ManuallyRouted="false" />
-        <AssociationConnector Association="Team.Data.Entities.FK_TeamMember_Team" ManuallyRouted="false" />
-        <AssociationConnector Association="Team.Data.Entities.FK_TeamMemberRequest_Team" ManuallyRouted="false" />
-        <AssociationConnector Association="Team.Data.Entities.FK_User_DefaultTeam" ManuallyRouted="false" />
-        <AssociationConnector Association="Team.Data.Entities.FK_UserNotificationSubscription_Team" ManuallyRouted="false" />
-        <AssociationConnector Association="Team.Data.Entities.FK_TeamMember_CreatedBy" ManuallyRouted="false" />
-        <AssociationConnector Association="Team.Data.Entities.FK_TeamMember_Member" ManuallyRouted="false" />
-        <AssociationConnector Association="Team.Data.Entities.FK_TeamMemberRequest_CreatedBy" ManuallyRouted="false" />
-        <AssociationConnector Association="Team.Data.Entities.FK_UserNotificationSubscription_User" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="Team.Data.Entities.StatusGroup" Width="1.5" PointX="3.75" PointY="40.25" />
+        <EntityTypeShape EntityType="Team.Data.Entities.Activity" Width="1.5" PointX="8.25" PointY="24.875" />
+        <EntityTypeShape EntityType="Team.Data.Entities.Category" Width="1.5" PointX="3" PointY="40.375" />
+        <EntityTypeShape EntityType="Team.Data.Entities.Comment" Width="1.5" PointX="6" PointY="15.875" />
+        <EntityTypeShape EntityType="Team.Data.Entities.Document" Width="1.5" PointX="3" PointY="15.75" />
+        <EntityTypeShape EntityType="Team.Data.Entities.EmailTemplate" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="Team.Data.Entities.Issue" Width="1.5" PointX="5.25" PointY="29.625" />
+        <EntityTypeShape EntityType="Team.Data.Entities.IssueMember" Width="1.5" PointX="7.5" PointY="20.375" />
+        <EntityTypeShape EntityType="Team.Data.Entities.NotificationType" Width="1.5" PointX="6" PointY="36.625" />
+        <EntityTypeShape EntityType="Team.Data.Entities.PasswordResetRequest" Width="1.5" PointX="3" PointY="12.375" />
+        <EntityTypeShape EntityType="Team.Data.Entities.Priority" Width="1.5" PointX="3" PointY="28.875" />
+        <EntityTypeShape EntityType="Team.Data.Entities.Project" Width="1.5" PointX="3" PointY="21.5" />
+        <EntityTypeShape EntityType="Team.Data.Entities.Status" Width="1.5" PointX="3" PointY="31.375" />
+        <EntityTypeShape EntityType="Team.Data.Entities.StatusGroup" Width="1.5" PointX="0.75" PointY="31.5" />
+        <EntityTypeShape EntityType="Team.Data.Entities.Team" Width="1.5" PointX="3" PointY="35.75" />
+        <EntityTypeShape EntityType="Team.Data.Entities.TeamMember" Width="1.5" PointX="5.25" PointY="25" />
+        <EntityTypeShape EntityType="Team.Data.Entities.TeamMemberRequest" Width="1.5" PointX="5.25" PointY="21.25" />
+        <EntityTypeShape EntityType="Team.Data.Entities.User" Width="1.5" PointX="0.75" PointY="14.125" />
+        <EntityTypeShape EntityType="Team.Data.Entities.UserNotificationSubscription" Width="1.5" PointX="8.25" PointY="29.125" />
+        <AssociationConnector Association="Team.Data.Entities.FK_Activity_Team" />
+        <AssociationConnector Association="Team.Data.Entities.FK_Activity_User" />
+        <AssociationConnector Association="Team.Data.Entities.FK_Issue_Category" />
+        <AssociationConnector Association="Team.Data.Entities.FK_Comment_Issue" />
+        <AssociationConnector Association="Team.Data.Entities.FK_Comment_User" />
+        <AssociationConnector Association="Team.Data.Entities.FK_Document_Issue" />
+        <AssociationConnector Association="Team.Data.Entities.FK_Document_User" />
+        <AssociationConnector Association="Team.Data.Entities.FK_Issue_Priority" />
+        <AssociationConnector Association="Team.Data.Entities.FK_Issue_Project" />
+        <AssociationConnector Association="Team.Data.Entities.FK_Issue_Status" />
+        <AssociationConnector Association="Team.Data.Entities.FK_Issue_Team" />
+        <AssociationConnector Association="Team.Data.Entities.FK_Issue_User" />
+        <AssociationConnector Association="Team.Data.Entities.FK_Issue_User1" />
+        <AssociationConnector Association="Team.Data.Entities.FK_IssueMember_Issue" />
+        <AssociationConnector Association="Team.Data.Entities.FK_IssueMember_IssueMember" />
+        <AssociationConnector Association="Team.Data.Entities.FK_IssueMember_User_CreatedBy" />
+        <AssociationConnector Association="Team.Data.Entities.FK_UserNotificationSubscription_NotificationType" />
+        <AssociationConnector Association="Team.Data.Entities.FK_PasswordResetRequest_User" />
+        <AssociationConnector Association="Team.Data.Entities.FK_Project_User" />
+        <AssociationConnector Association="Team.Data.Entities.FK_TeamMember_DefaultProject" />
         <AssociationConnector Association="Team.Data.Entities.FK_Status_StatusGroup" />
+        <AssociationConnector Association="Team.Data.Entities.FK_Team_User" />
+        <AssociationConnector Association="Team.Data.Entities.FK_TeamMember_Team" />
+        <AssociationConnector Association="Team.Data.Entities.FK_TeamMemberRequest_Team" />
+        <AssociationConnector Association="Team.Data.Entities.FK_User_DefaultTeam" />
+        <AssociationConnector Association="Team.Data.Entities.FK_UserNotificationSubscription_Team" />
+        <AssociationConnector Association="Team.Data.Entities.FK_TeamMember_CreatedBy" />
+        <AssociationConnector Association="Team.Data.Entities.FK_TeamMember_Member" />
+        <AssociationConnector Association="Team.Data.Entities.FK_TeamMemberRequest_CreatedBy" />
+        <AssociationConnector Association="Team.Data.Entities.FK_UserNotificationSubscription_User" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

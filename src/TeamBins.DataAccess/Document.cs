@@ -22,6 +22,6 @@ namespace TeamBins.DataAccess
         public int CreatedByID { get; set; }
     
         public virtual Issue Issue { get; set; }
-        public virtual User Author { get; set; }
+        public virtual User User { get; set; }
     }
 }

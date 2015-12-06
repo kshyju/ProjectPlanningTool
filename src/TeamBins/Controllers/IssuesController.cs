@@ -125,7 +125,7 @@ namespace TechiesWeb.TeamBins.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var previousVersion = issueManager.GetIssue(model.ID);
+                    var previousVersion = issueManager.GetIssue(model.Id);
                     var newVersion = issueManager.SaveIssue(model, files);
                     var issueActivity = issueManager.SaveActivity(model, previousVersion, newVersion);
 
@@ -142,7 +142,7 @@ namespace TechiesWeb.TeamBins.Controllers
                     }
                     if (Request.IsAjaxRequest())
                     {
-                        if (model.ID == 0)
+                        if (model.Id == 0)
                         {
                             //  var issueVM = issueService.GetIssueVM(issue);
                             // context.Clients.Group(TeamID.ToString()).addIssueToIssueList(issueVM);
@@ -247,7 +247,7 @@ namespace TechiesWeb.TeamBins.Controllers
                     return View("NotFound");
 
 
-                IssueDetailVM bugVm = new IssueDetailVM { ID = bug.ID, Title = bug.Title };
+                IssueDetailVM bugVm = new IssueDetailVM { Id = bug.ID, Title = bug.Title };
 
                 bugVm = issueManager.GetIssue(id);
 
@@ -377,7 +377,7 @@ namespace TechiesWeb.TeamBins.Controllers
 
         public ActionResult IssueMembers(int id)
         {
-            var vm = new IssueDetailVM { ID = id };
+            var vm = new IssueDetailVM { Id = id };
             issueService.LoadIssueMembers(id, vm, UserID);
             issueService.SetUserPermissionsForIssue(vm, UserID, TeamID);
             return PartialView("Partial/Members", vm);
@@ -428,7 +428,7 @@ namespace TechiesWeb.TeamBins.Controllers
 
         public ActionResult Delete(int id)
         {
-            var deleteConfirmVM = new DeleteIssueConfirmationVM { ID = id };
+            var deleteConfirmVM = new DeleteIssueConfirmationVM { Id = id };
             return PartialView("Partial/DeleteConfirm", deleteConfirmVM);
         }
         [HttpPost]
@@ -535,7 +535,7 @@ namespace TechiesWeb.TeamBins.Controllers
                 string path = Path.Combine(Server.MapPath("~/uploads"), fileKey);
                 file.SaveAs(path);
 
-                Document img = new Document { FileName = fileName, ParentID = model.ID };
+                Document img = new Document { FileName = fileName, ParentID = model.Id };
                 img.FileAlias = fileKey;
                 img.CreatedByID = UserID;
                 img.ParentID = result.OperationID;
@@ -562,7 +562,7 @@ namespace TechiesWeb.TeamBins.Controllers
                 issue.ProjectID = teamMember.DefaultProjectID.Value;
             }
             issue.StatusID = model.SelectedStatus;
-            if ((model.ID == 0) && (model.SelectedStatus == 0))
+            if ((model.Id == 0) && (model.SelectedStatus == 0))
             {
                 issue.StatusID = 1;
             }

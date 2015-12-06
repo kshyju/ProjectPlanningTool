@@ -1,0 +1,13 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+@using (Html.BeginForm("UpdateAvatars","Dev"))
+{
+    <input type="text" name="secret" value="" />
+    <input type="submit" value="Update user avatars" />
+    @Html.AntiForgeryToken()
+}

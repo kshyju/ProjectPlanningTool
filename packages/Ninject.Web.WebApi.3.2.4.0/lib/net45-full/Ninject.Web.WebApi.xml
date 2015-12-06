@@ -1,0 +1,1087 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Ninject.Web.WebApi</name>
+    </assembly>
+    <members>
+        <member name="T:Ninject.Web.WebApi.Filter.AbstractActionFilter">
+            <summary>
+            An abstract action filter implementation to simplify action filter implementations.
+            </summary>
+        </member>
+        <member name="F:Ninject.Web.WebApi.Filter.AbstractActionFilter.internalFilter">
+            <summary>
+            The internal filter.
+            </summary>
+        </member>
+        <member name="M:Ninject.Web.WebApi.Filter.AbstractActionFilter.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Ninject.Web.WebApi.Filter.AbstractActionFilter"/> class.
+            </summary>
+        </member>
+        <member name="M:Ninject.Web.WebApi.Filter.AbstractActionFilter.ExecuteActionFilterAsync(System.Web.Http.Controllers.HttpActionContext,System.Threading.CancellationToken,System.Func{System.Threading.Tasks.Task{System.Net.Http.HttpResponseMessage}})">
+            <summary>
+            Executes the action filter asyncronously.
+            </summary>
+            <param name="actionContext">The action context.</param>
+            <param name="cancellationToken">The cancellation token.</param>
+            <param name="continuation">The continuation.</param>
+            <returns>The task</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.Filter.AbstractActionFilter.OnActionExecuted(System.Web.Http.Filters.HttpActionExecutedContext)">
+            <summary>
+            Called when the action is executed.
+            </summary>
+            <param name="actionExecutedContext">The action executed context.</param>
+        </member>
+        <member name="M:Ninject.Web.WebApi.Filter.AbstractActionFilter.OnActionExecuting(System.Web.Http.Controllers.HttpActionContext)">
+            <summary>
+            Called before the action is executing.
+            </summary>
+            <param name="actionContext">The action context.</param>
+        </member>
+        <member name="P:Ninject.Web.WebApi.Filter.AbstractActionFilter.AllowMultiple">
+            <summary>
+            Gets a value indicating whether this filter can occur multiple times.
+            </summary>
+            <value>True if the filter can occur multiple times, False otherwise.</value>
+        </member>
+        <member name="T:Ninject.Web.WebApi.Filter.DefaultFilterProvider">
+            <summary>
+            Provider for the default filters.
+            </summary>
+        </member>
+        <member name="M:Ninject.Web.WebApi.Filter.DefaultFilterProvider.#ctor(Ninject.IKernel,Ninject.Web.WebApi.Filter.DefaultFilterProviders)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Ninject.Web.WebApi.Filter.DefaultFilterProvider"/> class.
+            </summary>
+            <param name="kernel">The kernel.</param>
+            <param name="filterProviders">The filter providers.</param>
+        </member>
+        <member name="M:Ninject.Web.WebApi.Filter.DefaultFilterProvider.GetFilters(System.Web.Http.HttpConfiguration,System.Web.Http.Controllers.HttpActionDescriptor)">
+            <summary>
+            Gets and injects the default filters.
+            </summary>
+            <param name="configuration">The configuration.</param>
+            <param name="actionDescriptor">The action descriptor.</param>
+            <returns>The default filters.</returns>
+        </member>
+        <member name="T:Ninject.Web.WebApi.Filter.DefaultFilterProviders">
+            <summary>
+            Keeps a reference to all default filter providers from the configuration.
+            </summary>
+        </member>
+        <member name="M:Ninject.Web.WebApi.Filter.DefaultFilterProviders.#ctor(System.Collections.Generic.IEnumerable{System.Web.Http.Filters.IFilterProvider})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Ninject.Web.WebApi.Filter.DefaultFilterProviders"/> class.
+            </summary>
+            <param name="defaultFilterProviders">The default filter providers.</param>
+        </member>
+        <member name="P:Ninject.Web.WebApi.Filter.DefaultFilterProviders.DefaultFilters">
+            <summary>
+            Gets the default filter providers.
+            </summary>
+            <value>The default filter providers.</value>
+        </member>
+        <member name="T:Ninject.Web.WebApi.Filter.DefaultModelValidatorProviders">
+            <summary>
+            Keeps a reference to all default model validator providers from the configuration.
+            </summary>
+        </member>
+        <member name="M:Ninject.Web.WebApi.Filter.DefaultModelValidatorProviders.#ctor(System.Collections.Generic.IEnumerable{System.Web.Http.Validation.ModelValidatorProvider})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Ninject.Web.WebApi.Filter.DefaultModelValidatorProviders"/> class.
+            </summary>
+            <param name="defaultModelValidatorProviders">The default model validator providers.</param>
+        </member>
+        <member name="P:Ninject.Web.WebApi.Filter.DefaultModelValidatorProviders.DefaultModelValidators">
+            <summary>
+            Gets the default model validator providers.
+            </summary>
+            <value>The default model validator providers.</value>
+        </member>
+        <member name="T:Ninject.Web.WebApi.Filter.FilterContextParameter">
+            <summary>
+            A parameter that contains the controller context and action descriptor for the filter.
+            </summary>
+        </member>
+        <member name="F:Ninject.Web.WebApi.Filter.FilterContextParameter.ParameterName">
+            <summary>
+            The name of the parameter.
+            </summary>
+        </member>
+        <member name="M:Ninject.Web.WebApi.Filter.FilterContextParameter.#ctor(System.Web.Http.HttpConfiguration,System.Web.Http.Controllers.HttpActionDescriptor)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Ninject.Web.WebApi.Filter.FilterContextParameter"/> class.
+            </summary>
+            <param name="configuration">The controller context.</param>
+            <param name="actionDescriptor">The action descriptor.</param>
+        </member>
+        <member name="P:Ninject.Web.WebApi.Filter.FilterContextParameter.HttpConfiguration">
+            <summary>
+            Gets the controller context.
+            </summary>
+            <value>The controller context.</value>
+        </member>
+        <member name="P:Ninject.Web.WebApi.Filter.FilterContextParameter.ActionDescriptor">
+            <summary>
+            Gets the action descriptor.
+            </summary>
+            <value>The action descriptor.</value>
+        </member>
+        <member name="T:Ninject.Web.WebApi.Filter.INinjectFilter">
+            <summary>
+            Used by the <see cref="T:Ninject.Web.WebApi.Filter.NinjectFilterProvider"/> to get injected filters.
+            </summary>
+        </member>
+        <member name="M:Ninject.Web.WebApi.Filter.INinjectFilter.BuildFilter(Ninject.Web.WebApi.Filter.FilterContextParameter)">
+            <summary>
+            Builds the filter instance.
+            </summary>
+            <param name="parameter">The parameter.</param>
+            <returns>The created filter.</returns>
+        </member>
+        <member name="T:Ninject.Web.WebApi.Filter.NinjectFilter`1">
+            <summary>
+            Creates a filter of the specified type using ninject.
+            </summary>
+            <typeparam name="T">The type of the filter.</typeparam>
+        </member>
+        <member name="F:Ninject.Web.WebApi.Filter.NinjectFilter`1.kernel">
+            <summary>
+            The kernel.
+            </summary>
+        </member>
+        <member name="F:Ninject.Web.WebApi.Filter.NinjectFilter`1.scope">
+            <summary>
+            The filter scope.
+            </summary>
+        </member>
+        <member name="F:Ninject.Web.WebApi.Filter.NinjectFilter`1.filterId">
+            <summary>
+            The id of the filter
+            </summary>
+        </member>
+        <member name="M:Ninject.Web.WebApi.Filter.NinjectFilter`1.#ctor(Ninject.IKernel,System.Web.Http.Filters.FilterScope,System.Guid)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Ninject.Web.WebApi.Filter.NinjectFilter`1"/> class.
+            </summary>
+            <param name="kernel">The kernel.</param>
+            <param name="scope">The filter scope.</param>
+            <param name="filterId">The filter id.</param>
+        </member>
+        <member name="M:Ninject.Web.WebApi.Filter.NinjectFilter`1.BuildFilter(Ninject.Web.WebApi.Filter.FilterContextParameter)">
+            <summary>
+            Builds the filter instance.
+            </summary>
+            <param name="parameter">The parameter.</param>
+            <returns>The created filter.</returns>
+        </member>
+        <member name="T:Ninject.Web.WebApi.Filter.NinjectFilterProvider">
+            <summary>
+            A filter provider that gets the filter by requesting all INinjectFilters.
+            </summary>
+        </member>
+        <member name="F:Ninject.Web.WebApi.Filter.NinjectFilterProvider.kernel">
+            <summary>
+            The kernel.
+            </summary>
+        </member>
+        <member name="M:Ninject.Web.WebApi.Filter.NinjectFilterProvider.#ctor(Ninject.IKernel)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Ninject.Web.WebApi.Filter.NinjectFilterProvider"/> class.
+            </summary>
+            <param name="kernel">The kernel.</param>
+        </member>
+        <member name="M:Ninject.Web.WebApi.Filter.NinjectFilterProvider.GetFilters(System.Web.Http.HttpConfiguration,System.Web.Http.Controllers.HttpActionDescriptor)">
+            <summary>
+            Gets the filters configured in Ninject.
+            </summary>
+            <param name="configuration">The configuration.</param>
+            <param name="actionDescriptor">The action descriptor.</param>
+            <returns>The filters configured in Ninject.</returns>
+        </member>
+        <member name="T:Ninject.Web.WebApi.FilterBindingSyntax.AttributeValueSelector`1">
+            <summary>
+            Syntax to specify which value from an attribute shall be passed to a constructor parameter.
+            </summary>
+            <typeparam name="TAttribute">The type of the attribute.</typeparam>
+        </member>
+        <member name="F:Ninject.Web.WebApi.FilterBindingSyntax.AttributeValueSelector`1.attribute">
+            <summary>
+            The attribute from which the value is returned.
+            </summary>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.AttributeValueSelector`1.#ctor(`0)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Ninject.Web.WebApi.FilterBindingSyntax.AttributeValueSelector`1"/> class.
+            </summary>
+            <param name="attribute">The attribute from which the value is returned.</param>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.AttributeValueSelector`1.GetValue``1(System.Func{`0,``0})">
+            <summary>
+            Gets a value from the attribute.
+            </summary>
+            <typeparam name="T">The type of the returned value.</typeparam>
+            <param name="valueSelector">The function that is used to get the value.</param>
+            <returns>The selected value.</returns>
+        </member>
+        <member name="T:Ninject.Web.WebApi.FilterBindingSyntax.BindingRootExtensions">
+            <summary>
+            Extension methods for <see cref="T:Ninject.Syntax.IBindingRoot"/> to define filter bindings.
+            </summary>
+        </member>
+        <member name="F:Ninject.Web.WebApi.FilterBindingSyntax.BindingRootExtensions.FilterIdMetadataKey">
+            <summary>
+            The key used to store the filter id in the binding meta data.
+            </summary>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.BindingRootExtensions.BindHttpFilter``1(Ninject.Syntax.IBindingRoot,System.Web.Http.Filters.FilterScope)">
+            <summary>
+            Creates a binding for a filter.
+            </summary>
+            <typeparam name="T">The type of the filter.</typeparam>
+            <param name="kernel">The kernel.</param>
+            <param name="scope">The filter scope.</param>
+            <returns>The fluent syntax to specify more information for the binding.</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.BindingRootExtensions.BindHttpFilter``1(Ninject.Syntax.IBindingRoot,System.Linq.Expressions.Expression{System.Func{Ninject.Syntax.IConstructorArgumentSyntax,``0}},System.Web.Http.Filters.FilterScope)">
+            <summary>
+            Indicates that the service should be bound to the specified constructor.
+            </summary>
+            <typeparam name="T">The type of the implementation.</typeparam>
+            <param name="kernel">The kernel.</param>
+            <param name="newExpression">The expression that specifies the constructor.</param>
+            <param name="scope">The scope.</param>
+            <returns>The fluent syntax.</returns>
+        </member>
+        <member name="T:Ninject.Web.WebApi.FilterBindingSyntax.FilterFilterBindingBuilder`1">
+            <summary>
+            Binding builder for filters.
+            </summary>
+            <typeparam name="T">The type of the filter.</typeparam>
+        </member>
+        <member name="T:Ninject.Web.WebApi.FilterBindingSyntax.IFilterBindingWhenInNamedWithOrOnSyntax`1">
+            <summary>
+            Used to set the scope, name, or add additional information or actions to a binding.
+            </summary>
+            <typeparam name="T">The service being bound.</typeparam>
+        </member>
+        <member name="T:Ninject.Web.WebApi.FilterBindingSyntax.IFilterBindingWhenSyntax`1">
+            <summary>
+            Used to add additional information or actions to a binding.
+            </summary>
+            <typeparam name="T">The type of the service</typeparam>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.IFilterBindingWhenSyntax`1.When(System.Func{Ninject.Activation.IRequest,System.Boolean})">
+            <summary>
+            Indicates that the binding should be used only for requests that support the specified condition.
+            </summary>
+            <param name="condition">The condition.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.IFilterBindingWhenSyntax`1.When(System.Func{System.Web.Http.HttpConfiguration,System.Web.Http.Controllers.HttpActionDescriptor,System.Boolean})">
+            <summary>
+            Indicates that the binding should be used only for requests that support the specified condition.
+            </summary>
+            <param name="condition">The condition.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.IFilterBindingWhenSyntax`1.WhenActionMethodHas(System.Type)">
+            <summary>
+            Indicates that the binding should be used only when the action method has
+            an attribute of the specified type.
+            </summary>
+            <param name="attributeType">Type of the attribute.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.IFilterBindingWhenSyntax`1.WhenActionMethodHas``1">
+            <summary>
+            Indicates that the binding should be used only when the action method has
+            an attribute of the specified type.
+            </summary>
+            <typeparam name="TAttribute">The type of the attribute.</typeparam>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.IFilterBindingWhenSyntax`1.WhenControllerHas(System.Type)">
+            <summary>
+            Indicates that the binding should be used only when the controller has
+            an attribute of the specified type.
+            </summary>
+            <param name="attributeType">Type of the attribute.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.IFilterBindingWhenSyntax`1.WhenControllerHas``1">
+            <summary>
+            Indicates that the binding should be used only when the controller has
+            an attribute of the specified type.
+            </summary>
+            <typeparam name="TAttribute">The type of the attribute.</typeparam>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.IFilterBindingWhenSyntax`1.WhenControllerType(System.Type)">
+            <summary>
+            Whens the type of the controller.
+            </summary>
+            <param name="controllerType">Type of the controller.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.IFilterBindingWhenSyntax`1.WhenControllerType``1">
+            <summary>
+            Whens the type of the controller.
+            </summary>
+            <typeparam name="TAttribute">The type of the attribute.</typeparam>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="T:Ninject.Web.WebApi.FilterBindingSyntax.IFilterBindingInSyntax`1">
+            <summary>
+            Used to define the scope in which instances activated via a binding should be re-used.
+            </summary>
+            <typeparam name="T">The service being bound.</typeparam>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.IFilterBindingInSyntax`1.InSingletonScope">
+            <summary>
+            Indicates that only a single instance of the binding should be created, and then
+            should be re-used for all subsequent requests.
+            </summary>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.IFilterBindingInSyntax`1.InTransientScope">
+            <summary>
+            Indicates that instances activated via the binding should not be re-used, nor have
+            their life cycle managed by Ninject.
+            </summary>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.IFilterBindingInSyntax`1.InThreadScope">
+            <summary>
+            Indicates that instances activated via the binding should be re-used within the same thread.
+            </summary>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.IFilterBindingInSyntax`1.InRequestScope">
+            <summary>
+            Indicates that instances activated via the binding should be re-used within the same
+            HTTP request.
+            </summary>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.IFilterBindingInSyntax`1.InScope(System.Func{Ninject.Activation.IContext,System.Object})">
+            <summary>
+            Indicates that instances activated via the binding should be re-used as long as the object
+            returned by the provided callback remains alive (that is, has not been garbage collected).
+            </summary>
+            <param name="scope">The callback that returns the scope.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.IFilterBindingInSyntax`1.InScope(System.Func{Ninject.Activation.IContext,System.Web.Http.HttpConfiguration,System.Web.Http.Controllers.HttpActionDescriptor,System.Object})">
+            <summary>
+            Indicates that instances activated via the binding should be re-used as long as the object
+            returned by the provided callback remains alive (that is, has not been garbage collected).
+            </summary>
+            <param name="scope">The callback that returns the scope.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="T:Ninject.Web.WebApi.FilterBindingSyntax.IFilterBindingNamedSyntax`1">
+            <summary>
+            Used to define the name of a binding.
+            </summary>
+            <typeparam name="T">The service being bound.</typeparam>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.IFilterBindingNamedSyntax`1.Named(System.String)">
+            <summary>
+            Indicates that the binding should be registered with the specified name. Names are not
+            necessarily unique; multiple bindings for a given service may be registered with the same name.
+            </summary>
+            <param name="name">The name to give the binding.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="T:Ninject.Web.WebApi.FilterBindingSyntax.IFilterBindingWithSyntax`1">
+            <summary>
+            Used to add additional information to a binding.
+            </summary>
+            <typeparam name="T">The service being bound.</typeparam>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.IFilterBindingWithSyntax`1.WithConstructorArgument(System.String,System.Object)">
+            <summary>
+            Indicates that the specified constructor argument should be overridden with the specified value.
+            </summary>
+            <param name="name">The name of the argument to override.</param>
+            <param name="value">The value for the argument.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.IFilterBindingWithSyntax`1.WithConstructorArgument(System.String,System.Func{Ninject.Activation.IContext,System.Object})">
+            <summary>
+            Indicates that the specified constructor argument should be overridden with the specified value.
+            </summary>
+            <param name="name">The name of the argument to override.</param>
+            <param name="callback">The callback to invoke to get the value for the argument.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.IFilterBindingWithSyntax`1.WithPropertyValue(System.String,System.Object)">
+            <summary>
+            Indicates that the specified property should be injected with the specified value.
+            </summary>
+            <param name="name">The name of the property to override.</param>
+            <param name="value">The value for the property.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.IFilterBindingWithSyntax`1.WithPropertyValue(System.String,System.Func{Ninject.Activation.IContext,System.Object})">
+            <summary>
+            Indicates that the specified property should be injected with the specified value.
+            </summary>
+            <param name="name">The name of the property to override.</param>
+            <param name="callback">The callback to invoke to get the value for the property.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.IFilterBindingWithSyntax`1.WithParameter(Ninject.Parameters.IParameter)">
+            <summary>
+            Adds a custom parameter to the binding.
+            </summary>
+            <param name="parameter">The parameter.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.IFilterBindingWithSyntax`1.WithMetadata(System.String,System.Object)">
+            <summary>
+            Sets the value of a piece of metadata on the binding.
+            </summary>
+            <param name="key">The metadata key.</param>
+            <param name="value">The metadata value.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.IFilterBindingWithSyntax`1.WithConstructorArgument(System.String,System.Func{Ninject.Activation.IContext,System.Web.Http.HttpConfiguration,System.Web.Http.Controllers.HttpActionDescriptor,System.Object})">
+            <summary>
+            Indicates that the specified constructor argument should be overridden with the specified value.
+            </summary>
+            <param name="name">The name of the argument to override.</param>
+            <param name="callback">The callback.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.IFilterBindingWithSyntax`1.WithConstructorArgumentFromActionAttribute``1(System.String,System.Func{``0,System.Object})">
+            <summary>
+            Indicates that the specified constructor argument should be overridden with the specified value.
+            The value is retrieved from an attribute on the action of the specified type.
+            </summary>
+            <typeparam name="TAttribute">The type of the attribute.</typeparam>
+            <param name="name">The name of the argument to override.</param>
+            <param name="callback">The callback.</param>
+            <returns>
+            The fluent syntax to define more information
+            </returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.IFilterBindingWithSyntax`1.WithConstructorArgumentFromControllerAttribute``1(System.String,System.Func{``0,System.Object})">
+            <summary>
+            Indicates that the specified constructor argument should be overridden with the specified value.
+            The value is retrieved from an attribute on the controller of the specified type.
+            </summary>
+            <typeparam name="TAttribute">The type of the attribute.</typeparam>
+            <param name="name">The name of the argument to override.</param>
+            <param name="callback">The callback.</param>
+            <returns>
+            The fluent syntax to define more information
+            </returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.IFilterBindingWithSyntax`1.WithPropertyValue(System.String,System.Func{Ninject.Activation.IContext,System.Web.Http.HttpConfiguration,System.Web.Http.Controllers.HttpActionDescriptor,System.Object})">
+            <summary>
+            Indicates that the specified property should be injected with the specified value.
+            </summary>
+            <param name="name">The name of the property to override.</param>
+            <param name="callback">The callback to retrieve the value.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.IFilterBindingWithSyntax`1.WithPropertyValueFromActionAttribute``1(System.String,System.Func{``0,System.Object})">
+            <summary>
+            Indicates that the specified property should be injected with the specified value.
+            The value is retrieved from an attribute on the action of the specified type.
+            </summary>
+            <typeparam name="TAttribute">The type of the attribute.</typeparam>
+            <param name="name">The name of the property to override.</param>
+            <param name="callback">The callback to retrieve the value.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.IFilterBindingWithSyntax`1.WithPropertyValueFromControllerAttribute``1(System.String,System.Func{``0,System.Object})">
+            <summary>
+            Indicates that the specified property should be injected with the specified value.
+            The value is retrieved from an attribute on the controller of the specified type.
+            </summary>
+            <typeparam name="TAttribute">The type of the attribute.</typeparam>
+            <param name="name">The name of the property to override.</param>
+            <param name="callback">The callback to retrieve the value.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="T:Ninject.Web.WebApi.FilterBindingSyntax.IFilterBindingOnSyntax`1">
+            <summary>
+            Used to add additional actions to be performed during activation or deactivation of instances via a binding.
+            </summary>
+            <typeparam name="T">The service being bound.</typeparam>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.IFilterBindingOnSyntax`1.OnActivation(System.Action{`0})">
+            <summary>
+            Indicates that the specified callback should be invoked when instances are activated.
+            </summary>
+            <param name="action">The action callback.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.IFilterBindingOnSyntax`1.OnActivation(System.Action{Ninject.Activation.IContext,`0})">
+            <summary>
+            Indicates that the specified callback should be invoked when instances are activated.
+            </summary>
+            <param name="action">The action callback.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.IFilterBindingOnSyntax`1.OnDeactivation(System.Action{`0})">
+            <summary>
+            Indicates that the specified callback should be invoked when instances are deactivated.
+            </summary>
+            <param name="action">The action callback.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.IFilterBindingOnSyntax`1.OnDeactivation(System.Action{Ninject.Activation.IContext,`0})">
+            <summary>
+            Indicates that the specified callback should be invoked when instances are deactivated.
+            </summary>
+            <param name="action">The action callback.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.IFilterBindingOnSyntax`1.OnActivation(System.Action{Ninject.Activation.IContext,System.Web.Http.HttpConfiguration,System.Web.Http.Controllers.HttpActionDescriptor,`0})">
+            <summary>
+            Indicates that the specified callback should be invoked when instances are activated.
+            </summary>
+            <param name="action">The action callback.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="T:Ninject.Web.WebApi.FilterBindingSyntax.IFilterBindingInNamedWithOrOnSyntax`1">
+            <summary>
+            Used to set the scope, name, or add additional information or actions to a binding.
+            </summary>
+            <typeparam name="T">The service being bound.</typeparam>
+        </member>
+        <member name="T:Ninject.Web.WebApi.FilterBindingSyntax.IFilterBindingNamedWithOrOnSyntax`1">
+            <summary>
+            Used to set the scope, name, or add additional information or actions to a binding.
+            </summary>
+            <typeparam name="T">The service being bound.</typeparam>
+        </member>
+        <member name="T:Ninject.Web.WebApi.FilterBindingSyntax.IFilterBindingWithOrOnSyntax`1">
+            <summary>
+            Used to add additional information or actions to a binding.
+            </summary>
+            <typeparam name="T">The service being bound.</typeparam>
+        </member>
+        <member name="F:Ninject.Web.WebApi.FilterBindingSyntax.FilterFilterBindingBuilder`1.ninjectFilterBindingSyntax">
+            <summary>
+            The binding of the ninject filter. Conditions are added here.
+            </summary>
+        </member>
+        <member name="F:Ninject.Web.WebApi.FilterBindingSyntax.FilterFilterBindingBuilder`1.filterBindingSyntax">
+            <summary>
+            The binding of the filter. All other additionla configuration but the conditions are added here.
+            </summary>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.FilterFilterBindingBuilder`1.#ctor(Ninject.Syntax.IBindingWhenInNamedWithOrOnSyntax{Ninject.Web.WebApi.Filter.NinjectFilter{`0}},Ninject.Syntax.IBindingWhenInNamedWithOrOnSyntax{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Ninject.Web.WebApi.FilterBindingSyntax.FilterFilterBindingBuilder`1"/> class.
+            </summary>
+            <param name="ninjectFilterBindingSyntax">The ninject filter binding syntax.</param>
+            <param name="filterBindingSyntax">The filter binding syntax.</param>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.FilterFilterBindingBuilder`1.Named(System.String)">
+            <summary>
+            Indicates that the binding should be registered with the specified name. Names are not
+            necessarily unique; multiple bindings for a given service may be registered with the same name.
+            </summary>
+            <param name="name">The name to give the binding.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.FilterFilterBindingBuilder`1.When(System.Func{Ninject.Activation.IRequest,System.Boolean})">
+            <summary>
+            Indicates that the binding should be used only for requests that support the specified condition.
+            </summary>
+            <param name="condition">The condition.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.FilterFilterBindingBuilder`1.When(System.Func{System.Web.Http.HttpConfiguration,System.Web.Http.Controllers.HttpActionDescriptor,System.Boolean})">
+            <summary>
+            Indicates that the binding should be used only for requests that support the specified condition.
+            </summary>
+            <param name="condition">The condition.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.FilterFilterBindingBuilder`1.WhenActionMethodHas(System.Type)">
+            <summary>
+            Indicates that the binding should be used only when the action method has
+            an attribute of the specified type.
+            </summary>
+            <param name="attributeType">Type of the attribute.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.FilterFilterBindingBuilder`1.WhenActionMethodHas``1">
+            <summary>
+            Indicates that the binding should be used only when the action method has
+            an attribute of the specified type.
+            </summary>
+            <typeparam name="TAttribute">The type of the attribute.</typeparam>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.FilterFilterBindingBuilder`1.WhenControllerHas(System.Type)">
+            <summary>
+            Indicates that the binding should be used only when the controller has
+            an attribute of the specified type.
+            </summary>
+            <param name="attributeType">Type of the attribute.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.FilterFilterBindingBuilder`1.WhenControllerHas``1">
+            <summary>
+            Indicates that the binding should be used only when the controller has
+            an attribute of the specified type.
+            </summary>
+            <typeparam name="TAttribute">The type of the attribute.</typeparam>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.FilterFilterBindingBuilder`1.WhenControllerType(System.Type)">
+            <summary>
+            Whens the type of the controller.
+            </summary>
+            <param name="controllerType">Type of the controller.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.FilterFilterBindingBuilder`1.WhenControllerType``1">
+            <summary>
+            Whens the type of the controller.
+            </summary>
+            <typeparam name="TAttribute">The type of the attribute.</typeparam>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.FilterFilterBindingBuilder`1.InSingletonScope">
+            <summary>
+            Indicates that only a single instance of the binding should be created, and then
+            should be re-used for all subsequent requests.
+            </summary>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.FilterFilterBindingBuilder`1.InTransientScope">
+            <summary>
+            Indicates that instances activated via the binding should not be re-used, nor have
+            their lifecycle managed by Ninject.
+            </summary>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.FilterFilterBindingBuilder`1.InThreadScope">
+            <summary>
+            Indicates that instances activated via the binding should be re-used within the same thread.
+            </summary>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.FilterFilterBindingBuilder`1.InRequestScope">
+            <summary>
+            Indicates that instances activated via the binding should be re-used within the same
+            HTTP request.
+            </summary>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.FilterFilterBindingBuilder`1.InScope(System.Func{Ninject.Activation.IContext,System.Object})">
+            <summary>
+            Indicates that instances activated via the binding should be re-used as long as the object
+            returned by the provided callback remains alive (that is, has not been garbage collected).
+            </summary>
+            <param name="scope">The callback that returns the scope.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.FilterFilterBindingBuilder`1.InScope(System.Func{Ninject.Activation.IContext,System.Web.Http.HttpConfiguration,System.Web.Http.Controllers.HttpActionDescriptor,System.Object})">
+            <summary>
+            Indicates that instances activated via the binding should be re-used as long as the object
+            returned by the provided callback remains alive (that is, has not been garbage collected).
+            </summary>
+            <param name="scope">The callback that returns the scope.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.FilterFilterBindingBuilder`1.WithConstructorArgument(System.String,System.Object)">
+            <summary>
+            Indicates that the specified constructor argument should be overridden with the specified value.
+            </summary>
+            <param name="name">The name of the argument to override.</param>
+            <param name="value">The value for the argument.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.FilterFilterBindingBuilder`1.WithConstructorArgument(System.String,System.Func{Ninject.Activation.IContext,System.Object})">
+            <summary>
+            Indicates that the specified constructor argument should be overridden with the specified value.
+            </summary>
+            <param name="name">The name of the argument to override.</param>
+            <param name="callback">The callback to invoke to get the value for the argument.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.FilterFilterBindingBuilder`1.WithPropertyValue(System.String,System.Object)">
+            <summary>
+            Indicates that the specified property should be injected with the specified value.
+            </summary>
+            <param name="name">The name of the property to override.</param>
+            <param name="value">The value for the property.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.FilterFilterBindingBuilder`1.WithPropertyValue(System.String,System.Func{Ninject.Activation.IContext,System.Object})">
+            <summary>
+            Indicates that the specified property should be injected with the specified value.
+            </summary>
+            <param name="name">The name of the property to override.</param>
+            <param name="callback">The callback to invoke to get the value for the property.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.FilterFilterBindingBuilder`1.WithParameter(Ninject.Parameters.IParameter)">
+            <summary>
+            Adds a custom parameter to the binding.
+            </summary>
+            <param name="parameter">The parameter.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.FilterFilterBindingBuilder`1.WithMetadata(System.String,System.Object)">
+            <summary>
+            Sets the value of a piece of metadata on the binding.
+            </summary>
+            <param name="key">The metadata key.</param>
+            <param name="value">The metadata value.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.FilterFilterBindingBuilder`1.WithConstructorArgument(System.String,System.Func{Ninject.Activation.IContext,System.Web.Http.HttpConfiguration,System.Web.Http.Controllers.HttpActionDescriptor,System.Object})">
+            <summary>
+            Indicates that the specified constructor argument should be overridden with the specified value.
+            </summary>
+            <param name="name">The name of the argument to override.</param>
+            <param name="callback">The callback.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.FilterFilterBindingBuilder`1.WithConstructorArgumentFromActionAttribute``1(System.String,System.Func{``0,System.Object})">
+            <summary>
+            Indicates that the specified constructor argument should be overridden with the specified value.
+            The value is retrieved from an attribute of the specified type.
+            </summary>
+            <typeparam name="TAttribute">The type of the attribute.</typeparam>
+            <param name="name">The name of the argument to override.</param>
+            <param name="callback">The callback.</param>
+            <returns>
+            The fluent syntax to define more information
+            </returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.FilterFilterBindingBuilder`1.WithConstructorArgumentFromControllerAttribute``1(System.String,System.Func{``0,System.Object})">
+            <summary>
+            Indicates that the specified constructor argument should be overridden with the specified value.
+            The value is retrieved from an attribute on the controller of the specified type.
+            </summary>
+            <typeparam name="TAttribute">The type of the attribute.</typeparam>
+            <param name="name">The name of the argument to override.</param>
+            <param name="callback">The callback.</param>
+            <returns>
+            The fluent syntax to define more information
+            </returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.FilterFilterBindingBuilder`1.WithPropertyValue(System.String,System.Func{Ninject.Activation.IContext,System.Web.Http.HttpConfiguration,System.Web.Http.Controllers.HttpActionDescriptor,System.Object})">
+            <summary>
+            Indicates that the specified property should be injected with the specified value.
+            </summary>
+            <param name="name">The name of the property to override.</param>
+            <param name="callback">The cllback to retrieve the value.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.FilterFilterBindingBuilder`1.WithPropertyValueFromActionAttribute``1(System.String,System.Func{``0,System.Object})">
+            <summary>
+            Indicates that the specified property should be injected with the specified value.
+            The value is retrieved from an attribute of the specified type.
+            </summary>
+            <typeparam name="TAttribute">The type of the attribute.</typeparam>
+            <param name="name">The name of the property to override.</param>
+            <param name="callback">The cllback to retrieve the value.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.FilterFilterBindingBuilder`1.WithPropertyValueFromControllerAttribute``1(System.String,System.Func{``0,System.Object})">
+            <summary>
+            Indicates that the specified property should be injected with the specified value.
+            The value is retrieved from an attribute on the controller of the specified type.
+            </summary>
+            <typeparam name="TAttribute">The type of the attribute.</typeparam>
+            <param name="name">The name of the property to override.</param>
+            <param name="callback">The cllback to retrieve the value.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.FilterFilterBindingBuilder`1.OnActivation(System.Action{`0})">
+            <summary>
+            Indicates that the specified callback should be invoked when instances are activated.
+            </summary>
+            <param name="action">The action callback.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.FilterFilterBindingBuilder`1.OnActivation(System.Action{Ninject.Activation.IContext,`0})">
+            <summary>
+            Indicates that the specified callback should be invoked when instances are activated.
+            </summary>
+            <param name="action">The action callback.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.FilterFilterBindingBuilder`1.OnDeactivation(System.Action{Ninject.Activation.IContext,`0})">
+            <summary>
+            Indicates that the specified callback should be invoked when instances are deactivated.
+            </summary>
+            <param name="action">The action callback.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.FilterFilterBindingBuilder`1.OnDeactivation(System.Action{`0})">
+            <summary>
+            Indicates that the specified callback should be invoked when instances are deactivated.
+            </summary>
+            <param name="action">The action callback.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.FilterFilterBindingBuilder`1.OnActivation(System.Action{Ninject.Activation.IContext,System.Web.Http.HttpConfiguration,System.Web.Http.Controllers.HttpActionDescriptor,`0})">
+            <summary>
+            Indicates that the specified callback should be invoked when instances are activated.
+            </summary>
+            <param name="action">The action callback.</param>
+            <returns>The fluent syntax to define more information</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.FilterFilterBindingBuilder`1.GetFilterContextParameter(Ninject.Activation.IContext)">
+            <summary>
+            Gets the filter context parameter.
+            </summary>
+            <param name="ctx">The context.</param>
+            <returns>The filter context parameter from the context parameters.</returns>
+        </member>
+        <member name="P:Ninject.Web.WebApi.FilterBindingSyntax.FilterFilterBindingBuilder`1.BindingConfiguration">
+            <summary>
+            Gets the binding.
+            </summary>
+            <value>The binding.</value>
+        </member>
+        <member name="P:Ninject.Web.WebApi.FilterBindingSyntax.FilterFilterBindingBuilder`1.Kernel">
+            <summary>
+            Gets the kernel.
+            </summary>
+            <value>The kernel.</value>
+        </member>
+        <member name="T:Ninject.Web.WebApi.FilterBindingSyntax.HttpActionDescriptorExtensionMethods">
+            <summary>
+            Extension methods for the http action descriptor
+            </summary>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.HttpActionDescriptorExtensionMethods.GetCustomAttributes(System.Web.Http.Controllers.HttpActionDescriptor,System.Type)">
+            <summary>
+            Gets the custom attributes of the specified type.
+            </summary>
+            <param name="actionDescriptor">The action descriptor.</param>
+            <param name="type">The type of the attribute.</param>
+            <returns>The custom attributes of the specified type.</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.HttpActionDescriptorExtensionMethods.GetCustomAttributes(System.Web.Http.Controllers.HttpControllerDescriptor,System.Type)">
+            <summary>
+            Gets the custom attributes of the specified type.
+            </summary>
+            <param name="actionDescriptor">The action descriptor.</param>
+            <param name="type">The type of the attribute.</param>
+            <returns>The custom attributes of the specified type.</returns>
+        </member>
+        <member name="T:Ninject.Web.WebApi.FilterBindingSyntax.IConstructorArgumentSyntaxExtensions">
+            <summary>
+            Extension methods for <see cref="T:Ninject.Syntax.IConstructorArgumentSyntax"/>
+            </summary>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.IConstructorArgumentSyntaxExtensions.FromActionAttribute``1(Ninject.Syntax.IConstructorArgumentSyntax)">
+            <summary>
+            Specifies that the constructor parameter shall be received from an attribute on the action.
+            </summary>
+            <typeparam name="TAttribute">The type of the attribute.</typeparam>
+            <param name="syntax">The constructor argument syntax.</param>
+            <returns>The syntax to specify which value to use.</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.FilterBindingSyntax.IConstructorArgumentSyntaxExtensions.FromControllerAttribute``1(Ninject.Syntax.IConstructorArgumentSyntax)">
+            <summary>
+            Specifies that the constructor parameter shall be received from an attribute on the controller.
+            </summary>
+            <typeparam name="TAttribute">The type of the attribute.</typeparam>
+            <param name="syntax">The constructor argument syntax.</param>
+            <returns>The syntax to specify which value to use.</returns>
+        </member>
+        <member name="T:Ninject.Web.WebApi.Validation.NinjectDataAnnotationsModelValidatorProvider">
+            <summary>
+            A <see cref="T:System.Web.Http.Validation.Providers.DataAnnotationsModelValidatorProvider"/> implementation that injects the validators. 
+            </summary>
+        </member>
+        <member name="F:Ninject.Web.WebApi.Validation.NinjectDataAnnotationsModelValidatorProvider.kernel">
+            <summary>
+            The kernel.
+            </summary>
+        </member>
+        <member name="F:Ninject.Web.WebApi.Validation.NinjectDataAnnotationsModelValidatorProvider.getAttributeMethodInfo">
+            <summary>
+            The method info to get the attribute from the <see cref="T:System.Web.Http.Validation.Providers.DataAnnotationsModelValidatorProvider"/>
+            </summary>
+        </member>
+        <member name="M:Ninject.Web.WebApi.Validation.NinjectDataAnnotationsModelValidatorProvider.#ctor(Ninject.IKernel)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Ninject.Web.WebApi.Validation.NinjectDataAnnotationsModelValidatorProvider"/> class.
+            </summary>
+            <param name="kernel">The kernel.</param>
+        </member>
+        <member name="M:Ninject.Web.WebApi.Validation.NinjectDataAnnotationsModelValidatorProvider.GetValidators(System.Web.Http.Metadata.ModelMetadata,System.Collections.Generic.IEnumerable{System.Web.Http.Validation.ModelValidatorProvider},System.Collections.Generic.IEnumerable{System.Attribute})">
+            <summary>
+            Gets a list of validators.
+            </summary>
+            <param name="metadata">The metadata.</param>
+            <param name="validatorProviders">The validator providers.</param>
+            <param name="attributes">The list of validation attributes.</param>
+            <returns>A list of validators.</returns>
+        </member>
+        <member name="T:Ninject.Web.WebApi.Validation.NinjectDefaultModelValidatorProvider">
+            <summary>
+            Provides the validators provided by the default model validator providers.
+            </summary>
+        </member>
+        <member name="F:Ninject.Web.WebApi.Validation.NinjectDefaultModelValidatorProvider.kernel">
+            <summary>
+            The ninject kernel.
+            </summary>
+        </member>
+        <member name="F:Ninject.Web.WebApi.Validation.NinjectDefaultModelValidatorProvider.defaultModelValidatorProviders">
+            <summary>
+            The default model validator providers.
+            </summary>
+        </member>
+        <member name="M:Ninject.Web.WebApi.Validation.NinjectDefaultModelValidatorProvider.#ctor(Ninject.IKernel,Ninject.Web.WebApi.Filter.DefaultModelValidatorProviders)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Ninject.Web.WebApi.Validation.NinjectDefaultModelValidatorProvider"/> class.
+            </summary>
+            <param name="kernel">The kernel.</param>
+            <param name="defaultModelValidatorProviders">The default model validator providers.</param>
+        </member>
+        <member name="M:Ninject.Web.WebApi.Validation.NinjectDefaultModelValidatorProvider.GetValidators(System.Web.Http.Metadata.ModelMetadata,System.Collections.Generic.IEnumerable{System.Web.Http.Validation.ModelValidatorProvider})">
+            <summary>
+            Gets the validators.
+            </summary>
+            <param name="metadata">The metadata.</param>
+            <param name="validatorProviders">The validator providers.</param>
+            <returns>
+            The validators returned by the default validator providers.
+            </returns>
+        </member>
+        <member name="T:Ninject.Web.WebApi.DefaultWebApiRequestScopeProvider">
+            <summary>
+            The default request scope provider for web api.
+            </summary>
+        </member>
+        <member name="T:Ninject.Web.WebApi.IWebApiRequestScopeProvider">
+            <summary>
+            The provider for the request scope.
+            </summary>
+        </member>
+        <member name="M:Ninject.Web.WebApi.IWebApiRequestScopeProvider.GetRequestScope(Ninject.Activation.IContext)">
+            <summary>
+            Gets the request scope for the current activation context.
+            </summary>
+            <param name="context">The context.</param>
+            <returns>The request scope.</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.DefaultWebApiRequestScopeProvider.GetRequestScope(Ninject.Activation.IContext)">
+            <summary>
+            Gets the request scope.
+            </summary>
+            <param name="context">The context.</param>
+            <returns>The http context.</returns>
+        </member>
+        <member name="T:Ninject.Web.WebApi.NinjectDependencyResolver">
+            <summary>
+            Dependency resolver implementation for ninject.
+            </summary>
+        </member>
+        <member name="T:Ninject.Web.WebApi.NinjectDependencyScope">
+            <summary>
+            Dependency Scope implementation for ninject
+            </summary>
+        </member>
+        <member name="M:Ninject.Web.WebApi.NinjectDependencyScope.#ctor(Ninject.Syntax.IResolutionRoot)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Ninject.Web.WebApi.NinjectDependencyScope"/> class.
+            </summary>
+            <param name="resolutionRoot">The resolution root.</param>
+        </member>
+        <member name="M:Ninject.Web.WebApi.NinjectDependencyScope.GetService(System.Type)">
+            <summary>
+            Gets the service of the specified type.
+            </summary>
+            <param name="serviceType">The type of the service.</param>
+            <returns>The service instance or <see langword="null"/> if none is configured.</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.NinjectDependencyScope.GetServices(System.Type)">
+            <summary>
+            Gets the services of the specifies type.
+            </summary>
+            <param name="serviceType">The type of the service.</param>
+            <returns>All service instances or an empty enumerable if none is configured.</returns>
+        </member>
+        <member name="P:Ninject.Web.WebApi.NinjectDependencyScope.ResolutionRoot">
+            <summary>
+            Gets the resolution root.
+            </summary>
+            <value>The resolution root.</value>
+        </member>
+        <member name="M:Ninject.Web.WebApi.NinjectDependencyResolver.#ctor(Ninject.Syntax.IResolutionRoot)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Ninject.Web.WebApi.NinjectDependencyResolver"/> class.
+            </summary>
+            <param name="resolutionRoot">The resolution root.</param>
+        </member>
+        <member name="M:Ninject.Web.WebApi.NinjectDependencyResolver.BeginScope">
+            <summary>
+            Begins the scope.
+            </summary>
+            <returns>The new scope</returns>
+        </member>
+        <member name="T:Ninject.Web.WebApi.NinjectWebApiHttpApplicationPlugin">
+            <summary>
+            The web plugin implementation for MVC
+            </summary>
+        </member>
+        <member name="F:Ninject.Web.WebApi.NinjectWebApiHttpApplicationPlugin.kernel">
+            <summary>
+            The ninject kernel.
+            </summary>
+        </member>
+        <member name="M:Ninject.Web.WebApi.NinjectWebApiHttpApplicationPlugin.#ctor(Ninject.IKernel,Ninject.Web.WebApi.IWebApiRequestScopeProvider)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Ninject.Web.WebApi.NinjectWebApiHttpApplicationPlugin"/> class.
+            </summary>
+            <param name="kernel">The kernel.</param>
+            <param name="webApiRequestScopeProvider">The web API request scope provider.</param>
+        </member>
+        <member name="M:Ninject.Web.WebApi.NinjectWebApiHttpApplicationPlugin.GetRequestScope(Ninject.Activation.IContext)">
+            <summary>
+            Gets the request scope.
+            </summary>
+            <param name="context">The context.</param>
+            <returns>The request scope.</returns>
+        </member>
+        <member name="M:Ninject.Web.WebApi.NinjectWebApiHttpApplicationPlugin.Start">
+            <summary>
+            Starts this instance.
+            </summary>
+        </member>
+        <member name="M:Ninject.Web.WebApi.NinjectWebApiHttpApplicationPlugin.Stop">
+            <summary>
+            Stops this instance.
+            </summary>
+        </member>
+        <member name="M:Ninject.Web.WebApi.NinjectWebApiHttpApplicationPlugin.CreateDependencyResolver">
+            <summary>
+            Creates the controller factory that is used to create the controllers.
+            </summary>
+            <returns>The created controller factory.</returns>
+        </member>
+        <member name="T:Ninject.Web.WebApi.WebApiModule">
+            <summary>
+            Defines the bindings and plugins of the WebApi extension.
+            </summary>
+        </member>
+        <member name="M:Ninject.Web.WebApi.WebApiModule.Load">
+            <summary>
+            Loads the module into the kernel.
+            </summary>
+        </member>
+    </members>
+</doc>

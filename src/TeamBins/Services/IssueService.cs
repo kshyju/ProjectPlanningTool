@@ -108,14 +108,14 @@ namespace TeamBins.Services
         //                string emailBody = emailTemplate.EmailBody;
         //                Email email = new Email();
 
-        //                string issueUrl = siteBaseUrl + "issues/" + issue.ID;
-        //                var issueLink = "<a href='" + issueUrl + "'>" + "# " + issue.ID + " " + issue.Title + "</a>";
+        //                string issueUrl = siteBaseUrl + "issues/" + issue.Id;
+        //                var issueLink = "<a href='" + issueUrl + "'>" + "# " + issue.Id + " " + issue.Title + "</a>";
         //                emailBody = emailBody.Replace("@author", issue.CreatedBy.FirstName);
         //                emailBody = emailBody.Replace("@link", issueLink);
         //                emailBody = emailBody.Replace("@comment", comment.CommentText);
-        //                emailBody = emailBody.Replace("@issueId", issue.ID.ToString());  
+        //                emailBody = emailBody.Replace("@issueId", issue.Id.ToString());  
         //                email.Body = emailBody;
-        //                emailSubject = emailSubject.Replace("@issueId", issue.ID.ToString());                      
+        //                emailSubject = emailSubject.Replace("@issueId", issue.Id.ToString());                      
         //                email.Subject = emailSubject;
 
         //                foreach (var subscriber in subscribers)
@@ -152,14 +152,14 @@ namespace TeamBins.Services
         //                string emailBody = emailTemplate.EmailBody;
         //                Email email = new Email();
 
-        //                string issueUrl = siteBaseUrl + "issues/" + issue.ID;
-        //                var issueLink = "<a href='" + issueUrl + "'>" + "#" + issue.ID + " " + issue.Title + "</a>";
+        //                string issueUrl = siteBaseUrl + "issues/" + issue.Id;
+        //                var issueLink = "<a href='" + issueUrl + "'>" + "#" + issue.Id + " " + issue.Title + "</a>";
         //                emailBody = emailBody.Replace("@issueAuthor", issue.CreatedBy.FirstName);
         //                emailBody = emailBody.Replace("@issueLink", issueLink);
         //                emailBody = emailBody.Replace("@teamName", currentTeam.Name);
         //                email.Body = emailBody;
         //                emailSubject = emailSubject.Replace("@teamName", currentTeam.Name);
-        //                emailSubject = emailSubject + " (#" + issue.ID + ")";
+        //                emailSubject = emailSubject + " (#" + issue.Id + ")";
         //                email.Subject = emailSubject;
 
         //                foreach (var subscriber in subscribers)
@@ -202,7 +202,7 @@ namespace TeamBins.Services
 
         public IssueVM GetIssueVM(Issue bug)
         {
-            var issueVM = new IssueDetailVM { ID = bug.ID, Title = bug.Title, Description = bug.Description };
+            var issueVM = new IssueDetailVM { Id = bug.ID, Title = bug.Title, Description = bug.Description };
             issueVM.OpenedBy = bug.CreatedBy.FirstName;
             issueVM.PriorityName = bug.Priority.Name;
             issueVM.StatusName = bug.Status.Name;

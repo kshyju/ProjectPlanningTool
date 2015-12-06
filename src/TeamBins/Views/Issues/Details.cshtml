@@ -1,6 +1,7 @@
-﻿@model TeamBins.Common.ViewModels.IssueDetailVM
-@{   
-    ViewBag.Title = "Issue #"+Model.ID;
+﻿@using Newtonsoft.Json
+@model TeamBins.Common.ViewModels.IssueDetailVM
+@{
+    ViewBag.Title = "Issue #" + Model.Id;
 }
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 <link href="http://code.jquery.com/ui/1.10.3/themes/flick/jquery-ui.css" rel="stylesheet" />
@@ -12,91 +13,96 @@
 <script src="~/Scripts/jquery.signalR-2.0.2.min.js"></script>
 <script src="~/signalr/hubs"></script>
 
-@if(Model.IsEditableForCurrentUser)
+@if (Model.IsEditableForCurrentUser)
 {
-    <div class="divToobar">        
-        @Html.ActionLink("Edit", "Edit", "Issues", new { id = Model.ID }, new { @class = "toolLink popup" })  
-        @Html.ActionLink("Delete", "Delete", "Issues", new { id = Model.ID }, new { @class = "toolLink popup" })          
+    <div class="divToobar">
+        @Html.ActionLink("Edit", "Edit", "Issues", new { id = Model.Id }, new { @class = "toolLink popup" })
+        @Html.ActionLink("Delete", "Delete", "Issues", new { id = Model.Id }, new { @class = "toolLink popup" })
     </div>
 }
 <div class="divPageContent" ng-app="issueDetialApp" ng-controller="IssueDetailsCtrl as vm">
     <div class="divLeft">
         <h2>@Model.Title</h2>
         <div id="issueMeta">
-            <div class="authorInfo">Opened by @Model.OpenedBy on @Model.CreatedDate
-            @if (!String.IsNullOrEmpty(Model.LastModifiedBy))
+            <div class="authorInfo">
+                Opened by @Model.OpenedBy on @Model.CreatedDate
+                @if (!String.IsNullOrEmpty(Model.LastModifiedBy))
             {
-                <span>, Last Modified by @Model.LastModifiedBy on @Model.LastModifiedDate</span>
-            }
-            </div>       
-            <div id="issueStatus">Status<span class="@Model.StatusCode">@Model.Status.Name</span></div>  
-            <div id="issueStatus">Project <span class="">@Model.Project.Name</span></div>                  
+                    <span>, Last Modified by @Model.LastModifiedBy on @Model.LastModifiedDate</span>
+                }
+            </div>
+            <div id="issueStatus">Status<span class="@Model.StatusCode">@Model.Status.Name</span></div>
+            <div id="issueStatus">Project <span class="">@Model.Project.Name</span></div>
         </div>
         <div class="divDetail">
-            <div class="divDescr">@Html.Raw(Model.Description.Replace("\n", "</br>"))
-           
+            <div class="divDescr">
+                @Html.Raw(Model.Description.Replace("\n", "</br>"))
+
             @foreach (var img in Model.Images)
             {
-                <div>                   
+                <div>
                     <a href="~/uploads/@(img.FileKey)" target="_blank"><img class="detailImg" src="~/uploads/@(img.FileKey)" /></a>
                 </div>
             }
-            </div>
-            @if(Model.Attachments.Any())
-            {
+        </div>
+        @if (Model.Attachments.Any())
+        {
             <div id="attachmentHolder">
                 <h5>Other Attachements</h5>
                 <ul>
-                @foreach (var img in Model.Attachments)
+                    @foreach (var img in Model.Attachments)
                 {
-                    <li><a href="~/uploads/@img.FileKey" target="_blank">@img.FileName</a></li>
-                }
+                        <li><a href="~/uploads/@img.FileKey" target="_blank">@img.FileName</a></li>
+                    }
                 </ul>
-             </div>
-            }
-        </div> 
-        <div id="comments" >
-            @Html.Partial("Partial/Comments",Model)
-        </div>         
-    </div>
-    <div class="divRight">
-        <div id="issue-details" class="right-detail-items ">
-            <div class="issue-detail-item important">Issue # @Model.ID.ToString()
-            @if (Model.IsEditableForCurrentUser)
-            {
-                <div class="starHolder">
-                    <span id="issue-star" class="glyphicon @(Model.IsStarredForUser?"glyphicon-star ":"glyphicon-star-empty")" data-starred="@(Model.IsStarredForUser?"starred":"unstarred")"></span>
-                </div>
-            }
-            </div>
-            <div class="issue-detail-item">Type : @Model.Category.Name</div>
-            <div class="issue-detail-item">Priority: @Model.Priority.Name</div>
-        </div>
-        
-        <div id="members"  class="changableWidget right-detail-items">
-            @Html.Partial("Partial/Members",Model)
-        </div>
-        @if (Model.IsEditableForCurrentUser)
-        {
-            <div id="dueDate" class="changableWidget">
-                <h4>Due Date</h4>
-                <span id="dueDate">@Model.IssueDueDate</span>
-                <a href="#" id="aChangeDueDate"  class="hiddenChangeLink" >Change</a>
-                <div id="dueDatePicker" style="display:none;">
-                    <input type="text" name="IssueDueDate" value="@Model.IssueDueDate" id="IssueDueDate" />
-                </div>           
             </div>
         }
     </div>
+    <div id="comments">
+        @Html.Partial("Partial/Comments", Model)
+    </div>
 </div>
-<input type="hidden" id="ID" name="ID" value="@Model.ID" />
+<div class="divRight">
+    <div id="issue-details" class="right-detail-items ">
+        <div class="issue-detail-item important">
+            Issue # @Model.Id.ToString()
 
-@Html.HiddenFor(x=>x.TeamID)
+            <div class="starHolder">
+                <span id="issue-star" ng-click="vm.starIssue()" 
+
+                      class="glyphicon @(Model.IsStarredForUser ? "glyphicon-star " : "glyphicon-star-empty")" 
+                      data-starred="@(Model.IsStarredForUser?"starred":"unstarred")"></span>
+            </div>
+
+        </div>
+        <div class="issue-detail-item">Type : @Model.Category.Name</div>
+        <div class="issue-detail-item">Priority: @Model.Priority.Name</div>
+    </div>
+
+    <div id="members" class="changableWidget right-detail-items">
+        @Html.Partial("Partial/Members", Model)
+    </div>
+    @if (Model.IsEditableForCurrentUser)
+    {
+        <div id="dueDate" class="changableWidget">
+            <h4>Due Date</h4>
+            <span id="dueDate">@Model.IssueDueDate</span>
+            <a href="#" id="aChangeDueDate" class="hiddenChangeLink">Change</a>
+            <div id="dueDatePicker" style="display:none;">
+                <input type="text" name="IssueDueDate" value="@Model.IssueDueDate" id="IssueDueDate" />
+            </div>
+        </div>
+    }
+</div>
+</div>
+<input type="hidden" id="ID" name="Id" value="@Model.Id" />
+
+@Html.HiddenFor(x => x.TeamID)
 <script type="text/javascript">
     var issueCommentsUrl = "@Url.Action("comments","Issues")";
     var issueDeleteUrl = "@Url.Action("delete","issues")";
     var issuesUrl = "@Url.Action("index","issues")";
 
-    angular.module("issueDetialApp").value("issue", { id: @Model.ID });
+    angular.module("issueDetialApp").value("issue",  @Html.Raw(Json.Encode(Model)));
 
 </script>

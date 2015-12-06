@@ -68,7 +68,7 @@ namespace TechiesWeb.TeamBins.Controllers
             var issueList = repo.GetIssues(TeamID).OrderByDescending(s => s.ID).Take(5);
             foreach (var issue in issueList)
             {
-                var issueVM = new IssueVM { ID = issue.ID, Title = issue.Title };
+                var issueVM = new IssueVM { Id = issue.ID, Title = issue.Title };
                 listIssues.Add(issueVM);
             }
             return listIssues;
@@ -83,7 +83,7 @@ namespace TechiesWeb.TeamBins.Controllers
                 .OrderByDescending(x=>x.ID).Take(5);
             foreach (var issue in issueList)
             {
-                var issueVM = new IssueVM { ID = issue.ID, Title = issue.Title };
+                var issueVM = new IssueVM { Id = issue.ID, Title = issue.Title };
                 listIssues.Add(issueVM);
             }
             return listIssues;

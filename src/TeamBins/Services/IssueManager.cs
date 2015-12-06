@@ -1,6 +1,7 @@
 using SmartPlan.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Web;
 using TeamBins.Common;
 using TeamBins.Common.Infrastructure.Enums.TeamBins.Helpers.Enums;
@@ -25,6 +26,12 @@ namespace TeamBins.Services
             this.issueRepository = issueRepository;
             this.activityRepository = activityRepository;
             this.teamRepository = teamRepository;
+        }
+
+        public async Task<int> StarIssue(int issueId)
+        {
+            return await  issueRepository.SaveIssueMember(issueId, userSessionHelper.UserId, IssueMemberRelationType.Star.ToString());
+            //return SaveIssueMemberRelation(issueId, userId, IssueMemberRelationType.Star, userId);
         }
 
         public IEnumerable<IssueVM> GetIssues(List<int> statusIds, int count)
@@ -70,11 +77,11 @@ namespace TeamBins.Services
         public ActivityDto SaveActivity(CreateIssue model, IssueDetailVM previousVersion, IssueDetailVM newVersion)
         {
             bool isStateChanged = false;
-            var activity = new ActivityDto() { ObjectId = newVersion.ID, ObjectType = "Issue" };
+            var activity = new ActivityDto() { ObjectId = newVersion.Id, ObjectType = "Issue" };
 
             if (previousVersion == null)
             {
-                activity.ObjectUrl = "issue/" + newVersion.ID;
+                activity.ObjectUrl = "issue/" + newVersion.Id;
                 //activity.CreatedBy = 
                 activity.Description = "Created";
                 activity.ObjectTite = model.Title;

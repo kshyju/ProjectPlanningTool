@@ -704,13 +704,153 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="Team.Data.Entities" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="TeamEntitiesConn" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Activities" EntityType="Team.Data.Entities.Activity" />
+          <EntitySet Name="Categories" EntityType="Team.Data.Entities.Category" />
+          <EntitySet Name="Comments" EntityType="Team.Data.Entities.Comment" />
+          <EntitySet Name="Documents" EntityType="Team.Data.Entities.Document" />
+          <EntitySet Name="EmailTemplates" EntityType="Team.Data.Entities.EmailTemplate" />
+          <EntitySet Name="Issues" EntityType="Team.Data.Entities.Issue" />
+          <EntitySet Name="IssueMembers" EntityType="Team.Data.Entities.IssueMember" />
+          <EntitySet Name="NotificationTypes" EntityType="Team.Data.Entities.NotificationType" />
+          <EntitySet Name="PasswordResetRequests" EntityType="Team.Data.Entities.PasswordResetRequest" />
+          <EntitySet Name="Priorities" EntityType="Team.Data.Entities.Priority" />
+          <EntitySet Name="Projects" EntityType="Team.Data.Entities.Project" />
+          <EntitySet Name="Status" EntityType="Team.Data.Entities.Status" />
+          <EntitySet Name="StatusGroups" EntityType="Team.Data.Entities.StatusGroup" />
+          <EntitySet Name="Teams" EntityType="Team.Data.Entities.Team" />
+          <EntitySet Name="TeamMembers" EntityType="Team.Data.Entities.TeamMember" />
+          <EntitySet Name="TeamMemberRequests" EntityType="Team.Data.Entities.TeamMemberRequest" />
+          <EntitySet Name="Users" EntityType="Team.Data.Entities.User" />
+          <EntitySet Name="UserNotificationSubscriptions" EntityType="Team.Data.Entities.UserNotificationSubscription" />
+          <AssociationSet Name="FK_Activity_Team" Association="Team.Data.Entities.FK_Activity_Team">
+            <End Role="Team" EntitySet="Teams" />
+            <End Role="Activity" EntitySet="Activities" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Activity_User" Association="Team.Data.Entities.FK_Activity_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Activity" EntitySet="Activities" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Issue_Category" Association="Team.Data.Entities.FK_Issue_Category">
+            <End Role="Category" EntitySet="Categories" />
+            <End Role="Issue" EntitySet="Issues" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Comment_Issue" Association="Team.Data.Entities.FK_Comment_Issue">
+            <End Role="Issue" EntitySet="Issues" />
+            <End Role="Comment" EntitySet="Comments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Comment_User" Association="Team.Data.Entities.FK_Comment_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Comment" EntitySet="Comments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Document_Issue" Association="Team.Data.Entities.FK_Document_Issue">
+            <End Role="Issue" EntitySet="Issues" />
+            <End Role="Document" EntitySet="Documents" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Document_User" Association="Team.Data.Entities.FK_Document_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Document" EntitySet="Documents" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Issue_Priority" Association="Team.Data.Entities.FK_Issue_Priority">
+            <End Role="Priority" EntitySet="Priorities" />
+            <End Role="Issue" EntitySet="Issues" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Issue_Project" Association="Team.Data.Entities.FK_Issue_Project">
+            <End Role="Project" EntitySet="Projects" />
+            <End Role="Issue" EntitySet="Issues" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Issue_Status" Association="Team.Data.Entities.FK_Issue_Status">
+            <End Role="Status" EntitySet="Status" />
+            <End Role="Issue" EntitySet="Issues" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Issue_Team" Association="Team.Data.Entities.FK_Issue_Team">
+            <End Role="Team" EntitySet="Teams" />
+            <End Role="Issue" EntitySet="Issues" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Issue_User" Association="Team.Data.Entities.FK_Issue_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Issue" EntitySet="Issues" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Issue_User1" Association="Team.Data.Entities.FK_Issue_User1">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Issue" EntitySet="Issues" />
+          </AssociationSet>
+          <AssociationSet Name="FK_IssueMember_Issue" Association="Team.Data.Entities.FK_IssueMember_Issue">
+            <End Role="Issue" EntitySet="Issues" />
+            <End Role="IssueMember" EntitySet="IssueMembers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_IssueMember_IssueMember" Association="Team.Data.Entities.FK_IssueMember_IssueMember">
+            <End Role="User" EntitySet="Users" />
+            <End Role="IssueMember" EntitySet="IssueMembers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_IssueMember_User_CreatedBy" Association="Team.Data.Entities.FK_IssueMember_User_CreatedBy">
+            <End Role="User" EntitySet="Users" />
+            <End Role="IssueMember" EntitySet="IssueMembers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserNotificationSubscription_NotificationType" Association="Team.Data.Entities.FK_UserNotificationSubscription_NotificationType">
+            <End Role="NotificationType" EntitySet="NotificationTypes" />
+            <End Role="UserNotificationSubscription" EntitySet="UserNotificationSubscriptions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PasswordResetRequest_User" Association="Team.Data.Entities.FK_PasswordResetRequest_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="PasswordResetRequest" EntitySet="PasswordResetRequests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Project_User" Association="Team.Data.Entities.FK_Project_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Project" EntitySet="Projects" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TeamMember_DefaultProject" Association="Team.Data.Entities.FK_TeamMember_DefaultProject">
+            <End Role="Project" EntitySet="Projects" />
+            <End Role="TeamMember" EntitySet="TeamMembers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Status_StatusGroup" Association="Team.Data.Entities.FK_Status_StatusGroup">
+            <End Role="StatusGroup" EntitySet="StatusGroups" />
+            <End Role="Status" EntitySet="Status" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Team_User" Association="Team.Data.Entities.FK_Team_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Team" EntitySet="Teams" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TeamMember_Team" Association="Team.Data.Entities.FK_TeamMember_Team">
+            <End Role="Team" EntitySet="Teams" />
+            <End Role="TeamMember" EntitySet="TeamMembers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TeamMemberRequest_Team" Association="Team.Data.Entities.FK_TeamMemberRequest_Team">
+            <End Role="Team" EntitySet="Teams" />
+            <End Role="TeamMemberRequest" EntitySet="TeamMemberRequests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_DefaultTeam" Association="Team.Data.Entities.FK_User_DefaultTeam">
+            <End Role="Team" EntitySet="Teams" />
+            <End Role="User" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserNotificationSubscription_Team" Association="Team.Data.Entities.FK_UserNotificationSubscription_Team">
+            <End Role="Team" EntitySet="Teams" />
+            <End Role="UserNotificationSubscription" EntitySet="UserNotificationSubscriptions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TeamMember_CreatedBy" Association="Team.Data.Entities.FK_TeamMember_CreatedBy">
+            <End Role="User" EntitySet="Users" />
+            <End Role="TeamMember" EntitySet="TeamMembers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TeamMember_Member" Association="Team.Data.Entities.FK_TeamMember_Member">
+            <End Role="User" EntitySet="Users" />
+            <End Role="TeamMember" EntitySet="TeamMembers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TeamMemberRequest_CreatedBy" Association="Team.Data.Entities.FK_TeamMemberRequest_CreatedBy">
+            <End Role="User" EntitySet="Users" />
+            <End Role="TeamMemberRequest" EntitySet="TeamMemberRequests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserNotificationSubscription_User" Association="Team.Data.Entities.FK_UserNotificationSubscription_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="UserNotificationSubscription" EntitySet="UserNotificationSubscriptions" />
+          </AssociationSet>
+        </EntityContainer>
         <EntityType Name="Activity">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ObjectID" Type="Int32" Nullable="false" />
-          <Property Name="ObjectType" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ObjectType" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
           <Property Name="ActivityDesc" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="ObjectTitle" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="OldState" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
@@ -718,58 +858,58 @@
           <Property Name="TeamID" Type="Int32" Nullable="false" />
           <Property Name="CreatedByID" Type="Int32" Nullable="false" />
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Team" Relationship="Self.FK_Activity_Team" FromRole="Activity" ToRole="Team" />
-          <NavigationProperty Name="User" Relationship="Self.FK_Activity_User" FromRole="Activity" ToRole="User" />
+          <NavigationProperty Name="Team" Relationship="Team.Data.Entities.FK_Activity_Team" FromRole="Activity" ToRole="Team" />
+          <NavigationProperty Name="User" Relationship="Team.Data.Entities.FK_Activity_User" FromRole="Activity" ToRole="User" />
         </EntityType>
         <EntityType Name="Category">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Code" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Issues" Relationship="Self.FK_Issue_Category" FromRole="Category" ToRole="Issue" />
+          <NavigationProperty Name="Issues" Relationship="Team.Data.Entities.FK_Issue_Category" FromRole="Category" ToRole="Issue" />
         </EntityType>
         <EntityType Name="Comment">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CommentText" Type="String" MaxLength="2000" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CommentText" Type="String" Nullable="false" MaxLength="2000" FixedLength="false" Unicode="true" />
           <Property Name="IssueID" Type="Int32" Nullable="false" />
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="CreatedByID" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Issue" Relationship="Self.FK_Comment_Issue" FromRole="Comment" ToRole="Issue" />
-          <NavigationProperty Name="Author" Relationship="Self.FK_Comment_User" FromRole="Comment" ToRole="User" />
+          <NavigationProperty Name="Issue" Relationship="Team.Data.Entities.FK_Comment_Issue" FromRole="Comment" ToRole="Issue" />
+          <NavigationProperty Name="Author" Relationship="Team.Data.Entities.FK_Comment_User" FromRole="Comment" ToRole="User" />
         </EntityType>
         <EntityType Name="Document">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="FileName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="FileAlias" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FileName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="FileAlias" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="ParentID" Type="Int32" Nullable="false" />
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="CreatedByID" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Issue" Relationship="Self.FK_Document_Issue" FromRole="Document" ToRole="Issue" />
-          <NavigationProperty Name="Author" Relationship="Self.FK_Document_User" FromRole="Document" ToRole="User" />
+          <NavigationProperty Name="Issue" Relationship="Team.Data.Entities.FK_Document_Issue" FromRole="Document" ToRole="Issue" />
+          <NavigationProperty Name="User" Relationship="Team.Data.Entities.FK_Document_User" FromRole="Document" ToRole="User" />
         </EntityType>
         <EntityType Name="EmailTemplate">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="EmailBody" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="EmailSubject" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="EmailBody" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="EmailSubject" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Issue">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Title" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Title" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="DueDate" Type="DateTime" Precision="3" />
           <Property Name="CategoryID" Type="Int32" Nullable="false" />
@@ -783,16 +923,16 @@
           <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
           <Property Name="ModifiedByID" Type="Int32" />
           <Property Name="Active" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Category" Relationship="Self.FK_Issue_Category" FromRole="Issue" ToRole="Category" />
-          <NavigationProperty Name="Comments" Relationship="Self.FK_Comment_Issue" FromRole="Issue" ToRole="Comment" />
-          <NavigationProperty Name="Documents" Relationship="Self.FK_Document_Issue" FromRole="Issue" ToRole="Document" />
-          <NavigationProperty Name="Priority" Relationship="Self.FK_Issue_Priority" FromRole="Issue" ToRole="Priority" />
-          <NavigationProperty Name="Project" Relationship="Self.FK_Issue_Project" FromRole="Issue" ToRole="Project" />
-          <NavigationProperty Name="Status" Relationship="Self.FK_Issue_Status" FromRole="Issue" ToRole="Status" />
-          <NavigationProperty Name="Team" Relationship="Self.FK_Issue_Team" FromRole="Issue" ToRole="Team" />
-          <NavigationProperty Name="CreatedBy" Relationship="Self.FK_Issue_User" FromRole="Issue" ToRole="User" />
-          <NavigationProperty Name="ModifiedBy" Relationship="Self.FK_Issue_User1" FromRole="Issue" ToRole="User" />
-          <NavigationProperty Name="IssueMembers" Relationship="Self.FK_IssueMember_Issue" FromRole="Issue" ToRole="IssueMember" />
+          <NavigationProperty Name="Category" Relationship="Team.Data.Entities.FK_Issue_Category" FromRole="Issue" ToRole="Category" />
+          <NavigationProperty Name="Comments" Relationship="Team.Data.Entities.FK_Comment_Issue" FromRole="Issue" ToRole="Comment" />
+          <NavigationProperty Name="Documents" Relationship="Team.Data.Entities.FK_Document_Issue" FromRole="Issue" ToRole="Document" />
+          <NavigationProperty Name="Priority" Relationship="Team.Data.Entities.FK_Issue_Priority" FromRole="Issue" ToRole="Priority" />
+          <NavigationProperty Name="Project" Relationship="Team.Data.Entities.FK_Issue_Project" FromRole="Issue" ToRole="Project" />
+          <NavigationProperty Name="Status" Relationship="Team.Data.Entities.FK_Issue_Status" FromRole="Issue" ToRole="Status" />
+          <NavigationProperty Name="Team" Relationship="Team.Data.Entities.FK_Issue_Team" FromRole="Issue" ToRole="Team" />
+          <NavigationProperty Name="CreatedBy" Relationship="Team.Data.Entities.FK_Issue_User" FromRole="Issue" ToRole="User" />
+          <NavigationProperty Name="ModifiedBy" Relationship="Team.Data.Entities.FK_Issue_User1" FromRole="Issue" ToRole="User" />
+          <NavigationProperty Name="IssueMembers" Relationship="Team.Data.Entities.FK_IssueMember_Issue" FromRole="Issue" ToRole="IssueMember" />
         </EntityType>
         <EntityType Name="IssueMember">
           <Key>
@@ -801,21 +941,21 @@
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="IssueID" Type="Int32" Nullable="false" />
           <Property Name="MemberID" Type="Int32" Nullable="false" />
-          <Property Name="RelationType" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="RelationType" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="CreatedByID" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Issue" Relationship="Self.FK_IssueMember_Issue" FromRole="IssueMember" ToRole="Issue" />
-          <NavigationProperty Name="Member" Relationship="Self.FK_IssueMember_IssueMember" FromRole="IssueMember" ToRole="User" />
-          <NavigationProperty Name="CreatedBy" Relationship="Self.FK_IssueMember_User_CreatedBy" FromRole="IssueMember" ToRole="User" />
+          <NavigationProperty Name="Issue" Relationship="Team.Data.Entities.FK_IssueMember_Issue" FromRole="IssueMember" ToRole="Issue" />
+          <NavigationProperty Name="Member" Relationship="Team.Data.Entities.FK_IssueMember_IssueMember" FromRole="IssueMember" ToRole="User" />
+          <NavigationProperty Name="User1" Relationship="Team.Data.Entities.FK_IssueMember_User_CreatedBy" FromRole="IssueMember" ToRole="User" />
         </EntityType>
         <EntityType Name="NotificationType">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="UserNotificationSubscriptions" Relationship="Self.FK_UserNotificationSubscription_NotificationType" FromRole="NotificationType" ToRole="UserNotificationSubscription" />
+          <Property Name="Code" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="UserNotificationSubscriptions" Relationship="Team.Data.Entities.FK_UserNotificationSubscription_NotificationType" FromRole="NotificationType" ToRole="UserNotificationSubscription" />
         </EntityType>
         <EntityType Name="PasswordResetRequest">
           <Key>
@@ -823,32 +963,32 @@
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="UserID" Type="Int32" Nullable="false" />
-          <Property Name="ActivationCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ActivationCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="User" Relationship="Self.FK_PasswordResetRequest_User" FromRole="PasswordResetRequest" ToRole="User" />
+          <NavigationProperty Name="User" Relationship="Team.Data.Entities.FK_PasswordResetRequest_User" FromRole="PasswordResetRequest" ToRole="User" />
         </EntityType>
         <EntityType Name="Priority">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="Code" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Issues" Relationship="Self.FK_Issue_Priority" FromRole="Priority" ToRole="Issue" />
+          <NavigationProperty Name="Issues" Relationship="Team.Data.Entities.FK_Issue_Priority" FromRole="Priority" ToRole="Issue" />
         </EntityType>
         <EntityType Name="Project">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="TeamID" Type="Int32" />
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="CreatedByID" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Issues" Relationship="Self.FK_Issue_Project" FromRole="Project" ToRole="Issue" />
-          <NavigationProperty Name="User" Relationship="Self.FK_Project_User" FromRole="Project" ToRole="User" />
-          <NavigationProperty Name="TeamMembers" Relationship="Self.FK_TeamMember_DefaultProject" FromRole="Project" ToRole="TeamMember" />
+          <NavigationProperty Name="Issues" Relationship="Team.Data.Entities.FK_Issue_Project" FromRole="Project" ToRole="Issue" />
+          <NavigationProperty Name="User" Relationship="Team.Data.Entities.FK_Project_User" FromRole="Project" ToRole="User" />
+          <NavigationProperty Name="TeamMembers" Relationship="Team.Data.Entities.FK_TeamMember_DefaultProject" FromRole="Project" ToRole="TeamMember" />
         </EntityType>
         <EntityType Name="Status">
           <Key>
@@ -857,25 +997,35 @@
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Code" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Issues" Relationship="Self.FK_Issue_Status" FromRole="Status" ToRole="Issue" />
           <Property Name="StatusGroupId" Type="Int32" />
+          <NavigationProperty Name="Issues" Relationship="Team.Data.Entities.FK_Issue_Status" FromRole="Status" ToRole="Issue" />
           <NavigationProperty Name="StatusGroup" Relationship="Team.Data.Entities.FK_Status_StatusGroup" FromRole="Status" ToRole="StatusGroup" />
+        </EntityType>
+        <EntityType Name="StatusGroup">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Code" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Status" Relationship="Team.Data.Entities.FK_Status_StatusGroup" FromRole="StatusGroup" ToRole="Status" />
         </EntityType>
         <EntityType Name="Team">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="CreatedByID" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Activities" Relationship="Self.FK_Activity_Team" FromRole="Team" ToRole="Activity" />
-          <NavigationProperty Name="Issues" Relationship="Self.FK_Issue_Team" FromRole="Team" ToRole="Issue" />
-          <NavigationProperty Name="User" Relationship="Self.FK_Team_User" FromRole="Team" ToRole="User" />
-          <NavigationProperty Name="TeamMembers" Relationship="Self.FK_TeamMember_Team" FromRole="Team" ToRole="TeamMember" />
-          <NavigationProperty Name="TeamMemberRequests" Relationship="Self.FK_TeamMemberRequest_Team" FromRole="Team" ToRole="TeamMemberRequest" />
-          <NavigationProperty Name="Users" Relationship="Self.FK_User_DefaultTeam" FromRole="Team" ToRole="User" />
-          <NavigationProperty Name="UserNotificationSubscriptions" Relationship="Self.FK_UserNotificationSubscription_Team" FromRole="Team" ToRole="UserNotificationSubscription" />
+          <NavigationProperty Name="Activities" Relationship="Team.Data.Entities.FK_Activity_Team" FromRole="Team" ToRole="Activity" />
+          <NavigationProperty Name="Issues" Relationship="Team.Data.Entities.FK_Issue_Team" FromRole="Team" ToRole="Issue" />
+          <NavigationProperty Name="User" Relationship="Team.Data.Entities.FK_Team_User" FromRole="Team" ToRole="User" />
+          <NavigationProperty Name="TeamMembers" Relationship="Team.Data.Entities.FK_TeamMember_Team" FromRole="Team" ToRole="TeamMember" />
+          <NavigationProperty Name="TeamMemberRequests" Relationship="Team.Data.Entities.FK_TeamMemberRequest_Team" FromRole="Team" ToRole="TeamMemberRequest" />
+          <NavigationProperty Name="Users" Relationship="Team.Data.Entities.FK_User_DefaultTeam" FromRole="Team" ToRole="User" />
+          <NavigationProperty Name="UserNotificationSubscriptions" Relationship="Team.Data.Entities.FK_UserNotificationSubscription_Team" FromRole="Team" ToRole="UserNotificationSubscription" />
         </EntityType>
         <EntityType Name="TeamMember">
           <Key>
@@ -887,53 +1037,53 @@
           <Property Name="DefaultProjectID" Type="Int32" />
           <Property Name="CreatedByID" Type="Int32" Nullable="false" />
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Project" Relationship="Self.FK_TeamMember_DefaultProject" FromRole="TeamMember" ToRole="Project" />
-          <NavigationProperty Name="Team" Relationship="Self.FK_TeamMember_Team" FromRole="TeamMember" ToRole="Team" />
-          <NavigationProperty Name="User" Relationship="Self.FK_TeamMember_CreatedBy" FromRole="TeamMember" ToRole="User" />
-          <NavigationProperty Name="Member" Relationship="Self.FK_TeamMember_Member" FromRole="TeamMember" ToRole="User" />
+          <NavigationProperty Name="Project" Relationship="Team.Data.Entities.FK_TeamMember_DefaultProject" FromRole="TeamMember" ToRole="Project" />
+          <NavigationProperty Name="Team" Relationship="Team.Data.Entities.FK_TeamMember_Team" FromRole="TeamMember" ToRole="Team" />
+          <NavigationProperty Name="CreatedBy" Relationship="Team.Data.Entities.FK_TeamMember_CreatedBy" FromRole="TeamMember" ToRole="User" />
+          <NavigationProperty Name="Member" Relationship="Team.Data.Entities.FK_TeamMember_Member" FromRole="TeamMember" ToRole="User" />
         </EntityType>
         <EntityType Name="TeamMemberRequest">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="EmailAddress" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="EmailAddress" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="TeamID" Type="Int32" Nullable="false" />
-          <Property Name="ActivationCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ActivationCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="CreatedByID" Type="Int32" Nullable="false" />
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Team" Relationship="Self.FK_TeamMemberRequest_Team" FromRole="TeamMemberRequest" ToRole="Team" />
-          <NavigationProperty Name="User" Relationship="Self.FK_TeamMemberRequest_CreatedBy" FromRole="TeamMemberRequest" ToRole="User" />
+          <NavigationProperty Name="Team" Relationship="Team.Data.Entities.FK_TeamMemberRequest_Team" FromRole="TeamMemberRequest" ToRole="Team" />
+          <NavigationProperty Name="User" Relationship="Team.Data.Entities.FK_TeamMemberRequest_CreatedBy" FromRole="TeamMemberRequest" ToRole="User" />
         </EntityType>
         <EntityType Name="User">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="EmailAddress" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Password" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="EmailAddress" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="JobTitle" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="LastLoginDate" Type="DateTime" Precision="3" />
           <Property Name="Avatar" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="DefaultTeamID" Type="Int32" />
-          <NavigationProperty Name="Activities" Relationship="Self.FK_Activity_User" FromRole="User" ToRole="Activity" />
-          <NavigationProperty Name="Comments" Relationship="Self.FK_Comment_User" FromRole="User" ToRole="Comment" />
-          <NavigationProperty Name="Documents" Relationship="Self.FK_Document_User" FromRole="User" ToRole="Document" />
-          <NavigationProperty Name="Issues" Relationship="Self.FK_Issue_User" FromRole="User" ToRole="Issue" />
-          <NavigationProperty Name="Issues1" Relationship="Self.FK_Issue_User1" FromRole="User" ToRole="Issue" />
-          <NavigationProperty Name="IssueMembers" Relationship="Self.FK_IssueMember_IssueMember" FromRole="User" ToRole="IssueMember" />
-          <NavigationProperty Name="IssueMembers1" Relationship="Self.FK_IssueMember_User_CreatedBy" FromRole="User" ToRole="IssueMember" />
-          <NavigationProperty Name="PasswordResetRequests" Relationship="Self.FK_PasswordResetRequest_User" FromRole="User" ToRole="PasswordResetRequest" />
-          <NavigationProperty Name="Projects" Relationship="Self.FK_Project_User" FromRole="User" ToRole="Project" />
-          <NavigationProperty Name="Teams" Relationship="Self.FK_Team_User" FromRole="User" ToRole="Team" />
-          <NavigationProperty Name="Team" Relationship="Self.FK_User_DefaultTeam" FromRole="User" ToRole="Team" />
-          <NavigationProperty Name="TeamMembers" Relationship="Self.FK_TeamMember_CreatedBy" FromRole="User" ToRole="TeamMember" />
-          <NavigationProperty Name="TeamMembers1" Relationship="Self.FK_TeamMember_Member" FromRole="User" ToRole="TeamMember" />
-          <NavigationProperty Name="TeamMemberRequests" Relationship="Self.FK_TeamMemberRequest_CreatedBy" FromRole="User" ToRole="TeamMemberRequest" />
-          <NavigationProperty Name="UserNotificationSubscriptions" Relationship="Self.FK_UserNotificationSubscription_User" FromRole="User" ToRole="UserNotificationSubscription" />
+          <NavigationProperty Name="Activities" Relationship="Team.Data.Entities.FK_Activity_User" FromRole="User" ToRole="Activity" />
+          <NavigationProperty Name="Comments" Relationship="Team.Data.Entities.FK_Comment_User" FromRole="User" ToRole="Comment" />
+          <NavigationProperty Name="Documents" Relationship="Team.Data.Entities.FK_Document_User" FromRole="User" ToRole="Document" />
+          <NavigationProperty Name="Issues" Relationship="Team.Data.Entities.FK_Issue_User" FromRole="User" ToRole="Issue" />
+          <NavigationProperty Name="Issues1" Relationship="Team.Data.Entities.FK_Issue_User1" FromRole="User" ToRole="Issue" />
+          <NavigationProperty Name="IssueMembers" Relationship="Team.Data.Entities.FK_IssueMember_IssueMember" FromRole="User" ToRole="IssueMember" />
+          <NavigationProperty Name="IssueMembers1" Relationship="Team.Data.Entities.FK_IssueMember_User_CreatedBy" FromRole="User" ToRole="IssueMember" />
+          <NavigationProperty Name="PasswordResetRequests" Relationship="Team.Data.Entities.FK_PasswordResetRequest_User" FromRole="User" ToRole="PasswordResetRequest" />
+          <NavigationProperty Name="Projects" Relationship="Team.Data.Entities.FK_Project_User" FromRole="User" ToRole="Project" />
+          <NavigationProperty Name="Teams" Relationship="Team.Data.Entities.FK_Team_User" FromRole="User" ToRole="Team" />
+          <NavigationProperty Name="Team" Relationship="Team.Data.Entities.FK_User_DefaultTeam" FromRole="User" ToRole="Team" />
+          <NavigationProperty Name="TeamMembers" Relationship="Team.Data.Entities.FK_TeamMember_CreatedBy" FromRole="User" ToRole="TeamMember" />
+          <NavigationProperty Name="TeamMembers1" Relationship="Team.Data.Entities.FK_TeamMember_Member" FromRole="User" ToRole="TeamMember" />
+          <NavigationProperty Name="TeamMemberRequests" Relationship="Team.Data.Entities.FK_TeamMemberRequest_CreatedBy" FromRole="User" ToRole="TeamMemberRequest" />
+          <NavigationProperty Name="UserNotificationSubscriptions" Relationship="Team.Data.Entities.FK_UserNotificationSubscription_User" FromRole="User" ToRole="UserNotificationSubscription" />
         </EntityType>
         <EntityType Name="UserNotificationSubscription">
           <Key>
@@ -945,13 +1095,13 @@
           <Property Name="TeamID" Type="Int32" Nullable="false" />
           <Property Name="Subscribed" Type="Boolean" Nullable="false" />
           <Property Name="ModifiedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="NotificationType" Relationship="Self.FK_UserNotificationSubscription_NotificationType" FromRole="UserNotificationSubscription" ToRole="NotificationType" />
-          <NavigationProperty Name="Team" Relationship="Self.FK_UserNotificationSubscription_Team" FromRole="UserNotificationSubscription" ToRole="Team" />
-          <NavigationProperty Name="User" Relationship="Self.FK_UserNotificationSubscription_User" FromRole="UserNotificationSubscription" ToRole="User" />
+          <NavigationProperty Name="NotificationType" Relationship="Team.Data.Entities.FK_UserNotificationSubscription_NotificationType" FromRole="UserNotificationSubscription" ToRole="NotificationType" />
+          <NavigationProperty Name="Team" Relationship="Team.Data.Entities.FK_UserNotificationSubscription_Team" FromRole="UserNotificationSubscription" ToRole="Team" />
+          <NavigationProperty Name="User" Relationship="Team.Data.Entities.FK_UserNotificationSubscription_User" FromRole="UserNotificationSubscription" ToRole="User" />
         </EntityType>
         <Association Name="FK_Activity_Team">
-          <End Role="Team" Type="Self.Team" Multiplicity="1" />
-          <End Role="Activity" Type="Self.Activity" Multiplicity="*" />
+          <End Type="Team.Data.Entities.Team" Role="Team" Multiplicity="1" />
+          <End Type="Team.Data.Entities.Activity" Role="Activity" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Team">
               <PropertyRef Name="ID" />
@@ -962,8 +1112,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Activity_User">
-          <End Role="User" Type="Self.User" Multiplicity="1" />
-          <End Role="Activity" Type="Self.Activity" Multiplicity="*" />
+          <End Type="Team.Data.Entities.User" Role="User" Multiplicity="1" />
+          <End Type="Team.Data.Entities.Activity" Role="Activity" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="User">
               <PropertyRef Name="ID" />
@@ -974,8 +1124,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Issue_Category">
-          <End Role="Category" Type="Self.Category" Multiplicity="1" />
-          <End Role="Issue" Type="Self.Issue" Multiplicity="*" />
+          <End Type="Team.Data.Entities.Category" Role="Category" Multiplicity="1" />
+          <End Type="Team.Data.Entities.Issue" Role="Issue" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Category">
               <PropertyRef Name="ID" />
@@ -986,8 +1136,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Comment_Issue">
-          <End Role="Issue" Type="Self.Issue" Multiplicity="1" />
-          <End Role="Comment" Type="Self.Comment" Multiplicity="*" />
+          <End Type="Team.Data.Entities.Issue" Role="Issue" Multiplicity="1" />
+          <End Type="Team.Data.Entities.Comment" Role="Comment" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Issue">
               <PropertyRef Name="ID" />
@@ -998,8 +1148,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Comment_User">
-          <End Role="User" Type="Self.User" Multiplicity="1" />
-          <End Role="Comment" Type="Self.Comment" Multiplicity="*" />
+          <End Type="Team.Data.Entities.User" Role="User" Multiplicity="1" />
+          <End Type="Team.Data.Entities.Comment" Role="Comment" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="User">
               <PropertyRef Name="ID" />
@@ -1010,8 +1160,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Document_Issue">
-          <End Role="Issue" Type="Self.Issue" Multiplicity="1" />
-          <End Role="Document" Type="Self.Document" Multiplicity="*" />
+          <End Type="Team.Data.Entities.Issue" Role="Issue" Multiplicity="1" />
+          <End Type="Team.Data.Entities.Document" Role="Document" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Issue">
               <PropertyRef Name="ID" />
@@ -1022,8 +1172,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Document_User">
-          <End Role="User" Type="Self.User" Multiplicity="1" />
-          <End Role="Document" Type="Self.Document" Multiplicity="*" />
+          <End Type="Team.Data.Entities.User" Role="User" Multiplicity="1" />
+          <End Type="Team.Data.Entities.Document" Role="Document" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="User">
               <PropertyRef Name="ID" />
@@ -1034,8 +1184,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Issue_Priority">
-          <End Role="Priority" Type="Self.Priority" Multiplicity="0..1" />
-          <End Role="Issue" Type="Self.Issue" Multiplicity="*" />
+          <End Type="Team.Data.Entities.Priority" Role="Priority" Multiplicity="0..1" />
+          <End Type="Team.Data.Entities.Issue" Role="Issue" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Priority">
               <PropertyRef Name="ID" />
@@ -1046,8 +1196,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Issue_Project">
-          <End Role="Project" Type="Self.Project" Multiplicity="1" />
-          <End Role="Issue" Type="Self.Issue" Multiplicity="*" />
+          <End Type="Team.Data.Entities.Project" Role="Project" Multiplicity="1" />
+          <End Type="Team.Data.Entities.Issue" Role="Issue" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Project">
               <PropertyRef Name="ID" />
@@ -1058,8 +1208,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Issue_Status">
-          <End Role="Status" Type="Self.Status" Multiplicity="1" />
-          <End Role="Issue" Type="Self.Issue" Multiplicity="*" />
+          <End Type="Team.Data.Entities.Status" Role="Status" Multiplicity="1" />
+          <End Type="Team.Data.Entities.Issue" Role="Issue" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Status">
               <PropertyRef Name="ID" />
@@ -1070,8 +1220,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Issue_Team">
-          <End Role="Team" Type="Self.Team" Multiplicity="1" />
-          <End Role="Issue" Type="Self.Issue" Multiplicity="*" />
+          <End Type="Team.Data.Entities.Team" Role="Team" Multiplicity="1" />
+          <End Type="Team.Data.Entities.Issue" Role="Issue" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Team">
               <PropertyRef Name="ID" />
@@ -1082,8 +1232,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Issue_User">
-          <End Role="User" Type="Self.User" Multiplicity="1" />
-          <End Role="Issue" Type="Self.Issue" Multiplicity="*" />
+          <End Type="Team.Data.Entities.User" Role="User" Multiplicity="1" />
+          <End Type="Team.Data.Entities.Issue" Role="Issue" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="User">
               <PropertyRef Name="ID" />
@@ -1094,8 +1244,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Issue_User1">
-          <End Role="User" Type="Self.User" Multiplicity="0..1" />
-          <End Role="Issue" Type="Self.Issue" Multiplicity="*" />
+          <End Type="Team.Data.Entities.User" Role="User" Multiplicity="0..1" />
+          <End Type="Team.Data.Entities.Issue" Role="Issue" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="User">
               <PropertyRef Name="ID" />
@@ -1106,8 +1256,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_IssueMember_Issue">
-          <End Role="Issue" Type="Self.Issue" Multiplicity="1" />
-          <End Role="IssueMember" Type="Self.IssueMember" Multiplicity="*" />
+          <End Type="Team.Data.Entities.Issue" Role="Issue" Multiplicity="1" />
+          <End Type="Team.Data.Entities.IssueMember" Role="IssueMember" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Issue">
               <PropertyRef Name="ID" />
@@ -1118,8 +1268,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_IssueMember_IssueMember">
-          <End Role="User" Type="Self.User" Multiplicity="1" />
-          <End Role="IssueMember" Type="Self.IssueMember" Multiplicity="*" />
+          <End Type="Team.Data.Entities.User" Role="User" Multiplicity="1" />
+          <End Type="Team.Data.Entities.IssueMember" Role="IssueMember" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="User">
               <PropertyRef Name="ID" />
@@ -1130,8 +1280,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_IssueMember_User_CreatedBy">
-          <End Role="User" Type="Self.User" Multiplicity="1" />
-          <End Role="IssueMember" Type="Self.IssueMember" Multiplicity="*" />
+          <End Type="Team.Data.Entities.User" Role="User" Multiplicity="1" />
+          <End Type="Team.Data.Entities.IssueMember" Role="IssueMember" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="User">
               <PropertyRef Name="ID" />
@@ -1142,8 +1292,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_UserNotificationSubscription_NotificationType">
-          <End Role="NotificationType" Type="Self.NotificationType" Multiplicity="1" />
-          <End Role="UserNotificationSubscription" Type="Self.UserNotificationSubscription" Multiplicity="*" />
+          <End Type="Team.Data.Entities.NotificationType" Role="NotificationType" Multiplicity="1" />
+          <End Type="Team.Data.Entities.UserNotificationSubscription" Role="UserNotificationSubscription" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="NotificationType">
               <PropertyRef Name="ID" />
@@ -1154,8 +1304,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_PasswordResetRequest_User">
-          <End Role="User" Type="Self.User" Multiplicity="1" />
-          <End Role="PasswordResetRequest" Type="Self.PasswordResetRequest" Multiplicity="*" />
+          <End Type="Team.Data.Entities.User" Role="User" Multiplicity="1" />
+          <End Type="Team.Data.Entities.PasswordResetRequest" Role="PasswordResetRequest" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="User">
               <PropertyRef Name="ID" />
@@ -1166,8 +1316,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Project_User">
-          <End Role="User" Type="Self.User" Multiplicity="1" />
-          <End Role="Project" Type="Self.Project" Multiplicity="*" />
+          <End Type="Team.Data.Entities.User" Role="User" Multiplicity="1" />
+          <End Type="Team.Data.Entities.Project" Role="Project" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="User">
               <PropertyRef Name="ID" />
@@ -1178,8 +1328,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_TeamMember_DefaultProject">
-          <End Role="Project" Type="Self.Project" Multiplicity="0..1" />
-          <End Role="TeamMember" Type="Self.TeamMember" Multiplicity="*" />
+          <End Type="Team.Data.Entities.Project" Role="Project" Multiplicity="0..1" />
+          <End Type="Team.Data.Entities.TeamMember" Role="TeamMember" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Project">
               <PropertyRef Name="ID" />
@@ -1189,264 +1339,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Team_User">
-          <End Role="User" Type="Self.User" Multiplicity="1" />
-          <End Role="Team" Type="Self.Team" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Team">
-              <PropertyRef Name="CreatedByID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_TeamMember_Team">
-          <End Role="Team" Type="Self.Team" Multiplicity="1" />
-          <End Role="TeamMember" Type="Self.TeamMember" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Team">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="TeamMember">
-              <PropertyRef Name="TeamID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_TeamMemberRequest_Team">
-          <End Role="Team" Type="Self.Team" Multiplicity="1" />
-          <End Role="TeamMemberRequest" Type="Self.TeamMemberRequest" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Team">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="TeamMemberRequest">
-              <PropertyRef Name="TeamID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_User_DefaultTeam">
-          <End Role="Team" Type="Self.Team" Multiplicity="0..1" />
-          <End Role="User" Type="Self.User" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Team">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="User">
-              <PropertyRef Name="DefaultTeamID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_UserNotificationSubscription_Team">
-          <End Role="Team" Type="Self.Team" Multiplicity="1" />
-          <End Role="UserNotificationSubscription" Type="Self.UserNotificationSubscription" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Team">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="UserNotificationSubscription">
-              <PropertyRef Name="TeamID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_TeamMember_CreatedBy">
-          <End Role="User" Type="Self.User" Multiplicity="1" />
-          <End Role="TeamMember" Type="Self.TeamMember" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="TeamMember">
-              <PropertyRef Name="CreatedByID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_TeamMember_Member">
-          <End Role="User" Type="Self.User" Multiplicity="1" />
-          <End Role="TeamMember" Type="Self.TeamMember" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="TeamMember">
-              <PropertyRef Name="MemberID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_TeamMemberRequest_CreatedBy">
-          <End Role="User" Type="Self.User" Multiplicity="1" />
-          <End Role="TeamMemberRequest" Type="Self.TeamMemberRequest" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="TeamMemberRequest">
-              <PropertyRef Name="CreatedByID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_UserNotificationSubscription_User">
-          <End Role="User" Type="Self.User" Multiplicity="1" />
-          <End Role="UserNotificationSubscription" Type="Self.UserNotificationSubscription" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="UserNotificationSubscription">
-              <PropertyRef Name="UserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityContainer Name="TeamEntitiesConn" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Activities" EntityType="Self.Activity" />
-          <EntitySet Name="Categories" EntityType="Self.Category" />
-          <EntitySet Name="Comments" EntityType="Self.Comment" />
-          <EntitySet Name="Documents" EntityType="Self.Document" />
-          <EntitySet Name="EmailTemplates" EntityType="Self.EmailTemplate" />
-          <EntitySet Name="Issues" EntityType="Self.Issue" />
-          <EntitySet Name="IssueMembers" EntityType="Self.IssueMember" />
-          <EntitySet Name="NotificationTypes" EntityType="Self.NotificationType" />
-          <EntitySet Name="PasswordResetRequests" EntityType="Self.PasswordResetRequest" />
-          <EntitySet Name="Priorities" EntityType="Self.Priority" />
-          <EntitySet Name="Projects" EntityType="Self.Project" />
-          <EntitySet Name="Status" EntityType="Self.Status" />
-          <EntitySet Name="Teams" EntityType="Self.Team" />
-          <EntitySet Name="TeamMembers" EntityType="Self.TeamMember" />
-          <EntitySet Name="TeamMemberRequests" EntityType="Self.TeamMemberRequest" />
-          <EntitySet Name="Users" EntityType="Self.User" />
-          <EntitySet Name="UserNotificationSubscriptions" EntityType="Self.UserNotificationSubscription" />
-          <AssociationSet Name="FK_Activity_Team" Association="Self.FK_Activity_Team">
-            <End Role="Team" EntitySet="Teams" />
-            <End Role="Activity" EntitySet="Activities" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Activity_User" Association="Self.FK_Activity_User">
-            <End Role="User" EntitySet="Users" />
-            <End Role="Activity" EntitySet="Activities" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Issue_Category" Association="Self.FK_Issue_Category">
-            <End Role="Category" EntitySet="Categories" />
-            <End Role="Issue" EntitySet="Issues" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Comment_Issue" Association="Self.FK_Comment_Issue">
-            <End Role="Issue" EntitySet="Issues" />
-            <End Role="Comment" EntitySet="Comments" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Comment_User" Association="Self.FK_Comment_User">
-            <End Role="User" EntitySet="Users" />
-            <End Role="Comment" EntitySet="Comments" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Document_Issue" Association="Self.FK_Document_Issue">
-            <End Role="Issue" EntitySet="Issues" />
-            <End Role="Document" EntitySet="Documents" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Document_User" Association="Self.FK_Document_User">
-            <End Role="User" EntitySet="Users" />
-            <End Role="Document" EntitySet="Documents" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Issue_Priority" Association="Self.FK_Issue_Priority">
-            <End Role="Priority" EntitySet="Priorities" />
-            <End Role="Issue" EntitySet="Issues" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Issue_Project" Association="Self.FK_Issue_Project">
-            <End Role="Project" EntitySet="Projects" />
-            <End Role="Issue" EntitySet="Issues" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Issue_Status" Association="Self.FK_Issue_Status">
-            <End Role="Status" EntitySet="Status" />
-            <End Role="Issue" EntitySet="Issues" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Issue_Team" Association="Self.FK_Issue_Team">
-            <End Role="Team" EntitySet="Teams" />
-            <End Role="Issue" EntitySet="Issues" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Issue_User" Association="Self.FK_Issue_User">
-            <End Role="User" EntitySet="Users" />
-            <End Role="Issue" EntitySet="Issues" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Issue_User1" Association="Self.FK_Issue_User1">
-            <End Role="User" EntitySet="Users" />
-            <End Role="Issue" EntitySet="Issues" />
-          </AssociationSet>
-          <AssociationSet Name="FK_IssueMember_Issue" Association="Self.FK_IssueMember_Issue">
-            <End Role="Issue" EntitySet="Issues" />
-            <End Role="IssueMember" EntitySet="IssueMembers" />
-          </AssociationSet>
-          <AssociationSet Name="FK_IssueMember_IssueMember" Association="Self.FK_IssueMember_IssueMember">
-            <End Role="User" EntitySet="Users" />
-            <End Role="IssueMember" EntitySet="IssueMembers" />
-          </AssociationSet>
-          <AssociationSet Name="FK_IssueMember_User_CreatedBy" Association="Self.FK_IssueMember_User_CreatedBy">
-            <End Role="User" EntitySet="Users" />
-            <End Role="IssueMember" EntitySet="IssueMembers" />
-          </AssociationSet>
-          <AssociationSet Name="FK_UserNotificationSubscription_NotificationType" Association="Self.FK_UserNotificationSubscription_NotificationType">
-            <End Role="NotificationType" EntitySet="NotificationTypes" />
-            <End Role="UserNotificationSubscription" EntitySet="UserNotificationSubscriptions" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PasswordResetRequest_User" Association="Self.FK_PasswordResetRequest_User">
-            <End Role="User" EntitySet="Users" />
-            <End Role="PasswordResetRequest" EntitySet="PasswordResetRequests" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Project_User" Association="Self.FK_Project_User">
-            <End Role="User" EntitySet="Users" />
-            <End Role="Project" EntitySet="Projects" />
-          </AssociationSet>
-          <AssociationSet Name="FK_TeamMember_DefaultProject" Association="Self.FK_TeamMember_DefaultProject">
-            <End Role="Project" EntitySet="Projects" />
-            <End Role="TeamMember" EntitySet="TeamMembers" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Team_User" Association="Self.FK_Team_User">
-            <End Role="User" EntitySet="Users" />
-            <End Role="Team" EntitySet="Teams" />
-          </AssociationSet>
-          <AssociationSet Name="FK_TeamMember_Team" Association="Self.FK_TeamMember_Team">
-            <End Role="Team" EntitySet="Teams" />
-            <End Role="TeamMember" EntitySet="TeamMembers" />
-          </AssociationSet>
-          <AssociationSet Name="FK_TeamMemberRequest_Team" Association="Self.FK_TeamMemberRequest_Team">
-            <End Role="Team" EntitySet="Teams" />
-            <End Role="TeamMemberRequest" EntitySet="TeamMemberRequests" />
-          </AssociationSet>
-          <AssociationSet Name="FK_User_DefaultTeam" Association="Self.FK_User_DefaultTeam">
-            <End Role="Team" EntitySet="Teams" />
-            <End Role="User" EntitySet="Users" />
-          </AssociationSet>
-          <AssociationSet Name="FK_UserNotificationSubscription_Team" Association="Self.FK_UserNotificationSubscription_Team">
-            <End Role="Team" EntitySet="Teams" />
-            <End Role="UserNotificationSubscription" EntitySet="UserNotificationSubscriptions" />
-          </AssociationSet>
-          <AssociationSet Name="FK_TeamMember_CreatedBy" Association="Self.FK_TeamMember_CreatedBy">
-            <End Role="User" EntitySet="Users" />
-            <End Role="TeamMember" EntitySet="TeamMembers" />
-          </AssociationSet>
-          <AssociationSet Name="FK_TeamMember_Member" Association="Self.FK_TeamMember_Member">
-            <End Role="User" EntitySet="Users" />
-            <End Role="TeamMember" EntitySet="TeamMembers" />
-          </AssociationSet>
-          <AssociationSet Name="FK_TeamMemberRequest_CreatedBy" Association="Self.FK_TeamMemberRequest_CreatedBy">
-            <End Role="User" EntitySet="Users" />
-            <End Role="TeamMemberRequest" EntitySet="TeamMemberRequests" />
-          </AssociationSet>
-          <AssociationSet Name="FK_UserNotificationSubscription_User" Association="Self.FK_UserNotificationSubscription_User">
-            <End Role="User" EntitySet="Users" />
-            <End Role="UserNotificationSubscription" EntitySet="UserNotificationSubscriptions" />
-          </AssociationSet>
-          <EntitySet Name="StatusGroups" EntityType="Team.Data.Entities.StatusGroup" />
-          <AssociationSet Name="FK_Status_StatusGroup" Association="Team.Data.Entities.FK_Status_StatusGroup">
-            <End Role="StatusGroup" EntitySet="StatusGroups" />
-            <End Role="Status" EntitySet="Status" />
-          </AssociationSet>
-        </EntityContainer>
-        <EntityType Name="StatusGroup">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Code" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Status" Relationship="Team.Data.Entities.FK_Status_StatusGroup" FromRole="StatusGroup" ToRole="Status" />
-        </EntityType>
         <Association Name="FK_Status_StatusGroup">
           <End Type="Team.Data.Entities.StatusGroup" Role="StatusGroup" Multiplicity="0..1" />
           <End Type="Team.Data.Entities.Status" Role="Status" Multiplicity="*" />
@@ -1459,6 +1351,114 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Team_User">
+          <End Type="Team.Data.Entities.User" Role="User" Multiplicity="1" />
+          <End Type="Team.Data.Entities.Team" Role="Team" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Team">
+              <PropertyRef Name="CreatedByID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TeamMember_Team">
+          <End Type="Team.Data.Entities.Team" Role="Team" Multiplicity="1" />
+          <End Type="Team.Data.Entities.TeamMember" Role="TeamMember" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Team">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TeamMember">
+              <PropertyRef Name="TeamID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TeamMemberRequest_Team">
+          <End Type="Team.Data.Entities.Team" Role="Team" Multiplicity="1" />
+          <End Type="Team.Data.Entities.TeamMemberRequest" Role="TeamMemberRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Team">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TeamMemberRequest">
+              <PropertyRef Name="TeamID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_DefaultTeam">
+          <End Type="Team.Data.Entities.Team" Role="Team" Multiplicity="0..1" />
+          <End Type="Team.Data.Entities.User" Role="User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Team">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="DefaultTeamID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserNotificationSubscription_Team">
+          <End Type="Team.Data.Entities.Team" Role="Team" Multiplicity="1" />
+          <End Type="Team.Data.Entities.UserNotificationSubscription" Role="UserNotificationSubscription" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Team">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="UserNotificationSubscription">
+              <PropertyRef Name="TeamID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TeamMember_CreatedBy">
+          <End Type="Team.Data.Entities.User" Role="User" Multiplicity="1" />
+          <End Type="Team.Data.Entities.TeamMember" Role="TeamMember" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TeamMember">
+              <PropertyRef Name="CreatedByID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TeamMember_Member">
+          <End Type="Team.Data.Entities.User" Role="User" Multiplicity="1" />
+          <End Type="Team.Data.Entities.TeamMember" Role="TeamMember" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TeamMember">
+              <PropertyRef Name="MemberID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TeamMemberRequest_CreatedBy">
+          <End Type="Team.Data.Entities.User" Role="User" Multiplicity="1" />
+          <End Type="Team.Data.Entities.TeamMemberRequest" Role="TeamMemberRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TeamMemberRequest">
+              <PropertyRef Name="CreatedByID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserNotificationSubscription_User">
+          <End Type="Team.Data.Entities.User" Role="User" Multiplicity="1" />
+          <End Type="Team.Data.Entities.UserNotificationSubscription" Role="UserNotificationSubscription" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="UserNotificationSubscription">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1468,131 +1468,131 @@
           <EntitySetMapping Name="Activities">
             <EntityTypeMapping TypeName="Team.Data.Entities.Activity">
               <MappingFragment StoreEntitySet="Activity">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="ObjectID" ColumnName="ObjectID" />
-                <ScalarProperty Name="ObjectType" ColumnName="ObjectType" />
-                <ScalarProperty Name="ActivityDesc" ColumnName="ActivityDesc" />
-                <ScalarProperty Name="ObjectTitle" ColumnName="ObjectTitle" />
-                <ScalarProperty Name="OldState" ColumnName="OldState" />
-                <ScalarProperty Name="NewState" ColumnName="NewState" />
-                <ScalarProperty Name="TeamID" ColumnName="TeamID" />
-                <ScalarProperty Name="CreatedByID" ColumnName="CreatedByID" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedByID" ColumnName="CreatedByID" />
+                <ScalarProperty Name="TeamID" ColumnName="TeamID" />
+                <ScalarProperty Name="NewState" ColumnName="NewState" />
+                <ScalarProperty Name="OldState" ColumnName="OldState" />
+                <ScalarProperty Name="ObjectTitle" ColumnName="ObjectTitle" />
+                <ScalarProperty Name="ActivityDesc" ColumnName="ActivityDesc" />
+                <ScalarProperty Name="ObjectType" ColumnName="ObjectType" />
+                <ScalarProperty Name="ObjectID" ColumnName="ObjectID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Categories">
             <EntityTypeMapping TypeName="Team.Data.Entities.Category">
               <MappingFragment StoreEntitySet="Category">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Comments">
             <EntityTypeMapping TypeName="Team.Data.Entities.Comment">
               <MappingFragment StoreEntitySet="Comment">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="CommentText" ColumnName="CommentText" />
-                <ScalarProperty Name="IssueID" ColumnName="IssueID" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="CreatedByID" ColumnName="CreatedByID" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="IssueID" ColumnName="IssueID" />
+                <ScalarProperty Name="CommentText" ColumnName="CommentText" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Documents">
             <EntityTypeMapping TypeName="Team.Data.Entities.Document">
               <MappingFragment StoreEntitySet="Document">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="FileName" ColumnName="FileName" />
-                <ScalarProperty Name="FileAlias" ColumnName="FileAlias" />
-                <ScalarProperty Name="ParentID" ColumnName="ParentID" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="CreatedByID" ColumnName="CreatedByID" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+                <ScalarProperty Name="FileAlias" ColumnName="FileAlias" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="EmailTemplates">
             <EntityTypeMapping TypeName="Team.Data.Entities.EmailTemplate">
               <MappingFragment StoreEntitySet="EmailTemplate">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="EmailBody" ColumnName="EmailBody" />
                 <ScalarProperty Name="EmailSubject" ColumnName="EmailSubject" />
+                <ScalarProperty Name="EmailBody" ColumnName="EmailBody" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Issues">
             <EntityTypeMapping TypeName="Team.Data.Entities.Issue">
               <MappingFragment StoreEntitySet="Issue">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="Title" ColumnName="Title" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="DueDate" ColumnName="DueDate" />
-                <ScalarProperty Name="CategoryID" ColumnName="CategoryID" />
-                <ScalarProperty Name="StatusID" ColumnName="StatusID" />
-                <ScalarProperty Name="PriorityID" ColumnName="PriorityID" />
-                <ScalarProperty Name="ProjectID" ColumnName="ProjectID" />
-                <ScalarProperty Name="Location" ColumnName="Location" />
-                <ScalarProperty Name="TeamID" ColumnName="TeamID" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedByID" ColumnName="CreatedByID" />
-                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
-                <ScalarProperty Name="ModifiedByID" ColumnName="ModifiedByID" />
                 <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="ModifiedByID" ColumnName="ModifiedByID" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="CreatedByID" ColumnName="CreatedByID" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="TeamID" ColumnName="TeamID" />
+                <ScalarProperty Name="Location" ColumnName="Location" />
+                <ScalarProperty Name="ProjectID" ColumnName="ProjectID" />
+                <ScalarProperty Name="PriorityID" ColumnName="PriorityID" />
+                <ScalarProperty Name="StatusID" ColumnName="StatusID" />
+                <ScalarProperty Name="CategoryID" ColumnName="CategoryID" />
+                <ScalarProperty Name="DueDate" ColumnName="DueDate" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="IssueMembers">
             <EntityTypeMapping TypeName="Team.Data.Entities.IssueMember">
               <MappingFragment StoreEntitySet="IssueMember">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="IssueID" ColumnName="IssueID" />
-                <ScalarProperty Name="MemberID" ColumnName="MemberID" />
-                <ScalarProperty Name="RelationType" ColumnName="RelationType" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="CreatedByID" ColumnName="CreatedByID" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="RelationType" ColumnName="RelationType" />
+                <ScalarProperty Name="MemberID" ColumnName="MemberID" />
+                <ScalarProperty Name="IssueID" ColumnName="IssueID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="NotificationTypes">
             <EntityTypeMapping TypeName="Team.Data.Entities.NotificationType">
               <MappingFragment StoreEntitySet="NotificationType">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="Code" ColumnName="Code" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="PasswordResetRequests">
             <EntityTypeMapping TypeName="Team.Data.Entities.PasswordResetRequest">
               <MappingFragment StoreEntitySet="PasswordResetRequest">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
-                <ScalarProperty Name="ActivationCode" ColumnName="ActivationCode" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ActivationCode" ColumnName="ActivationCode" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Priorities">
             <EntityTypeMapping TypeName="Team.Data.Entities.Priority">
               <MappingFragment StoreEntitySet="Priority">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Projects">
             <EntityTypeMapping TypeName="Team.Data.Entities.Project">
               <MappingFragment StoreEntitySet="Project">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="TeamID" ColumnName="TeamID" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="CreatedByID" ColumnName="CreatedByID" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="TeamID" ColumnName="TeamID" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1600,71 +1600,9 @@
             <EntityTypeMapping TypeName="Team.Data.Entities.Status">
               <MappingFragment StoreEntitySet="Status">
                 <ScalarProperty Name="StatusGroupId" ColumnName="StatusGroupId" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Code" ColumnName="Code" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Teams">
-            <EntityTypeMapping TypeName="Team.Data.Entities.Team">
-              <MappingFragment StoreEntitySet="Team">
-                <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedByID" ColumnName="CreatedByID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="TeamMembers">
-            <EntityTypeMapping TypeName="Team.Data.Entities.TeamMember">
-              <MappingFragment StoreEntitySet="TeamMember">
                 <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="MemberID" ColumnName="MemberID" />
-                <ScalarProperty Name="TeamID" ColumnName="TeamID" />
-                <ScalarProperty Name="DefaultProjectID" ColumnName="DefaultProjectID" />
-                <ScalarProperty Name="CreatedByID" ColumnName="CreatedByID" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="TeamMemberRequests">
-            <EntityTypeMapping TypeName="Team.Data.Entities.TeamMemberRequest">
-              <MappingFragment StoreEntitySet="TeamMemberRequest">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
-                <ScalarProperty Name="TeamID" ColumnName="TeamID" />
-                <ScalarProperty Name="ActivationCode" ColumnName="ActivationCode" />
-                <ScalarProperty Name="CreatedByID" ColumnName="CreatedByID" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Users">
-            <EntityTypeMapping TypeName="Team.Data.Entities.User">
-              <MappingFragment StoreEntitySet="User">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
-                <ScalarProperty Name="LastName" ColumnName="LastName" />
-                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
-                <ScalarProperty Name="Password" ColumnName="Password" />
-                <ScalarProperty Name="JobTitle" ColumnName="JobTitle" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="LastLoginDate" ColumnName="LastLoginDate" />
-                <ScalarProperty Name="Avatar" ColumnName="Avatar" />
-                <ScalarProperty Name="DefaultTeamID" ColumnName="DefaultTeamID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="UserNotificationSubscriptions">
-            <EntityTypeMapping TypeName="Team.Data.Entities.UserNotificationSubscription">
-              <MappingFragment StoreEntitySet="UserNotificationSubscription">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
-                <ScalarProperty Name="NotificationTypeID" ColumnName="NotificationTypeID" />
-                <ScalarProperty Name="TeamID" ColumnName="TeamID" />
-                <ScalarProperty Name="Subscribed" ColumnName="Subscribed" />
-                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1675,6 +1613,68 @@
                 <ScalarProperty Name="Code" ColumnName="Code" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Teams">
+            <EntityTypeMapping TypeName="Team.Data.Entities.Team">
+              <MappingFragment StoreEntitySet="Team">
+                <ScalarProperty Name="CreatedByID" ColumnName="CreatedByID" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TeamMembers">
+            <EntityTypeMapping TypeName="Team.Data.Entities.TeamMember">
+              <MappingFragment StoreEntitySet="TeamMember">
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedByID" ColumnName="CreatedByID" />
+                <ScalarProperty Name="DefaultProjectID" ColumnName="DefaultProjectID" />
+                <ScalarProperty Name="TeamID" ColumnName="TeamID" />
+                <ScalarProperty Name="MemberID" ColumnName="MemberID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TeamMemberRequests">
+            <EntityTypeMapping TypeName="Team.Data.Entities.TeamMemberRequest">
+              <MappingFragment StoreEntitySet="TeamMemberRequest">
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedByID" ColumnName="CreatedByID" />
+                <ScalarProperty Name="ActivationCode" ColumnName="ActivationCode" />
+                <ScalarProperty Name="TeamID" ColumnName="TeamID" />
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="Team.Data.Entities.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="DefaultTeamID" ColumnName="DefaultTeamID" />
+                <ScalarProperty Name="Avatar" ColumnName="Avatar" />
+                <ScalarProperty Name="LastLoginDate" ColumnName="LastLoginDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="JobTitle" ColumnName="JobTitle" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserNotificationSubscriptions">
+            <EntityTypeMapping TypeName="Team.Data.Entities.UserNotificationSubscription">
+              <MappingFragment StoreEntitySet="UserNotificationSubscription">
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="Subscribed" ColumnName="Subscribed" />
+                <ScalarProperty Name="TeamID" ColumnName="TeamID" />
+                <ScalarProperty Name="NotificationTypeID" ColumnName="NotificationTypeID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

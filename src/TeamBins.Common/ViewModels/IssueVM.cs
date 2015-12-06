@@ -79,7 +79,7 @@ namespace TeamBins.Common.ViewModels
     }
     public class IssueVM
     {
-        public int ID { set; get; }
+        public int Id { set; get; }
         public string Title { set; get; }
         [DataType(DataType.MultilineText)]
         [AllowHtml]

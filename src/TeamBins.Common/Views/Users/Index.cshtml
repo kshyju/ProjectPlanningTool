@@ -1,0 +1,74 @@
+﻿@{
+    ViewBag.Title = "Team Members";
+}
+@model TeamBins.Common.TeamVM
+<script src="~/Scripts/moment.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+<link href="http://code.jquery.com/ui/1.10.3/themes/flick/jquery-ui.css" rel="stylesheet" />
+<h2>Team Members (@Model.Name)</h2>
+@Html.ActionLink("Add new member", "add", "users", null, new { @class="popup"})
+<table class="tblGrid table">
+    <thead>
+        <tr>            
+            <th>Name</th>
+            <th>Email</th>
+            <th>Joined date</th>
+            <th>Last Login</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var member in Model.Members)
+        {
+            <tr>
+                <td><img class="img-team-member" src="@member.AvatarHash">@member.Name</td>
+                <td>@member.EmailAddress</td>
+                <td>@member.JoinedDate</td>
+                <td><span title="@member.LastLoginDate (UTC time)" class="relativeTime">@member.LastLoginDate</span></td>
+            </tr>
+        }
+    </tbody>
+</table>
+<h3>Lazy friends who hasn't joined yet</h3>
+<table class="table table-condensed">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Date Invited</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var member in Model.MembersInvited)
+        {
+            <tr>
+                <td><img class="img-team-member" src="@member.AvatarHash?s=30"> @member.EmailAddress</td>
+                <td><span title="@member.DateInvited (UTC time)" class="relativeTime">@member.DateInvited</span></td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script type="text/javascript">
+    $(function () {
+       
+
+        $(document).on("click", "#btnAddMember", function (e) {
+            e.preventDefault();
+            $.post($(this).closest("form").attr("action"), $(this).closest("form").serialize(), function (res) {
+                if (res.Status === "Success")
+                    window.location.href = "@Url.Action("Index")";
+                else
+                    $("#msg").text(res.Message).addClass("error").slideDown(); $("#Name").focus();
+            });
+        });       
+        $('span.relativeTime').each(function () {
+            var _this = $(this);
+            if (_this.html() != "")
+            {
+                var myUtcDate = new Date($(this).html()+" UTC");
+                var a = moment(myUtcDate);
+                var res = a.format("MMM Do YYYY, h:mm a");
+                _this.html(res);
+            }         
+        });
+    });
+    
+</script>

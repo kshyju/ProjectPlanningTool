@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title | TeamBins</title>
+    @Styles.Render("~/Content/css")
+    <script src="~/Scripts/jquery-2.0.3.min.js"></script>
+</head>
+<body>
+    <div>
+        <div class="header">            
+            <a class="header-logo">
+                <span class="logo"></span>
+            </a>
+        </div>
+        <div class="content">
+            <div class="central centralNonWhite">
+                @RenderBody()
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

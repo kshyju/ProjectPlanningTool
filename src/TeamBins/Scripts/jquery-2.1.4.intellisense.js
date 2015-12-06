@@ -1525,7 +1525,7 @@ intellisense.annotate(jQuery.fn, {
   'id': function() {
     /// <signature>
     ///   <summary>Selects a single element with the given id attribute.</summary>
-    ///   <param name="id" type="String">An ID to search for, specified via the id attribute of an element.</param>
+    ///   <param name="id" type="String">An Id to search for, specified via the id attribute of an element.</param>
     /// </signature>
   },
   'image': function() {

@@ -1,0 +1,49 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+@model TeamBins.Common.TeamListVM
+<h2>Teams</h2>
+<div>
+   @Html.ActionLink("Add", "Add", "Team", null, new { @class = "popup" })
+</div>
+<table class="tblGrid table">
+    <tr>
+        <th>Team Name</th>
+        <th>Member type</th>
+        <th>Member count</th>
+    </tr>
+    @foreach (var team in Model.Teams)
+    {
+        <tr>
+            <td>
+
+                @if (team.IsRequestingUserTeamOwner)
+                {
+                    @Html.ActionLink(team.Name, "edit", "Team", new {id = team.Id}, new {@class = "popup"})
+                }
+                else
+                {
+                    <span>@team.Name</span>
+                }
+            </td>
+            <td>
+                @(team.IsRequestingUserTeamOwner ? "Team Admin" : "Team Member")
+            </td>
+            <td>@Html.ActionLink(team.MemberCount.ToString(),"index","users",null,null)</td>
+        </tr>
+    }
+</table>
+<script type="text/javascript">
+    $(function () {
+        $(document).on("click", "#btnSaveTeam", function (e) {
+            e.preventDefault();
+            $.post($(this).closest("form").attr("action"), $(this).closest("form").serialize(), function (res) {
+                if (res.Status === "Success")
+                    window.location.href = "@Url.Action("Index")";
+            else
+                    $("#msg").text(res.Message).addClass("error").slideDown(); $("#Name").focus();
+            });
+        });
+
+    });
+</script>

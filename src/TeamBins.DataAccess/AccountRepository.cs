@@ -46,7 +46,7 @@ namespace TeamBins.DataAccess
                     Password = user.Password,
                     GravatarUrl = user.Avatar,
                     DefaultTeamId = user.DefaultTeamID
-                    //    (user.TeamMembers1.Any(f=>f.MemberID==user.ID)? user.TeamMembers1.FirstOrDefault(c=>c.MemberID==user.ID).TeamID:null)
+                    //    (user.TeamMembers1.Any(f=>f.MemberID==user.Id)? user.TeamMembers1.FirstOrDefault(c=>c.MemberID==user.Id).TeamID:null)
                 };
             }
             return null;

@@ -1,0 +1,17 @@
+﻿<div class="navigation">
+    <a href="@Url.Action( "index", "dashboard")">Home</a>
+    <a href="@Url.Action( "index", "issues")">Issues</a>
+    <a href="@Url.Action("index","projects")">Projects</a>
+    <a href="@Url.Action("index","users")">Members</a>   
+</div>
+<div class="userInfo">
+    @if(Session["TB_NickName"]!=null)
+    {
+    <span>Howdy, 
+    <a href="@Url.Action("EditProfile","Account")">@Session["TB_NickName"]</a>   
+    
+    </span>
+    <img src="http://0.gravatar.com/avatar/8faa5e8a474933dd207c86fb886a7f28?s=26" />
+         @Html.ActionLink("Logout", "Logout", "Account", null, new { @class="aLogout" })
+    }
+</div>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using StackExchange.Exceptional;
@@ -14,13 +15,32 @@ namespace TeamBins.Controllers
 {
     public class IssueApiController : ApiController
     {
-        readonly IssueManager issueManager;
+        readonly IIssueManager issueManager;
         readonly ICommentManager commentManager;
-        public IssueApiController(IssueManager issueManager,ICommentManager commentManager)
+        public IssueApiController(IIssueManager issueManager,ICommentManager commentManager)
         {
             this.issueManager = issueManager;
             this.commentManager = commentManager;
         }
+
+        //[Route("api/issue/{count}")]
+        //[HttpGet]
+        //public HttpResponseMessage GetIssue(int id)
+        //{
+        //    IssueDetailVM issue = new IssueDetailVM();
+        //    try
+        //    {
+        //        issue = issueManager.GetIssue(id);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ErrorStore.LogException(ex, System.Web.HttpContext.Current);
+        //    }
+        //    return Request.CreateResponse(HttpStatusCode.OK, issue);
+
+        //}
+
+
         // GET api/<controller>
 
         [Route("api/issues/{count}")]
@@ -54,6 +74,14 @@ namespace TeamBins.Controllers
                 ErrorStore.LogException(ex, System.Web.HttpContext.Current);
             }
             return Request.CreateResponse(HttpStatusCode.OK, comments);
+        }
+
+        [Route("api/issues/{id}/star")]
+        [HttpPost]
+        public async Task<HttpResponseMessage> Star(int id)
+        {
+            var isStarred= await issueManager.StarIssue(id);
+            return Request.CreateResponse(HttpStatusCode.OK, isStarred);
         }
 
     }

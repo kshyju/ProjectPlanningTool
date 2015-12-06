@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Ninject.Web.WebApi.WebHost</name>
+    </assembly>
+    <members>
+        <member name="T:Ninject.Web.WebApi.WebHost.WebApiWebHostModule">
+            <summary>
+            Defines the bindings of the WebApi WebHost extension.
+            </summary>
+        </member>
+        <member name="M:Ninject.Web.WebApi.WebHost.WebApiWebHostModule.Load">
+            <summary>
+            Loads the module into the kernel.
+            </summary>
+        </member>
+        <member name="M:Ninject.Web.WebApi.WebHost.WebApiWebHostModule.VerifyRequiredModulesAreLoaded">
+            <summary>
+            Called after loading the modules. A module can verify here if all other required modules are loaded.
+            </summary>
+        </member>
+    </members>
+</doc>
