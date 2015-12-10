@@ -371,6 +371,7 @@
     <Content Include="Scripts\chosen\chosen.proto.js" />
     <Content Include="Scripts\chosen\chosen.proto.min.js" />
     <Content Include="Scripts\controller.js" />
+    <Content Include="Scripts\DashboardController.js" />
     <Content Include="Scripts\issue.js" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />

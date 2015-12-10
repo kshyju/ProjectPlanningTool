@@ -43,4 +43,4 @@
 
 issueService.$inject = ['$http'];
 
-angular.module("issueListApp").factory("issueService", issueService);
+angular.module("teamBins").factory("issueService", issueService);

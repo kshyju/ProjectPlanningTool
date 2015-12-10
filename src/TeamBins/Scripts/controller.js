@@ -2,7 +2,7 @@
 IssueDetails.gIssueDetailConnectionID = "";
 
 //
-var issueDetailApp = angular.module('issueDetialApp', ['ngSanitize']);
+var issueDetailApp = angular.module('teamBins', ['ngSanitize']);
 
 var IssueDetailsCtrl = function($scope, $http, issueDetailService, issue) {
 

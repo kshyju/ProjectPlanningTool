@@ -1,4 +1,4 @@
-﻿var issueListApp = angular.module('issueListApp', []);
+﻿var issueListApp = angular.module('teamBins', []);
 issueListApp.config(['$httpProvider', function ($httpProvider) {
     $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 }]);

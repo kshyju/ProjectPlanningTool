@@ -6,7 +6,9 @@
 <script src="~/Scripts/jquery.signalR-2.0.2.min.js"></script>
 <script src="~/signalr/hubs"></script>
 <script src="~/Scripts/Chart.min.js"></script>
-<div ng-app="dashboardApp" ng-controller="dashboardCtrl">
+
+
+<div ng-app="teamBins" ng-controller="dashboardCtrl">
     <div class="dbItemContainer">
         <div class="dashboardItem">
             <h4>At a glance {{summary1}}</h4>
@@ -78,11 +80,12 @@
         <div class="dashboardItem">
             <h4>Team Activity</h4>
             <ul class="db-recent-activity">
-                <li ng-repeat="activity in activities | orderBy:'Id':true | limitTo:6">
-                    <a href="#" class="activity-author">{{activity.Author}}</a> {{activity.Activity}} <a href="{{activity.ObjectURL}}" class="activity-name">{{activity.ObjectTite}}</a>
+                <li ng-repeat="activity in activities |  orderBy:'CreatedTime':true" | limitTo:8">
+                    <a href="#" class="activity-author">{{activity.Actor.Name}}</a> {{activity.Description}} 
+                    <a href="{{activity.ObjectURL}}" class="activity-name">{{activity.ObjectTite}}</a>
                     <i>{{activity.NewState}}</i>
-                    <p class="activity-date">{{activity.CreatedDate | date:'medium'}}</p>
-                </li>
+                    <p class="activity-date">{{activity.CreatedTime | date:'medium'}}</p>
+                </li>               
             </ul>
         </div>
         <div class="dashboardItem">
@@ -92,7 +95,8 @@
     </div>
 </div>
 @Html.HiddenFor(s=>s.TeamID)
-
+<script src="~/Scripts/DashboardController.js"></script>
+<script src="~/Scripts/issueList.service.js"></script>
 <script type="text/javascript">
    
     function RenderPieChart(newItems, inProgressItems, closedItems,animate) {
@@ -105,28 +109,5 @@
     }
 
 
-var dashboardApp = angular.module('dashboardApp', []);
-dashboardApp.controller("dashboardCtrl", function ($scope, $http) {
-    $http.get('../../team/stream/' + $("#TeamID").val() + "?size=6").success(function (data) {
-        $scope.activities = data;           
-    });
-    $http.get('/dashboard/GetDashBoardItemSummary').success(function (data) {      
-        RenderPieChart(data.NewItems, data.ItemsInProgress, data.CompletedItems,true);
-        $scope.summary = data;          
-    });
-    var chat = $.connection.issuesHub;
-    chat.client.addNewTeamActivity = function (comment) {
-        $scope.activities.push(comment);          
-        $scope.$apply();
-    };
-    chat.client.updateDashboardSummary = function (item) {
-        RenderPieChart(item.NewItems, item.ItemsInProgress, item.CompletedItems,false);
-        $scope.summary = item;
-        $scope.$apply();           
-    };        
-    $.connection.hub.start().done(function () {
-        chat.server.subscribeToTeam($("#TeamID").val());
-    })
-});
 
 </script>

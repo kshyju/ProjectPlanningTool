@@ -87,4 +87,4 @@
 
 issueDetailService.$inject = ['$http'];
 
-angular.module("issueDetialApp").factory("issueDetailService", issueDetailService);
+angular.module("teamBins").factory("issueDetailService", issueDetailService);

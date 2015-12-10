@@ -19,7 +19,7 @@
         @Html.ActionLink("Delete", "Delete", "Issues", new { id = Model.Id }, new { @class = "toolLink popup" })          
     </div>
 }
-<div class="divPageContent" ng-app="issueDetialApp" ng-controller="IssueDetailsCtrl as vm">
+<div class="divPageContent" ng-app="teamBins" ng-controller="IssueDetailsCtrl as vm">
     <div class="divLeft">
         <h2>@Model.Title</h2>
         <div id="issueMeta">
@@ -97,6 +97,6 @@
     var issueDeleteUrl = "@Url.Action("delete","issues")";
     var issuesUrl = "@Url.Action("index","issues")";
 
-    angular.module("issueDetialApp").value("issue", { id: @Model.Id });
+    angular.module("teamBins").value("issue", { id: @Model.Id });
 
 </script>
