@@ -510,7 +510,7 @@ namespace TechiesWeb.TeamBins.Controllers
 
         private void LoadDropDownsForCreate(CreateIssue viewModel)
         {
-            viewModel.Projects = ProjectService.GetProjects(repo, TeamID);
+            viewModel.Projects = projectManager.GetProjects().Select(s=>new SelectListItem { Value = s.Id.ToString(), Text =s.Name}).ToList();
             viewModel.Priorities = ProjectService.GetPriorities(repo);
             viewModel.Categories = ProjectService.GetCategories(repo);
             viewModel.Statuses = ProjectService.GetStatuses(repo);

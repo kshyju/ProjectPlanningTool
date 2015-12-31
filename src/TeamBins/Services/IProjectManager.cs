@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using TeamBins.Common;
 using TeamBins.DataAccess;
 
@@ -11,6 +13,9 @@ namespace TeamBins.Services
         bool DoesProjectsExist();
 
         int GetDefaultProjectForCurrentTeam();
+
+        IEnumerable<ProjectDto> GetProjects();
+
     }
 
     public class ProjectManager : IProjectManager
@@ -41,5 +46,9 @@ namespace TeamBins.Services
             return 0;
         }
 
+        public IEnumerable<ProjectDto> GetProjects()
+        {
+            return this.projectRepository.GetProjects(userSessionHelper.TeamId);
+        }
     }
 }

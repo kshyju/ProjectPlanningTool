@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using TeamBins.Common;
 using TeamBins.DataAccess;
 namespace TeamBins.DataAccess
 {    
@@ -230,6 +233,7 @@ namespace TeamBins.DataAccess
             return db.Documents.Where(s => s.ParentID == parentId).ToList();
         }
 
+       
         public IEnumerable<Project> GetProjects(int teamId)
         {
             return db.Projects.Where(s=>s.TeamID==teamId);

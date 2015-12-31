@@ -26,6 +26,9 @@ namespace TechiesWeb.TeamBins.Controllers
         {
             try
             {
+                var t = System.Threading.Thread.CurrentPrincipal;
+                var id = t.Identity;
+
                 if (teamid.HasValue)
                 {
                     //User switched team from the header menu

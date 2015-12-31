@@ -1,8 +1,12 @@
-﻿using System;
+﻿using Microsoft.Owin.Security;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
 using TeamBins.Common;
 using TeamBins.Common.ViewModels;
@@ -16,7 +20,7 @@ namespace TechiesWeb.TeamBins.Controllers
     public class AccountController : BaseController
     {
         readonly IUserAccountManager accountManager;
-       
+
         public AccountController(IUserAccountManager accountManager)
         {
             this.accountManager = accountManager;
@@ -98,6 +102,19 @@ namespace TechiesWeb.TeamBins.Controllers
                         {
                             await accountManager.SaveLastLoginAsync(user.Id);
                             int userDefaultTeamId = user.DefaultTeamId ?? 0;
+
+
+                            //var claims = new[] {
+                            //        new Claim(ClaimTypes.Name, user.Name),
+                            //        new Claim(ClaimTypes.Email, user.EmailAddress)
+                            // };
+                            //var identity = new ClaimsIdentity(claims,"teambins");
+                            //ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+                            //Thread.CurrentPrincipal = principal;
+                            //var context = Request.GetOwinContext();
+                            //var authManager = context.Authentication;
+
+                            //authManager.SignIn(new AuthenticationProperties { IsPersistent = true }, identity);
 
                             SetUserIDToSession(user.Id, userDefaultTeamId, user.Name);
 
@@ -222,13 +239,13 @@ namespace TechiesWeb.TeamBins.Controllers
         {
             return View();
         }
-        
+
         public ActionResult Logout()
         {
             Session.Abandon();
             return RedirectToAction("login", "account");
         }
 
-        
+
     }
 }

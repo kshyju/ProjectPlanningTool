@@ -12,12 +12,15 @@ namespace TechiesWeb.TeamBins.Controllers
 {
     [VerifyLogin]
     public class ProjectsController : BaseController
-    {        
+    {
+        
+        private IProjectManager projectManager;
         private UserService userService;
-        public ProjectsController()
+        public ProjectsController(IProjectManager projectManager)
         {
             repo = new Repositary();
             userService = new UserService(repo);
+            this.projectManager = projectManager;
         }
         public ProjectsController(IRepositary repositary):base(repositary)
         {           
