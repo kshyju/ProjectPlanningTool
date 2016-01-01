@@ -71,6 +71,7 @@ namespace TechiesWeb.TeamBins.Controllers
                 return Json(new { Status = "Error", Message = "Troubles getting team members", JsonRequestBehavior.AllowGet });
             }
         }
+   
         public ActionResult Index(int size = 50, string iteration = "current")
         {
             try
@@ -118,6 +119,7 @@ namespace TechiesWeb.TeamBins.Controllers
 
         [HttpPost]
         [VerifyLogin]
+       
         public ActionResult Add(CreateIssue model, List<HttpPostedFileBase> files)
 
         {

@@ -21,12 +21,16 @@ namespace TeamBins.DataAccess
         {
             using (var db = new TeamEntitiesConn())
             {
-                var c = db.Comments.FirstOrDefault(s => s.ID == id);
-                if (c != null)
-                {
-                    db.Comments.Remove(c);
-                    await db.SaveChangesAsync();
-                }
+                var c = new Comment {ID = id};
+                db.Comments.Attach(c);
+                db.Comments.Remove(c);
+                await db.SaveChangesAsync();
+                //var c = db.Comments.FirstOrDefault(s => s.ID == id);
+                //if (c != null)
+                //{
+                //    db.Comments.Remove(c);
+                //    await db.SaveChangesAsync();
+                //}
 
             }
         }

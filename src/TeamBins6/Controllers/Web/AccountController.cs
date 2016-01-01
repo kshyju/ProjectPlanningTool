@@ -1,33 +1,25 @@
-﻿using Microsoft.Owin.Security;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Security.Claims;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
-using TeamBins.Common;
-using TeamBins.Common.ViewModels;
-using TeamBins.DataAccess;
+using Microsoft.AspNet.Http.Authentication;
+using Microsoft.AspNet.Mvc;
 using TeamBins.Services;
-using TechiesWeb.TeamBins.Infrastructure;
-using TechiesWeb.TeamBins.ViewModels;
 
-namespace TechiesWeb.TeamBins.Controllers
+// For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+
+namespace TeamBins6.Controllers.Web
 {
-
-    public class AccountController : BaseController
+    public class AccountController : Controller
     {
         readonly IUserAccountManager accountManager;
         private UserManager<AppUser> um;
         public AccountController(IUserAccountManager accountManager)
         {
             this.accountManager = accountManager;
-           
-           
+
+
         }
 
         public AccountController(IRepositary repositary, IUserAccountManager accountManager) : base(repositary)
@@ -89,8 +81,8 @@ namespace TechiesWeb.TeamBins.Controllers
 
         public ActionResult Login()
         {
-            
-           
+
+
 
 
             return View("Login", new LoginVM());
@@ -112,7 +104,7 @@ namespace TechiesWeb.TeamBins.Controllers
             //identity.Claims =new 
             AuthenticationManager.SignIn(new AuthenticationProperties() { IsPersistent = isPersistent }, identity);
 
-         //   var identity = new ClaimsIdentity(claims,DefaultAuthenticationTypes.ApplicationCookie);
+            //   var identity = new ClaimsIdentity(claims,DefaultAuthenticationTypes.ApplicationCookie);
             //ClaimsPrincipal principal = new ClaimsPrincipal(identity);
             //Thread.CurrentPrincipal = principal;
             //var context = Request.GetOwinContext();
@@ -137,21 +129,21 @@ namespace TechiesWeb.TeamBins.Controllers
                     var user = accountManager.GetUser(model.Email);
                     if (user != null)
                     {
-                        var appUser = new AppUser { UserName = user.EmailAddress , Id = user.Id.ToString()};
+                        var appUser = new AppUser { UserName = user.EmailAddress, Id = user.Id.ToString() };
                         //var user1 = await um.FindAsync(model.Email, model.Password);
                         //if (user1!= null)
                         //{
-                            await SignInAsync(appUser, model.RememberMe);
+                        await SignInAsync(appUser, model.RememberMe);
                         //   // return RedirectToLocal(returnUrl);
                         //}
 
-                      
+
                         if (user.Password == model.Password)
                         {
                             await accountManager.SaveLastLoginAsync(user.Id);
                             int userDefaultTeamId = user.DefaultTeamId ?? 0;
 
-                           
+
 
 
                             var claims = new[] {

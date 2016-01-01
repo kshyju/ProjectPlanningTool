@@ -18,6 +18,8 @@ namespace TechiesWeb.TeamBins.ViewModels
         [DataType(DataType.Password)]        
         public string Password { set; get; }
 
+        public bool RememberMe { set; get; }
+
     }
     public class AccountSignupVM
     {
