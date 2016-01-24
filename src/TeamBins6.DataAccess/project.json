@@ -1,0 +1,13 @@
+﻿{
+  "version": "1.0.0-*",
+  "description": "TeamBins6.DataAccess Class Library",
+  "authors": [ "skrishnankutty" ],
+  "tags": [ "" ],
+  "projectUrl": "",
+  "licenseUrl": "",
+  "dependencies": {"TeamBins6.Common": ""},
+  "frameworks": {
+    "net451": { }
+    
+  }
+}

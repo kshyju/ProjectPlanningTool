@@ -1,0 +1,24 @@
+﻿{
+  "version": "1.0.0-*",
+  "description": "TeamBins6.Common Class Library",
+  "authors": [ "skrishnankutty" ],
+  "tags": [ "" ],
+  "projectUrl": "",
+  "licenseUrl": "",
+  "frameworks": {
+    "net451": { }
+
+    
+  },
+  "dependencies": {
+    "Microsoft.CSharp": "4.0.1-beta-23516",
+    "System.Collections": "4.0.11-beta-23516",
+    "System.Linq": "4.0.1-beta-23516",
+    "System.Runtime": "4.0.21-beta-23516",
+    "System.Threading": "4.0.11-beta-23516",
+    "EntityFramework.Core": "7.0.0-rc1-final",
+  
+    "Microsoft.AspNet.Mvc": "6.0.0-rc1-final",
+    "Microsoft.AspNet.Mvc.TagHelpers": "6.0.0-rc1-final"
+  }
+}

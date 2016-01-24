@@ -6,6 +6,12 @@ using Microsoft.AspNet.Mvc;
 
 namespace TeamBins6.Controllers
 {
+    public class Test
+    {
+       // public List<SelectL> 
+      //  [Required]
+        public string Name { set; get; }
+    }
     public class HomeController : Controller
     {
         public IActionResult Index()
