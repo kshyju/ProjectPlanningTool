@@ -4,11 +4,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TeamBins.Common.ViewModels
 {
+    
     public class TeamProjectListVM
     {
         public List<ProjectVM> Projects { set; get; }
         public string TeamName { set; get; }
-        public int TeamID { set; get; }
+        public int TeamId { set; get; }
 
         public TeamProjectListVM()
         {

@@ -1,16 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data.SqlClient;
 using System.Linq;
 using TeamBins.Common;
+using Dapper;
 
 namespace TeamBins.DataAccess
 {
+    public class BaseRepo
+    {
+        protected string ConnectionString
+        {
+            get { return "Data Source=DET-4082;Initial Catalog=Team;Integrated Security=true"; }
+        }
+    }
     public interface IProjectRepository
     {
         IEnumerable<ProjectDto> GetProjects(int teamId);
         bool DoesProjectsExist(int teamId);
     }
+
+    public class ProjectRepository : BaseRepo,IProjectRepository
+    {
+        public IEnumerable<ProjectDto> GetProjects(int teamId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool DoesProjectsExist(int teamId)
+        {
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                var projectCount = con.Query<int>("SELECT COUNT(1) FROM Project WHERE TeamId=@teamId", new {@teamId = teamId});
+                return projectCount.First() > 0;
+            }
+          
+        }
+    }
+
 
     //public class ProjectRepository : IProjectRepository
     //{

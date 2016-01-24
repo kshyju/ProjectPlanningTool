@@ -18,6 +18,39 @@ namespace TeamBins.Services
         Task SendEmailNotificaionForNewComment(CommentVM comment);
         Task Delete(int id);
     }
+
+    public class CommentManager : ICommentManager
+    {
+        public Task Delete(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public CommentVM GetComment(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<CommentVM> GetComments(int issueId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ActivityDto SaveActivity(int commentId, int issueId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int SaveComment(CommentVM comment)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task SendEmailNotificaionForNewComment(CommentVM comment)
+        {
+            throw new NotImplementedException();
+        }
+    }
     //public class CommentManager : ICommentManager
     //{
     //    IUserRepository userRepository;
@@ -75,7 +108,7 @@ namespace TeamBins.Services
 
     //            var newId = activityRepository.Save(activity);
     //            return activityRepository.GetActivityItem(newId);
-                
+
     //        }
     //        return null;
     //    }

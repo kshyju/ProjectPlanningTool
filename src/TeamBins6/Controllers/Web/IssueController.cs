@@ -9,6 +9,8 @@ using Microsoft.AspNet.Mvc.Rendering;
 using TeamBins.Common;
 using TeamBins.Common.ViewModels;
 using TeamBins.Services;
+using TeamBins6.Infrastrucutre;
+using TeamBins6.Infrastrucutre.Services;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -17,20 +19,17 @@ namespace TeamBins6.Controllers.Web
     public class IssueController : Controller
     {
         ICommentManager commentManager;
-        //private readonly IProjectManager projectManager;
+        private readonly IProjectManager projectManager;
         //private IIssueManager issueManager;
         //private IssueService issueService;
-        //IUserSessionHelper userSessionHelper;
-        public IssueController()
-        {
-          //  issueService = new IssueService(new Repositary(), UserID, TeamID);
-        }
+        IUserSessionHelper userSessionHelper;
+       
 
-        public IssueController(ICommentManager commentManager) //: base(repositary)
+        public IssueController(ICommentManager commentManager, IUserSessionHelper userSessionHelper, IProjectManager projectManager) //: base(repositary)
         {
             //this.issueManager = issueManager;
-            //this.projectManager = projectManager;
-            //this.userSessionHelper = userSessionHelper;
+            this.projectManager = projectManager;
+            this.userSessionHelper = userSessionHelper;
             this.commentManager = commentManager;
         }
 
@@ -67,50 +66,40 @@ namespace TeamBins6.Controllers.Web
         //    }
         //}
 
-        //public ActionResult Index(int size = 50, string iteration = "current")
-        //{
-        //    try
-        //    {
-        //        var statusIds = new List<int> { 1, 2, 3, 4 };
-        //        IssueListVM bugListVM = new IssueListVM { TeamID = userSessionHelper.TeamId };
-        //        var projectExists = projectManager.DoesProjectsExist();
+        public ActionResult Index(int size = 50, string iteration = "current")
+        {
+            try
+            {
+                IssueListVM bugListVM = new IssueListVM { TeamID = userSessionHelper.TeamId };
+                var projectExists = projectManager.DoesProjectsExist();
 
-        //        if (!projectExists)
-        //        {
-        //            return RedirectToAction("Index", "Projects");
-        //        }
-        //        else
-        //        {
-        //            List<IssueVM> issueVMs = new List<IssueVM>();
+                if (!projectExists)
+                {
+                    return RedirectToAction("Index", "Projects");
+                }
+                else
+                {
+                  
+                    bugListVM.ProjectsExist = true;
 
-        //            if (Request.IsAjaxRequest())
-        //            {
-        //                issueVMs = issueManager.GetIssues(statusIds, 50).ToList();
-        //                return Json(issueVMs, JsonRequestBehavior.AllowGet);
-        //            }
-        //            else
-        //            {
-        //                bugListVM.Bugs = issueManager.GetIssues(statusIds, 50).ToList();
-        //                bugListVM.ProjectsExist = true;
+                    bool defaultProjectExist = projectManager.GetDefaultProjectForCurrentTeam() > 0;
+                    if (!defaultProjectExist)
+                    {
+                        var alertMessages = new AlertMessageStore();
+                       // alertMessages.AddMessage("system", String.Format("Hey!, You need to set a default project for the current team. Go to your <a href='{0}account/settings'>profile</a> and set a project as default project.", SiteBaseURL));
+                        TempData["AlertMessages"] = alertMessages;
+                    }
+                    return View("Index", bugListVM);
 
-        //                bool defaultProjectExist = projectManager.GetDefaultProjectForCurrentTeam() > 0;
-        //                if (!defaultProjectExist)
-        //                {
-        //                    var alertMessages = new AlertMessageStore();
-        //                    alertMessages.AddMessage("system", String.Format("Hey!, You need to set a default project for the current team. Go to your <a href='{0}account/settings'>profile</a> and set a project as default project.", SiteBaseURL));
-        //                    TempData["AlertMessages"] = alertMessages;
-        //                }
-        //                return View("Index", bugListVM);
-        //            }
-        //        }
+                }
 
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        ErrorStore.LogException(ex, System.Web.HttpContext.Current);
-        //        return View("Error");
-        //    }
-        //}
+            }
+            catch (Exception ex)
+            {
+                //ErrorStore.LogException(ex, System.Web.HttpContext.Current);
+                return View("Error");
+            }
+        }
 
         //[HttpPost]
         ////[VerifyLogin]

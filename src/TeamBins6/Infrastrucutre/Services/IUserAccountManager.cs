@@ -4,6 +4,7 @@ using TeamBins.Common.ViewModels;
 
 namespace TeamBins.Services
 {
+
     public interface IUserAccountManager
     {
         bool DoesAccountExist(string email);

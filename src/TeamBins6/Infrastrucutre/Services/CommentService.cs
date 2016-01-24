@@ -5,9 +5,49 @@ using System.Web;
 using TeamBins.Common;
 using TeamBins.Common.ViewModels;
 using TeamBins.DataAccess;
+using TeamBins6.Infrastrucutre.Services;
 
 namespace TeamBins.Services
 {
+    public interface IProjectManager
+    {
+        //GetProjects(int teamId);
+
+        bool DoesProjectsExist();
+
+        int GetDefaultProjectForCurrentTeam();
+
+        IEnumerable<ProjectDto> GetProjects();
+
+    }
+
+    public class ProjectManager : IProjectManager
+    {
+        IProjectRepository projectRepository;
+        private IUserSessionHelper userSessionHelper;
+
+        public ProjectManager(IProjectRepository projectRepository, IUserSessionHelper userSessionHelper)
+        {
+            this.projectRepository = projectRepository;
+            this.userSessionHelper = userSessionHelper;
+        }
+
+        public bool DoesProjectsExist()
+        {
+            return this.projectRepository.DoesProjectsExist(this.userSessionHelper.TeamId);
+        }
+
+        public int GetDefaultProjectForCurrentTeam()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<ProjectDto> GetProjects()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     //public class CommentService : IActivitySavable
     //{
     //    IRepositary repo;

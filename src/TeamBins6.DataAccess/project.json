@@ -5,7 +5,10 @@
   "tags": [ "" ],
   "projectUrl": "",
   "licenseUrl": "",
-  "dependencies": {"TeamBins6.Common": ""},
+  "dependencies": {
+    "Dapper": "1.42.0",
+    "TeamBins6.Common": ""
+  },
   "frameworks": {
     "net451": { }
     
