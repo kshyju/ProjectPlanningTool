@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using TeamBins.Common;
 using Dapper;
+using TeamBins.Common.ViewModels;
 
 namespace TeamBins.DataAccess
 {
@@ -19,6 +20,7 @@ namespace TeamBins.DataAccess
     {
         IEnumerable<ProjectDto> GetProjects(int teamId);
         bool DoesProjectsExist(int teamId);
+        void Save(CreateProjectVM model);
     }
 
     public class ProjectRepository : BaseRepo,IProjectRepository
@@ -37,6 +39,18 @@ namespace TeamBins.DataAccess
                 return projectCount.First() > 0;
             }
           
+        }
+
+        public void Save(CreateProjectVM model)
+        {
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                var projectCount = con.Query<int>("INSERT INTO Project(Name,TeamID,CreatedDate,CreatedByID) VALUES (@name,@teamId,@dt,@createdById)",
+                    new { @name=model.Name, @teamId = model.TeamId,@dt=DateTime.Now, @createdById =model.CreatedById});
+
+                
+            }
         }
     }
 

@@ -19,6 +19,7 @@ namespace TeamBins.Services
 
         IEnumerable<ProjectDto> GetProjects();
 
+        void Save(CreateProjectVM model);
     }
 
     public class ProjectManager : IProjectManager
@@ -45,6 +46,13 @@ namespace TeamBins.Services
         public IEnumerable<ProjectDto> GetProjects()
         {
             throw new NotImplementedException();
+        }
+
+        public void Save(CreateProjectVM model)
+        {
+            model.CreatedById = userSessionHelper.UserId;
+            model.TeamId = userSessionHelper.TeamId;
+            this.projectRepository.Save(model);
         }
     }
 

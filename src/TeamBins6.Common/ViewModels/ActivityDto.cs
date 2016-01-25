@@ -37,7 +37,9 @@ namespace TeamBins.Common.ViewModels
         [Required]
         public string Name { set; get; }
 
-        public int TeamID { get; set; }
+        public int TeamId { get; set; }
+
+        public int CreatedById { set; get; }
     }
     public class DeleteProjectConfirmVM : ProjectVM
     {
