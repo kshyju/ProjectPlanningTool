@@ -19,6 +19,8 @@ namespace TeamBins.Services
 
         IEnumerable<ProjectDto> GetProjects();
 
+        ProjectDto GetProject(int id);
+
         void Save(CreateProjectVM model);
     }
 
@@ -40,12 +42,17 @@ namespace TeamBins.Services
 
         public int GetDefaultProjectForCurrentTeam()
         {
-            throw new NotImplementedException();
+           return this.projectRepository.GetDefaultProjectForTeam(this.userSessionHelper.TeamId);
         }
 
         public IEnumerable<ProjectDto> GetProjects()
         {
-            throw new NotImplementedException();
+            return this.projectRepository.GetProjects(this.userSessionHelper.TeamId);
+        }
+
+        public ProjectDto GetProject(int id)
+        {
+            return this.projectRepository.GetProject(id);
         }
 
         public void Save(CreateProjectVM model)

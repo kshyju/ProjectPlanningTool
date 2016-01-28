@@ -44,7 +44,7 @@ namespace TechiesWeb.TeamBins.Controllers
                 var projectList = repo.GetProjects(TeamID).Where(s => s.TeamID == TeamID).ToList();
                 foreach (var project in projectList)
                 {
-                    var projectVM = new ProjectVM { ID = project.ID, Name = project.Name, Description = project.Description };
+                    var projectVM = new ProjectVM { Id = project.ID, Name = project.Name, Description = project.Description };
                     projectVM.IsProjectOwner = (project.CreatedByID == UserID);
                     vm.Projects.Add(projectVM);
                 }

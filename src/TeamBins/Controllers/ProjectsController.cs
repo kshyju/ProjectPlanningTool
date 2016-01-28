@@ -46,7 +46,7 @@ namespace TechiesWeb.TeamBins.Controllers
                         {
                             foreach (var project in projectList)
                             {
-                                var projectVM = new ProjectVM { Name = project.Name, ID = project.ID };
+                                var projectVM = new ProjectVM { Name = project.Name, Id = project.ID };
                                 if (teamMember.DefaultProjectID.HasValue)
                                     projectVM.IsDefaultProject = project.ID == teamMember.DefaultProjectID.Value;
 
@@ -160,7 +160,7 @@ namespace TechiesWeb.TeamBins.Controllers
         {
             try
             {
-                var result = repo.DeleteProject(model.ID);
+                var result = repo.DeleteProject(model.Id);
                 return Json(new { Status = "Success", Message = "Project deleted successfully" });
             }
             catch(Exception ex)

@@ -21,13 +21,22 @@ namespace TeamBins.DataAccess
         IEnumerable<ProjectDto> GetProjects(int teamId);
         bool DoesProjectsExist(int teamId);
         void Save(CreateProjectVM model);
+        ProjectDto GetProject(int id);
+
+        int GetDefaultProjectForTeam(int teamId);
     }
 
     public class ProjectRepository : BaseRepo,IProjectRepository
     {
         public IEnumerable<ProjectDto> GetProjects(int teamId)
         {
-            throw new NotImplementedException();
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                var projects = con.Query<ProjectDto>("SELECT * FROM Project WHERE TeamId=@teamId", new { @teamId = teamId });
+                return projects;
+            }
+
         }
 
         public bool DoesProjectsExist(int teamId)
@@ -46,10 +55,37 @@ namespace TeamBins.DataAccess
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                var projectCount = con.Query<int>("INSERT INTO Project(Name,TeamID,CreatedDate,CreatedByID) VALUES (@name,@teamId,@dt,@createdById)",
-                    new { @name=model.Name, @teamId = model.TeamId,@dt=DateTime.Now, @createdById =model.CreatedById});
+                if (model.Id == 0)
+                {
+                    con.Query<int>("INSERT INTO Project(Name,TeamID,CreatedDate,CreatedByID) VALUES (@name,@teamId,@dt,@createdById)",
+                                            new { @name = model.Name, @teamId = model.TeamId, @dt = DateTime.Now, @createdById = model.CreatedById });
+                }
+                else
+                {
+                    con.Query<int>("UPDATE Project SET Name=@name WHERE ID=@id",
+                                 new { @name = model.Name, @id=model.Id});
 
-                
+                }
+            }
+        }
+
+        public ProjectDto GetProject(int id)
+        {
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                var projects = con.Query<ProjectDto>("SELECT * FROM Project WHERE Id=@id", new { @id = id });
+                return projects.First();
+            }
+        }
+
+        public int GetDefaultProjectForTeam(int teamId)
+        {
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                var projects = con.Query<ProjectDto>("SELECT * FROM Project WHERE Id=@id", new { @id = id });
+                return projects.First();
             }
         }
     }
