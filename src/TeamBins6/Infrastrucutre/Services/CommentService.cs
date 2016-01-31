@@ -4,65 +4,10 @@ using System.Linq;
 using System.Web;
 using TeamBins.Common;
 using TeamBins.Common.ViewModels;
-using TeamBins.DataAccess;
-using TeamBins6.Infrastrucutre.Services;
 
 namespace TeamBins.Services
 {
-    public interface IProjectManager
-    {
-        //GetProjects(int teamId);
-
-        bool DoesProjectsExist();
-
-        int GetDefaultProjectForCurrentTeam();
-
-        IEnumerable<ProjectDto> GetProjects();
-
-        ProjectDto GetProject(int id);
-
-        void Save(CreateProjectVM model);
-    }
-
-    public class ProjectManager : IProjectManager
-    {
-        IProjectRepository projectRepository;
-        private IUserSessionHelper userSessionHelper;
-
-        public ProjectManager(IProjectRepository projectRepository, IUserSessionHelper userSessionHelper)
-        {
-            this.projectRepository = projectRepository;
-            this.userSessionHelper = userSessionHelper;
-        }
-
-        public bool DoesProjectsExist()
-        {
-            return this.projectRepository.DoesProjectsExist(this.userSessionHelper.TeamId);
-        }
-
-        public int GetDefaultProjectForCurrentTeam()
-        {
-           return this.projectRepository.GetDefaultProjectForTeam(this.userSessionHelper.TeamId);
-        }
-
-        public IEnumerable<ProjectDto> GetProjects()
-        {
-            return this.projectRepository.GetProjects(this.userSessionHelper.TeamId);
-        }
-
-        public ProjectDto GetProject(int id)
-        {
-            return this.projectRepository.GetProject(id);
-        }
-
-        public void Save(CreateProjectVM model)
-        {
-            model.CreatedById = userSessionHelper.UserId;
-            model.TeamId = userSessionHelper.TeamId;
-            this.projectRepository.Save(model);
-        }
-    }
-
+  
     //public class CommentService : IActivitySavable
     //{
     //    IRepositary repo;

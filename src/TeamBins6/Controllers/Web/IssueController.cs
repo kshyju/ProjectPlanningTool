@@ -82,7 +82,7 @@ namespace TeamBins6.Controllers.Web
                   
                     bugListVM.ProjectsExist = true;
 
-                    bool defaultProjectExist = projectManager.GetDefaultProjectForCurrentTeam() > 0;
+                    bool defaultProjectExist = projectManager.GetDefaultProjectForCurrentTeam() !=null;
                     if (!defaultProjectExist)
                     {
                         var alertMessages = new AlertMessageStore();

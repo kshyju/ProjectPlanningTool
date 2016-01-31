@@ -33,7 +33,19 @@ namespace TeamBins.Common
         }
     }
 
-    
+    public class UserMenuHeaderVM
+    {
+        public List<TeamVM> Teams { set; get; }
+        public int SelectedTeam { set; get; }
+        //  public int CurrentTeamID { set; get; }
+        public string CurrentTeamName { set; get; }
+        public string UserDisplayName { set; get; }
+        public string UserAvatarHash { set; get; }
+        public UserMenuHeaderVM()
+        {
+            Teams = new List<TeamVM>();
+        }
+    }
 
     public class TeamVM : TeamDto
     {

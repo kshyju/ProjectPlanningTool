@@ -68,7 +68,7 @@ namespace TechiesWeb.TeamBins.Controllers
             var project = repo.GetProject(id);
             if (project != null)
             {
-                var projectVm = new ProjectDetailsVM { ID = id, Name = project.Name };
+                var projectVm = new ProjectDetailsVM { Id = id, Name = project.Name };
                 /*
                 var projectMembers = project.ProjectMembers.ToList();
                 foreach (var item in projectMembers)
@@ -93,16 +93,16 @@ namespace TechiesWeb.TeamBins.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    Project project = new Project { ID = model.ID };
+                    Project project = new Project { ID = model.Id };
 
                     project = repo.GetProject(model.Name, UserID);
-                    if ((project != null) && (project.ID != model.ID))
+                    if ((project != null) && (project.ID != model.Id))
                         return Json(new { Status = "Error", Message = "Project name exists" });
 
                     if (project == null)
                     {
-                        if (model.ID > 0)
-                            project = repo.GetProject(model.ID);
+                        if (model.Id > 0)
+                            project = repo.GetProject(model.Id);
                         else
                             project = new Project();
 
@@ -138,7 +138,7 @@ namespace TechiesWeb.TeamBins.Controllers
                 var project = repo.GetProject(id, TeamID);
                 if (project != null)
                 {
-                    var vm = new CreateProjectVM { ID = id, Name = project.Name };
+                    var vm = new CreateProjectVM { Id = id, Name = project.Name };
                     return PartialView("Partial/Add", vm);
                 }
                 return View("NotFound");

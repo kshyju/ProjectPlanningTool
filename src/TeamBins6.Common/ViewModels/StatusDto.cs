@@ -1,4 +1,3 @@
-namespace TeamBins.Common.ViewModels
-{
-    
-}
+
+
+

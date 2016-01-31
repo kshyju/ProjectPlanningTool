@@ -23,11 +23,21 @@ namespace TeamBins.DataAccess
         void Save(CreateProjectVM model);
         ProjectDto GetProject(int id);
 
-        int GetDefaultProjectForTeam(int teamId);
+        ProjectDto GetDefaultProjectForTeam(int teamId);
+        int GetIssueCountForProject(int projectId);
     }
 
     public class ProjectRepository : BaseRepo,IProjectRepository
     {
+        public int GetIssueCountForProject(int projectId)
+        {
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                var issueCount = con.Query<int>(" SELECT COUNT(ID) from Issue WHERE PROJECTID=@projectId", new { projectId = projectId });
+                return issueCount.First();
+            }
+        }
         public IEnumerable<ProjectDto> GetProjects(int teamId)
         {
             using (var con = new SqlConnection(ConnectionString))
@@ -79,12 +89,12 @@ namespace TeamBins.DataAccess
             }
         }
 
-        public int GetDefaultProjectForTeam(int teamId)
+        public ProjectDto GetDefaultProjectForTeam(int teamId)
         {
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                var projects = con.Query<ProjectDto>("SELECT * FROM Project WHERE Id=@id", new { @id = id });
+                var projects = con.Query<ProjectDto>("SELECT * FROM Project WHERE Id=@id", new { @id = teamId });
                 return projects.First();
             }
         }
