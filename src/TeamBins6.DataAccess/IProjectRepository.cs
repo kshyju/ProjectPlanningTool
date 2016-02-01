@@ -9,13 +9,6 @@ using TeamBins.Common.ViewModels;
 
 namespace TeamBins.DataAccess
 {
-    public class BaseRepo
-    {
-        protected string ConnectionString
-        {
-            get { return "Data Source=DET-4082;Initial Catalog=Team;Integrated Security=true"; }
-        }
-    }
     public interface IProjectRepository
     {
         IEnumerable<ProjectDto> GetProjects(int teamId);

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using Dapper;
 using TeamBins.Common;
 using TeamBins.Common.Infrastructure.Enums.TeamBins.Helpers.Enums;
 using TeamBins.Common.ViewModels;
@@ -20,6 +22,62 @@ namespace TeamBins.DataAccess
         Task<int> SaveIssueMember(int issueId, int userId, string relationShipType);
     }
 
+    public class IssueRepository : BaseRepo, IIssueRepository
+    {
+        public DashBoardItemSummaryVM GetDashboardSummaryVM(int teamId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IssueDetailVM GetIssue(int id)
+        {
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                var projects = con.Query<IssueDetailVM>("SELECT * FROM Issue WHERE ID=@issueId", new { @issueId = id });
+                return projects.FirstOrDefault();
+            }
+
+        }
+
+        public IEnumerable<IssueDetailVM> GetIssues(List<int> statusIds, int count)
+        {
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                var projects = con.Query<IssueDetailVM>("SELECT * FROM Issue");
+                return projects;
+            }
+        }
+
+        public IEnumerable<IssuesPerStatusGroup> GetIssuesGroupedByStatusGroup(int count)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int SaveIssue(CreateIssue issue)
+        {
+
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+
+                var q =
+                    con.Query(
+                        "INSERT INTO Issue(Title,Description,DueDate,CategoryId,StatusID,PriorityID,ProjectID,TeamID) VALUES(@title,@description,@dueDate,@categoryId,@priortiyId,@projectId,@location,@teamId)",
+                        new { @title=issue.Title, @description=issue.Description, @dueDate=issue.IssueDueDate, @categoryId=issue.SelectedCategory
+                        , @priortiyId=issue.SelectedPriority, @projectId=issue.SelectedProject, @teamId =issue.TeamID});
+
+                return 1;
+
+            }
+        }
+
+        public Task<int> SaveIssueMember(int issueId, int userId, string relationShipType)
+        {
+            throw new NotImplementedException();
+        }
+    }
 
 
     //public class IssueRepository : IIssueRepository

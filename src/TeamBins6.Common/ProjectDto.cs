@@ -1,7 +1,11 @@
 ﻿namespace TeamBins.Common
 {
-    public class ProjectDto : BaseEntityDto
+    public class IssueDetailVMProjectDto : BaseEntityDto
     {
         
+    }
+    public class ProjectDto : BaseEntityDto
+    {
+
     }
 }
