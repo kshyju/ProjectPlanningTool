@@ -18,6 +18,8 @@ namespace TeamBins.DataAccess
 
         ProjectDto GetDefaultProjectForTeam(int teamId);
         int GetIssueCountForProject(int projectId);
+
+        int GetDefaultProjectForTeamMember(int teamId, int userId);
     }
 
     public class ProjectRepository : BaseRepo,IProjectRepository
@@ -88,6 +90,16 @@ namespace TeamBins.DataAccess
             {
                 con.Open();
                 var projects = con.Query<ProjectDto>("SELECT * FROM Project WHERE Id=@id", new { @id = teamId });
+                return projects.First();
+            }
+        }
+
+        public int GetDefaultProjectForTeamMember(int teamId, int userId)
+        {
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                var projects = con.Query<int>("  SELECT DefaultProjectID from TeamMember where TeamId=@teamId and MemberId=@memberId", new { @teamId = teamId,@memberId= userId });
                 return projects.First();
             }
         }

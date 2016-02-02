@@ -63,12 +63,13 @@ namespace TeamBins.DataAccess
                 con.Open();
 
                 var q =
-                    con.Query(
-                        "INSERT INTO Issue(Title,Description,DueDate,CategoryId,StatusID,PriorityID,ProjectID,TeamID) VALUES(@title,@description,@dueDate,@categoryId,@priortiyId,@projectId,@location,@teamId)",
+                    con.Query<int>(
+                        @"INSERT INTO Issue(Title,Description,DueDate,CategoryId,StatusID,PriorityID,ProjectID,TeamID) 
+                        VALUES(@title,@description,@dueDate,@categoryId,@statusId,@priortiyId,@projectId,@teamId);SELECT CAST(SCOPE_IDENTITY() as int)",
                         new { @title=issue.Title, @description=issue.Description, @dueDate=issue.IssueDueDate, @categoryId=issue.SelectedCategory
-                        , @priortiyId=issue.SelectedPriority, @projectId=issue.SelectedProject, @teamId =issue.TeamID});
+                        ,@statusId= issue.SelectedStatus, @priortiyId=issue.SelectedPriority, @projectId=issue.SelectedProject, @teamId =issue.TeamID});
 
-                return 1;
+                return q.First();
 
             }
         }

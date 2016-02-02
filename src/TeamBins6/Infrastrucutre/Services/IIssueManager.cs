@@ -42,7 +42,17 @@ namespace TeamBins.Services
 
         public IssueDetailVM SaveIssue(CreateIssue issue, List<IFormFile> files)
         {
-            throw new NotImplementedException();
+            if (issue.SelectedStatus==0)
+            {
+                
+            }
+            var issueId = this.issueRepository.SaveIssue(issue);
+
+          
+
+            var issueDetail = this.issueRepository.GetIssue(issueId);
+            return issueDetail;
+            ;
         }
 
         public Task<int> StarIssue(int issueId)
