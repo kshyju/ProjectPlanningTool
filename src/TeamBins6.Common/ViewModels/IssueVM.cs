@@ -39,6 +39,7 @@ namespace TeamBins.Common.ViewModels
 
 
 
+
     public class IssueDetailVM : IssueVM
     {
         public bool IsStarredForUser { set; get; }

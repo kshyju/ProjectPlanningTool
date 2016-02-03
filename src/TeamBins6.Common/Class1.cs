@@ -13,4 +13,16 @@ namespace TeamBins6.Common
         {
         }
     }
+    public class CategoryDto : NameValueItem
+    {
+
+    }
+
+    public class NameValueItem
+    {
+        public string Name { set; get; }
+        public string Code { set; get; }
+        public int Id { set; get; }
+    }
+
 }

@@ -7,12 +7,14 @@ using Dapper;
 using TeamBins.Common;
 using TeamBins.Common.Infrastructure.Enums.TeamBins.Helpers.Enums;
 using TeamBins.Common.ViewModels;
-
+using TeamBins6.Common;
 namespace TeamBins.DataAccess
 {
 
     public interface IIssueRepository
     {
+        IEnumerable<CategoryDto> GetCategories();
+        IEnumerable<NameValueItem> GetPriorities();
         IEnumerable<IssueDetailVM> GetIssues(List<int> statusIds, int count);
         IssueDetailVM GetIssue(int id);
         int SaveIssue(CreateIssue issue);
@@ -29,6 +31,25 @@ namespace TeamBins.DataAccess
             throw new NotImplementedException();
         }
 
+        public IEnumerable<NameValueItem> GetPriorities()
+        {
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                var projects = con.Query<NameValueItem>("SELECT * from Priority");
+                return projects;
+            }
+
+        }
+        public IEnumerable<CategoryDto> GetCategories()
+        {
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                var projects = con.Query<CategoryDto>("SELECT * from Category");
+                return projects;
+            }
+        } 
         public IssueDetailVM GetIssue(int id)
         {
             using (var con = new SqlConnection(ConnectionString))

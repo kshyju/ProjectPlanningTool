@@ -99,7 +99,7 @@ namespace TeamBins.DataAccess
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                var projects = con.Query<int>("  SELECT DefaultProjectID from TeamMember where TeamId=@teamId and MemberId=@memberId", new { @teamId = teamId,@memberId= userId });
+                var projects = con.Query<int>("SELECT DefaultProjectID from TeamMember where TeamId=@teamId and MemberId=@memberId", new { @teamId = teamId,@memberId= userId });
                 return projects.First();
             }
         }

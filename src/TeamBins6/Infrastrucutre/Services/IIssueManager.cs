@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Http;
 using TeamBins.Common.ViewModels;
 using TeamBins.DataAccess;
+using TeamBins6.Infrastrucutre.Services;
 
 namespace TeamBins.Services
 {
@@ -11,9 +13,13 @@ namespace TeamBins.Services
     public class IssueManager : IIssueManager
     {
         private IIssueRepository issueRepository;
-        public IssueManager(IIssueRepository issueRepository)
+        private IProjectRepository iProjectRepository;
+        private IUserSessionHelper urlSessionHelper;
+        public IssueManager(IIssueRepository issueRepository, IProjectRepository iProjectRepository,IUserSessionHelper userSessionHelper)
         {
             this.issueRepository = issueRepository;
+            this.iProjectRepository = iProjectRepository;
+            this.urlSessionHelper = urlSessionHelper;
         }
         public DashBoardItemSummaryVM GetDashboardSummaryVM(int teamId)
         {
@@ -44,8 +50,22 @@ namespace TeamBins.Services
         {
             if (issue.SelectedStatus==0)
             {
-                
+               var defaultProjectId = this.iProjectRepository.GetDefaultProjectForTeamMember(this.urlSessionHelper.TeamId,
+                    this.urlSessionHelper.UserId);
+                issue.SelectedStatus = defaultProjectId;
+
             }
+            if (issue.SelectedCategory == 0)
+            {
+                var categories = this.issueRepository.GetCategories();
+                issue.SelectedStatus = categories.First().Id;
+            }
+            if (issue.SelectedPriority == 0)
+            {
+                var categories = this.issueRepository.GetCategories();
+                issue.SelectedPriority = categories.First().Id;
+            }
+
             var issueId = this.issueRepository.SaveIssue(issue);
 
           
