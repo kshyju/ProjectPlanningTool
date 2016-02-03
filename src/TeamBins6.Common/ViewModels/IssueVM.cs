@@ -39,7 +39,12 @@ namespace TeamBins.Common.ViewModels
 
 
 
-
+    public class IssueDetailWithStatusGroup : IssueDetailVM
+    {
+       
+        public string StatusGroupName { set; get; }
+        
+    }
     public class IssueDetailVM : IssueVM
     {
         public bool IsStarredForUser { set; get; }

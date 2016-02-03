@@ -60,7 +60,7 @@ namespace TeamBins.DataAccess
                 var projects = con.Query<CategoryDto>("SELECT * from Category");
                 return projects;
             }
-        } 
+        }
         public IssueDetailVM GetIssue(int id)
         {
             const string q = "SELECT ID,Title,Description,CreatedDate,DueDate as IssueDueDate from Issue where ID=@id";
@@ -85,7 +85,26 @@ namespace TeamBins.DataAccess
 
         public IEnumerable<IssuesPerStatusGroup> GetIssuesGroupedByStatusGroup(int count)
         {
-            throw new NotImplementedException();
+            var results = new List<IssuesPerStatusGroup>();
+            var q = @" SELECT 
+                          SG.Code as StatusGroupCode,
+                          SG.Name,
+                          I.ID,I.Title,S.Name as StatusName
+                          from Issue I INNER JOIN Status S
+                          ON I.StatusID =S.ID
+                          INNER JOIN StatusGroup SG ON SG.Id =S.StatusGroupId";
+
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                var projects = con.Query<IssueDetailVM>(q);
+
+                results= projects.GroupBy(s => s.StatusGroupCode, x => x,
+                    (k, v) => new IssuesPerStatusGroup {GroupCode = k, GroupName = k,Issues = v.ToList()}).ToList();
+
+                //grou py now
+            }
+            return results;
         }
 
         public int SaveIssue(CreateIssue issue)
@@ -99,10 +118,19 @@ namespace TeamBins.DataAccess
                     con.Query<int>(
                         @"INSERT INTO Issue(Title,Description,DueDate,CategoryId,StatusID,PriorityID,ProjectID,TeamID,Active,CreatedDate,CreatedByID) 
                         VALUES(@title,@description,@dueDate,@categoryId,@statusId,@priortiyId,@projectId,@teamId,1,@createdDate,@userId);SELECT CAST(SCOPE_IDENTITY() as int)",
-                        new { @title=issue.Title, @description=issue.Description, @dueDate=issue.IssueDueDate, @categoryId=issue.SelectedCategory
-                        ,@statusId= issue.SelectedStatus, @priortiyId=issue.SelectedPriority, @projectId=issue.SelectedProject, @teamId =issue.TeamID,
+                        new
+                        {
+                            @title = issue.Title,
+                            @description = issue.Description,
+                            @dueDate = issue.IssueDueDate,
+                            @categoryId = issue.SelectedCategory
+                        ,
+                            @statusId = issue.SelectedStatus,
+                            @priortiyId = issue.SelectedPriority,
+                            @projectId = issue.SelectedProject,
+                            @teamId = issue.TeamID,
                             @createdDate = DateTime.Now,
-                            @userId=issue.CreatedByID
+                            @userId = issue.CreatedByID
                         });
 
                 return q.First();

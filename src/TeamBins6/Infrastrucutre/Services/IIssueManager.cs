@@ -27,6 +27,8 @@ namespace TeamBins.Services
             throw new NotImplementedException();
         }
 
+
+
         public IssueDetailVM GetIssue(int id)
         {
             return this.issueRepository.GetIssue(id);
@@ -39,7 +41,7 @@ namespace TeamBins.Services
 
         public IEnumerable<IssuesPerStatusGroup> GetIssuesGroupedByStatusGroup(int count)
         {
-            throw new NotImplementedException();
+            return this.issueRepository.GetIssuesGroupedByStatusGroup(count);
         }
 
         public ActivityDto SaveActivity(CreateIssue model, IssueDetailVM previousVersion, IssueDetailVM newVersion)
@@ -93,6 +95,7 @@ namespace TeamBins.Services
     }
     public interface IIssueManager
     {
+
         Task<int> StarIssue(int issueId);
         IEnumerable<IssueVM> GetIssues(List<int> statusIds, int count);
         IssueDetailVM SaveIssue(CreateIssue issue, List<IFormFile> files);

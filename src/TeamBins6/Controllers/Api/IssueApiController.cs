@@ -12,7 +12,7 @@ using TeamBins6.Infrastrucutre.Services;
 
 namespace TeamBins6.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/issue")]
     public class IssueApiController : Controller
     {
 
@@ -40,9 +40,12 @@ namespace TeamBins6.Controllers
 
         // GET api/values/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public ObjectResult Get(int id)
         {
-            return "value";
+
+            var issues= this.issueManager.GetIssuesGroupedByStatusGroup(25);
+
+            return Ok(issues);
         }
 
 
