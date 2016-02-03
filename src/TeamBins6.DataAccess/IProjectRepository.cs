@@ -20,16 +20,28 @@ namespace TeamBins.DataAccess
         int GetIssueCountForProject(int projectId);
 
         int GetDefaultProjectForTeamMember(int teamId, int userId);
+
+        void Delete(int projectId);
     }
 
-    public class ProjectRepository : BaseRepo,IProjectRepository
+    public class ProjectRepository : BaseRepo, IProjectRepository
     {
+
+        public void Delete(int projectId)
+        {
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                con.Query<int>("DELETE from Project WHERE ID=@projectId", new { @projectId = projectId });               
+            }
+        }
+
         public int GetIssueCountForProject(int projectId)
         {
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                var issueCount = con.Query<int>(" SELECT COUNT(ID) from Issue WHERE PROJECTID=@projectId", new { projectId = projectId });
+                var issueCount = con.Query<int>(" SELECT COUNT(ID) from Issue WHERE PROJECTID=@projectId", new { @projectId = projectId });
                 return issueCount.First();
             }
         }
@@ -49,10 +61,10 @@ namespace TeamBins.DataAccess
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                var projectCount = con.Query<int>("SELECT COUNT(1) FROM Project WHERE TeamId=@teamId", new {@teamId = teamId});
+                var projectCount = con.Query<int>("SELECT COUNT(1) FROM Project WHERE TeamId=@teamId", new { @teamId = teamId });
                 return projectCount.First() > 0;
             }
-          
+
         }
 
         public void Save(CreateProjectVM model)
@@ -62,16 +74,40 @@ namespace TeamBins.DataAccess
                 con.Open();
                 if (model.Id == 0)
                 {
-                    con.Query<int>("INSERT INTO Project(Name,TeamID,CreatedDate,CreatedByID) VALUES (@name,@teamId,@dt,@createdById)",
+                    var p = con.Query<int>("INSERT INTO Project(Name,TeamID,CreatedDate,CreatedByID) VALUES (@name,@teamId,@dt,@createdById);SELECT CAST(SCOPE_IDENTITY() as int)",
                                             new { @name = model.Name, @teamId = model.TeamId, @dt = DateTime.Now, @createdById = model.CreatedById });
+                    model.Id = p.First();
                 }
                 else
                 {
                     con.Query<int>("UPDATE Project SET Name=@name WHERE ID=@id",
-                                 new { @name = model.Name, @id=model.Id});
+                                 new { @name = model.Name, @id = model.Id });
 
                 }
+
+                SetAsDefaultProjectIfNotExists(model);
             }
+        }
+
+        private void SetAsDefaultProjectIfNotExists(CreateProjectVM model)
+        {
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+
+                var defaultProjectCount = con.Query<int>("SELECT TOP 1 DefaultProjectId from TEAMMEMBER WHERE TeamId = @teamId and MemberId = @userId", new { @teamId = model.TeamId, @userId = model.CreatedById });
+                if (!defaultProjectCount.Any())
+                {
+                    con.Query<int>(" UPDATE TEAMMEMBER SET DEFAULTPROJECTID=@projectId WHERE TEAMID=@teamId AND MEMBERID=@userId",
+                                      new
+                                      {
+                                          @projectId = model.Id,
+                                          @teamId = model.TeamId,
+                                          @userId = model.CreatedById
+                                      });
+                }
+            }
+
         }
 
         public ProjectDto GetProject(int id)
@@ -90,7 +126,7 @@ namespace TeamBins.DataAccess
             {
                 con.Open();
                 var projects = con.Query<ProjectDto>("SELECT * FROM Project WHERE Id=@id", new { @id = teamId });
-                return projects.First();
+                return projects.Any() ? projects.First() : null;
             }
         }
 
@@ -99,7 +135,12 @@ namespace TeamBins.DataAccess
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                var projects = con.Query<int>("SELECT DefaultProjectID from TeamMember where TeamId=@teamId and MemberId=@memberId", new { @teamId = teamId,@memberId= userId });
+                var projects = con.Query<int>("SELECT DefaultProjectID from TeamMember where TeamId=@teamId and MemberId=@memberId", new { @teamId = teamId, @memberId = userId });
+                if (!projects.Any())
+                {
+                    return 0;
+
+                }
                 return projects.First();
             }
         }
@@ -122,7 +163,7 @@ namespace TeamBins.DataAccess
     //    public IEnumerable<ProjectDto> GetProjects(int teamId)
     //    {
     //        var projectList = new List<TeamBins.Common.ProjectDto>();
-            
+
     //        using (var c = new SqlConnection(db.Database.Connection.ConnectionString))
     //        {
 

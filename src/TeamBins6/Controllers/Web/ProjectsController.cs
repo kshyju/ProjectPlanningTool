@@ -80,7 +80,8 @@ namespace TeamBins6.Controllers.Web
         public ActionResult DeleteConfirm(int id)
         {
             var vm = new DeleteProjectConfirmVM();
-          //  vm.DependableItemsCount = repo.GetIssues().Where(s => s.Project.ID == id).Count();
+            var issueCount = this.projectManager.GetIssueCountForProject(id);
+            vm.DependableItemsCount =issueCount;
             return PartialView("Partial/DeleteConfirm", vm);
         }
         [HttpPost]
@@ -88,6 +89,7 @@ namespace TeamBins6.Controllers.Web
         {
             try
             {
+                this.projectManager.Delete(model.Id);
               //  var result = repo.DeleteProject(model.Id);
                 return Json(new { Status = "Success", Message = "Project deleted successfully" });
             }

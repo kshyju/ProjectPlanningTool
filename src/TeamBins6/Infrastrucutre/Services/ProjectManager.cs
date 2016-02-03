@@ -21,6 +21,7 @@ namespace TeamBins.Services
         void Save(CreateProjectVM model);
 
         int GetIssueCountForProject(int projectId);
+        void Delete(int id);
     }
 
     public class ProjectManager : IProjectManager
@@ -32,6 +33,11 @@ namespace TeamBins.Services
         {
             this.projectRepository = projectRepository;
             this.userSessionHelper = userSessionHelper;
+        }
+
+        public void Delete(int id)
+        {
+            this.projectRepository.Delete(id);
         }
 
         public bool DoesProjectsExist()

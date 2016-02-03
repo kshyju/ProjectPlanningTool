@@ -7,9 +7,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Rendering;
+using Microsoft.AspNet.Mvc.Routing;
 using TeamBins.Common;
 using TeamBins.Common.ViewModels;
 using TeamBins.Services;
+using TeamBins6.Common.Infrastructure.Exceptions;
 using TeamBins6.Infrastrucutre;
 using TeamBins6.Infrastrucutre.Services;
 
@@ -54,9 +56,11 @@ namespace TeamBins6.Controllers.Web
                     bool defaultProjectExist = projectManager.GetDefaultProjectForCurrentTeam() !=null;
                     if (!defaultProjectExist)
                     {
-                        var alertMessages = new AlertMessageStore();
-                       // alertMessages.AddMessage("system", String.Format("Hey!, You need to set a default project for the current team. Go to your <a href='{0}account/settings'>profile</a> and set a project as default project.", SiteBaseURL));
-                        TempData["AlertMessages"] = alertMessages;
+                        var some = new TestClass { Name = "Tes"};
+                       var alertMessages = new AlertMessageStore();
+                       
+                       // alertMessages.AddMessage("system", String.Format("Hey!, You need to set a default project for the current team. Go to your <a href='{0}account/settings'>profile</a> and set a project as default project.",""));
+                        //TempData["AlertMessages"] = some; //alertMessages;// "alertMessages";
                     }
                     return View("Index", bugListVM);
 
@@ -73,7 +77,7 @@ namespace TeamBins6.Controllers.Web
 
         [HttpPost]
 
-        public ActionResult Add(CreateIssue model, List<IFormFile> files)
+        public ActionResult Add([FromBody]CreateIssue model, List<IFormFile> files)
         {
             try
             {
@@ -81,7 +85,7 @@ namespace TeamBins6.Controllers.Web
                 {
                     var previousVersion = issueManager.GetIssue(model.Id);
                     var newVersion = issueManager.SaveIssue(model, files);
-                  //  var issueActivity = issueManager.SaveActivity(model, previousVersion, newVersion);
+                    //  var issueActivity = issueManager.SaveActivity(model, previousVersion, newVersion);
 
                     if ((files != null) && (files.Any()))
                     {
@@ -91,8 +95,12 @@ namespace TeamBins6.Controllers.Web
                             // fileCounter = SaveAttachedDocument(model, result, fileCounter, file);
                         }
                     }
-                    return RedirectToAction("Index");
+                    return Json(new { Status = "Success" });
                 }
+            }
+            catch (MissingSettingsException mex)
+            {
+                return Json(new { Status = "Error", Message = String.Format("You need to set a value for {0} first.", mex.MissingSettingName) });
             }
             catch (Exception ex)
             {

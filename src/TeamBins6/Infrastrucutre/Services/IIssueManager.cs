@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Http;
 using TeamBins.Common.ViewModels;
 using TeamBins.DataAccess;
+using TeamBins6.Common.Infrastructure.Exceptions;
 using TeamBins6.Infrastrucutre.Services;
 
 namespace TeamBins.Services
@@ -14,12 +15,12 @@ namespace TeamBins.Services
     {
         private IIssueRepository issueRepository;
         private IProjectRepository iProjectRepository;
-        private IUserSessionHelper urlSessionHelper;
+        private IUserSessionHelper userSessionHelper;
         public IssueManager(IIssueRepository issueRepository, IProjectRepository iProjectRepository,IUserSessionHelper userSessionHelper)
         {
             this.issueRepository = issueRepository;
             this.iProjectRepository = iProjectRepository;
-            this.urlSessionHelper = urlSessionHelper;
+            this.userSessionHelper = userSessionHelper;
         }
         public DashBoardItemSummaryVM GetDashboardSummaryVM(int teamId)
         {
@@ -48,24 +49,34 @@ namespace TeamBins.Services
 
         public IssueDetailVM SaveIssue(CreateIssue issue, List<IFormFile> files)
         {
-            if (issue.SelectedStatus==0)
+            if (issue.SelectedProject==0)
             {
-               var defaultProjectId = this.iProjectRepository.GetDefaultProjectForTeamMember(this.urlSessionHelper.TeamId,
-                    this.urlSessionHelper.UserId);
-                issue.SelectedStatus = defaultProjectId;
+               var defaultProjectId = this.iProjectRepository.GetDefaultProjectForTeamMember(this.userSessionHelper.TeamId,
+                    this.userSessionHelper.UserId);
+                if (defaultProjectId == 0)
+                {
+                    throw new MissingSettingsException("Missing data", "Default project");
+                }
+                issue.SelectedProject = defaultProjectId;
 
             }
             if (issue.SelectedCategory == 0)
             {
                 var categories = this.issueRepository.GetCategories();
-                issue.SelectedStatus = categories.First().Id;
+                issue.SelectedCategory = categories.First().Id;
             }
             if (issue.SelectedPriority == 0)
             {
-                var categories = this.issueRepository.GetCategories();
+                var categories = this.issueRepository.GetPriorities();
                 issue.SelectedPriority = categories.First().Id;
             }
-
+            if (issue.SelectedStatus == 0)
+            {
+                var statuses = this.issueRepository.GetStatuses();
+                issue.SelectedStatus = statuses.First().Id;
+            }
+            issue.CreatedByID = this.userSessionHelper.UserId;
+            issue.TeamID = this.userSessionHelper.TeamId;
             var issueId = this.issueRepository.SaveIssue(issue);
 
           

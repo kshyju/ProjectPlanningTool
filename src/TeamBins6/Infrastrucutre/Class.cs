@@ -5,6 +5,18 @@ using System.Threading.Tasks;
 
 namespace TeamBins6.Infrastrucutre
 {
+
+
+    [Serializable]
+    public class TestClass
+    {
+        
+        public string Name { set; get; }
+    }
+
+
+    [Serializable]
+
     public class AlertMessageStore
     {
         public AlertMessageStore()

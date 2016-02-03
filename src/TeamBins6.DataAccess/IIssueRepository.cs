@@ -13,6 +13,7 @@ namespace TeamBins.DataAccess
 
     public interface IIssueRepository
     {
+        IEnumerable<NameValueItem> GetStatuses();
         IEnumerable<CategoryDto> GetCategories();
         IEnumerable<NameValueItem> GetPriorities();
         IEnumerable<IssueDetailVM> GetIssues(List<int> statusIds, int count);
@@ -31,6 +32,16 @@ namespace TeamBins.DataAccess
             throw new NotImplementedException();
         }
 
+        public IEnumerable<NameValueItem> GetStatuses()
+        {
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                var projects = con.Query<NameValueItem>("SELECT * from Status");
+                return projects;
+            }
+
+        }
         public IEnumerable<NameValueItem> GetPriorities()
         {
             using (var con = new SqlConnection(ConnectionString))
@@ -52,10 +63,11 @@ namespace TeamBins.DataAccess
         } 
         public IssueDetailVM GetIssue(int id)
         {
+            const string q = "SELECT ID,Title,Description,CreatedDate,DueDate as IssueDueDate from Issue where ID=@id";
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                var projects = con.Query<IssueDetailVM>("SELECT * FROM Issue WHERE ID=@issueId", new { @issueId = id });
+                var projects = con.Query<IssueDetailVM>(q, new { @id = id });
                 return projects.FirstOrDefault();
             }
 
@@ -66,7 +78,7 @@ namespace TeamBins.DataAccess
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                var projects = con.Query<IssueDetailVM>("SELECT * FROM Issue");
+                var projects = con.Query<IssueDetailVM>("SELECT ID,Title,Description,CreatedDate,DueDate as IssueDueDate FROM Issue");
                 return projects;
             }
         }
@@ -85,10 +97,13 @@ namespace TeamBins.DataAccess
 
                 var q =
                     con.Query<int>(
-                        @"INSERT INTO Issue(Title,Description,DueDate,CategoryId,StatusID,PriorityID,ProjectID,TeamID) 
-                        VALUES(@title,@description,@dueDate,@categoryId,@statusId,@priortiyId,@projectId,@teamId);SELECT CAST(SCOPE_IDENTITY() as int)",
+                        @"INSERT INTO Issue(Title,Description,DueDate,CategoryId,StatusID,PriorityID,ProjectID,TeamID,Active,CreatedDate,CreatedByID) 
+                        VALUES(@title,@description,@dueDate,@categoryId,@statusId,@priortiyId,@projectId,@teamId,1,@createdDate,@userId);SELECT CAST(SCOPE_IDENTITY() as int)",
                         new { @title=issue.Title, @description=issue.Description, @dueDate=issue.IssueDueDate, @categoryId=issue.SelectedCategory
-                        ,@statusId= issue.SelectedStatus, @priortiyId=issue.SelectedPriority, @projectId=issue.SelectedProject, @teamId =issue.TeamID});
+                        ,@statusId= issue.SelectedStatus, @priortiyId=issue.SelectedPriority, @projectId=issue.SelectedProject, @teamId =issue.TeamID,
+                            @createdDate = DateTime.Now,
+                            @userId=issue.CreatedByID
+                        });
 
                 return q.First();
 
