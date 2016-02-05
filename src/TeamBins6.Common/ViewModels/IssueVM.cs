@@ -66,10 +66,20 @@ namespace TeamBins.Common.ViewModels
         }
 
         public KeyValueItem Priority { set; get; }
-        public KeyValueItem Status { set; get; }
+        public StatusDto Status { set; get; }
         public KeyValueItem Category { set; get; }
         public KeyValueItem Project { set; get; }
         public string StatusGroupCode { get; set; }
+
+        
+    }
+
+    public class StatusDto
+    {
+        // this could be a dapper PR ( Make the mapping work without making the properties (ClassName+ID)
+        public int StatusId { set; get; }
+        public string StatusName { set; get; }
+        public string StatusCode { set; get; }
     }
 
     public class StatusGroupVm

@@ -80,6 +80,7 @@ namespace TeamBins.DataAccess
                 con.Open();
                 var projects = con.Query<IssueDetailVM>("SELECT ID,Title,Description,CreatedDate,DueDate as IssueDueDate FROM Issue");
                 return projects;
+               // Status
             }
         }
 
@@ -87,19 +88,31 @@ namespace TeamBins.DataAccess
         {
             var results = new List<IssuesPerStatusGroup>();
             var q = @" SELECT 
-                          SG.Code as StatusGroupCode,
-                          SG.Name,
-                          I.ID,I.Title,S.Name as StatusName
-                          from Issue I INNER JOIN Status S
-                          ON I.StatusID =S.ID
-                          INNER JOIN StatusGroup SG ON SG.Id =S.StatusGroupId";
+                        I.ID,I.Title,
+                        U.FirstName + + ISNULL(U.LastName,'') as OpenedBy,
+                        SG.Code as StatusGroupCode,
+                        SG.Name,
+                        C.Name as CategoryName,C.Code as CategoryCode,
+                        P.Name as PriorityName,
+                        I.CreatedDate,S.ID as StatusId,S.Name as StatusName						 
+                        from Issue I 
+                        INNER JOIN Status S ON I.StatusID =S.ID
+                        INNER JOIN StatusGroup SG ON SG.Id =S.StatusGroupId
+                        INNER JOIN dbo.[USer] U ON U.ID=I.CreatedByid
+                        INNER JOIN Category C on C.ID = I.CategoryID
+                        INNER JOIN Priority P on P.ID = I.PriorityID";
 
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                var projects = con.Query<IssueDetailVM>(q);
+               
+                var projects = con.Query<IssueDetailVM, StatusDto, IssueDetailVM>(q, (post, user)
+                    => { post.Status = user; return post; }, splitOn: "StatusId");
+                //var projects = con.Query<IssueDetailVM>(q);
 
-                results= projects.GroupBy(s => s.StatusGroupCode, x => x,
+
+
+                results = projects.GroupBy(s => s.StatusGroupCode, x => x,
                     (k, v) => new IssuesPerStatusGroup {GroupCode = k, GroupName = k,Issues = v.ToList()}).ToList();
 
                 //grou py now
