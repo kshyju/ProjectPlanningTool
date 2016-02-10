@@ -66,12 +66,13 @@ namespace TeamBins.Common.ViewModels
         }
 
         public KeyValueItem Priority { set; get; }
-        public StatusDto Status { set; get; }
+        public KeyValueItem Status { set; get; }
         public KeyValueItem Category { set; get; }
         public KeyValueItem Project { set; get; }
         public string StatusGroupCode { get; set; }
+        public KeyValueItem StatusGroup { set; get; }
 
-        
+
     }
 
     public class StatusDto

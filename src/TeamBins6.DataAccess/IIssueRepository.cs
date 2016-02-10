@@ -87,14 +87,17 @@ namespace TeamBins.DataAccess
         public IEnumerable<IssuesPerStatusGroup> GetIssuesGroupedByStatusGroup(int count)
         {
             var results = new List<IssuesPerStatusGroup>();
-            var q = @" SELECT 
-                        I.ID,I.Title,
+            var q = @"SELECT I.ID,I.Title,
                         U.FirstName + + ISNULL(U.LastName,'') as OpenedBy,
-                        SG.Code as StatusGroupCode,
+                        SG.ID,
+                        SG.Code,
                         SG.Name,
-                        C.Name as CategoryName,C.Code as CategoryCode,
-                        P.Name as PriorityName,
-                        I.CreatedDate,S.ID as StatusId,S.Name as StatusName						 
+                        C.ID,
+                        C.Name,C.Code,
+                        P.ID,
+                        P.Name,
+                        I.CreatedDate,
+                        S.ID,S.Name						 
                         from Issue I 
                         INNER JOIN Status S ON I.StatusID =S.ID
                         INNER JOIN StatusGroup SG ON SG.Id =S.StatusGroupId
@@ -106,13 +109,17 @@ namespace TeamBins.DataAccess
             {
                 con.Open();
                
-                var projects = con.Query<IssueDetailVM, StatusDto, IssueDetailVM>(q, (post, user)
-                    => { post.Status = user; return post; }, splitOn: "StatusId");
+                var projects = con.Query<IssueDetailVM, KeyValueItem, KeyValueItem, KeyValueItem, KeyValueItem, IssueDetailVM >
+                    (q, (issue, sg,cat,priority,status)
+                    => { issue.Status = status;
+                           issue.StatusGroup = sg;
+                           issue.Priority = priority;
+                           issue.Category = cat; return issue; }, splitOn: "Id,Id,Id,Id");
                 //var projects = con.Query<IssueDetailVM>(q);
 
 
 
-                results = projects.GroupBy(s => s.StatusGroupCode, x => x,
+                results = projects.GroupBy(s => s.StatusGroup.Code, x => x,
                     (k, v) => new IssuesPerStatusGroup {GroupCode = k, GroupName = k,Issues = v.ToList()}).ToList();
 
                 //grou py now

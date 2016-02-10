@@ -74,6 +74,15 @@ namespace TeamBins6.Controllers.Web
             }
         }
 
+        [Route("Issue/{id}")]
+        public IActionResult Details(int id)
+        {
+            var vm = new IssueDetailVM();
+            vm = this.issueManager.GetIssue(id);
+
+            return View(vm);
+        }
+
 
         [HttpPost]
 
