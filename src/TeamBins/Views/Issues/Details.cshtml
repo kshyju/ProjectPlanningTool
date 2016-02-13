@@ -6,7 +6,7 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 <link href="http://code.jquery.com/ui/1.10.3/themes/flick/jquery-ui.css" rel="stylesheet" />
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular-sanitize.min.js"></script>
+
 <script src="~/Scripts/controller.js"></script>
 <script src="~/Scripts/issue.js"></script>
 <script src="~/Scripts/issueDetail.service.js"></script>
@@ -20,7 +20,7 @@
         @Html.ActionLink("Delete", "Delete", "Issues", new { id = Model.Id }, new { @class = "toolLink popup" })
     </div>
 }
-<div class="divPageContent" ng-app="teamBins" ng-controller="IssueDetailsCtrl as vm">
+<div class="divPageContent" ng-controller="issueDetailsCtrl as vm">
     <div class="divLeft">
         <h2>@Model.Title</h2>
         <div id="issueMeta">

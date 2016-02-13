@@ -63,11 +63,41 @@ namespace TeamBins.DataAccess
         }
         public IssueDetailVM GetIssue(int id)
         {
-            const string q = "SELECT ID,Title,Description,CreatedDate,DueDate as IssueDueDate from Issue where ID=@id";
+            var q = @"SELECT I.ID,I.Title,I.Description,ISNULL(I.Description,'') as Description,
+                        U.FirstName + + ISNULL(U.LastName,'') as OpenedBy,
+                        SG.ID,
+                        SG.Code,
+                        SG.Name,
+                        C.ID,
+                        C.Name,C.Code,
+                        P.ID,
+                        P.Name,
+                        I.CreatedDate,
+                        S.ID,S.Name,
+                        Pr.ID,
+                        Pr.Name						 
+                        from Issue I 
+                        INNER JOIN Status S ON I.StatusID =S.ID
+                        INNER JOIN StatusGroup SG ON SG.Id =S.StatusGroupId
+                        INNER JOIN dbo.[USer] U ON U.ID=I.CreatedByid
+                        INNER JOIN Category C on C.ID = I.CategoryID
+                        INNER JOIN Priority P on P.ID = I.PriorityID
+                        INNER JOIN Project Pr ON Pr.ID=I.ProjectID
+
+where I.ID=@id";
+
+          
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                var projects = con.Query<IssueDetailVM>(q, new { @id = id });
+                var projects = con.Query<IssueDetailVM, KeyValueItem, KeyValueItem, KeyValueItem, KeyValueItem, KeyValueItem, IssueDetailVM >(q, (issue, sg, cat, priority, status,project)
+                 => {
+                     issue.Status = status;
+                     issue.StatusGroup = sg;
+                     issue.Priority = priority;
+                        issue.Project = project;
+                     issue.Category = cat; return issue;
+                 },  new { @id = id },null,true, "Id,Id,Id,Id,Id");
                 return projects.FirstOrDefault();
             }
 
@@ -89,6 +119,7 @@ namespace TeamBins.DataAccess
             var results = new List<IssuesPerStatusGroup>();
             var q = @"SELECT I.ID,I.Title,
                         U.FirstName + + ISNULL(U.LastName,'') as OpenedBy,
+                        I.CreatedDate,
                         SG.ID,
                         SG.Code,
                         SG.Name,
@@ -96,7 +127,7 @@ namespace TeamBins.DataAccess
                         C.Name,C.Code,
                         P.ID,
                         P.Name,
-                        I.CreatedDate,
+                       
                         S.ID,S.Name						 
                         from Issue I 
                         INNER JOIN Status S ON I.StatusID =S.ID
