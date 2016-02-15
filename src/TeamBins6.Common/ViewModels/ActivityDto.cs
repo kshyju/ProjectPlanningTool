@@ -73,7 +73,7 @@ namespace TeamBins.Common.ViewModels
 
         public string ObjectUrl { set; get; }
 
-        public string ObjectTite { set; get; }
+        public string ObjectTitle { set; get; }
 
         public DateTime CreatedTime { set; get; }
 

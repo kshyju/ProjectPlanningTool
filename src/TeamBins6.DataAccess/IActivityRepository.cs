@@ -1,18 +1,68 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
+using Dapper;
 using TeamBins.Common;
 using TeamBins.Common.ViewModels;
+using TeamBins6.Common;
 
 namespace TeamBins.DataAccess
 {
     public interface IActivityRepository
     {
-        List<ActivityDto> GetActivityItems(int count);
+        IEnumerable<ActivityDto> GetActivityItems(int teamId, int count);
         int Save(ActivityDto activity);
         ActivityDto GetActivityItem(int id);
     }
-    //public class ActivityRepository : IActivityRepository
+
+    public class ActivityRepository : BaseRepo, IActivityRepository
+    {
+        public IEnumerable<ActivityDto> GetActivityItems(int teamId, int count)
+        {
+
+            var q = @"SELECT TOP 1000 A.[ID]
+                    ,[ObjectID]
+                    ,[ObjectType]
+                    ,[ActivityDesc] as DeSCRIPTION
+                    ,[ObjectTitle]
+                    ,[OldState]
+                    ,[NewState]
+                    ,[TeamID]
+                    ,A.[CreatedDate] as CreatedTime
+                    ,U.ID
+                    ,U.FirstName as Name
+                    ,U.EmailAddress
+                    FROM [Activity] A
+                    INNER JOIN [User] U ON A.CreatedByID = U.ID
+                    WHERE A.TeamID=@teamId";
+
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                var projects = con.Query<ActivityDto, UserDto, ActivityDto>(q, (a, u) =>
+                {
+                    a.Actor = u;
+                    return a;
+                }, new {@teamId = teamId}, null, true, "Id");
+                return projects;
+            }
+
+        }
+
+        public int Save(ActivityDto activity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ActivityDto GetActivityItem(int id)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}
+
+//public class ActivityRepository : IActivityRepository
     //{
     //    public ActivityDto GetActivityItem(int id)
     //    {
@@ -79,4 +129,3 @@ namespace TeamBins.DataAccess
     //        }
     //    }
     //}
-}
