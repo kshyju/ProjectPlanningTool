@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using TeamBins.Common;
 using TeamBins.Common.ViewModels;
+using TeamBins.DataAccess;
+using TeamBins6.Infrastrucutre.Services;
 
 
 namespace TeamBins.Services
@@ -21,6 +23,14 @@ namespace TeamBins.Services
 
     public class CommentManager : ICommentManager
     {
+        private ICommentRepository commentRepository;
+
+        private IUserSessionHelper userSessionHelper;
+        public CommentManager(ICommentRepository commentRepository,IUserSessionHelper userSessionHelper)
+        {
+            this.commentRepository = commentRepository;
+            this.userSessionHelper = userSessionHelper;
+        }
         public Task Delete(int id)
         {
             throw new NotImplementedException();
@@ -28,12 +38,12 @@ namespace TeamBins.Services
 
         public CommentVM GetComment(int id)
         {
-            throw new NotImplementedException();
+            return this.commentRepository.GetComment(id);
         }
 
         public IEnumerable<CommentVM> GetComments(int issueId)
         {
-            throw new NotImplementedException();
+            return this.commentRepository.GetComments(issueId);
         }
 
         public ActivityDto SaveActivity(int commentId, int issueId)
@@ -43,7 +53,9 @@ namespace TeamBins.Services
 
         public int SaveComment(CommentVM comment)
         {
-            throw new NotImplementedException();
+            comment.Author = new UserDto {Id = this.userSessionHelper.UserId};
+            return this.commentRepository.Save(comment);
+            
         }
 
         public Task SendEmailNotificaionForNewComment(CommentVM comment)

@@ -52,7 +52,26 @@ namespace TeamBins.DataAccess
 
         public int Save(ActivityDto activity)
         {
-            throw new NotImplementedException();
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+
+                var q =
+                    con.Query<int>(
+                        @"INSERT INTO Activity(Title,Description,DueDate,CategoryId,StatusID,PriorityID,ProjectID,TeamID,Active,CreatedDate,CreatedByID) 
+                        VALUES(@title,@description,@dueDate,@categoryId,@statusId,@priortiyId,@projectId,@teamId,1,@createdDate,@userId);SELECT CAST(SCOPE_IDENTITY() as int)",
+                        new
+                        {
+                            @itemId = activity.TeamId,
+                            @desc= activity.Description,
+                            title = activity.CreatedTime,
+                            @state = activity.ObjectTitle
+
+                        });
+
+                return q.First();
+
+            }
         }
 
         public ActivityDto GetActivityItem(int id)

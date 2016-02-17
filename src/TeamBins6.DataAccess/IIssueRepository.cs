@@ -65,6 +65,7 @@ namespace TeamBins.DataAccess
         {
             var q = @"SELECT I.ID,I.Title,I.Description,ISNULL(I.Description,'') as Description,
                         U.FirstName + + ISNULL(U.LastName,'') as OpenedBy,
+                        I.CreatedDate,
                         SG.ID,
                         SG.Code,
                         SG.Name,

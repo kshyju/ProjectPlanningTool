@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Http;
+using TeamBins.Common;
 using TeamBins.Common.ViewModels;
 using TeamBins.DataAccess;
 using TeamBins6.Common.Infrastructure.Exceptions;
@@ -13,13 +14,15 @@ namespace TeamBins.Services
 
     public class IssueManager : IIssueManager
     {
+        private IActivityRepository activityRepository;
         private IIssueRepository issueRepository;
         private IProjectRepository iProjectRepository;
         private IUserSessionHelper userSessionHelper;
-        public IssueManager(IIssueRepository issueRepository, IProjectRepository iProjectRepository,IUserSessionHelper userSessionHelper)
+        public IssueManager(IIssueRepository issueRepository, IProjectRepository iProjectRepository,IActivityRepository activityRepository,IUserSessionHelper userSessionHelper)
         {
             this.issueRepository = issueRepository;
             this.iProjectRepository = iProjectRepository;
+            this.activityRepository = activityRepository;
             this.userSessionHelper = userSessionHelper;
         }
         public DashBoardItemSummaryVM GetDashboardSummaryVM(int teamId)
@@ -46,7 +49,51 @@ namespace TeamBins.Services
 
         public ActivityDto SaveActivity(CreateIssue model, IssueDetailVM previousVersion, IssueDetailVM newVersion)
         {
-            throw new NotImplementedException();
+            bool isStateChanged = false;
+            var activity = new ActivityDto() { ObjectId = newVersion.Id, ObjectType = "Issue" };
+
+            if (previousVersion == null)
+            {
+                activity.ObjectUrl = "issue/" + newVersion.Id;
+                //activity.CreatedBy = 
+                activity.Description = "Created";
+                activity.ObjectTitle = model.Title;
+                isStateChanged = true;
+            }
+            else
+            {
+                if (previousVersion.Status.Id != newVersion.Status.Id)
+                {
+                    // status of issue updated
+                    activity.Description = "Changed status";
+                    activity.NewState = newVersion.Status.Name;
+                    activity.OldState = previousVersion.Status.Name;
+                    activity.ObjectTitle = newVersion.Title;
+                    isStateChanged = true;
+                }
+                else if (previousVersion.Category.Id != newVersion.Category.Id)
+                {
+                    activity.Description = "Changed category";
+                    activity.NewState = newVersion.Category.Name;
+                    activity.OldState = previousVersion.Category.Name;
+                    activity.ObjectTitle = newVersion.Title;
+                    isStateChanged = true;
+                }
+
+
+            }
+
+            activity.TeamId = userSessionHelper.TeamId;
+
+            activity.Actor = new UserDto { Id = userSessionHelper.UserId };
+
+            if (isStateChanged)
+            {
+                var newId = activityRepository.Save(activity);
+                return activityRepository.GetActivityItem(newId);
+
+            }
+            return null;
         }
 
         public IssueDetailVM SaveIssue(CreateIssue issue, List<IFormFile> files)

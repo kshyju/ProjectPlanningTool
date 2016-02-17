@@ -9,6 +9,51 @@ using TeamBins.Common.ViewModels;
 
 namespace TeamBins.DataAccess
 {
+    public interface ICommentRepository
+    {
+        int Save(CommentVM comment);
+        CommentVM GetComment(int id);
+
+        IEnumerable<CommentVM> GetComments(int issueId);
+
+    }
+
+    public class CommentRepository : BaseRepo, ICommentRepository
+    {
+        public int Save(CommentVM comment)
+        {
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+
+                var p = con.Query<int>("INSERT INTO Comment(CommentText,IssueID,CreatedDate,CreatedByID) VALUES (@cmnt,@issueId,@dt,@createdById);SELECT CAST(SCOPE_IDENTITY() as int)",
+                                        new { cmnt = comment.CommentBody,@issueId=comment.IssueId, @dt = DateTime.Now, @createdById = comment.Author.Id });
+                return p.First();
+
+            }
+        }
+
+        public IEnumerable<CommentVM> GetComments(int issueId)
+        {
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                return con.Query<CommentVM>("SELECT * FROM Comment WHERE IssueId=@id", new { @id = issueId });
+               
+            }
+
+        }
+        public CommentVM GetComment(int id)
+        {
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                var projects = con.Query<CommentVM>("SELECT * FROM Comment WHERE Id=@id", new { @id = id });
+                return projects.FirstOrDefault();
+            }
+        }
+    }
+
     public interface IProjectRepository
     {
         IEnumerable<ProjectDto> GetProjects(int teamId);
@@ -32,7 +77,7 @@ namespace TeamBins.DataAccess
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                con.Query<int>("DELETE from Project WHERE ID=@projectId", new { @projectId = projectId });               
+                con.Query<int>("DELETE from Project WHERE ID=@projectId", new { @projectId = projectId });
             }
         }
 

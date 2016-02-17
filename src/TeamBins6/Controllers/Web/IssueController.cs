@@ -21,6 +21,7 @@ namespace TeamBins6.Controllers.Web
 {
     public class IssueController : Controller
     {
+        private ITeamManager teamManager;
         ICommentManager commentManager;
         private readonly IProjectManager projectManager;
         private IIssueManager issueManager;
@@ -28,12 +29,13 @@ namespace TeamBins6.Controllers.Web
         IUserSessionHelper userSessionHelper;
        
 
-        public IssueController(ICommentManager commentManager, IUserSessionHelper userSessionHelper, IProjectManager projectManager, IIssueManager issueManager) //: base(repositary)
+        public IssueController(ICommentManager commentManager, IUserSessionHelper userSessionHelper, IProjectManager projectManager, IIssueManager issueManager, ITeamManager teamManager) //: base(repositary)
         {
             this.issueManager = issueManager;
             this.projectManager = projectManager;
             this.userSessionHelper = userSessionHelper;
             this.commentManager = commentManager;
+            this.teamManager = teamManager;
         }
 
 
@@ -79,13 +81,14 @@ namespace TeamBins6.Controllers.Web
         {
             var vm = new IssueDetailVM();
             vm = this.issueManager.GetIssue(id);
+            vm.IsEditableForCurrentUser = this.teamManager.DoesCurrentUserBelongsToTeam();
 
             return View(vm);
         }
 
 
         [HttpPost]
-
+        [Route("Issue/Add")]
         public ActionResult Add([FromBody]CreateIssue model, List<IFormFile> files)
         {
             try
@@ -94,7 +97,7 @@ namespace TeamBins6.Controllers.Web
                 {
                     var previousVersion = issueManager.GetIssue(model.Id);
                     var newVersion = issueManager.SaveIssue(model, files);
-                    //  var issueActivity = issueManager.SaveActivity(model, previousVersion, newVersion);
+                     var issueActivity = issueManager.SaveActivity(model, previousVersion, newVersion);
 
                     if ((files != null) && (files.Any()))
                     {

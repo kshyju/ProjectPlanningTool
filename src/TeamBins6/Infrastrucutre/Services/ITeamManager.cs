@@ -15,19 +15,26 @@ namespace TeamBins6.Infrastrucutre.Services
     {
       //  List<TeamDto> GetTeams();
         IEnumerable<ActivityDto> GeActivityItems(int count);
+        bool DoesCurrentUserBelongsToTeam();
     }
     public class TeamManager : ITeamManager
     {
         IActivityRepository activityRepository;
         IUserSessionHelper userSessionHelper;
-    //    private readonly ITeamRepository teamRepository;
-        public TeamManager( IUserSessionHelper userSessionHelper, IActivityRepository activityRepository)
+        private readonly ITeamRepository teamRepository;
+        public TeamManager( IUserSessionHelper userSessionHelper, IActivityRepository activityRepository, ITeamRepository teamRepository)
         {
-         //   this.teamRepository = teamRepository;
+           this.teamRepository = teamRepository;
             this.userSessionHelper = userSessionHelper;
             this.activityRepository = activityRepository;
         }
 
+        public bool DoesCurrentUserBelongsToTeam()
+        {
+            var member = this.teamRepository.GetTeamMember(this.userSessionHelper.TeamId, this.userSessionHelper.UserId);
+            return member != null;
+
+        }
         //public List<TeamDto> GetTeams()
         //{
         //   // return teamRepository.GetTeams(userSessionHelper.UserId);
