@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using TeamBins.Common;
 using TeamBins.Common.ViewModels;
 using TeamBins.DataAccess;
+using TeamBins6.Infrastrucutre.Extensions;
 using TeamBins6.Infrastrucutre.Services;
 
 
@@ -18,7 +19,7 @@ namespace TeamBins.Services
         CommentVM GetComment(int id);
 
         Task SendEmailNotificaionForNewComment(CommentVM comment);
-        Task Delete(int id);
+        void Delete(int id);
     }
 
     public class CommentManager : ICommentManager
@@ -31,9 +32,9 @@ namespace TeamBins.Services
             this.commentRepository = commentRepository;
             this.userSessionHelper = userSessionHelper;
         }
-        public Task Delete(int id)
+        public void Delete(int id)
         {
-            throw new NotImplementedException();
+            commentRepository.Delete(id);
         }
 
         public CommentVM GetComment(int id)
@@ -43,7 +44,13 @@ namespace TeamBins.Services
 
         public IEnumerable<CommentVM> GetComments(int issueId)
         {
-            return this.commentRepository.GetComments(issueId);
+            var c= this.commentRepository.GetComments(issueId);
+            foreach (var commentVm in c)
+            {
+                commentVm.Author.GravatarUrl = commentVm.Author.EmailAddress.ToGravatarUrl();
+                commentVm.IsOwner = commentVm.Author.Id == this.userSessionHelper.UserId;
+            }
+            return c;
         }
 
         public ActivityDto SaveActivity(int commentId, int issueId)

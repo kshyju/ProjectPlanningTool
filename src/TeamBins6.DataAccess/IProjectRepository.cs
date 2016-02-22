@@ -15,7 +15,7 @@ namespace TeamBins.DataAccess
         CommentVM GetComment(int id);
 
         IEnumerable<CommentVM> GetComments(int issueId);
-
+        void Delete(int id);
     }
 
     public class CommentRepository : BaseRepo, ICommentRepository
@@ -27,7 +27,7 @@ namespace TeamBins.DataAccess
                 con.Open();
 
                 var p = con.Query<int>("INSERT INTO Comment(CommentText,IssueID,CreatedDate,CreatedByID) VALUES (@cmnt,@issueId,@dt,@createdById);SELECT CAST(SCOPE_IDENTITY() as int)",
-                                        new { cmnt = comment.CommentBody,@issueId=comment.IssueId, @dt = DateTime.Now, @createdById = comment.Author.Id });
+                                        new { cmnt = comment.CommentText,@issueId=comment.IssueId, @dt = DateTime.Now, @createdById = comment.Author.Id });
                 return p.First();
 
             }
@@ -35,21 +35,38 @@ namespace TeamBins.DataAccess
 
         public IEnumerable<CommentVM> GetComments(int issueId)
         {
+            var q = @"SELECT C.*,U.Id,U.FIRSTNAME AS NAME,U.EmailAddress FROM COMMENT C WITH (NOLOCK) 
+                    INNER JOIN [USER] U WITH (NOLOCK)  ON C.CREATEDBYID=U.Id
+                    WHERE C.IssueId=@id";
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                return con.Query<CommentVM>("SELECT * FROM Comment WHERE IssueId=@id", new { @id = issueId });
-               
+                var com =  con.Query<CommentVM,UserDto,CommentVM>(q, (c,a)=>  { c.Author=a; return c;} ,new { @id = issueId },null,false).ToList();
+                return com;
             }
 
         }
-        public CommentVM GetComment(int id)
+        public void Delete(int id)
         {
+            var q = @"DELETE FROM  COMMENT C WHERE C.Id=@id";
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                var projects = con.Query<CommentVM>("SELECT * FROM Comment WHERE Id=@id", new { @id = id });
-                return projects.FirstOrDefault();
+                con.Query<int>(q);
+
+            }
+        }
+
+        public CommentVM GetComment(int id)
+        {
+            var q = @"SELECT C.*,U.Id,U.FIRSTNAME AS NAME,U.EmailAddress FROM COMMENT C WITH (NOLOCK) 
+                    INNER JOIN [USER] U WITH (NOLOCK)  ON C.CREATEDBYID=U.Id
+                    WHERE C.Id=@id";
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                var com = con.Query<CommentVM, UserDto, CommentVM>(q, (c, a) => { c.Author = a; return c; }, new { @id = id }, null, false).ToList();
+                return com.FirstOrDefault();
             }
         }
     }
@@ -77,7 +94,7 @@ namespace TeamBins.DataAccess
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                con.Query<int>("DELETE from Project WHERE ID=@projectId", new { @projectId = projectId });
+                con.Query<int>("DELETE from Project WHERE Id=@projectId", new { @projectId = projectId });
             }
         }
 
@@ -86,7 +103,7 @@ namespace TeamBins.DataAccess
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                var issueCount = con.Query<int>(" SELECT COUNT(ID) from Issue WHERE PROJECTID=@projectId", new { @projectId = projectId });
+                var issueCount = con.Query<int>(" SELECT COUNT(Id) from Issue WHERE PROJECTID=@projectId", new { @projectId = projectId });
                 return issueCount.First();
             }
         }
@@ -125,7 +142,7 @@ namespace TeamBins.DataAccess
                 }
                 else
                 {
-                    con.Query<int>("UPDATE Project SET Name=@name WHERE ID=@id",
+                    con.Query<int>("UPDATE Project SET Name=@name WHERE Id=@id",
                                  new { @name = model.Name, @id = model.Id });
 
                 }
@@ -212,7 +229,7 @@ namespace TeamBins.DataAccess
     //        using (var c = new SqlConnection(db.Database.Connection.ConnectionString))
     //        {
 
-    //            var cmd = new SqlCommand("SELECT ID,Name from Project where TeamId=@teamId",c);
+    //            var cmd = new SqlCommand("SELECT Id,Name from Project where TeamId=@teamId",c);
     //            cmd.Parameters.AddWithValue("teamId", teamId);
     //            c.Open();
     //            var reader = cmd.ExecuteReader();
@@ -222,7 +239,7 @@ namespace TeamBins.DataAccess
     //                {
     //                    var p = new ProjectDto
     //                    {
-    //                        Id = reader.GetInt32(reader.GetOrdinal("ID")),
+    //                        Id = reader.GetInt32(reader.GetOrdinal("Id")),
     //                        Name = reader.GetString(reader.GetOrdinal("Name"))
     //                    };
     //                    projectList.Add(p);

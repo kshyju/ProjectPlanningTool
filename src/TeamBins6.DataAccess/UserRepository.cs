@@ -16,7 +16,7 @@ namespace TeamBins.DataAccess
     //                .Select(x => new UserDto
     //                {
     //                    EmailAddress = x.User.EmailAddress,
-    //                    Id = x.User.ID,
+    //                    Id = x.User.Id,
     //                    Name = x.User.FirstName
     //                }).ToListAsync();
     //        }

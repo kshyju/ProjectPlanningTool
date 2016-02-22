@@ -11,7 +11,7 @@ namespace TeamBins.DataAccess
   //      }
   //      public void SaveDefaultTeam(int userId, int teamId)
   //      {
-  //          var user = db.Users.FirstOrDefault(s => s.ID == userId);
+  //          var user = db.Users.FirstOrDefault(s => s.Id == userId);
   //          if (user != null)
   //          {
   //              user.DefaultTeamID =teamId;
@@ -36,7 +36,7 @@ namespace TeamBins.DataAccess
   //          //Get a list of users who are not part of the current team
   //          return db.Users                
   //             // .Where(s=>s.FirstName.StartsWith(searchKey,StringComparison.OrdinalIgnoreCase)==true)
-  //              .Where(x=>!db.TeamMembers.Any(s=>s.MemberID==x.ID && s.TeamID==teamId))  ;
+  //              .Where(x=>!db.TeamMembers.Any(s=>s.MemberID==x.Id && s.TeamID==teamId))  ;
   //      }
   //      public IQueryable<TeamMember> GetTeamMembers(int teamId)
   //      {
@@ -48,7 +48,7 @@ namespace TeamBins.DataAccess
   //      }
   //      public void DeleteComment(int commentId)
   //      {
-  //          var comment = db.Comments.FirstOrDefault(s => s.ID == commentId);
+  //          var comment = db.Comments.FirstOrDefault(s => s.Id == commentId);
   //          if (comment != null)
   //          {
   //              db.Comments.Remove(comment);
@@ -105,7 +105,7 @@ namespace TeamBins.DataAccess
   //      }
   //      public Activity GetActivity(int id)
   //      {
-  //          return db.Activities.Include(s=>s.User).FirstOrDefault(s=>s.ID==id);
+  //          return db.Activities.Include(s=>s.User).FirstOrDefault(s=>s.Id==id);
   //      }
   //      public PasswordResetRequest GetPasswordResetRequest(string activationCode)
   //      {
@@ -113,7 +113,7 @@ namespace TeamBins.DataAccess
   //      }
   //      public User GetUser(int userId)
   //      {
-  //          return db.Users.FirstOrDefault(s => s.ID == userId);
+  //          return db.Users.FirstOrDefault(s => s.Id == userId);
   //      }
   //      public TeamMember GetTeamMember(int userId, int teamId)
   //      {
@@ -123,7 +123,7 @@ namespace TeamBins.DataAccess
   //      {
   //          try
   //          {
-  //              var issue=db.Issues.FirstOrDefault(s=>s.ID==issueId);
+  //              var issue=db.Issues.FirstOrDefault(s=>s.Id==issueId);
   //              if(issue!=null)
   //              {
   //                  issue.Active = false;
@@ -152,7 +152,7 @@ namespace TeamBins.DataAccess
   //          }
   //          catch (Exception ex)
   //          {
-  //              return OperationStatus.CreateFromException("error deleting issue member relation "+issueMember.ID , ex);
+  //              return OperationStatus.CreateFromException("error deleting issue member relation "+issueMember.Id , ex);
   //          }
   //          return new OperationStatus();
   //      }
@@ -174,7 +174,7 @@ namespace TeamBins.DataAccess
   //      {
             
             
-  //          var project = db.Projects.FirstOrDefault(s => s.ID == projectId);
+  //          var project = db.Projects.FirstOrDefault(s => s.Id == projectId);
   //          /*var projectMembers = project.ProjectMembers.ToList();
 
   //          foreach(var members in projectMembers)
@@ -195,7 +195,7 @@ namespace TeamBins.DataAccess
   //      {
   //          try
   //          {
-  //              if (teamMemberRequest.ID == 0)
+  //              if (teamMemberRequest.Id == 0)
   //              {
 
   //                  teamMemberRequest.CreatedDate = DateTime.UtcNow;
@@ -231,11 +231,11 @@ namespace TeamBins.DataAccess
   //      }
   //      public Project GetProject(int projectId)
   //      {
-  //          return db.Projects.FirstOrDefault(s => s.ID == projectId);
+  //          return db.Projects.FirstOrDefault(s => s.Id == projectId);
   //      }
   //      public Project GetProject(int projectId, int teamId)
   //      {
-  //          return db.Projects.FirstOrDefault(s => s.ID == projectId && s.TeamID == teamId);
+  //          return db.Projects.FirstOrDefault(s => s.Id == projectId && s.TeamID == teamId);
   //      }
 
   //      public Project GetProject(string name, int createdById)
@@ -260,7 +260,7 @@ namespace TeamBins.DataAccess
 
   //      public OperationStatus SaveIssue(Issue issue)
   //      {
-  //          if (issue.ID == 0)
+  //          if (issue.Id == 0)
   //          {
   //              issue.Active = true;
   //              issue.CreatedDate = DateTime.UtcNow;
@@ -272,7 +272,7 @@ namespace TeamBins.DataAccess
   //              db.Entry(issue).State = EntityState.Modified;
   //          }
   //          db.SaveChanges();
-  //          return new OperationStatus { Status = true, OperationID = issue.ID };
+  //          return new OperationStatus { Status = true, OperationID = issue.Id };
   //      }
        
   //     public OperationStatus SaveDocument(Document image)
@@ -285,7 +285,7 @@ namespace TeamBins.DataAccess
     
   //      public Project SaveProject(Project project)
   //      {
-  //          if (project.ID == 0)
+  //          if (project.Id == 0)
   //          {
   //              project.CreatedDate = DateTime.UtcNow;
   //              db.Projects.Add(project);
@@ -302,7 +302,7 @@ namespace TeamBins.DataAccess
   //      {
   //          try
   //          {
-  //              if (user.ID == 0)
+  //              if (user.Id == 0)
   //              {
   //                  user.CreatedDate = DateTime.UtcNow;
   //                  db.Users.Add(user);
@@ -322,7 +322,7 @@ namespace TeamBins.DataAccess
   //              var res = new OperationStatus();
 
   //          }
-  //          return new OperationStatus { OperationID = user.ID, Status = true };
+  //          return new OperationStatus { OperationID = user.Id, Status = true };
   //      }
   //      /*
   //      public User GetUser(string emailAddress)
@@ -340,12 +340,12 @@ namespace TeamBins.DataAccess
   //     */
   //      public Team GetTeam(int teamId)
   //      {
-  //          return db.Teams.FirstOrDefault(s => s.ID == teamId);
+  //          return db.Teams.FirstOrDefault(s => s.Id == teamId);
   //      }
 
   //      public Team SaveTeam(Team team)
   //      {
-  //          if (team.ID == 0)
+  //          if (team.Id == 0)
   //          {
   //              team.CreatedDate = DateTime.UtcNow;
   //              db.Teams.Add(team);
@@ -367,7 +367,7 @@ namespace TeamBins.DataAccess
   //      }*/
   //      public TeamMember SaveTeamMember(TeamMember teamMember)
   //      {
-  //          if (teamMember.ID == 0)
+  //          if (teamMember.Id == 0)
   //          {
   //              teamMember.CreatedDate = DateTime.UtcNow;
   //              db.TeamMembers.Add(teamMember);
@@ -392,7 +392,7 @@ namespace TeamBins.DataAccess
   //      {
             
 
-  //          return db.Issues.Include(s => s.Priority).Include(x => x.Status).Include(s => s.Category).Include(s => s.CreatedBy).Include(s=>s.ModifiedBy).FirstOrDefault(s => s.ID == issueId && s.Active == true);
+  //          return db.Issues.Include(s => s.Priority).Include(x => x.Status).Include(s => s.Category).Include(s => s.CreatedBy).Include(s=>s.ModifiedBy).FirstOrDefault(s => s.Id == issueId && s.Active == true);
   //      }
   ///*
   //      public List<TechiesWeb.TeamBins.Entities.User> GetTeamMembers(int teamId)
@@ -464,13 +464,13 @@ namespace TeamBins.DataAccess
   //          }
             
 
-  //          return new OperationStatus { Status = true, OperationID = comment.ID };
+  //          return new OperationStatus { Status = true, OperationID = comment.Id };
 
   //      }
 
   //      public Comment GetComment(int commentId)
   //      {
-  //          return db.Comments.Where(s => s.ID == commentId)
+  //          return db.Comments.Where(s => s.Id == commentId)
   //              .Include(s=>s.Issue).Include(s=>s.Author).FirstOrDefault();
   //      }
 

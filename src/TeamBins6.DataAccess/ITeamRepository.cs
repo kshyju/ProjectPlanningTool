@@ -57,7 +57,7 @@ namespace TeamBins.DataAccess
         public MemberVM GetTeamMember(int teamId, int userId)
         {
             var q =
-                @"SELECT [ID],[MemberID] ,[TeamID] ,[DefaultProjectID] FROM TeamMember WHERE TeamID=@t AND MemberID=@m";
+                @"SELECT [Id],[MemberID] ,[TeamID] ,[DefaultProjectID] FROM TeamMember WHERE TeamID=@t AND MemberID=@m";
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();

@@ -63,29 +63,29 @@ namespace TeamBins.DataAccess
         }
         public IssueDetailVM GetIssue(int id)
         {
-            var q = @"SELECT I.ID,I.Title,I.Description,ISNULL(I.Description,'') as Description,
+            var q = @"SELECT I.Id,I.Title,I.Description,ISNULL(I.Description,'') as Description,
                         U.FirstName + + ISNULL(U.LastName,'') as OpenedBy,
                         I.CreatedDate,
-                        SG.ID,
+                        SG.Id,
                         SG.Code,
                         SG.Name,
-                        C.ID,
+                        C.Id,
                         C.Name,C.Code,
-                        P.ID,
+                        P.Id,
                         P.Name,
                         I.CreatedDate,
-                        S.ID,S.Name,
-                        Pr.ID,
+                        S.Id,S.Name,
+                        Pr.Id,
                         Pr.Name						 
                         from Issue I 
-                        INNER JOIN Status S ON I.StatusID =S.ID
+                        INNER JOIN Status S ON I.StatusID =S.Id
                         INNER JOIN StatusGroup SG ON SG.Id =S.StatusGroupId
-                        INNER JOIN dbo.[USer] U ON U.ID=I.CreatedByid
-                        INNER JOIN Category C on C.ID = I.CategoryID
-                        INNER JOIN Priority P on P.ID = I.PriorityID
-                        INNER JOIN Project Pr ON Pr.ID=I.ProjectID
+                        INNER JOIN dbo.[USer] U ON U.Id=I.CreatedByid
+                        INNER JOIN Category C on C.Id = I.CategoryID
+                        INNER JOIN Priority P on P.Id = I.PriorityID
+                        INNER JOIN Project Pr ON Pr.Id=I.ProjectID
 
-where I.ID=@id";
+where I.Id=@id";
 
           
             using (var con = new SqlConnection(ConnectionString))
@@ -109,7 +109,7 @@ where I.ID=@id";
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                var projects = con.Query<IssueDetailVM>("SELECT ID,Title,Description,CreatedDate,DueDate as IssueDueDate FROM Issue");
+                var projects = con.Query<IssueDetailVM>("SELECT Id,Title,Description,CreatedDate,DueDate as IssueDueDate FROM Issue");
                 return projects;
                // Status
             }
@@ -118,24 +118,24 @@ where I.ID=@id";
         public IEnumerable<IssuesPerStatusGroup> GetIssuesGroupedByStatusGroup(int count)
         {
             var results = new List<IssuesPerStatusGroup>();
-            var q = @"SELECT I.ID,I.Title,
+            var q = @"SELECT I.Id,I.Title,
                         U.FirstName + + ISNULL(U.LastName,'') as OpenedBy,
                         I.CreatedDate,
-                        SG.ID,
+                        SG.Id,
                         SG.Code,
                         SG.Name,
-                        C.ID,
+                        C.Id,
                         C.Name,C.Code,
-                        P.ID,
+                        P.Id,
                         P.Name,
                        
-                        S.ID,S.Name						 
+                        S.Id,S.Name						 
                         from Issue I 
-                        INNER JOIN Status S ON I.StatusID =S.ID
+                        INNER JOIN Status S ON I.StatusID =S.Id
                         INNER JOIN StatusGroup SG ON SG.Id =S.StatusGroupId
-                        INNER JOIN dbo.[USer] U ON U.ID=I.CreatedByid
-                        INNER JOIN Category C on C.ID = I.CategoryID
-                        INNER JOIN Priority P on P.ID = I.PriorityID";
+                        INNER JOIN dbo.[USer] U ON U.Id=I.CreatedByid
+                        INNER JOIN Category C on C.Id = I.CategoryID
+                        INNER JOIN Priority P on P.Id = I.PriorityID";
 
             using (var con = new SqlConnection(ConnectionString))
             {
@@ -208,7 +208,7 @@ where I.ID=@id";
 
     //            if (issue.Id > 0)
     //            {
-    //                issueEntity = db.Issues.FirstOrDefault(s => s.ID == issue.Id);
+    //                issueEntity = db.Issues.FirstOrDefault(s => s.Id == issue.Id);
     //                if (issueEntity == null)
     //                {
     //                    return 0;
@@ -231,18 +231,18 @@ where I.ID=@id";
 
     //            if (issueEntity.CategoryID == 0)
     //            {
-    //                issueEntity.CategoryID = db.Categories.FirstOrDefault().ID;
+    //                issueEntity.CategoryID = db.Categories.FirstOrDefault().Id;
     //            }
     //            if (issueEntity.StatusID == 0)
     //            {
 
     //                var status = db.Status.FirstOrDefault(s => s.Code == "New");
-    //                issueEntity.StatusID = status.ID;
+    //                issueEntity.StatusID = status.Id;
     //            }
     //            if (issueEntity.PriorityID == null || issueEntity.PriorityID.Value == 0)
     //            {
     //                var priority = db.Priorities.FirstOrDefault(s => s.Code == "Normal");
-    //                issueEntity.PriorityID = priority.ID;
+    //                issueEntity.PriorityID = priority.Id;
     //            }
 
     //            if (issue.Id == 0)
@@ -261,33 +261,33 @@ where I.ID=@id";
     //            }
 
     //            db.SaveChanges();
-    //            return issueEntity.ID;
+    //            return issueEntity.Id;
     //        }
     //    }
     //    public IssueDetailVM GetIssue(int id)
     //    {
     //        using (var db = new TeamEntitiesConn())
     //        {
-    //            var issue = db.Issues.FirstOrDefault(s => s.ID == id);
+    //            var issue = db.Issues.FirstOrDefault(s => s.Id == id);
     //            if (issue != null)
     //            {
     //                var issueDto = new IssueDetailVM
     //                {
-    //                    Id = issue.ID,
+    //                    Id = issue.Id,
     //                    Title = issue.Title,
     //                    Description = issue.Description ?? string.Empty,
-    //                    Author = new UserDto { Id = issue.CreatedBy.ID, Name = issue.CreatedBy.FirstName },
-    //                    Project = new KeyValueItem { Id = issue.Project.ID, Name = issue.Project.Name },
+    //                    Author = new UserDto { Id = issue.CreatedBy.Id, Name = issue.CreatedBy.FirstName },
+    //                    Project = new KeyValueItem { Id = issue.Project.Id, Name = issue.Project.Name },
     //                    TeamID = issue.TeamID,
-    //                    Status = new KeyValueItem { Id = issue.Category.ID, Name = issue.Status.Name },
+    //                    Status = new KeyValueItem { Id = issue.Category.Id, Name = issue.Status.Name },
     //                    CreatedDate = issue.CreatedDate,
-    //                    Category = new KeyValueItem { Id = issue.Category.ID, Name = issue.Category.Name },
+    //                    Category = new KeyValueItem { Id = issue.Category.Id, Name = issue.Category.Name },
     //                    StatusGroupCode = issue.Status.StatusGroup.Code
 
     //                };
     //                if (issue.Priority != null)
     //                {
-    //                    issueDto.Priority = new KeyValueItem { Id = issue.Priority.ID, Name = issue.Priority.Name };
+    //                    issueDto.Priority = new KeyValueItem { Id = issue.Priority.Id, Name = issue.Priority.Name };
     //                }
 
 
@@ -319,10 +319,10 @@ where I.ID=@id";
     //        {
     //            var statusCounts = db.Issues
     //                .Where(s => s.TeamID == teamId)
-    //                .GroupBy(d => d.Status, g => g.ID, (k, i) => new
+    //                .GroupBy(d => d.Status, g => g.Id, (k, i) => new
     //            ItemCount
     //                {
-    //                    ItemId = k.ID,
+    //                    ItemId = k.Id,
     //                    ItemName = k.Name,
     //                    Count = i.Count()
     //                }).ToList();
@@ -346,17 +346,17 @@ where I.ID=@id";
     //                    Issues = items.SelectMany(d => d.Issues)
     //                        .Select(p => new IssueDetailVM
     //                        {
-    //                            Id = p.ID,
+    //                            Id = p.Id,
     //                            Title = p.Title,
     //                            Description = p.Description,
     //                            PriorityName = p.Priority.Name,
     //                            StatusName = p.Status.Name,
     //                            CategoryName = p.Category.Name,
-    //                            Category = new KeyValueItem { Id = p.Category.ID, Name = p.Category.Name },
-    //                            Priority = new KeyValueItem { Id = p.Project.ID, Name = p.Priority.Name },
-    //                            Author = new UserDto { Id = p.CreatedBy.ID, Name = p.CreatedBy.FirstName },
-    //                            Status = new KeyValueItem { Id = p.Project.ID, Name = p.Status.Name },
-    //                            Project = new KeyValueItem { Id = p.Project.ID, Name = p.Project.Name },
+    //                            Category = new KeyValueItem { Id = p.Category.Id, Name = p.Category.Name },
+    //                            Priority = new KeyValueItem { Id = p.Project.Id, Name = p.Priority.Name },
+    //                            Author = new UserDto { Id = p.CreatedBy.Id, Name = p.CreatedBy.FirstName },
+    //                            Status = new KeyValueItem { Id = p.Project.Id, Name = p.Status.Name },
+    //                            Project = new KeyValueItem { Id = p.Project.Id, Name = p.Project.Name },
     //                            CreatedDate = p.CreatedDate
     //                        }).ToList()
     //                }).ToList();
@@ -375,18 +375,18 @@ where I.ID=@id";
 
     //                .Select(s => new IssueDetailVM
     //                {
-    //                    Id = s.ID,
+    //                    Id = s.Id,
     //                    Title = s.Title,
     //                    Description = s.Description,
     //                    PriorityName = s.Priority.Name,
     //                    StatusName = s.Status.Name,
     //                    CategoryName = s.Category.Name,
-    //                    Category = new KeyValueItem { Id = s.Category.ID, Name = s.Category.Name },
-    //                    Priority = new KeyValueItem { Id = s.Project.ID, Name = s.Priority.Name },
-    //                    Author = new UserDto { Id = s.CreatedBy.ID, Name = s.CreatedBy.FirstName },
+    //                    Category = new KeyValueItem { Id = s.Category.Id, Name = s.Category.Name },
+    //                    Priority = new KeyValueItem { Id = s.Project.Id, Name = s.Priority.Name },
+    //                    Author = new UserDto { Id = s.CreatedBy.Id, Name = s.CreatedBy.FirstName },
     //                    //  Project = s.Project.Name,
-    //                    Status = new KeyValueItem { Id = s.Project.ID, Name = s.Status.Name },
-    //                    Project = new KeyValueItem { Id = s.Project.ID, Name = s.Project.Name },
+    //                    Status = new KeyValueItem { Id = s.Project.Id, Name = s.Status.Name },
+    //                    Project = new KeyValueItem { Id = s.Project.Id, Name = s.Project.Name },
     //                    CreatedDate = s.CreatedDate
     //                })
     //                .ToList();

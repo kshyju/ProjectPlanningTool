@@ -8,6 +8,7 @@ using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.AspNet.Mvc.Routing;
+using StackExchange.Exceptional;
 using TeamBins.Common;
 using TeamBins.Common.ViewModels;
 using TeamBins.Services;
@@ -116,6 +117,8 @@ namespace TeamBins6.Controllers.Web
             }
             catch (Exception ex)
             {
+              //  bErrorStore.LogException(ex, Request.HttpContext);
+
                 return Json(new { Status = "Error", Message = "Error saving issue" });
             }
           

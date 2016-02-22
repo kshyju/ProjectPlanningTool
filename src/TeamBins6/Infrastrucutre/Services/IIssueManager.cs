@@ -82,7 +82,7 @@ namespace TeamBins.Services
 
 
             }
-
+            activity.CreatedTime = DateTime.Now;
             activity.TeamId = userSessionHelper.TeamId;
 
             activity.Actor = new UserDto { Id = userSessionHelper.UserId };

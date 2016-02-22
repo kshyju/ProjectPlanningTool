@@ -89,12 +89,12 @@ namespace TeamBins.Common
     public class CommentVM
     {
         public int IssueId;
-        public int ID { set; get; }
-        public string CommentBody { set; get; }
+        public int Id { set; get; }
+        public string CommentText { set; get; }
         public string AuthorName { set; get; }
         public string AvatarHash { set; get; }
         public string CreatedDateRelative { set; get; }
-        public DateTime CreativeDate { set; get; }
+        public DateTime CreatedDate { set; get; }
         public bool IsOwner { set; get; }
         public UserDto Author { set; get; }
         public IssueVM Issue { set; get; }

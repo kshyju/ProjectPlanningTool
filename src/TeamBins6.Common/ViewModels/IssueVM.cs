@@ -77,7 +77,7 @@ namespace TeamBins.Common.ViewModels
 
     public class StatusDto
     {
-        // this could be a dapper PR ( Make the mapping work without making the properties (ClassName+ID)
+        // this could be a dapper PR ( Make the mapping work without making the properties (ClassName+Id)
         public int StatusId { set; get; }
         public string StatusName { set; get; }
         public string StatusCode { set; get; }

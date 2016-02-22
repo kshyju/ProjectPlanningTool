@@ -22,14 +22,24 @@ namespace TeamBins6.Controllers.Api
 
         // GET: api/values
         [HttpGet]
-        [Route("api/issue/{issueId}/comments")]
+        [Route("~/api/issue/{issueId}/comments")]
         public IEnumerable<CommentVM> Get(int issueId)
         {
             return this.commentManager.GetComments(issueId);
         }
 
+        // POST api/values
+        [HttpPost]
+        [Route("{commentId}/delete")]
+        public ObjectResult DeleteComment(int commentId)
+        {
+            this.commentManager.Delete(commentId);
+            return new HttpOkObjectResult(new { Status = "Success"});
+
+        }
+
         // GET api/values/5
- 
+
 
         // POST api/values
         [HttpPost]

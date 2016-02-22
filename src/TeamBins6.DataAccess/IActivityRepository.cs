@@ -21,7 +21,7 @@ namespace TeamBins.DataAccess
         public IEnumerable<ActivityDto> GetActivityItems(int teamId, int count)
         {
 
-            var q = @"SELECT TOP 1000 A.[ID]
+            var q = @"SELECT TOP 1000 A.[Id]
                     ,[ObjectID]
                     ,[ObjectType]
                     ,[ActivityDesc] as DeSCRIPTION
@@ -30,11 +30,11 @@ namespace TeamBins.DataAccess
                     ,[NewState]
                     ,[TeamID]
                     ,A.[CreatedDate] as CreatedTime
-                    ,U.ID
+                    ,U.Id
                     ,U.FirstName as Name
                     ,U.EmailAddress
                     FROM [Activity] A
-                    INNER JOIN [User] U ON A.CreatedByID = U.ID
+                    INNER JOIN [User] U ON A.CreatedByID = U.Id
                     WHERE A.TeamID=@teamId";
 
             using (var con = new SqlConnection(ConnectionString))
@@ -58,14 +58,20 @@ namespace TeamBins.DataAccess
 
                 var q =
                     con.Query<int>(
-                        @"INSERT INTO Activity(Title,Description,DueDate,CategoryId,StatusID,PriorityID,ProjectID,TeamID,Active,CreatedDate,CreatedByID) 
-                        VALUES(@title,@description,@dueDate,@categoryId,@statusId,@priortiyId,@projectId,@teamId,1,@createdDate,@userId);SELECT CAST(SCOPE_IDENTITY() as int)",
+                        @"INSERT INTO Activity(ObjectID,ObjectType,ActivityDesc,ObjectTitle,OldState,NewState,TeamID,CreatedDate,CreatedByID) 
+                        VALUES(@objectId,@objectType,@desc,@title,@oldState,@newState,@teamId,@createdDate,@userId);SELECT CAST(SCOPE_IDENTITY() as int)",
                         new
                         {
-                            @itemId = activity.TeamId,
-                            @desc= activity.Description,
-                            title = activity.CreatedTime,
-                            @state = activity.ObjectTitle
+                           @objectId = activity.TeamId,
+                            @objectType = activity.ObjectType,
+                            @title=activity.ObjectTitle,
+                            @oldState=activity.OldState,
+                            @newState=activity.NewState,
+                            @desc = activity.Description,
+                            @teamId = activity.TeamId,
+                            @createdDate = DateTime.Now,
+                            @userId=activity.Actor.Id
+
 
                         });
 
@@ -76,7 +82,34 @@ namespace TeamBins.DataAccess
 
         public ActivityDto GetActivityItem(int id)
         {
-            throw new NotImplementedException();
+            var q = @"SELECT TOP 1 A.[Id]
+                    ,[ObjectID]
+                    ,[ObjectType]
+                    ,[ActivityDesc] as DeSCRIPTION
+                    ,[ObjectTitle]
+                    ,[OldState]
+                    ,[NewState]
+                    ,[TeamID]
+                    ,A.[CreatedDate] as CreatedTime
+                    ,U.Id
+                    ,U.FirstName as Name
+                    ,U.EmailAddress
+                    FROM [Activity] A
+                    INNER JOIN [User] U ON A.CreatedByID = U.Id
+                    WHERE A.Id=@id";
+
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                var projects = con.Query<ActivityDto, UserDto, ActivityDto>(q, (a, u) =>
+                {
+                    a.Actor = u;
+                    return a;
+                }, new { @Id = id }, null, true, "Id");
+                return projects.FirstOrDefault();
+            }
+
+
         }
     }
 }
@@ -87,7 +120,7 @@ namespace TeamBins.DataAccess
     //    {
     //        using (var db = new TeamEntitiesConn())
     //        {
-    //            var x = db.Activities.FirstOrDefault(s=>s.ID==id);
+    //            var x = db.Activities.FirstOrDefault(s=>s.Id==id);
 
 
     //            return new ActivityDto
@@ -95,7 +128,7 @@ namespace TeamBins.DataAccess
     //                ObjectId = x.ObjectID,
     //                CreatedTime = x.CreatedDate,
     //                ObjectTite = x.ObjectTitle,
-    //                Actor = new UserDto {Id = x.User.ID, Name = x.User.FirstName, EmailAddress = x.User.EmailAddress},
+    //                Actor = new UserDto {Id = x.User.Id, Name = x.User.FirstName, EmailAddress = x.User.EmailAddress},
     //                NewState = x.NewState,
     //                ObjectType = x.ObjectType,
     //                Description = x.ActivityDesc
@@ -116,7 +149,7 @@ namespace TeamBins.DataAccess
     //               ObjectId =  x.ObjectID,
     //               CreatedTime = x.CreatedDate,
     //               ObjectTite = x.ObjectTitle,
-    //                    Actor = new UserDto {  Id = x.User.ID, Name = x.User.FirstName, EmailAddress = x.User.EmailAddress},
+    //                    Actor = new UserDto {  Id = x.User.Id, Name = x.User.FirstName, EmailAddress = x.User.EmailAddress},
     //               NewState = x.NewState,
     //               ObjectType = x.ObjectType,
     //               Description = x.ActivityDesc
@@ -144,7 +177,7 @@ namespace TeamBins.DataAccess
 
     //            db.Activities.Add(a);
     //            db.SaveChanges();
-    //            return a.ID;
+    //            return a.Id;
     //        }
     //    }
     //}

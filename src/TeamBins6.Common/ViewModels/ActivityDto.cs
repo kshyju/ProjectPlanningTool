@@ -76,7 +76,7 @@ namespace TeamBins.Common.ViewModels
         public string ObjectTitle { set; get; }
 
         public DateTime CreatedTime { set; get; }
-
+        public int CreatedById { get; set; }
     }
     public class ActivityVM
     {
