@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
+using StackExchange.Exceptional;
 using TeamBins.Common;
 
 namespace TeamBins6.Controllers
@@ -18,6 +19,9 @@ namespace TeamBins6.Controllers
     
         public IActionResult Index()
         {
+            var ex=new ArgumentException("Missing");
+          
+
             return View();
         }
 

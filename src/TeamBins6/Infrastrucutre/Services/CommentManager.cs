@@ -39,7 +39,10 @@ namespace TeamBins.Services
 
         public CommentVM GetComment(int id)
         {
-            return this.commentRepository.GetComment(id);
+            var commentVm = this.commentRepository.GetComment(id);
+            commentVm.Author.GravatarUrl = commentVm.Author.EmailAddress.ToGravatarUrl();
+            commentVm.IsOwner = commentVm.Author.Id == this.userSessionHelper.UserId;
+            return commentVm;
         }
 
         public IEnumerable<CommentVM> GetComments(int issueId)

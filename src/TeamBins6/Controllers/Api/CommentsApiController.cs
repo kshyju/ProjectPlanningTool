@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
 using TeamBins.Common;
 using TeamBins.Services;
+using TeamBins6.Infrastrucutre.Services;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -15,9 +16,11 @@ namespace TeamBins6.Controllers.Api
     public class CommentsApiController : Controller
     {
         private ICommentManager commentManager;
-        public CommentsApiController(ICommentManager commentManager)
+        private IUserSessionHelper userSessionHelper;
+        public CommentsApiController(ICommentManager commentManager,IUserSessionHelper userSessionHelper)
         {
             this.commentManager = commentManager;
+            this.userSessionHelper = userSessionHelper;
         }
 
         // GET: api/values
@@ -30,11 +33,17 @@ namespace TeamBins6.Controllers.Api
 
         // POST api/values
         [HttpPost]
-        [Route("{commentId}/delete")]
+       // [Route("~/api/comments/{commentId}/delete")]
         public ObjectResult DeleteComment(int commentId)
         {
-            this.commentManager.Delete(commentId);
-            return new HttpOkObjectResult(new { Status = "Success"});
+            var comment = this.commentManager.GetComment(commentId);
+            if (comment != null && comment.Author.Id == this.userSessionHelper.UserId)
+            {
+                this.commentManager.Delete(commentId);
+                return new HttpOkObjectResult(new { Status = "Success" });
+
+            }
+            return new HttpOkObjectResult(new { Status = "Error",Message="Can not delete comment!" });
 
         }
 
@@ -43,10 +52,13 @@ namespace TeamBins6.Controllers.Api
 
         // POST api/values
         [HttpPost]
-        public CommentVM Post([FromBody]CommentVM value)
+       // [Route("")]
+        public ObjectResult Create([FromBody]CommentVM value)
         {
             var commentId = this.commentManager.SaveComment(value);
-            return this.commentManager.GetComment(commentId);
+            var c= this.commentManager.GetComment(commentId);
+            return new HttpOkObjectResult(new { Status = "Success", Data = c });
+
 
         }
 

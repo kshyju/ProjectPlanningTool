@@ -48,11 +48,11 @@ namespace TeamBins.DataAccess
         }
         public void Delete(int id)
         {
-            var q = @"DELETE FROM  COMMENT C WHERE C.Id=@id";
+            var q = @"DELETE FROM COMMENT WHERE Id=@id";
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                con.Query<int>(q);
+                con.Query<int>(q,new {@id=id});
 
             }
         }
