@@ -49,17 +49,26 @@ namespace TeamBins6.Controllers
             return Ok(issues);
         }
 
-
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        
+        [HttpPost]
+        [Route("~/api/issue/{id}/delete")]
+        public ObjectResult Delete(int id, string token = "")
         {
-        }
+            try
+            {
+                var issue = this.issueManager.GetIssue(id);
+                if (issue != null && issue.Author.Id == this.userSessionHelper.UserId)
+                {
+                    this.issueManager.Delete(id);
+                }
+                ///return new HttpOkObjectResult();
+                return  Ok(new { Status = "Success" });
+            }
+            catch (Exception)
+            {
 
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+                return Ok(new { Status = "Error", Message = "Can not delete comment!" });
+            }
         }
     }
 }

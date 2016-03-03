@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc.Rendering;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 
 namespace TeamBins.Common.ViewModels
@@ -111,7 +112,9 @@ namespace TeamBins.Common.ViewModels
         public string ProjectName { get; set; }
         public DateTime CreatedDate { set; get; }
         public string IssueDueDate { set; get; }
-      //  public UserDto Author { get; set; }
+        public UserDto Author { get; set; }
+
+        public bool Active { set; get; }
     }
 
     public class DocumentVM
@@ -147,8 +150,8 @@ namespace TeamBins.Common.ViewModels
         public List<SelectListItem> Categories { set; get; }
         public List<SelectListItem> Projects { set; get; }
         public List<SelectListItem> Priorities { set; get; }
-        public List<SelectListItem> Cycles { set; get; }
-        public List<SelectListItem> Iterations { set; get; }
+        //public List<SelectListItem> Cycles { set; get; }
+        //public List<SelectListItem> Iterations { set; get; }
 
         public string Version { set; get; }
 
@@ -156,7 +159,31 @@ namespace TeamBins.Common.ViewModels
 
         public CreateIssue()
         {
-      //      files = new List<HttpPostedFileBase>();
+            this.Statuses=new List<SelectListItem>();
+            this.Categories = new List<SelectListItem>();
+            this.Projects = new List<SelectListItem>();
+            this.Priorities = new List<SelectListItem>();
+           
+
+            //      files = new List<HttpPostedFileBase>();
+        }
+
+        public CreateIssue(IssueDetailVM issueDetail)
+        {
+            this.Title = issueDetail.Title;
+            this.Description = issueDetail.Description;
+            this.SelectedProject = issueDetail.Project.Id;
+            this.SelectedStatus = issueDetail.Status.Id;
+            this.SelectedCategory = issueDetail.Category.Id;
+            this.SelectedPriority = issueDetail.Priority.Id;
+
+
+            this.Statuses = new List<SelectListItem>();
+            this.Categories = new List<SelectListItem>();
+            this.Projects = new List<SelectListItem>();
+            this.Priorities = new List<SelectListItem>();
+
         }
     }
+
 }

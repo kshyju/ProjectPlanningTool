@@ -499,7 +499,7 @@
     <Content Include="Views\Issues\Index.cshtml" />
     <Content Include="Views\Issues\IssueBoardNotFound.cshtml" />
     <Content Include="Views\Issues\NotFound.cshtml" />
-    <Content Include="Views\Issues\Partial\Comments.cshtml" />
+    <Content Include="Views\Comments.cshtml" />
     <Content Include="Views\Issues\Partial\DeleteConfirm.cshtml" />
     <Content Include="Views\Issues\Partial\Edit.cshtml" />
     <Content Include="Views\Issues\Partial\Members.cshtml" />

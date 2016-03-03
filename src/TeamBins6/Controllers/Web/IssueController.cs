@@ -28,7 +28,7 @@ namespace TeamBins6.Controllers.Web
         private IIssueManager issueManager;
         //private IssueService issueService;
         IUserSessionHelper userSessionHelper;
-       
+        
 
         public IssueController(ICommentManager commentManager, IUserSessionHelper userSessionHelper, IProjectManager projectManager, IIssueManager issueManager, ITeamManager teamManager) //: base(repositary)
         {
@@ -53,16 +53,16 @@ namespace TeamBins6.Controllers.Web
                 }
                 else
                 {
-                  
+
                     bugListVM.ProjectsExist = true;
 
-                    bool defaultProjectExist = projectManager.GetDefaultProjectForCurrentTeam() !=null;
+                    bool defaultProjectExist = projectManager.GetDefaultProjectForCurrentTeam() != null;
                     if (!defaultProjectExist)
                     {
-                        var some = new TestClass { Name = "Tes"};
-                       var alertMessages = new AlertMessageStore();
-                       
-                       // alertMessages.AddMessage("system", String.Format("Hey!, You need to set a default project for the current team. Go to your <a href='{0}account/settings'>profile</a> and set a project as default project.",""));
+                        var some = new TestClass { Name = "Tes" };
+                        var alertMessages = new AlertMessageStore();
+
+                        // alertMessages.AddMessage("system", String.Format("Hey!, You need to set a default project for the current team. Go to your <a href='{0}account/settings'>profile</a> and set a project as default project.",""));
                         //TempData["AlertMessages"] = some; //alertMessages;// "alertMessages";
                     }
                     return View("Index", bugListVM);
@@ -82,11 +82,29 @@ namespace TeamBins6.Controllers.Web
         {
             var vm = new IssueDetailVM();
             vm = this.issueManager.GetIssue(id);
-            vm.IsEditableForCurrentUser = this.teamManager.DoesCurrentUserBelongsToTeam();
+            if (vm != null && vm.Active)
+            {
+                vm.IsEditableForCurrentUser = this.teamManager.DoesCurrentUserBelongsToTeam();
 
-            return View(vm);
+                return View(vm);
+            }
+            return View("NotFound");
         }
 
+        public IActionResult Edit(int id)
+        {
+            var issue = this.issueManager.GetIssue(id);
+            if (issue != null && issue.Active)
+            {
+                var vm = new CreateIssue(issue);
+                this.issueManager.LoadDropdownData(vm);
+
+
+                vm.IsEditableForCurrentUser = this.teamManager.DoesCurrentUserBelongsToTeam();
+                return PartialView("~/Views/Issue/Partial/Edit.cshtml",vm);
+            }
+            return PartialView("NotFound");
+        }
 
         [HttpPost]
         [Route("Issue/Add")]
@@ -98,7 +116,7 @@ namespace TeamBins6.Controllers.Web
                 {
                     var previousVersion = issueManager.GetIssue(model.Id);
                     var newVersion = issueManager.SaveIssue(model, files);
-                     var issueActivity = issueManager.SaveActivity(model, previousVersion, newVersion);
+                    var issueActivity = issueManager.SaveActivity(model, previousVersion, newVersion);
 
                     if ((files != null) && (files.Any()))
                     {
@@ -117,13 +135,21 @@ namespace TeamBins6.Controllers.Web
             }
             catch (Exception ex)
             {
-              //  bErrorStore.LogException(ex, Request.HttpContext);
+                //  bErrorStore.LogException(ex, Request.HttpContext);
 
                 return Json(new { Status = "Error", Message = "Error saving issue" });
             }
-          
+
 
             return View(model);
         }
+
+        public IActionResult Delete(int id)
+        {
+            var deleteConfirmVM = new DeleteIssueConfirmationVM { Id = id };
+            return PartialView("Partial/DeleteConfirm", deleteConfirmVM);
+        }
+
+
     }
 }

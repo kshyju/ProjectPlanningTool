@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Http;
+using Microsoft.AspNet.Mvc.Rendering;
 using TeamBins.Common;
 using TeamBins.Common.ViewModels;
 using TeamBins.DataAccess;
@@ -18,7 +19,7 @@ namespace TeamBins.Services
         private IIssueRepository issueRepository;
         private IProjectRepository iProjectRepository;
         private IUserSessionHelper userSessionHelper;
-        public IssueManager(IIssueRepository issueRepository, IProjectRepository iProjectRepository,IActivityRepository activityRepository,IUserSessionHelper userSessionHelper)
+        public IssueManager(IIssueRepository issueRepository, IProjectRepository iProjectRepository, IActivityRepository activityRepository, IUserSessionHelper userSessionHelper)
         {
             this.issueRepository = issueRepository;
             this.iProjectRepository = iProjectRepository;
@@ -96,12 +97,36 @@ namespace TeamBins.Services
             return null;
         }
 
+
+        public void LoadDropdownData(CreateIssue issue)
+        {
+            issue.Projects =
+                   this.iProjectRepository.GetProjects(this.userSessionHelper.TeamId)
+                       .Select(s => new SelectListItem { Value = s.Id.ToString(), Text = s.Name })
+                       .ToList();
+
+            issue.Statuses = this.issueRepository.GetStatuses()
+                  .Select(s => new SelectListItem { Value = s.Id.ToString(), Text = s.Name })
+                       .ToList();
+
+            issue.Priorities = this.issueRepository.GetPriorities()
+                      .Select(s => new SelectListItem { Value = s.Id.ToString(), Text = s.Name })
+                           .ToList();
+
+            issue.Categories = this.issueRepository.GetCategories()
+          .Select(s => new SelectListItem { Value = s.Id.ToString(), Text = s.Name })
+               .ToList();
+
+
+
+        }
+
         public IssueDetailVM SaveIssue(CreateIssue issue, List<IFormFile> files)
         {
-            if (issue.SelectedProject==0)
+            if (issue.SelectedProject == 0)
             {
-               var defaultProjectId = this.iProjectRepository.GetDefaultProjectForTeamMember(this.userSessionHelper.TeamId,
-                    this.userSessionHelper.UserId);
+                var defaultProjectId = this.iProjectRepository.GetDefaultProjectForTeamMember(this.userSessionHelper.TeamId,
+                     this.userSessionHelper.UserId);
                 if (defaultProjectId == 0)
                 {
                     throw new MissingSettingsException("Missing data", "Default project");
@@ -128,7 +153,7 @@ namespace TeamBins.Services
             issue.TeamID = this.userSessionHelper.TeamId;
             var issueId = this.issueRepository.SaveIssue(issue);
 
-          
+
 
             var issueDetail = this.issueRepository.GetIssue(issueId);
             return issueDetail;
@@ -138,6 +163,11 @@ namespace TeamBins.Services
         public Task<int> StarIssue(int issueId)
         {
             throw new NotImplementedException();
+        }
+
+        public void Delete(int id)
+        {
+            this.issueRepository.Delete(id, this.userSessionHelper.UserId);
         }
     }
     public interface IIssueManager
@@ -151,5 +181,7 @@ namespace TeamBins.Services
         ActivityDto SaveActivity(CreateIssue model, IssueDetailVM previousVersion, IssueDetailVM newVersion);
 
         IEnumerable<IssuesPerStatusGroup> GetIssuesGroupedByStatusGroup(int count);
+        void Delete(int id);
+        void LoadDropdownData(CreateIssue issue);
     }
 }

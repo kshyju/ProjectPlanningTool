@@ -23,6 +23,7 @@ namespace TeamBins.DataAccess
 
         IEnumerable<IssuesPerStatusGroup> GetIssuesGroupedByStatusGroup(int count);
         Task<int> SaveIssueMember(int issueId, int userId, string relationShipType);
+        void Delete(int id, int userId);
     }
 
     public class IssueRepository : BaseRepo, IIssueRepository
@@ -66,6 +67,7 @@ namespace TeamBins.DataAccess
             var q = @"SELECT I.Id,I.Title,I.Description,ISNULL(I.Description,'') as Description,
                         U.FirstName + + ISNULL(U.LastName,'') as OpenedBy,
                         I.CreatedDate,
+                        I.Active,
                         SG.Id,
                         SG.Code,
                         SG.Name,
@@ -76,29 +78,31 @@ namespace TeamBins.DataAccess
                         I.CreatedDate,
                         S.Id,S.Name,
                         Pr.Id,
-                        Pr.Name						 
-                        from Issue I 
-                        INNER JOIN Status S ON I.StatusID =S.Id
-                        INNER JOIN StatusGroup SG ON SG.Id =S.StatusGroupId
-                        INNER JOIN dbo.[USer] U ON U.Id=I.CreatedByid
-                        INNER JOIN Category C on C.Id = I.CategoryID
-                        INNER JOIN Priority P on P.Id = I.PriorityID
-                        INNER JOIN Project Pr ON Pr.Id=I.ProjectID
-
-where I.Id=@id";
+                        Pr.Name,
+                        U.Id,U.FirstName as Name,
+						U.EmailAddress 						 
+                        from Issue I  WITH (NOLOCK)
+                        INNER JOIN Status S  WITH (NOLOCK) ON I.StatusID =S.Id
+                        INNER JOIN StatusGroup SG  WITH (NOLOCK) ON SG.Id =S.StatusGroupId
+                        INNER JOIN dbo.[USer] U  WITH (NOLOCK) ON U.Id=I.CreatedByid
+                        INNER JOIN Category C  WITH (NOLOCK) on C.Id = I.CategoryID
+                        INNER JOIN Priority P  WITH (NOLOCK) on P.Id = I.PriorityID
+                        INNER JOIN Project Pr  WITH (NOLOCK) ON Pr.Id=I.ProjectID
+                        WHERE I.Id=@id";
 
           
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                var projects = con.Query<IssueDetailVM, KeyValueItem, KeyValueItem, KeyValueItem, KeyValueItem, KeyValueItem, IssueDetailVM >(q, (issue, sg, cat, priority, status,project)
+                var projects = con.Query<IssueDetailVM, KeyValueItem, KeyValueItem, KeyValueItem, KeyValueItem, KeyValueItem,UserDto, IssueDetailVM >(q, (issue, sg, cat, priority, status,project,user)
                  => {
                      issue.Status = status;
                      issue.StatusGroup = sg;
                      issue.Priority = priority;
                         issue.Project = project;
+                        issue.Author = user;
                      issue.Category = cat; return issue;
-                 },  new { @id = id },null,true, "Id,Id,Id,Id,Id");
+                 },  new { @id = id },null,true, "Id,Id,Id,Id,Id,Id");
                 return projects.FirstOrDefault();
             }
 
@@ -130,12 +134,12 @@ where I.Id=@id";
                         P.Name,
                        
                         S.Id,S.Name						 
-                        from Issue I 
-                        INNER JOIN Status S ON I.StatusID =S.Id
-                        INNER JOIN StatusGroup SG ON SG.Id =S.StatusGroupId
-                        INNER JOIN dbo.[USer] U ON U.Id=I.CreatedByid
-                        INNER JOIN Category C on C.Id = I.CategoryID
-                        INNER JOIN Priority P on P.Id = I.PriorityID";
+                        from Issue I  WITH (NOLOCK)
+                        INNER JOIN Status S  WITH (NOLOCK) ON I.StatusID =S.Id
+                        INNER JOIN StatusGroup SG  WITH (NOLOCK) ON SG.Id =S.StatusGroupId
+                        INNER JOIN dbo.[USer] U  WITH (NOLOCK) ON U.Id=I.CreatedByid
+                        INNER JOIN Category C  WITH (NOLOCK) on C.Id = I.CategoryID
+                        INNER JOIN Priority P  WITH (NOLOCK) on P.Id = I.PriorityID WHERE I.Active=1";
 
             using (var con = new SqlConnection(ConnectionString))
             {
@@ -193,6 +197,16 @@ where I.Id=@id";
         public Task<int> SaveIssueMember(int issueId, int userId, string relationShipType)
         {
             throw new NotImplementedException();
+        }
+
+        public void Delete(int id,int userId)
+        {
+            // Soft delete
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                con.Query<int>("UPDATE Issue SET Active=0, ModifiedDate=@dt,ModifiedByID=@userId where Id=@id", new {@id=id, @dt=DateTime.UtcNow,@userId= userId });
+            }
         }
     }
 
