@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Reflection;
 using TeamBins.Common;
 using Dapper;
 using TeamBins.Common.ViewModels;
@@ -27,7 +29,7 @@ namespace TeamBins.DataAccess
                 con.Open();
 
                 var p = con.Query<int>("INSERT INTO Comment(CommentText,IssueID,CreatedDate,CreatedByID) VALUES (@cmnt,@issueId,@dt,@createdById);SELECT CAST(SCOPE_IDENTITY() as int)",
-                                        new { cmnt = comment.CommentText,@issueId=comment.IssueId, @dt = DateTime.Now, @createdById = comment.Author.Id });
+                                        new { cmnt = comment.CommentText, @issueId = comment.IssueId, @dt = DateTime.Now, @createdById = comment.Author.Id });
                 return p.First();
 
             }
@@ -41,7 +43,7 @@ namespace TeamBins.DataAccess
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                var com =  con.Query<CommentVM,UserDto,CommentVM>(q, (c,a)=>  { c.Author=a; return c;} ,new { @id = issueId },null,false).ToList();
+                var com = con.Query<CommentVM, UserDto, CommentVM>(q, (c, a) => { c.Author = a; return c; }, new { @id = issueId }, null, false).ToList();
                 return com;
             }
 
@@ -52,7 +54,7 @@ namespace TeamBins.DataAccess
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                con.Query<int>(q,new {@id=id});
+                con.Query<int>(q, new { @id = id });
 
             }
         }
@@ -103,27 +105,55 @@ namespace TeamBins.DataAccess
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                var issueCount = con.Query<int>(" SELECT COUNT(Id) from Issue WHERE PROJECTID=@projectId", new { @projectId = projectId });
+                var issueCount = con.Query<int>("SELECT COUNT(Id) from Issue WITH (NOLOCK) WHERE PROJECTID=@projectId", new { @projectId = projectId });
                 return issueCount.First();
             }
         }
+
+
         public IEnumerable<ProjectDto> GetProjects(int teamId)
         {
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                var projects = con.Query<ProjectDto>("SELECT * FROM Project WHERE TeamId=@teamId", new { @teamId = teamId });
+                var projects = con.Query<ProjectDto>("SELECT * FROM Project WITH (NOLOCK) WHERE TeamId=@teamId", new { @teamId = teamId });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 return projects;
             }
 
         }
+        
 
         public bool DoesProjectsExist(int teamId)
         {
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                var projectCount = con.Query<int>("SELECT COUNT(1) FROM Project WHERE TeamId=@teamId", new { @teamId = teamId });
+                var projectCount = con.Query<int>("SELECT COUNT(1) FROM Project  WITH (NOLOCK) WHERE TeamId=@teamId", new { @teamId = teamId });
                 return projectCount.First() > 0;
             }
 
@@ -142,8 +172,7 @@ namespace TeamBins.DataAccess
                 }
                 else
                 {
-                    con.Query<int>("UPDATE Project SET Name=@name WHERE Id=@id",
-                                 new { @name = model.Name, @id = model.Id });
+                    con.Query<int>("UPDATE Project SET Name=@name WHERE Id=@id",new { @name = model.Name, @id = model.Id });
 
                 }
 

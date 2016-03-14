@@ -132,7 +132,7 @@ namespace TeamBins.Common.ViewModels
     public class CreateIssue : IssueDetailVM
     {
         public int CreatedByID;
-
+        public bool IncludeIssueInResponse { set; get; }
         public bool IsFromModalWindow { set; get; }
         public int SelectedStatus { set; get; }
 

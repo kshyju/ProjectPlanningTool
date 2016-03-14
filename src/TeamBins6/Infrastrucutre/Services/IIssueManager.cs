@@ -105,7 +105,7 @@ namespace TeamBins.Services
                        .Select(s => new SelectListItem { Value = s.Id.ToString(), Text = s.Name })
                        .ToList();
 
-            issue.Statuses = this.issueRepository.GetStatuses()
+         issue.Statuses = this.issueRepository.GetStatuses()
                   .Select(s => new SelectListItem { Value = s.Id.ToString(), Text = s.Name })
                        .ToList();
 

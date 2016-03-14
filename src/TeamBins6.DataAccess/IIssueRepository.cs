@@ -90,19 +90,20 @@ namespace TeamBins.DataAccess
                         INNER JOIN Project Pr  WITH (NOLOCK) ON Pr.Id=I.ProjectID
                         WHERE I.Id=@id";
 
-          
+
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                var projects = con.Query<IssueDetailVM, KeyValueItem, KeyValueItem, KeyValueItem, KeyValueItem, KeyValueItem,UserDto, IssueDetailVM >(q, (issue, sg, cat, priority, status,project,user)
-                 => {
-                     issue.Status = status;
-                     issue.StatusGroup = sg;
-                     issue.Priority = priority;
-                        issue.Project = project;
-                        issue.Author = user;
-                     issue.Category = cat; return issue;
-                 },  new { @id = id },null,true, "Id,Id,Id,Id,Id,Id");
+                var projects = con.Query<IssueDetailVM, KeyValueItem, KeyValueItem, KeyValueItem, KeyValueItem, KeyValueItem, UserDto, IssueDetailVM>(q, (issue, sg, cat, priority, status, project, user)
+                 =>
+                {
+                    issue.Status = status;
+                    issue.StatusGroup = sg;
+                    issue.Priority = priority;
+                    issue.Project = project;
+                    issue.Author = user;
+                    issue.Category = cat; return issue;
+                }, new { @id = id }, null, true, "Id,Id,Id,Id,Id,Id");
                 return projects.FirstOrDefault();
             }
 
@@ -115,7 +116,7 @@ namespace TeamBins.DataAccess
                 con.Open();
                 var projects = con.Query<IssueDetailVM>("SELECT Id,Title,Description,CreatedDate,DueDate as IssueDueDate FROM Issue");
                 return projects;
-               // Status
+                // Status
             }
         }
 
@@ -144,19 +145,22 @@ namespace TeamBins.DataAccess
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-               
-                var projects = con.Query<IssueDetailVM, KeyValueItem, KeyValueItem, KeyValueItem, KeyValueItem, IssueDetailVM >
-                    (q, (issue, sg,cat,priority,status)
-                    => { issue.Status = status;
-                           issue.StatusGroup = sg;
-                           issue.Priority = priority;
-                           issue.Category = cat; return issue; }, splitOn: "Id,Id,Id,Id");
+
+                var projects = con.Query<IssueDetailVM, KeyValueItem, KeyValueItem, KeyValueItem, KeyValueItem, IssueDetailVM>
+                    (q, (issue, sg, cat, priority, status)
+                    =>
+                    {
+                        issue.Status = status;
+                        issue.StatusGroup = sg;
+                        issue.Priority = priority;
+                        issue.Category = cat; return issue;
+                    }, splitOn: "Id,Id,Id,Id");
                 //var projects = con.Query<IssueDetailVM>(q);
 
 
 
                 results = projects.GroupBy(s => s.StatusGroup.Code, x => x,
-                    (k, v) => new IssuesPerStatusGroup {GroupCode = k, GroupName = k,Issues = v.ToList()}).ToList();
+                    (k, v) => new IssuesPerStatusGroup { GroupCode = k, GroupName = k, Issues = v.ToList() }).ToList();
 
                 //grou py now
             }
@@ -169,27 +173,46 @@ namespace TeamBins.DataAccess
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-
-                var q =
-                    con.Query<int>(
-                        @"INSERT INTO Issue(Title,Description,DueDate,CategoryId,StatusID,PriorityID,ProjectID,TeamID,Active,CreatedDate,CreatedByID) 
+                if (issue.Id == 0)
+                {
+                    var q =
+    con.Query<int>(
+        @"INSERT INTO Issue(Title,Description,DueDate,CategoryId,StatusID,PriorityID,ProjectID,TeamID,Active,CreatedDate,CreatedByID) 
                         VALUES(@title,@description,@dueDate,@categoryId,@statusId,@priortiyId,@projectId,@teamId,1,@createdDate,@userId);SELECT CAST(SCOPE_IDENTITY() as int)",
+        new
+        {
+            @title = issue.Title,
+            @description = issue.Description,
+            @dueDate = issue.IssueDueDate,
+            @categoryId = issue.SelectedCategory
+        ,
+            @statusId = issue.SelectedStatus,
+            @priortiyId = issue.SelectedPriority,
+            @projectId = issue.SelectedProject,
+            @teamId = issue.TeamID,
+            @createdDate = DateTime.Now,
+            @userId = issue.CreatedByID
+        });
+
+                    return q.First();
+                }
+                else
+                {
+                    con.Execute(
+                        "UPDATE Issue SET Title=@title,Description=@description,CategoryId=@catId,ProjectId=@projectId,StatusId=@statusId,PriorityId=@priorityId WHERE Id=@id",
                         new
                         {
                             @title = issue.Title,
                             @description = issue.Description,
-                            @dueDate = issue.IssueDueDate,
-                            @categoryId = issue.SelectedCategory
-                        ,
+                            @priorityId = issue.SelectedPriority,
                             @statusId = issue.SelectedStatus,
-                            @priortiyId = issue.SelectedPriority,
-                            @projectId = issue.SelectedProject,
-                            @teamId = issue.TeamID,
-                            @createdDate = DateTime.Now,
-                            @userId = issue.CreatedByID
+                            @catId = issue.SelectedCategory,
+                            @id = issue.Id,
+                            @projectId = issue.SelectedProject
                         });
+                    return issue.Id;
+                }
 
-                return q.First();
 
             }
         }
@@ -199,13 +222,13 @@ namespace TeamBins.DataAccess
             throw new NotImplementedException();
         }
 
-        public void Delete(int id,int userId)
+        public void Delete(int id, int userId)
         {
             // Soft delete
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                con.Query<int>("UPDATE Issue SET Active=0, ModifiedDate=@dt,ModifiedByID=@userId where Id=@id", new {@id=id, @dt=DateTime.UtcNow,@userId= userId });
+                con.Query<int>("UPDATE Issue SET Active=0, ModifiedDate=@dt,ModifiedByID=@userId where Id=@id", new { @id = id, @dt = DateTime.UtcNow, @userId = userId });
             }
         }
     }

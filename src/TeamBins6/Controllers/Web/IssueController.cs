@@ -99,6 +99,8 @@ namespace TeamBins6.Controllers.Web
                 var vm = new CreateIssue(issue);
                 this.issueManager.LoadDropdownData(vm);
 
+               
+
 
                 vm.IsEditableForCurrentUser = this.teamManager.DoesCurrentUserBelongsToTeam();
                 return PartialView("~/Views/Issue/Partial/Edit.cshtml",vm);
@@ -108,24 +110,30 @@ namespace TeamBins6.Controllers.Web
 
         [HttpPost]
         [Route("Issue/Add")]
-        public ActionResult Add([FromBody]CreateIssue model, List<IFormFile> files)
+        public ActionResult Add([FromBody] CreateIssue model) //, List<IFormFile> files
         {
             try
             {
                 if (ModelState.IsValid)
                 {
                     var previousVersion = issueManager.GetIssue(model.Id);
-                    var newVersion = issueManager.SaveIssue(model, files);
+                    var newVersion = issueManager.SaveIssue(model, null);
                     var issueActivity = issueManager.SaveActivity(model, previousVersion, newVersion);
 
-                    if ((files != null) && (files.Any()))
+                    //if ((files != null) && (files.Any()))
+                    //{
+                    //    int fileCounter = 0;
+                    //    foreach (var file in files)
+                    //    {
+                    //        // fileCounter = SaveAttachedDocument(model, result, fileCounter, file);
+                    //    }
+                    //}
+                    if (model.IncludeIssueInResponse)
                     {
-                        int fileCounter = 0;
-                        foreach (var file in files)
-                        {
-                            // fileCounter = SaveAttachedDocument(model, result, fileCounter, file);
-                        }
+                        var newIssue = issueManager.GetIssue(newVersion.Id);
+                        return Json(new { Status = "Success" , Data = newIssue});
                     }
+                    
                     return Json(new { Status = "Success" });
                 }
             }

@@ -13,9 +13,13 @@ namespace TeamBins6.Infrastrucutre.Services
 {
     public interface ITeamManager
     {
-      //  List<TeamDto> GetTeams();
+        int SaveTeam(TeamDto team);
+        TeamBins.Common.TeamDto GetTeam(int id);
+        List<TeamDto> GetTeams();
         IEnumerable<ActivityDto> GeActivityItems(int count);
         bool DoesCurrentUserBelongsToTeam();
+
+        void Delete(int id);
     }
     public class TeamManager : ITeamManager
     {
@@ -29,16 +33,41 @@ namespace TeamBins6.Infrastrucutre.Services
             this.activityRepository = activityRepository;
         }
 
+        public TeamDto GetTeam(int id)
+        {
+            return this.teamRepository.GetTeam(id);
+        }
+
+        public void Delete(int id)
+        {
+            teamRepository.Delete(id);
+        }
+
         public bool DoesCurrentUserBelongsToTeam()
         {
             var member = this.teamRepository.GetTeamMember(this.userSessionHelper.TeamId, this.userSessionHelper.UserId);
             return member != null;
 
         }
-        //public List<TeamDto> GetTeams()
-        //{
-        //   // return teamRepository.GetTeams(userSessionHelper.UserId);
-        //}
+        public List<TeamDto> GetTeams()
+        {
+             var teams= teamRepository.GetTeams(userSessionHelper.UserId);
+            foreach (var teamDto in teams)
+            {
+                teamDto.IsRequestingUserTeamOwner = teamDto.CreatedById == this.userSessionHelper.UserId;
+            }
+            return teams;
+        }
+
+        public int SaveTeam(TeamDto team)
+        {
+            var isNewTeam = team.Id == 0;
+            team.CreatedById = this.userSessionHelper.UserId;
+            var teamId= teamRepository.SaveTeam(team);
+            return teamId;
+        }
+
+       
 
         public IEnumerable<ActivityDto> GeActivityItems(int count)
         {

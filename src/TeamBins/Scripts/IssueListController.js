@@ -32,12 +32,13 @@ issueListApp.controller('IssueListCtrl', function ($scope, $http, issueService) 
     $scope.create = function (e) {
         if (e.keyCode === 13) {
             if ($("#NewItemTitle").val() !== "") {
-                $.post(addIssueUrl, { Title: $("#NewItemTitle").val() }, function (data) {
+                $.post(addIssueUrl, { Title: $("#NewItemTitle").val(), includeIssueInResponse:true }, function (data) {
                     if (data.Status === "Error") {
                         alert(data.Message);
                     }
                     else {
                         $("#NewItemTitle").val("");
+
                     }
                 });
             }
