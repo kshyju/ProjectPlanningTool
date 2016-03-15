@@ -25,6 +25,7 @@ namespace TeamBins6.Controllers
         }
         public IActionResult Index()
         {
+            
             if (this.userSessionHelper.UserId > 0)
             {
                 return RedirectToAction("Index","Issue");

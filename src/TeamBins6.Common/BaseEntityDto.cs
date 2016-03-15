@@ -1,6 +1,6 @@
 ﻿namespace TeamBins.Common
 {
-    public class BaseEntityDto
+    public abstract class BaseEntityDto
     {
         public int Id { set; get; }
         public string Name { set; get; }

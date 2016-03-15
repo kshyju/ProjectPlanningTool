@@ -35,7 +35,7 @@ namespace TeamBins.Common
 
     public class UserMenuHeaderVM
     {
-        public List<TeamVM> Teams { set; get; }
+        public List<TeamDto> Teams { set; get; }
         public int SelectedTeam { set; get; }
         //  public int CurrentTeamID { set; get; }
         public string CurrentTeamName { set; get; }
@@ -43,7 +43,7 @@ namespace TeamBins.Common
         public string UserAvatarHash { set; get; }
         public UserMenuHeaderVM()
         {
-            Teams = new List<TeamVM>();
+            Teams = new List<TeamDto>();
         }
     }
 
