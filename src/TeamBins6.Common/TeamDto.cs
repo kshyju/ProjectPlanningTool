@@ -64,6 +64,8 @@ namespace TeamBins.Common
         public string DateInvited { set; get; }
         public string AvatarHash { set; get; }
     }
+
+    
     public class MemberVM
     {
         public int MemberID { set; get; }

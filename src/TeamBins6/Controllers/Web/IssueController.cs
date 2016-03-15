@@ -8,6 +8,7 @@ using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.AspNet.Mvc.Routing;
+using Newtonsoft.Json;
 using StackExchange.Exceptional;
 using TeamBins.Common;
 using TeamBins.Common.ViewModels;
@@ -76,6 +77,8 @@ namespace TeamBins6.Controllers.Web
                 return View("Error");
             }
         }
+
+       
 
         [Route("Issue/{id}")]
         public IActionResult Details(int id)
@@ -157,6 +160,9 @@ namespace TeamBins6.Controllers.Web
             var deleteConfirmVM = new DeleteIssueConfirmationVM { Id = id };
             return PartialView("Partial/DeleteConfirm", deleteConfirmVM);
         }
+
+
+
 
 
     }

@@ -13,8 +13,8 @@ namespace TeamBins6.Controllers.Web
 {
     public class DashboardController : Controller
     {
-        private IUserSessionHelper userSessionHelper;
-        private IUserAccountManager userAccountManager;
+        private readonly IUserSessionHelper userSessionHelper;
+        private readonly IUserAccountManager userAccountManager;
 
         public DashboardController(IUserSessionHelper userSessionHelper,IUserAccountManager userAccountManager)
         {
@@ -24,7 +24,7 @@ namespace TeamBins6.Controllers.Web
         }
 
         // GET: /<controller>/
-        [Route("~/Dashboard/{id}")]
+        //[Route("~/Dashboard/{id}")]
         public async Task<IActionResult> Index(int? id)
         {
             var vm = new DashBoardVM {  };
@@ -33,9 +33,6 @@ namespace TeamBins6.Controllers.Web
                 userSessionHelper.SetTeamId(id.Value);
                 await userAccountManager.SetDefaultTeam(userSessionHelper.UserId, id.Value);
             }
-
-
-
             return View(vm);
         }
     }

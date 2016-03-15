@@ -8,6 +8,7 @@ using TeamBins.Common;
 using TeamBins.Common.ViewModels;
 using TeamBins.DataAccess;
 using TeamBins6.Common.Infrastructure.Exceptions;
+using TeamBins6.Infrastrucutre.Extensions;
 using TeamBins6.Infrastrucutre.Services;
 
 namespace TeamBins.Services
@@ -169,10 +170,25 @@ namespace TeamBins.Services
         {
             this.issueRepository.Delete(id, this.userSessionHelper.UserId);
         }
+        public async Task<IEnumerable<UserDto>> GetNonIssueMembers(int issueId)
+        {
+            var members = await this.issueRepository.GetNonIssueMembers(issueId,this.userSessionHelper.TeamId);
+            foreach (var userDto in members)
+            {
+                userDto.GravatarUrl = userDto.EmailAddress.ToGravatarUrl();
+            }
+            return members;
+        }
+
+        public async Task SaveIssueAssignee(int issueId, int userId)
+        {
+            await issueRepository.SaveIssueMember(issueId, userId,userSessionHelper.UserId ,"ASSIGNEE");
+        }
     }
     public interface IIssueManager
     {
-
+        Task SaveIssueAssignee(int issueId, int userId);
+        Task<IEnumerable<UserDto>> GetNonIssueMembers(int issueId);
         Task<int> StarIssue(int issueId);
         IEnumerable<IssueVM> GetIssues(List<int> statusIds, int count);
         IssueDetailVM SaveIssue(CreateIssue issue, List<IFormFile> files);

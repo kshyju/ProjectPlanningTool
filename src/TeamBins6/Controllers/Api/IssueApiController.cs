@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc;
+using TeamBins.Common;
 using TeamBins.Common.ViewModels;
 using TeamBins.Services;
 using TeamBins6.Infrastrucutre.Services;
@@ -34,9 +35,19 @@ namespace TeamBins6.Controllers
 
 
         [HttpGet]
-        public IEnumerable<string> Get()
+        [Route("~/api/issue/{issueId}/noissuemembers")]
+        public async Task<IActionResult> GetIssueMembers(string term,int issueId)
         {
-            return new string[] { "value1", "value2" };
+            var list= await issueManager.GetNonIssueMembers(issueId);
+            return Json(list);
+        }
+
+        [HttpPost]
+        [Route("~/api/issue/{issueId}/assignteammember/{userId}")]
+        public async Task<IActionResult> GetIssueMembers(int issueId,int userId)
+        {
+            await this.issueManager.SaveIssueAssignee(issueId,userId);
+            return Json( new { Status="Success"});
         }
 
         // GET api/values/5

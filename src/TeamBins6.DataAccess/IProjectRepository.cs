@@ -186,8 +186,8 @@ namespace TeamBins.DataAccess
             {
                 con.Open();
 
-                var defaultProjectCount = con.Query<int>("SELECT TOP 1 DefaultProjectId from TEAMMEMBER WHERE TeamId = @teamId and MemberId = @userId", new { @teamId = model.TeamId, @userId = model.CreatedById });
-                if (!defaultProjectCount.Any())
+                var defaultProjectId = con.Query<int?>("SELECT TOP 1 DefaultProjectId from TEAMMEMBER WHERE TeamId = @teamId and MemberId = @userId", new { @teamId = model.TeamId, @userId = model.CreatedById });
+                if (defaultProjectId.Any()==false || defaultProjectId.First() == null)
                 {
                     con.Query<int>(" UPDATE TEAMMEMBER SET DEFAULTPROJECTID=@projectId WHERE TEAMID=@teamId AND MEMBERID=@userId",
                                       new
