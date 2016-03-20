@@ -29,7 +29,7 @@ namespace TeamBins6.Controllers.Web
         private IIssueManager issueManager;
         //private IssueService issueService;
         IUserSessionHelper userSessionHelper;
-        
+
 
         public IssueController(ICommentManager commentManager, IUserSessionHelper userSessionHelper, IProjectManager projectManager, IIssueManager issueManager, ITeamManager teamManager) //: base(repositary)
         {
@@ -78,7 +78,7 @@ namespace TeamBins6.Controllers.Web
             }
         }
 
-       
+
 
         [Route("Issue/{id}")]
         public IActionResult Details(int id)
@@ -102,11 +102,11 @@ namespace TeamBins6.Controllers.Web
                 var vm = new CreateIssue(issue);
                 this.issueManager.LoadDropdownData(vm);
 
-               
+
 
 
                 vm.IsEditableForCurrentUser = this.teamManager.DoesCurrentUserBelongsToTeam();
-                return PartialView("~/Views/Issue/Partial/Edit.cshtml",vm);
+                return PartialView("~/Views/Issue/Partial/Edit.cshtml", vm);
             }
             return PartialView("NotFound");
         }
@@ -134,9 +134,9 @@ namespace TeamBins6.Controllers.Web
                     if (model.IncludeIssueInResponse)
                     {
                         var newIssue = issueManager.GetIssue(newVersion.Id);
-                        return Json(new { Status = "Success" , Data = newIssue});
+                        return Json(new { Status = "Success", Data = newIssue });
                     }
-                    
+
                     return Json(new { Status = "Success" });
                 }
             }
@@ -162,6 +162,17 @@ namespace TeamBins6.Controllers.Web
         }
 
 
+        public async Task<IActionResult> Members(int id)
+        {
+            var issue = new IssueDetailVM();
+            issue.IsEditableForCurrentUser = this.teamManager.DoesCurrentUserBelongsToTeam();
+            var members = await issueManager.GetIssueMembers(id);
+            issue.Members = members;
+
+
+
+            return PartialView("Partial/Members", issue);
+        }
 
 
 

@@ -37,6 +37,8 @@ namespace TeamBins.Common.ViewModels
         [StringLength(100)]
         public string Email { set; get; }
 
+        public int Id { set; get; }
+
     }
 
     public class ResetPasswordVM
@@ -65,6 +67,8 @@ namespace TeamBins.Common.ViewModels
 
     public class DefaultIssueSettings
     {
+        public int UserId { set; get; }
+        public int TeamId { set; get; }
         public List<SelectListItem> Projects { set; get; }
         public int? SelectedProject { set; get; }
 

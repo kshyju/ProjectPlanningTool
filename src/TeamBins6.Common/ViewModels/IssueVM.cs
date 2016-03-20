@@ -51,7 +51,7 @@ namespace TeamBins.Common.ViewModels
         public bool IsStarredForUser { set; get; }
         public List<DocumentVM> Images { set; get; }
         public List<DocumentVM> Attachments { set; get; }
-     //   public List<MemberVM> Members { set; get; }
+       public IEnumerable<UserDto> Members { set; get; }
     //    public List<CommentVM> Comments { set; get; }
         public bool IsEditableForCurrentUser { set; get; }
         public int TeamID { set; get; }
@@ -62,7 +62,7 @@ namespace TeamBins.Common.ViewModels
         {
             Images = new List<DocumentVM>();
             Attachments = new List<DocumentVM>();
-      //      Members = new List<MemberVM>();
+            Members = new List<UserDto>();
        //     Comments = new List<CommentVM>();
         }
 

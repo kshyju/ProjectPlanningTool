@@ -7,12 +7,15 @@ using TeamBins.Common.ViewModels;
 using TeamBins.DataAccess;
 using TeamBins6.Infrastrucutre.Services;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TeamBins.Services
 {
 
     public interface IUserAccountManager
     {
+        Task<DefaultIssueSettings> GetIssueSettingsForUser();
+        Task<EditProfileVm> GetUserProfile();
         Task SetDefaultTeam(int userId, int teamId);
         Task<IEnumerable<TeamDto>> GetTeams(int userId);
         Task<UserAccountDto> GetUser(int id);
@@ -35,18 +38,46 @@ namespace TeamBins.Services
         //UserEmailNotificationSettingsVM GetNotificationSettings();
         //DefaultIssueSettings GetIssueSettingsForUser();
 
-        //void UpdateProfile(EditProfileVm model);
+        Task UpdateProfile(EditProfileVm model);
         //void UpdatePassword(ChangePasswordVM model);
         //void SaveDefaultProjectForTeam(int? selectedProject);
     }
 
     public class UserAccountManager : IUserAccountManager
     {
+        private IProjectManager projectManager;
         private IUserRepository userRepository;
-        public UserAccountManager(IUserRepository userRepository)
+        private IUserSessionHelper userSessionHelper;
+        public UserAccountManager(IUserRepository userRepository, IUserSessionHelper userSessionHelper, IProjectManager projectManager)
         {
             this.userRepository = userRepository;
+            this.userSessionHelper = userSessionHelper;
+            this.projectManager = projectManager;
         }
+        public async Task<EditProfileVm> GetUserProfile()
+        {
+            var vm = new EditProfileVm();
+            var user = await this.userRepository.GetUser(this.userSessionHelper.UserId);
+            if (user != null)
+            {
+                vm.Name = user.Name;
+                vm.Email = user.EmailAddress;
+            }
+            return vm;
+        }
+
+      
+
+        public async Task<DefaultIssueSettings> GetIssueSettingsForUser()
+        {
+            var vm = new DefaultIssueSettings();
+            vm.Projects=this.projectManager.GetProjects()
+                    .Select(s => new SelectListItem {Value = s.Id.ToString(), Text = s.Name})
+                    .ToList();
+            
+            return await Task.FromResult(vm);
+        }
+
 
         public  async Task SetDefaultTeam(int userId, int teamId)
         {
@@ -61,6 +92,12 @@ namespace TeamBins.Services
         {
             return await userRepository.GetTeams(userId);
 
+        }
+
+        public async Task UpdateProfile(EditProfileVm model)
+        {
+            model.Id = this.userSessionHelper.UserId;
+            await userRepository.SaveUserProfile(model);
         }
     }
 

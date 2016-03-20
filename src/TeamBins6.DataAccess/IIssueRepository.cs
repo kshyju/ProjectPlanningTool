@@ -27,6 +27,8 @@ namespace TeamBins.DataAccess
         void Delete(int id, int userId);
 
         Task<IEnumerable<UserDto>> GetNonIssueMembers(int issueId, int teamId);
+        Task<IEnumerable<UserDto>> GetIssueMembers(int issueId);
+
     }
 
     public class IssueRepository : BaseRepo, IIssueRepository
@@ -265,6 +267,19 @@ namespace TeamBins.DataAccess
                               AND U.ID NOT IN ( SELECT MemberID FROM IssueMember WHERE IssueID=@teamId)";
                 con.Open();
                 return await con.QueryAsync<UserDto>(q, new {@teamId = teamId});
+            }
+        }
+        public async Task<IEnumerable<UserDto>> GetIssueMembers(int issueId)
+        {
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                var q = @"SELECT U.ID,U.FirstName as Name,
+                        U.EmailAddress
+                        FROM [USER] U
+                        INNER JOIN IssueMember TM ON TM.MemberID=U.ID 
+                        WHERE TM.IssueID=@issueId  ";
+                con.Open();
+                return await con.QueryAsync<UserDto>(q, new { @issueId = issueId });
             }
         }
 

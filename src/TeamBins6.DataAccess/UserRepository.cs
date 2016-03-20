@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Dapper;
 using TeamBins.Common;
 using TeamBins.Common.Infrastructure.Enums.TeamBins.Helpers.Enums;
+using TeamBins.Common.ViewModels;
 
 namespace TeamBins.DataAccess
 {
@@ -31,6 +32,10 @@ namespace TeamBins.DataAccess
         Task<IEnumerable<TeamDto>> GetTeams(int userId);
         Task<UserAccountDto> GetUser(int id);
         Task SetDefaultTeam(int userId, int teamId);
+        Task SaveUserProfile(EditProfileVm userProfileVm);
+
+        Task SaveDefaultIssueSettings(DefaultIssueSettings model);
+
         // Task<List<UserDto>> GetSubscribers(int teamId, NotificationTypeCode notificationType);
     }
 
@@ -42,43 +47,72 @@ namespace TeamBins.DataAccess
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                await con.ExecuteAsync(q, new { @userId = userId,@teamId=teamId });
+                await con.ExecuteAsync(q, new { @userId = userId, @teamId = teamId });
             }
 
         }
 
-        public async Task<UserAccountDto> GetUser(int id)
+        public async Task SaveDefaultIssueSettings(DefaultIssueSettings model)
         {
-            var q = @"SELECT [ID]
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+
+                var defaultProjectId = con.Query<int?>("SELECT TOP 1 DefaultProjectId from TEAMMEMBER WHERE TeamId = @teamId and MemberId = @userId",
+                    new { @teamId = model.TeamId, @userId = model.UserId });
+
+                con.Query<int>(" UPDATE TEAMMEMBER SET DEFAULTPROJECTID=@projectId WHERE TEAMID=@teamId AND MEMBERID=@userId",
+                                  new
+                                  {
+                                      @projectId = model.SelectedProject.Value,
+                                      @teamId = model.TeamId,
+                                      @userId = model.UserId
+                                  });
+
+            }
+        }
+    
+
+    public async Task<UserAccountDto> GetUser(int id)
+    {
+        var q = @"SELECT [ID]
                       ,[FirstName] as Name                    
                       ,[EmailAddress]  
                       ,[Avatar] as GravatarUrl
                       ,[DefaultTeamID]
                     FROM [dbo].[User]
                     WHERE Id=@id";
-            using (var con = new SqlConnection(ConnectionString))
-            {
-                con.Open();
-                var com = await con.QueryAsync<UserAccountDto>(q, new {@id = id});
-                return com.FirstOrDefault();
-            }
-
+        using (var con = new SqlConnection(ConnectionString))
+        {
+            con.Open();
+            var com = await con.QueryAsync<UserAccountDto>(q, new { @id = id });
+            return com.FirstOrDefault();
         }
 
-        public async Task<IEnumerable<TeamDto>> GetTeams(int userId)
+    }
+    public async Task SaveUserProfile(EditProfileVm userProfileVm)
+    {
+        var q = @"UPDATE [User] SET FirstName=@name WHERE ID=@userId";
+        using (var con = new SqlConnection(ConnectionString))
         {
-           var q = @"SELECT T.ID,T.Name
+            con.Open();
+            await con.ExecuteAsync(q, new { @userId = userProfileVm.Id, @name = userProfileVm.Name });
+        }
+    }
+    public async Task<IEnumerable<TeamDto>> GetTeams(int userId)
+    {
+        var q = @"SELECT T.ID,T.Name
                   FROM [dbo].[TeamMember] TM
                   INNER JOIN TEAM T ON TM.TeamID=T.ID                 
                   WHERE TM.MemberID=@id";
-            using (var con = new SqlConnection(ConnectionString))
-            {
-                con.Open();
-                return await con.QueryAsync<TeamDto>(q, new {@id = userId });               
-            }            
+        using (var con = new SqlConnection(ConnectionString))
+        {
+            con.Open();
+            return await con.QueryAsync<TeamDto>(q, new { @id = userId });
         }
-        
     }
+
+}
 
 
 

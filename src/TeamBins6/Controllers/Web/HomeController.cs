@@ -15,6 +15,25 @@ namespace TeamBins6.Controllers
       //  [Required]
         public string Name { set; get; }
     }
+    public class GraphPoint 
+    {
+        /// <summary>
+        /// Date represented as a unix epoch
+        /// </summary>
+        public virtual long DateEpoch { get; set; }
+        /// <summary>
+        /// Value of the top (or only) point
+        /// </summary>
+        public virtual double? Value { get; set; }
+    }
+
+    public class DoubleGraphPoint : GraphPoint
+    {
+        /// <summary>
+        /// Value of the bottom (or second) point
+        /// </summary>
+        public virtual double? BottomValue { get; set; }
+    }
     public class HomeController : Controller
     {
         private IUserSessionHelper userSessionHelper;
@@ -23,12 +42,34 @@ namespace TeamBins6.Controllers
         {
             this.userSessionHelper = userSessionHelper;
         }
+
         public IActionResult Index()
         {
-            
+
+            var list = new List<GraphPoint>();
+            list.Add(new GraphPoint { DateEpoch = 132321, Value = 705});
+
+            list.Add(new GraphPoint { DateEpoch = 212000 });
+            list.Add(new GraphPoint { DateEpoch = 212134, Value = 233 });
+            list.Add(new GraphPoint { DateEpoch = 432321, Value = 275 });
+            list.Add(new GraphPoint { DateEpoch = 669321, Value = 145 });
+
+
+            var s = list.Max(f => f.Value);
+
+            Func<GraphPoint, double> getter = p => p.Value.GetValueOrDefault(0);
+
+            var s52 = list.Where(f => f.DateEpoch == 212000).Max(getter);
+
+            var s2 = list.Where(f => f.DateEpoch < 212134).Max(getter);
+
+
+          //  var s23 = list.Where(f => f.DateEpoch < 132321).DefaultIfEmpty(new GraphPoint()).Max(getter);
+
+
             if (this.userSessionHelper.UserId > 0)
             {
-                return RedirectToAction("Index","Issue");
+                //return RedirectToAction("Index","Issue");
            }
                
 

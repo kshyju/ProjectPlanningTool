@@ -184,9 +184,20 @@ namespace TeamBins.Services
         {
             await issueRepository.SaveIssueMember(issueId, userId,userSessionHelper.UserId ,"ASSIGNEE");
         }
+        public async Task<IEnumerable<UserDto>> GetIssueMembers(int issueId)
+        {
+            var members = await this.issueRepository.GetIssueMembers(issueId);
+            foreach (var userDto in members)
+            {
+                userDto.GravatarUrl = userDto.EmailAddress.ToGravatarUrl();
+            }
+            return members;
+        }
+
     }
     public interface IIssueManager
     {
+        Task<IEnumerable<UserDto>> GetIssueMembers(int issueId);
         Task SaveIssueAssignee(int issueId, int userId);
         Task<IEnumerable<UserDto>> GetNonIssueMembers(int issueId);
         Task<int> StarIssue(int issueId);

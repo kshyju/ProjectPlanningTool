@@ -18,6 +18,8 @@ namespace TeamBins.Common
         public string EmailAddress { set; get; }
         public string Name { set; get; }
         public string GravatarUrl { get; set; }
+
+        public double? TestVal { set; get; }
     }
 
     public class AppUser 
