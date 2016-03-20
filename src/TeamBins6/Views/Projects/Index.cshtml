@@ -1,0 +1,104 @@
+﻿@model TeamBins.Common.ViewModels.TeamProjectListVM
+@{
+    ViewBag.Title = "Projects";
+}
+
+<div >
+    <h2>Projects</h2>
+    @if (Model.Projects.Count > 0)
+    {
+        <a asp-action="Add" class="popup" asp-controller="Projects">Add</a>
+       
+        <table class="tblGrid table">
+            <thead>
+                <tr><th>Name</th><th></th></tr>
+            </thead>
+            <tbody>
+                @foreach (var project in Model.Projects)
+                {
+                    <tr>
+                        <td>
+                            @Html.ActionLink(project.Name, "details", "Projects", new { @id = project.Id }, new { @class = "listItem" })
+                            @if (project.IsDefaultProject)
+                            {
+                                <span class="def-project-item">Default project</span>
+                            }
+                        </td>
+                        <td>
+                            <a asp-action="edit" class="popup" asp-route-id="@project.Id" asp-controller="Projects">Edit</a>
+                            <a asp-action="DeleteConfirm" class="popup deletess" asp-route-id="@project.Id" asp-controller="Projects">Delete</a>
+                            @*@Html.ActionLink("Edit", "Edit", "Projects", new { id = @project.Id }, new { @class = "popup" }) |
+                            @Html.ActionLink("Delete", "DeleteConfirm", "Projects", new { id = project.Id }, new { @class = "popup delete", @data_id = project.Id })*@
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div>
+            <p>No projects found ! you need to create atleast one project before you start creating issues.</p>
+            <a asp-action="Add" asp-controller="Projects" class = "popup">Add a project now</a>
+
+
+        </div>
+    }
+</div>
+
+<div id="modal" class="modal fade"></div>
+
+@section Scripts
+{
+
+    <script type="text/javascript">
+        $(function() {
+
+            $("#deleteBtn").click(function(e) {
+                e.preventDefault();
+                $('#delConfirm').modal('show');
+            });
+
+
+            $(document).on("click", "#btnSaveProject", function(e) {
+                e.preventDefault();
+                $.post($(this).closest("form").attr("action"), $(this).closest("form").serialize(), function(res) {
+                    if (res.Status === "Success")
+                        window.location.href = "@Url.Action("Index")";
+                    else
+                        $("#msg").text(res.Message).addClass("error").slideDown();
+                    $("#Name").focus();
+                });
+            });
+
+            $(document).on("click", "#delproj", function(e) {
+                e.preventDefault();
+                var _this = $(this);
+                $.post($(this).closest("form").attr("action"), $(this).closest("form").serialize(), function(res) {
+                    if (res.Status === "Success") {
+                        $("#msg").text(res.Message).addClass("success").fadeIn(100);
+                        var projId = $("div#msg").closest("div.model").find("#Id").val();
+                        $("div#msg").closest("div.model").find("table").hide();
+                        $("#li_" + projId).fadeOut(300, function() { $(this).remove(); });
+                    } else
+                        $("#msg").text(res.Message).addClass("error").slideDown();
+                    $("#Name").focus();
+                });
+            });
+            $(document).on("click", "input.closeModel", function(e) {
+                e.preventDefault();
+                $("#kendoWindow").data("kendoWindow").close();
+            });
+
+
+            $("li.listItem").hover(function() {
+                $(this).find("div.liEdit").show();
+            }, function() {
+                $(this).find("div.liEdit").hide();
+            });
+
+        });
+
+    </script>
+
+}

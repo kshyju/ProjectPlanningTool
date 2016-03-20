@@ -1,0 +1,29 @@
+﻿@model TeamBins.Common.ViewModels.IssueDetailVM
+<h4>Assigned To</h4>
+<div id="memberList">
+    @foreach (var member in Model.Members)
+    {
+        <div class="issueMember">
+            <img class="memberAvatar" src="@member.GravatarUrl" />
+            <h5>@member.Name</h5>
+            @if (Model.IsEditableForCurrentUser)
+            {
+                <span>
+                    <a class="aRemove hiddenchangelink"  href="">remove</a>
+                </span>
+            }
+        </div>
+    }
+    @if (!Model.Members.Any())
+    {
+        <p id="pNoData"> No Members assigned to this issue yet</p>
+    }
+
+</div>
+@Model.IsEditableForCurrentUser
+@if (Model.IsEditableForCurrentUser)
+{
+    <h4>Assign New Member</h4>
+    <input id="txtAssignMember" value="" />
+}
+

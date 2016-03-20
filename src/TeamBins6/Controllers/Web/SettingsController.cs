@@ -61,23 +61,23 @@ namespace TeamBins.Controllers
         //    return RedirectToAction("Index");
         //}
 
-        //[HttpPost]
-        //public ActionResult Settings(DefaultIssueSettings model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //         userAccountManager.SaveDefaultProjectForTeam(model.SelectedProject);
+        [HttpPost]
+        public ActionResult Settings(DefaultIssueSettings model)
+        {
+            if (ModelState.IsValid)
+            {
+              //  userAccountManager.SaveDefaultProjectForTeam(model.SelectedProject);
 
-        //            var msg = new AlertMessageStore();
-        //            msg.AddMessage("success", "Settings updated successfully");
-        //            TempData["AlertMessages"] = msg;
-        //            return RedirectToAction("settings");
+                //var msg = new AlertMessageStore();
+                //msg.AddMessage("success", "Settings updated successfully");
+                //TempData["AlertMessages"] = msg;
+                return RedirectToAction("settings");
 
-        //    }
-        //    //
-        //  //  model.Projects = GetProjectListItem();
-        //    return RedirectToAction("Index");
-        //}
+            }
+            //
+            //  model.Projects = GetProjectListItem();
+            return RedirectToAction("Index");
+        }
 
     }
 

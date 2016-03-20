@@ -1,0 +1,43 @@
+﻿@using System.Threading.Tasks
+@using TeamBins.Common.ViewModels
+@model TeamBins.Common.ViewModels.DeleteProjectConfirmVM
+@using(Html.BeginForm("DeleteConfirm","Projects"))
+{
+<div class="modal-dialog">
+        <div class="modal-content" style="width:500px;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Confirm your action</h4>
+            </div>
+            <div class="modal-body">
+
+                <table class="tblform sleek modelTblFull">
+
+                    @if (Model.DependableItemsCount > 0)
+                    {
+                        <tr>
+                            <td>
+                                <div class="deleteMeta">You cannot delete this project because <b> @Model.DependableItemsCount</b> issues are associated to this project.</div>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <th>Are you sure to delete this project</th>
+                        </tr>
+                    }
+                </table>
+                @Html.HiddenFor(x => x.Id)
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                @if (Model.DependableItemsCount==0)
+                {
+                    <button type="button" id="btnSaveProject" class="btn btn-primary">Delete</button>
+                }
+            </div>
+        </div>
+    </div>
+}
+

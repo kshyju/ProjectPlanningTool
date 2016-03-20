@@ -7,6 +7,10 @@ using Microsoft.AspNet.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using StackExchange.Exceptional.Stores;
+using TeamBins.DataAccess;
+using TeamBins.Services;
+using TeamBins6.Infrastrucutre.Services;
 
 namespace TeamBins6
 {
@@ -26,6 +30,24 @@ namespace TeamBins6
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<ICommentManager, CommentManager>();
+            services.AddTransient<IUserSessionHelper, UserSessionHelper>();
+            services.AddTransient<IProjectManager, ProjectManager>();
+            services.AddTransient<IProjectRepository, ProjectRepository>();
+            services.AddTransient<IIssueRepository, IssueRepository>();
+            services.AddTransient<IIssueManager, IssueManager>();
+            services.AddTransient<ITeamManager, TeamManager>();
+            services.AddTransient<IActivityRepository,ActivityRepository>();
+            services.AddTransient<ITeamRepository, TeamRepository>();
+            services.AddTransient<ICommentRepository, CommentRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IUserAccountManager, UserAccountManager>();
+
+            // Rechecking in
+
+            services.AddCaching();
+            services.AddSession(s => s.IdleTimeout = TimeSpan.FromMinutes(30));
+            
             // Add framework services.
             services.AddMvc();
         }
@@ -49,6 +71,10 @@ namespace TeamBins6
             app.UseIISPlatformHandler();
 
             app.UseStaticFiles();
+
+            app.UseSession();
+
+            StackExchange.Exceptional.ErrorStore.Setup("My Application", new SQLErrorStore("Data Source=DET-4082;Initial Catalog=Team;Integrated Security=true"));
 
             app.UseMvc(routes =>
             {

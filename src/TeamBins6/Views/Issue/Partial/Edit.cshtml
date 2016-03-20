@@ -1,0 +1,96 @@
+﻿@model TeamBins.Common.ViewModels.CreateIssue
+
+@using (Html.BeginForm("Add", "Issue"))
+{
+
+    <div class="modal-dialog">
+        <div class="modal-content" style="width:650px;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">@Model.Title</h4>
+            </div>
+            <div class="modal-body">
+
+
+                <table class="tblform sleek" >
+                    <tr>
+                        <td>
+                            @Html.TextBoxFor(x => x.Title, new { @placeholder = "Issue Title", @class = "sleekInput" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table class="tblSub">
+                                <tr>
+                                    <th>Project</th>
+                                    <td>
+                                        @Model.SelectedProject
+                                        @Html.DropDownListFor(x => x.SelectedProject, Model.Projects, "Select", new {@class = "kendoDropDown"})
+                                    </td>
+                                    <th>Category</th>
+                                    <td>
+                                        @Html.DropDownListFor(x => x.SelectedCategory, Model.Categories, "Select", new { @class = "kendoDropDown" })
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Priority</th>
+                                    <td>
+                                        @Html.DropDownListFor(x => x.SelectedPriority, Model.Priorities, "Select", new { @class = "kendoDropDown" })
+                                    </td>
+                                    <th>Status</th>
+                                    <td>
+                                        @Html.DropDownListFor(x => x.SelectedStatus, Model.Statuses, "Select", new { @class = "kendoDropDown" })
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.TextAreaFor(x => x.Description, new { @class = "DescrTxtArea" })
+                        </td>
+                    </tr>
+                    <tr>
+
+                        <td>
+                            <div class="divAttach">
+                                <h5>Attachments</h5>
+                                <div>
+                                    @foreach (var img in Model.Images)
+                                    {
+
+                                        <div>
+                                            <a href="@Url.Action("Image",new { @id=img.FileKey})" target="_blank">
+                                                @img.FileName
+                                            </a>
+                                        </div>
+                                    }
+
+                                </div>
+                                Add a file
+                                <input type="file" name="files" id="files" />
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                @Html.HiddenFor(x => x.Id)
+                @Html.HiddenFor(x => x.IsFromModalWindow)
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="submit" id="btnSaveIssue" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+<script type="text/javascript">
+
+
+
+</script>

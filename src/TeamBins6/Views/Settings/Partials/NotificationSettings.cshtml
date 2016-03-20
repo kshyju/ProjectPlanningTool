@@ -1,0 +1,26 @@
+﻿@{
+    ViewBag.Title = "Email Settings";
+}
+
+@model TeamBins.Common.ViewModels.UserEmailNotificationSettingsVM
+<div>
+    <h3>Notification setttings</h3>
+
+    <div class="tab-content">
+        <div class="tab-pane active">
+            @using (Html.BeginForm())
+            {
+                <h4>Send an email to me when </h4>
+                    <table id="tbl-notificaton-settings">
+                        @Html.EditorFor(m => m.EmailSubscriptions)
+                        <tr>
+                            <td><button type="submit" class="btn btn-primary">Save</button></td>
+                            <td></td>
+                        </tr>
+                    </table>
+            }
+        </div>
+    </div>
+
+</div>
+

@@ -17,32 +17,14 @@
     </environment>
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a asp-controller="Home" asp-action="Index" class="navbar-brand">TeamBins6</a>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-controller="Home" asp-action="About">About</a></li>
-                    <li><a asp-controller="Home" asp-action="Contact">Contact</a></li>
-                </ul>
+    <div>
+        @await Component.InvokeAsync("MenuHeader",1)
+        @*@Html.AlertMessages()*@
+        <div class="content">
+            <div class="central">
+                @RenderBody()
             </div>
         </div>
-    </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; 2016 - TeamBins</p>
-        </footer>
     </div>
 
     <environment names="Development">
@@ -50,18 +32,64 @@
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
     </environment>
-    <environment names="Staging,Production">
-        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.1.4.min.js"
-                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
-                asp-fallback-test="window.jQuery">
-        </script>
-        <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.5/bootstrap.min.js"
-                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
-                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal">
-        </script>
-        <script src="~/js/site.min.js" asp-append-version="true"></script>
-    </environment>
+<environment names="Staging,Production">
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.1.4.min.js"
+            asp-fallback-src="~/lib/jquery/dist/jquery.js"
+            asp-fallback-test="window.jQuery">
+        
+    </script>
 
+    <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.5/bootstrap.min.js"
+            asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+            asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal">
+        
+    </script>
+    <script src="~/js/site.min.js" asp-append-version="true"></script>
+</environment>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular-sanitize.js"></script>
+
+
+<script type="text/javascript">
+
+    var teamBins = teamBins || {};
+    teamBins.appSettings = teamBins.appSettings || {};
+    teamBins.appSettings.baseUrl = '@Url.Content("~")';
+
+    var issueListApp = angular.module('teamBins', ['ngSanitize']);
+    issueListApp.value("appSettings", teamBins);
+
+    function ShowModel(url, title) {
+        $("#modal").remove();
+        $.get(url, function (data) {
+            $('<div id="modal" class="modal fade">' + data + '</div>').modal();
+        });
+    }
+    $(function () {
+        $(document).on("click", "a.popup", function (e) {
+            e.preventDefault();
+         
+            ShowModel($(this).attr("href"));
+        });
+        $("a.a-current-team").click(function (e) {
+            e.preventDefault();
+            var _this = $(this);
+            if (_this.data("state") === "selected") {
+                $("#available-teams").fadeIn(100);
+                _this.data("state", "expanded");
+            }
+            else {
+                $("#available-teams").fadeOut(100);
+                _this.data("state", "selected");
+            }
+        });
+        setTimeout(function () { $('#success-message').slideUp(300); }, 6000);
+
+
+    });
+</script>
     @RenderSection("scripts", required: false)
 </body>
 </html>

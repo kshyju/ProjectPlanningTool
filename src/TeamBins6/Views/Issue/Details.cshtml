@@ -1,0 +1,115 @@
+﻿@using Newtonsoft.Json
+@model TeamBins.Common.ViewModels.IssueDetailVM
+@{
+    ViewBag.Title = "Issue #" + Model.Id;
+}
+
+
+@if (Model.IsEditableForCurrentUser)
+{
+    <div class="divToobar">
+        @Html.ActionLink("Edit", "Edit", "Issue", new { id = Model.Id }, new { @class = "toolLink popup" })
+        @Html.ActionLink("Delete", "Delete", "Issue", new { id = Model.Id }, new { @class = "toolLink popup" })
+    </div>
+}
+<div class="divPageContent" ng-app="teamBins" ng-cloak ng-controller="issueDetailsCtrl as vm">
+    <div class="divLeft">
+        <h2>@Model.Title</h2>
+        <div id="issueMeta">
+            <div class="authorInfo">
+                Opened by @Model.OpenedBy on @Model.CreatedDate
+                @if (!String.IsNullOrEmpty(Model.LastModifiedBy))
+                {
+                    <span>, Last Modified by @Model.LastModifiedBy on @Model.LastModifiedDate</span>
+                }
+            </div>
+            <div id="issueStatus">Status<span class="@Model.StatusCode">@Model.Status.Name</span></div>
+            <div id="issueStatus">Project <span class="">@Model.Project.Name</span></div>
+        </div>
+        <div class="divDetail">
+            <div class="divDescr">
+                @Html.Raw(Model.Description.Replace("\n", "</br>"))
+
+                @foreach (var img in Model.Images)
+                {
+                    <div>
+                        <a href="~/uploads/@(img.FileKey)" target="_blank"><img class="detailImg" src="~/uploads/@(img.FileKey)"/></a>
+                    </div>
+                }
+            </div>
+            @if (Model.Attachments.Any())
+            {
+                <div id="attachmentHolder">
+                    <h5>Other Attachements</h5>
+                    <ul>
+                        @foreach (var img in Model.Attachments)
+                        {
+                            <li><a href="~/uploads/@img.FileKey" target="_blank">@img.FileName</a></li>
+                        }
+                    </ul>
+                </div>
+            }
+        </div>
+        <div id="comments">
+            @Html.Partial("Partial/Comments", Model)
+        </div>
+    </div>
+    <div class="divRight">
+        <div id="issue-details" class="right-detail-items ">
+            <div class="issue-detail-item important">
+                Issue # @Model.Id.ToString()
+
+                <div class="starHolder">
+                    <span id="issue-star" ng-click="vm.starIssue()" 
+
+                      class="glyphicon @(Model.IsStarredForUser ? "glyphicon-star " : "glyphicon-star-empty")" 
+                      data-starred="@(Model.IsStarredForUser ? "starred" : "unstarred")"></span>
+                </div>
+
+            </div>
+            <div class="issue-detail-item">Type : @Model.Category.Name</div>
+            <div class="issue-detail-item">Priority: @Model.Priority.Name</div>
+        </div>
+
+        <div id="members" class="changableWidget right-detail-items">
+            @Html.Partial("Partial/Members", Model)
+        </div>
+        @if (Model.IsEditableForCurrentUser)
+        {
+            <div id="dueDate" class="changableWidget">
+                <h4>Due Date</h4>
+                <span id="dueDate">@Model.IssueDueDate</span>
+                <a href="#" id="aChangeDueDate" class="hiddenChangeLink">Change</a>
+                <div id="dueDatePicker" style="display: none;">
+                    <input type="text" name="IssueDueDate" value="@Model.IssueDueDate" id="IssueDueDate"/>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+@Html.HiddenFor(d=>d.Id)
+
+
+@Html.HiddenFor(x => x.TeamID)
+
+@section Scripts
+{
+<script src="~/js/issuedetail.service.js"></script>
+<script src="~/js/issuedetailcontroller.js"></script>
+<script src="~/js/issue.js"></script>
+
+@*<script src="~/js/issue.js"></script>*@
+
+    <script>
+        angular.module("teamBins").value("issue",  @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model)));
+    </script>
+}
+
+<script type="text/javascript">
+    var issueCommentsUrl = "@Url.Action("comments","Issues")";
+    var issueDeleteUrl = "@Url.Action("delete","issues")";
+    var issuesUrl = "@Url.Action("index","issues")";
+
+
+
+</script>

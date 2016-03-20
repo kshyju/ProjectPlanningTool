@@ -1,5 +1,5 @@
 ﻿body {
-    font-size: .85em;
+    /*font-size: .85em;*/
     font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif;
     color: #232323;
     background-color: #fff;
@@ -717,14 +717,19 @@ div.dashboardItem
 	}
     .iterations
     {
-        overflow:auto;
+
     }
 ul.navtab
 {
+    padding-bottom: 6px;
 	list-style:none;	
-    overflow:auto; margin:0px;padding: 5px 16px !IMPORTANT;
+   
+   /*padding: 5px 16px !IMPORTANT;*/
     /*width:300px;*/
     float:left;
+  
+    width: 100%;
+    margin: 0;
 }
 .spinner {
     width:100px;float:left;
@@ -1097,3 +1102,13 @@ color: #111;
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
   display: none !important;
 }   
+
+.no-issue-msg {
+
+    padding: 8px;
+    text-align: center;
+    font-weight: bold;
+}
+.settings-form-tbl th {
+    padding: 8px 16px 8px 8px;
+}
