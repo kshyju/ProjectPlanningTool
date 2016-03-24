@@ -31,6 +31,7 @@ namespace TeamBins.DataAccess
     {
         Task<IEnumerable<TeamDto>> GetTeams(int userId);
         Task<UserAccountDto> GetUser(int id);
+        Task<UserAccountDto> GetUser(string email);
         Task SetDefaultTeam(int userId, int teamId);
         Task SaveUserProfile(EditProfileVm userProfileVm);
 
@@ -71,48 +72,66 @@ namespace TeamBins.DataAccess
 
             }
         }
-    
 
-    public async Task<UserAccountDto> GetUser(int id)
-    {
-        var q = @"SELECT [ID]
+        public async Task<UserAccountDto> GetUser(string email)
+        {
+            var q = @"SELECT [ID]
+                      ,[FirstName] as Name                    
+                      ,[EmailAddress],
+                        Password
+                      ,[Avatar] as GravatarUrl
+                      ,[DefaultTeamID]
+                    FROM [dbo].[User]
+                    WHERE EmailAddress=@id";
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                var com = await con.QueryAsync<UserAccountDto>(q, new { @id = email });
+                return com.FirstOrDefault();
+            }
+
+        }
+
+        public async Task<UserAccountDto> GetUser(int id)
+        {
+            var q = @"SELECT [ID]
                       ,[FirstName] as Name                    
                       ,[EmailAddress]  
                       ,[Avatar] as GravatarUrl
                       ,[DefaultTeamID]
                     FROM [dbo].[User]
                     WHERE Id=@id";
-        using (var con = new SqlConnection(ConnectionString))
-        {
-            con.Open();
-            var com = await con.QueryAsync<UserAccountDto>(q, new { @id = id });
-            return com.FirstOrDefault();
-        }
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                var com = await con.QueryAsync<UserAccountDto>(q, new { @id = id });
+                return com.FirstOrDefault();
+            }
 
-    }
-    public async Task SaveUserProfile(EditProfileVm userProfileVm)
-    {
-        var q = @"UPDATE [User] SET FirstName=@name WHERE ID=@userId";
-        using (var con = new SqlConnection(ConnectionString))
-        {
-            con.Open();
-            await con.ExecuteAsync(q, new { @userId = userProfileVm.Id, @name = userProfileVm.Name });
         }
-    }
-    public async Task<IEnumerable<TeamDto>> GetTeams(int userId)
-    {
-        var q = @"SELECT T.ID,T.Name
+        public async Task SaveUserProfile(EditProfileVm userProfileVm)
+        {
+            var q = @"UPDATE [User] SET FirstName=@name WHERE ID=@userId";
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                await con.ExecuteAsync(q, new { @userId = userProfileVm.Id, @name = userProfileVm.Name });
+            }
+        }
+        public async Task<IEnumerable<TeamDto>> GetTeams(int userId)
+        {
+            var q = @"SELECT T.ID,T.Name
                   FROM [dbo].[TeamMember] TM
                   INNER JOIN TEAM T ON TM.TeamID=T.ID                 
                   WHERE TM.MemberID=@id";
-        using (var con = new SqlConnection(ConnectionString))
-        {
-            con.Open();
-            return await con.QueryAsync<TeamDto>(q, new { @id = userId });
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                return await con.QueryAsync<TeamDto>(q, new { @id = userId });
+            }
         }
-    }
 
-}
+    }
 
 
 

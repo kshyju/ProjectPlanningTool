@@ -35,9 +35,9 @@ namespace TeamBins.Controllers
             if (ModelState.IsValid)
             {
                 await userAccountManager.UpdateProfile(model);
-                var msg = new AlertMessageStore();
-                msg.AddMessage("success", "Profile updated successfully");
-                TempData["AlertMessages"] = msg;
+                //var msg = new AlertMessageStore();
+                //msg.AddMessage("success", "Profile updated successfully");
+                //TempData["AlertMessages"] = msg;
                 return RedirectToAction("Index", "Settings");
 
             }
@@ -66,7 +66,7 @@ namespace TeamBins.Controllers
         {
             if (ModelState.IsValid)
             {
-              //  userAccountManager.SaveDefaultProjectForTeam(model.SelectedProject);
+               userAccountManager.SaveDefaultProjectForTeam(model);
 
                 //var msg = new AlertMessageStore();
                 //msg.AddMessage("success", "Settings updated successfully");

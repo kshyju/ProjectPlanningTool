@@ -10,11 +10,78 @@
 //// For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 
+using System;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using Microsoft.AspNet.Mvc;
+using TeamBins.Common;
+using TeamBins.Common.ViewModels;
+using TeamBins.Services;
+using TeamBins6.Infrastrucutre.Services;
+
+namespace TeamBins6.Controllers.Web
+{
+    public class AccountController : Controller
+    {
+        IUserAccountManager userAccountManager;
+        private IUserSessionHelper userSessionHelper;
+
+        public AccountController(IUserAccountManager userAccountManager,IUserSessionHelper userSessionHelper)
+        {
+            this.userAccountManager = userAccountManager;
+            this.userSessionHelper = userSessionHelper;
+        }
+
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Login(LoginVM model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var user = await userAccountManager.GetUser(model.Email);
+                    if (user != null)
+                    {
+                        var appUser = new AppUser { UserName = user.EmailAddress, Id = user.Id.ToString() };
+                        if (user.Password == model.Password)
+                        {
+                            int userDefaultTeamId = user.DefaultTeamId ?? 0;                           
+
+                            this.userSessionHelper.SetUserIDToSession(user.Id, userDefaultTeamId);
+                            return RedirectToAction("index", "dashboard");
+                        }
+                    }
+                }
+                ModelState.AddModelError("", "Username/Password is incorrect!");
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "Oops! Something went wrong :(");
+               
+            }
+            return View(model);
+        }
 
 
-//namespace TeamBins6.Controllers.Web
-//{
-//    public class AccountController : Controller
+        public ActionResult reset(string id)
+        {
+            var vm = new ResetPasswordVM();
+            return View(vm);
+        }
+
+        public ActionResult forgotPassword()
+        {
+            return View("forgotPassword", new ForgotPasswordVM());
+        }
+
+    }
+}
+
 //    {
 //        readonly IUserAccountManager accountManager;
 //        private UserManager<AppUser> um;
@@ -122,67 +189,7 @@
 
 //        }
 
-//        [HttpPost]
-//        public async Task<ActionResult> Login(LoginVM model)
-//        {
-//            try
-//            {
-//                if (ModelState.IsValid)
-//                {
-//                    var user = accountManager.GetUser(model.Email);
-//                    if (user != null)
-//                    {
-//                        var appUser = new AppUser { UserName = user.EmailAddress, Id = user.Id.ToString() };
-//                        //var user1 = await um.FindAsync(model.Email, model.Password);
-//                        //if (user1!= null)
-//                        //{
-//                        await SignInAsync(appUser, model.RememberMe);
-//                        //   // return RedirectToLocal(returnUrl);
-//                        //}
-
-
-//                        if (user.Password == model.Password)
-//                        {
-//                            await accountManager.SaveLastLoginAsync(user.Id);
-//                            int userDefaultTeamId = user.DefaultTeamId ?? 0;
-
-
-
-
-//                            var claims = new[] {
-//                                    new Claim(ClaimTypes.Name, user.Name),
-//                                    new Claim(ClaimTypes.Email, user.EmailAddress)
-//                             };
-//                            //var identity = new ClaimsIdentity(claims,DefaultAuthenticationTypes.ApplicationCookie);
-//                            //ClaimsPrincipal principal = new ClaimsPrincipal(identity);
-//                            //Thread.CurrentPrincipal = principal;
-//                            //var context = Request.GetOwinContext();
-//                            //var authManager = context.Authentication;
-
-//                            //authManager.SignIn(new AuthenticationProperties { IsPersistent = true }, identity);
-
-//                            //AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-//                            //var identity = await UserManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
-//                            //AuthenticationManager.SignIn(new AuthenticationProperties() { IsPersistent = isPersistent }, identity);
-
-
-
-//                            SetUserIDToSession(user.Id, userDefaultTeamId, user.Name);
-
-//                            return RedirectToAction("index", "dashboard");
-//                        }
-//                    }
-//                }
-//                ModelState.AddModelError("", "Username/Password is incorrect!");
-//            }
-//            catch (Exception ex)
-//            {
-//                ModelState.AddModelError("", "Oops! Something went wrong :(");
-//                log.Error(ex);
-//            }
-//            return View(model);
-//        }
-
+//  
 //        public ActionResult NotificationSettings()
 //        {
 //            var vm = new UserEmailNotificationSettingsVM { TeamID = TeamID };
@@ -224,16 +231,6 @@
 //        }
 
 
-//        public ActionResult reset(string id)
-//        {
-//            var vm = new ResetPasswordVM();
-//            return View(vm);
-//        }
-
-//        public ActionResult forgotPassword()
-//        {
-//            return View("forgotPassword", new ForgotPasswordVM());
-//        }
 //        public ActionResult forgotPasswordEmailSent()
 //        {
 //            return View();

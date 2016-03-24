@@ -40,7 +40,8 @@ namespace TeamBins.Services
 
         Task UpdateProfile(EditProfileVm model);
         //void UpdatePassword(ChangePasswordVM model);
-        //void SaveDefaultProjectForTeam(int? selectedProject);
+        Task SaveDefaultProjectForTeam(DefaultIssueSettings defaultIssueSettings);
+        Task<UserAccountDto> GetUser(string email);
     }
 
     public class UserAccountManager : IUserAccountManager
@@ -53,6 +54,11 @@ namespace TeamBins.Services
             this.userRepository = userRepository;
             this.userSessionHelper = userSessionHelper;
             this.projectManager = projectManager;
+        }
+
+        public async Task SaveDefaultProjectForTeam(DefaultIssueSettings defaultIssueSettings)
+        {
+             await this.userRepository.SaveDefaultIssueSettings(defaultIssueSettings);
         }
         public async Task<EditProfileVm> GetUserProfile()
         {
@@ -87,7 +93,10 @@ namespace TeamBins.Services
         {
             return await this.userRepository.GetUser(id);
         }
-
+        public async Task<UserAccountDto> GetUser(string email)
+        {
+            return await this.userRepository.GetUser(email);
+        }
         public async Task<IEnumerable<TeamDto>> GetTeams(int userId)
         {
             return await userRepository.GetTeams(userId);

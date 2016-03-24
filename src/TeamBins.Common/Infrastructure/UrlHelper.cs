@@ -19,7 +19,7 @@ namespace TeamBins.Common.Infrastructure
 
                 if (appUrl != "/") appUrl += "/";
 
-                var baseUrl = $"{request.Url.Scheme}://{request.Url.Authority}{appUrl}";
+                var baseUrl = String.Format("{0}://{1}{2}", request.Url.Scheme, request.Url.Authority, appUrl);
 
                 return baseUrl;
             }

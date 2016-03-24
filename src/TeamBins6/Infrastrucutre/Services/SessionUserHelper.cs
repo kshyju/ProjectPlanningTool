@@ -13,7 +13,7 @@ namespace TeamBins6.Infrastrucutre.Services
         int TeamId { get; }
         int UserId { get; }
         void SetTeamId(int teamId);
-
+        void SetUserIDToSession(int userId, int teamId);
         void SetUserId(int userId);
 
     }
@@ -30,6 +30,7 @@ namespace TeamBins6.Infrastrucutre.Services
 
         private const string teamIdKey = "TB_TeamId";
         private const string userIdKey = "TB_UserId";
+        private const string DefaultTeamIdKey = "TB_DefaultTeamId";
         public int TeamId
         {
             get
@@ -51,6 +52,12 @@ namespace TeamBins6.Infrastrucutre.Services
             _session.SetInt32(userIdKey, userId);
         }
 
+        public void SetUserIDToSession(int userId, int teamId)
+        {
+            _session.SetInt32(userIdKey, userId);
+            _session.SetInt32(teamIdKey,teamId);
+          
+        }
         public int UserId
         {
             get
