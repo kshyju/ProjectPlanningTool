@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
-using TeamBins.Common.ViewModels;
+    using Microsoft.AspNet.Mvc.ViewFeatures;
+    using TeamBins.Common.ViewModels;
 using TeamBins.Services;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
@@ -50,6 +51,11 @@ namespace TeamBins6.Controllers.Web
                     
                     return Json(new { Status = "Success", Message = "Project created successfully" });
 
+                }
+                else
+                {
+                    var ss=ViewData.ModelState.Values.Select(s => s.Errors);
+                    return Json(new { Status = "Error",Errors=ss});
                 }
                 return Json(new { Status = "Error", Message = "Required fields are missing" });
             }

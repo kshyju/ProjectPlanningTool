@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
 using TeamBins.Common;
 using TeamBins.Services;
+using TeamBins6.Infrastrucutre.Extensions;
 using TeamBins6.Infrastrucutre.Services;
 
 namespace TeamBins6.ViewComponents
@@ -28,6 +29,7 @@ namespace TeamBins6.ViewComponents
             {
                 var u = await userAccountManager.GetUser(userSessionHelper.UserId);
                 vm.UserDisplayName = u.Name;
+                vm.UserAvatarHash = u.EmailAddress.ToGravatarUrl();
 
                 var teams = await userAccountManager.GetTeams(userSessionHelper.UserId);
                 vm.Teams = teams.Select(x => new TeamDto {Id = x.Id, Name = x.Name}).ToList();

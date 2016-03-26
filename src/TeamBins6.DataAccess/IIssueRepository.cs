@@ -22,7 +22,7 @@ namespace TeamBins.DataAccess
         int SaveIssue(CreateIssue issue);
         DashBoardItemSummaryVM GetDashboardSummaryVM(int teamId);
 
-        IEnumerable<IssuesPerStatusGroup> GetIssuesGroupedByStatusGroup(int count);
+        IEnumerable<IssuesPerStatusGroup> GetIssuesGroupedByStatusGroup(int count,int teamId);
         Task SaveIssueMember(int issueId, int memberId, int createdById, string relationShipType);
         void Delete(int id, int userId);
 
@@ -135,7 +135,7 @@ namespace TeamBins.DataAccess
             }
         }
 
-        public IEnumerable<IssuesPerStatusGroup> GetIssuesGroupedByStatusGroup(int count)
+        public IEnumerable<IssuesPerStatusGroup> GetIssuesGroupedByStatusGroup(int count,int teamId)
         {
             var results = new List<IssuesPerStatusGroup>();
             var q = @"SELECT I.Id,I.Title,
@@ -155,7 +155,7 @@ namespace TeamBins.DataAccess
                         INNER JOIN StatusGroup SG  WITH (NOLOCK) ON SG.Id =S.StatusGroupId
                         INNER JOIN dbo.[USer] U  WITH (NOLOCK) ON U.Id=I.CreatedByid
                         INNER JOIN Category C  WITH (NOLOCK) on C.Id = I.CategoryID
-                        INNER JOIN Priority P  WITH (NOLOCK) on P.Id = I.PriorityID WHERE I.Active=1";
+                        INNER JOIN Priority P  WITH (NOLOCK) on P.Id = I.PriorityID WHERE I.Active=1 and TeamId=@t";
 
             using (var con = new SqlConnection(ConnectionString))
             {
@@ -171,7 +171,7 @@ namespace TeamBins.DataAccess
                         issue.Priority = priority;
                         issue.Category = cat;
                         return issue;
-                    }, splitOn: "Id,Id,Id,Id");
+                    }, new { @t = teamId },null, splitOn: "Id,Id,Id,Id");
                 //var projects = con.Query<IssueDetailVM>(q);
 
 

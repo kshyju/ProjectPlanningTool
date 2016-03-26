@@ -1112,3 +1112,7 @@ color: #111;
 .settings-form-tbl th {
     padding: 8px 16px 8px 8px;
 }
+.menubar-gravatar {
+    width: 25px;
+    height: 25px;   
+}

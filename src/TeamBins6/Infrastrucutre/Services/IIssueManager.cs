@@ -46,7 +46,7 @@ namespace TeamBins.Services
 
         public IEnumerable<IssuesPerStatusGroup> GetIssuesGroupedByStatusGroup(int count)
         {
-            return this.issueRepository.GetIssuesGroupedByStatusGroup(count);
+            return this.issueRepository.GetIssuesGroupedByStatusGroup(count,this.userSessionHelper.TeamId);
         }
 
         public ActivityDto SaveActivity(CreateIssue model, IssueDetailVM previousVersion, IssueDetailVM newVersion)

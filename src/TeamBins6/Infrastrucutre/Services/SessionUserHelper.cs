@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Http.Features;
+using TeamBins.Common;
 using TeamBins.Services;
 
 namespace TeamBins6.Infrastrucutre.Services
@@ -15,6 +16,10 @@ namespace TeamBins6.Infrastrucutre.Services
         void SetTeamId(int teamId);
         void SetUserIDToSession(int userId, int teamId);
         void SetUserId(int userId);
+
+        void SetUserIDToSession(LoggedInSessionInfo loggedInSessionInfo);
+
+        void Logout();
 
     }
     public class UserSessionHelper : IUserSessionHelper
@@ -39,10 +44,14 @@ namespace TeamBins6.Infrastrucutre.Services
                 {
                     return _session.GetInt32(teamIdKey).Value;
                 }
-                return 12101;
+                return 0;
             }
         }
 
+        public void Logout()
+        {
+            _session.Clear();
+        }
         public void SetTeamId(int teamId)
         {
             _session.SetInt32(teamIdKey, teamId);
@@ -52,6 +61,12 @@ namespace TeamBins6.Infrastrucutre.Services
             _session.SetInt32(userIdKey, userId);
         }
 
+        public void SetUserIDToSession(LoggedInSessionInfo loggedInSessionInfo)
+        {
+            _session.SetInt32(userIdKey, loggedInSessionInfo.UserId);
+            _session.SetInt32(teamIdKey, loggedInSessionInfo.TeamId);
+
+        }
         public void SetUserIDToSession(int userId, int teamId)
         {
             _session.SetInt32(userIdKey, userId);
@@ -66,7 +81,7 @@ namespace TeamBins6.Infrastrucutre.Services
                 {
                     return _session.GetInt32(userIdKey).Value;
                 }
-                return 1;
+                return 0;
             }
         }
 

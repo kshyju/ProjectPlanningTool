@@ -26,7 +26,7 @@ namespace TeamBins6.Controllers.Web
         IUserAccountManager userAccountManager;
         private IUserSessionHelper userSessionHelper;
 
-        public AccountController(IUserAccountManager userAccountManager,IUserSessionHelper userSessionHelper)
+        public AccountController(IUserAccountManager userAccountManager, IUserSessionHelper userSessionHelper)
         {
             this.userAccountManager = userAccountManager;
             this.userSessionHelper = userSessionHelper;
@@ -47,10 +47,10 @@ namespace TeamBins6.Controllers.Web
                     var user = await userAccountManager.GetUser(model.Email);
                     if (user != null)
                     {
-                        var appUser = new AppUser { UserName = user.EmailAddress, Id = user.Id.ToString() };
+                        var appUser = new AppUser {UserName = user.EmailAddress, Id = user.Id.ToString()};
                         if (user.Password == model.Password)
                         {
-                            int userDefaultTeamId = user.DefaultTeamId ?? 0;                           
+                            int userDefaultTeamId = user.DefaultTeamId ?? 0;
 
                             this.userSessionHelper.SetUserIDToSession(user.Id, userDefaultTeamId);
                             return RedirectToAction("index", "dashboard");
@@ -62,7 +62,7 @@ namespace TeamBins6.Controllers.Web
             catch (Exception ex)
             {
                 ModelState.AddModelError("", "Oops! Something went wrong :(");
-               
+
             }
             return View(model);
         }
@@ -79,6 +79,64 @@ namespace TeamBins6.Controllers.Web
             return View("forgotPassword", new ForgotPasswordVM());
         }
 
+        public ActionResult Join(string returnurl = "")
+        {
+            return View(new AccountSignupVM {ReturnUrl = returnurl});
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Join(AccountSignupVM model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var accountExists = await userAccountManager.GetUser(model.Email);
+                    if (accountExists == null)
+                    {
+                        var newUser = new UserAccountDto
+                        {
+                            EmailAddress = model.Email,
+                            Name = model.Name,
+                            Password = model.Password
+                        };
+                        var userSession = await userAccountManager.CreateAccount(newUser);
+
+                        if (userSession.UserId > 0)
+                        {
+                            userSessionHelper.SetUserIDToSession(userSession);
+                        }
+
+                        //if (!String.IsNullOrEmpty(model.ReturnUrl))
+                        //    return RedirectToAction("joinmyteam", "users", new { id = model.ReturnUrl });
+
+                        return RedirectToAction("accountcreated");
+
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Account already exists with this email address");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return View(model);
+
+        }
+
+        public ActionResult AccountCreated()
+        {
+            return View();
+        }
+
+        public ActionResult Logout()
+        {
+            this.userSessionHelper.Logout();
+            return RedirectToAction("login", "account");
+        }
     }
 }
 
@@ -102,52 +160,10 @@ namespace TeamBins6.Controllers.Web
 //            return RedirectToAction("Login");
 //        }
 
-//        public ActionResult Join(string returnurl = "")
-//        {
-//            return View(new AccountSignupVM { ReturnUrl = returnurl });
+
 //        }
 
-//        [HttpPost]
-//        public ActionResult Join(AccountSignupVM model)
-//        {
-//            try
-//            {
-//                if (ModelState.IsValid)
-//                {
-//                    var accountExists = accountManager.DoesAccountExist(model.Email);
-//                    if (!accountExists)
-//                    {
-//                        var newUser = new UserAccountDto { EmailAddress = model.Email, Name = model.Name, Password = model.Password };
-//                        var userSession = accountManager.CreateUserAccount(newUser);
 
-//                        if (userSession.UserId > 0)
-//                        {
-//                            SetUserIDToSession(userSession);
-//                        }
-
-//                        if (!String.IsNullOrEmpty(model.ReturnUrl))
-//                            return RedirectToAction("joinmyteam", "users", new { id = model.ReturnUrl });
-
-//                        return RedirectToAction("accountcreated");
-
-//                    }
-//                    else
-//                    {
-//                        ModelState.AddModelError("", "Account already exists with this email address");
-//                    }
-//                }
-//            }
-//            catch (Exception ex)
-//            {
-//                log.Error(ex);
-//            }
-//            return View(model);
-//        }
-
-//        public ActionResult AccountCreated()
-//        {
-//            return View();
-//        }
 
 //        public ActionResult Login()
 //        {
@@ -288,11 +304,7 @@ namespace TeamBins6.Controllers.Web
 //            return View();
 //        }
 
-//        public ActionResult Logout()
-//        {
-//            Session.Abandon();
-//            return RedirectToAction("login", "account");
-//        }
+
 
 
 //    }

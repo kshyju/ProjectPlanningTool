@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -37,6 +38,8 @@ namespace TeamBins.DataAccess
 
         Task SaveDefaultIssueSettings(DefaultIssueSettings model);
 
+        Task<int> CreateAccount(UserAccountDto userAccount);
+
         // Task<List<UserDto>> GetSubscribers(int teamId, NotificationTypeCode notificationType);
     }
 
@@ -48,7 +51,7 @@ namespace TeamBins.DataAccess
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                await con.ExecuteAsync(q, new { @userId = userId, @teamId = teamId });
+                await con.ExecuteAsync(q, new {@userId = userId, @teamId = teamId});
             }
 
         }
@@ -59,16 +62,19 @@ namespace TeamBins.DataAccess
             {
                 con.Open();
 
-                var defaultProjectId = con.Query<int?>("SELECT TOP 1 DefaultProjectId from TEAMMEMBER WHERE TeamId = @teamId and MemberId = @userId",
-                    new { @teamId = model.TeamId, @userId = model.UserId });
+                var defaultProjectId =
+                    con.Query<int?>(
+                        "SELECT TOP 1 DefaultProjectId from TEAMMEMBER WHERE TeamId = @teamId and MemberId = @userId",
+                        new {@teamId = model.TeamId, @userId = model.UserId});
 
-                con.Query<int>(" UPDATE TEAMMEMBER SET DEFAULTPROJECTID=@projectId WHERE TEAMID=@teamId AND MEMBERID=@userId",
-                                  new
-                                  {
-                                      @projectId = model.SelectedProject.Value,
-                                      @teamId = model.TeamId,
-                                      @userId = model.UserId
-                                  });
+                con.Query<int>(
+                    " UPDATE TEAMMEMBER SET DEFAULTPROJECTID=@projectId WHERE TEAMID=@teamId AND MEMBERID=@userId",
+                    new
+                    {
+                        @projectId = model.SelectedProject.Value,
+                        @teamId = model.TeamId,
+                        @userId = model.UserId
+                    });
 
             }
         }
@@ -86,7 +92,7 @@ namespace TeamBins.DataAccess
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                var com = await con.QueryAsync<UserAccountDto>(q, new { @id = email });
+                var com = await con.QueryAsync<UserAccountDto>(q, new {@id = email});
                 return com.FirstOrDefault();
             }
 
@@ -104,20 +110,22 @@ namespace TeamBins.DataAccess
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                var com = await con.QueryAsync<UserAccountDto>(q, new { @id = id });
+                var com = await con.QueryAsync<UserAccountDto>(q, new {@id = id});
                 return com.FirstOrDefault();
             }
 
         }
+
         public async Task SaveUserProfile(EditProfileVm userProfileVm)
         {
             var q = @"UPDATE [User] SET FirstName=@name WHERE ID=@userId";
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                await con.ExecuteAsync(q, new { @userId = userProfileVm.Id, @name = userProfileVm.Name });
+                await con.ExecuteAsync(q, new {@userId = userProfileVm.Id, @name = userProfileVm.Name});
             }
         }
+
         public async Task<IEnumerable<TeamDto>> GetTeams(int userId)
         {
             var q = @"SELECT T.ID,T.Name
@@ -127,12 +135,33 @@ namespace TeamBins.DataAccess
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                return await con.QueryAsync<TeamDto>(q, new { @id = userId });
+                return await con.QueryAsync<TeamDto>(q, new {@id = userId});
             }
         }
 
+        public async Task<int> CreateAccount(UserAccountDto userAccount)
+        {
+            var q =
+                @"INSERT INTO [dbo].[User](FirstName,EmailAddress,Password,CreatedDate) VALUES(@n,@e,@p,@dt);SELECT CAST(SCOPE_IDENTITY() as int)";
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                var ss=
+                    await
+                        con.QueryAsync<int>
+                        (q,
+                            new
+                            {
+                                @n = userAccount.Name,
+                                @e = userAccount.EmailAddress,
+                                @p = userAccount.Password,
+                                @dt = DateTime.Now
+                            });
+                return ss.Single();
+            }
+        }
+
+
+
     }
-
-
-
 }

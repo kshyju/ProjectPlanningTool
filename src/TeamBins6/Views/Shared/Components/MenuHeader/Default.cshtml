@@ -40,7 +40,7 @@
     <div class="userInfo">
 
         <span>Howdy, <a href="@Url.Action("index","Settings")">@Model.UserDisplayName</a> </span>
-        <img src="@Model.UserAvatarHash?s=26" />
+        <img class="menubar-gravatar" src="@Model.UserAvatarHash?s=26" />
         @Html.ActionLink("Logout", "logout", "account", null, new { @class = "aLogout" })
 
     {       

@@ -33,7 +33,7 @@ namespace TeamBins6.Controllers.Api
 
         // POST api/values
         [HttpPost]
-       // [Route("~/api/comments/{commentId}/delete")]
+        [Route("~/api/comments/{commentId}/delete")]
         public ObjectResult DeleteComment(int commentId)
         {
             var comment = this.commentManager.GetComment(commentId);

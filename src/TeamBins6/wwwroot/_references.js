@@ -1,5 +1,7 @@
 ﻿/// <autosync enabled="true" />
 /// <reference path="../gulpfile.js" />
+/// <reference path="js/dashboardcontroller.js" />
+/// <reference path="js/dashboardservice.js" />
 /// <reference path="js/issue.js" />
 /// <reference path="js/issuedetail.service.js" />
 /// <reference path="js/issuedetailcontroller.js" />

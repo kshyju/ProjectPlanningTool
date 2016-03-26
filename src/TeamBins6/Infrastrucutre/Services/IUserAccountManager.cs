@@ -42,6 +42,7 @@ namespace TeamBins.Services
         //void UpdatePassword(ChangePasswordVM model);
         Task SaveDefaultProjectForTeam(DefaultIssueSettings defaultIssueSettings);
         Task<UserAccountDto> GetUser(string email);
+        Task<LoggedInSessionInfo> CreateAccount(UserAccountDto userAccount);
     }
 
     public class UserAccountManager : IUserAccountManager
@@ -49,11 +50,13 @@ namespace TeamBins.Services
         private IProjectManager projectManager;
         private IUserRepository userRepository;
         private IUserSessionHelper userSessionHelper;
-        public UserAccountManager(IUserRepository userRepository, IUserSessionHelper userSessionHelper, IProjectManager projectManager)
+        private ITeamRepository teamRepository;
+        public UserAccountManager(IUserRepository userRepository, IUserSessionHelper userSessionHelper, IProjectManager projectManager,ITeamRepository teamRepository)
         {
             this.userRepository = userRepository;
             this.userSessionHelper = userSessionHelper;
             this.projectManager = projectManager;
+            this.teamRepository = teamRepository;
         }
 
         public async Task SaveDefaultProjectForTeam(DefaultIssueSettings defaultIssueSettings)
@@ -103,6 +106,12 @@ namespace TeamBins.Services
 
         }
 
+        public async Task<LoggedInSessionInfo> CreateAccount(UserAccountDto userAccount)
+        {
+            var userId = await userRepository.CreateAccount(userAccount);
+            var teamId = await Task.FromResult(teamRepository.SaveTeam(new TeamDto {CreatedById = userId, Name = userAccount.Name + "'s Team"}));
+            return new LoggedInSessionInfo() {TeamId = teamId, UserId = userId, UserDisplayName = userAccount.Name};
+        }
         public async Task UpdateProfile(EditProfileVm model)
         {
             model.Id = this.userSessionHelper.UserId;
