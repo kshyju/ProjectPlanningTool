@@ -20,13 +20,25 @@ namespace TeamBins6.Controllers.Api
         {
             this.teamManager = teamManager;
         }
-        // GET: api/values
-        [HttpGet]
-        [Route("ActivityStream")]
+       // GET: api/values
+       [HttpGet]
+       [Route("ActivityStream")]
         public IEnumerable<ActivityDto> GetActivityStream(int count)
         {
             return this.teamManager.GeActivityItems(count);
         }
+        //public ObjectResult GetActivityStream()
+        //{
+        //    var token = "d";
+        //    var Responseresponse = new HttpOkObjectResult(token);
+
+        //    //response.Headers.Add()
+
+        //    Response.Headers.Add("Token","ss");
+
+
+        //    return Responseresponse;
+        //}
 
         //// GET api/values/5
         //[HttpGet("{id}")]

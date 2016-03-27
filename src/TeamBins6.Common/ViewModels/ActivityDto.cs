@@ -49,14 +49,14 @@ namespace TeamBins.Common.ViewModels
     public class DashBoardVM
     {
         public int TeamID { set; get; }
-        public List<ProjectVM> Projects { set; get; }
-        public List<IssueVM> RecentIssues { set; get; }
-        public List<IssueVM> IssuesAssignedToMe { set; get; }
+        public List<ProjectDto> Projects { set; get; }
+        public List<IssueDetailVM> RecentIssues { set; get; }
+        public List<IssueDetailVM> IssuesAssignedToMe { set; get; }
         public DashBoardVM()
         {
-            Projects = new List<ProjectVM>();
-            RecentIssues = new List<IssueVM>();
-            IssuesAssignedToMe = new List<IssueVM>();
+            Projects = new List<ProjectDto>();
+            RecentIssues = new List<IssueDetailVM>();
+            IssuesAssignedToMe = new List<IssueDetailVM>();
         }
     }
 

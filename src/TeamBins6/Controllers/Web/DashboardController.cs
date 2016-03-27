@@ -15,11 +15,15 @@ namespace TeamBins6.Controllers.Web
     {
         private readonly IUserSessionHelper userSessionHelper;
         private readonly IUserAccountManager userAccountManager;
+        private readonly IProjectManager projectManager;
+        private IIssueManager issueManager;
 
-        public DashboardController(IUserSessionHelper userSessionHelper,IUserAccountManager userAccountManager)
+        public DashboardController(IUserSessionHelper userSessionHelper,IUserAccountManager userAccountManager,IIssueManager issueManager,IProjectManager projectManager)
         {
             this.userSessionHelper = userSessionHelper;
             this.userAccountManager = userAccountManager;
+            this.issueManager = issueManager;
+            this.projectManager = projectManager;
 
         }
 
@@ -33,6 +37,12 @@ namespace TeamBins6.Controllers.Web
                 userSessionHelper.SetTeamId(id.Value);
                 await userAccountManager.SetDefaultTeam(userSessionHelper.UserId, id.Value);
             }
+
+            var issues = this.issueManager.GetIssuesGroupedByStatusGroup(25).SelectMany(f => f.Issues).ToList();
+            vm.RecentIssues = issues;
+
+            vm.Projects = this.projectManager.GetProjects().ToList();
+
             return View(vm);
         }
     }

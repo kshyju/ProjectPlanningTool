@@ -11,6 +11,7 @@
 
 
 using System;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
@@ -50,9 +51,18 @@ namespace TeamBins6.Controllers.Web
                         var appUser = new AppUser {UserName = user.EmailAddress, Id = user.Id.ToString()};
                         if (user.Password == model.Password)
                         {
-                            int userDefaultTeamId = user.DefaultTeamId ?? 0;
-
-                            this.userSessionHelper.SetUserIDToSession(user.Id, userDefaultTeamId);
+                            if (user.DefaultTeamId == null)
+                            {
+                                // This sould not happen! But if in case
+                               var teams= await userAccountManager.GetTeams(user.Id);
+                                if (teams.Any())
+                                {
+                                    user.DefaultTeamId = teams.First().Id;
+                                    await this.userAccountManager.SetDefaultTeam(user.Id, user.DefaultTeamId.Value);
+                                }
+                            }
+                            
+                            this.userSessionHelper.SetUserIDToSession(user.Id, user.DefaultTeamId.Value);
                             return RedirectToAction("index", "dashboard");
                         }
                     }

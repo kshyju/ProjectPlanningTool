@@ -5,7 +5,7 @@ var TeamBins;
             this.$http = $http;
         }
         DashboardService.prototype.getActivityStream = function () {
-            return this.$http.post("projects/add", {})
+            return this.$http.get("api/team/ActivityStream")
                 .then(function (response) {
                 return response.data;
             });

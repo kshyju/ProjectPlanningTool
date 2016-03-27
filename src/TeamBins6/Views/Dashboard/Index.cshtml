@@ -85,7 +85,8 @@
             <ul class="db-recent-activity">
                 <li ng-repeat="activity in vm.activities |  orderBy:'CreatedTime':true" | limitTo:8">
                     <a href="#" class="activity-author">{{activity.Actor.Name}}</a> {{activity.Description}}
-                    <a href="{{activity.ObjectURL}}" class="activity-name">{{activity.ObjectTite}}</a>
+
+                    <a href="{{activity.ObjectUrl}}" class="activity-name">{{activity.ObjectTitle}}</a>
                     <i>{{activity.NewState}}</i>
                     <p class="activity-date">{{activity.CreatedTime | date:'medium'}}</p>
                 </li>

@@ -7,7 +7,7 @@
         }
 
         getActivityStream() {
-            return this.$http.post("projects/add", {})
+            return this.$http.get("api/team/ActivityStream")
                 .then((response:any): any=> {
                     return response.data;
                 });
