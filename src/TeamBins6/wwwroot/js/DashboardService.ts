@@ -14,5 +14,13 @@
 
         }
 
+        getSummary() {
+            return this.$http.get("api/team/summary")
+                .then((response: any): any=> {
+                    return response.data;
+                });
+
+        }
+
     }
 }

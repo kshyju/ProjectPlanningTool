@@ -15,21 +15,10 @@
     <div class="dbItemContainer">
         <div class="dashboardItem">
             <h4>At a glance {{summary1}}</h4>
-            <div class="dashboard-ataglance">
-                <span>{{vm.summary.CurrentItems}}</span> in current sprint
+            <div class="dashboard-ataglance" ng-repeat="item in vm.summary">
+                <span>{{item.ItemName}}</span> <span>{{item.Count}} </span> 
             </div>
-            <div class="dashboard-ataglance">
-                <span>{{vm.summary.ItemsInProgress}}</span> in progress
-            </div>
-            <div class="dashboard-ataglance">
-                <span>{{summary.NewItems}}</span> new items
-            </div>
-            <div class="dashboard-ataglance">
-                <span>{{summary.BacklogItems}}</span> in Backlog
-            </div>
-            <div class="dashboard-ataglance">
-                <span>{{summary.CompletedItems}}</span> completed
-            </div>
+           
         </div>
         <div class="dashboardItem">
             <div id="pieChart">

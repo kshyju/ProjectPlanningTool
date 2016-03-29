@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace TeamBins.Common.ViewModels
 {
     public class ProjectVM

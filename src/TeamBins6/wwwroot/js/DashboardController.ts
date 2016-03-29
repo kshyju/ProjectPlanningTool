@@ -2,14 +2,15 @@
     
     export class DashboardController {
 
-        activityStream : any[];
-        activities:any[];
+        summary : any[];
+        activities: any[];
+
         
         constructor(private summaryService: any) {
 
 
             this.getActivityStream();
-
+            this.getSummary();
             
         }
         getActivityStream() {
@@ -19,7 +20,12 @@
             });
         }
 
-
+        getSummary() {
+            var self = this;
+            this.summaryService.getSummary().then(function (data) {
+                self.summary = data.IssueCountsByStatus;
+            });
+        }
     }
 
 

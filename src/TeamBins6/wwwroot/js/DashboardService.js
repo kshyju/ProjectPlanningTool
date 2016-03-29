@@ -10,6 +10,12 @@ var TeamBins;
                 return response.data;
             });
         };
+        DashboardService.prototype.getSummary = function () {
+            return this.$http.get("api/team/summary")
+                .then(function (response) {
+                return response.data;
+            });
+        };
         return DashboardService;
     })();
     TeamBins.DashboardService = DashboardService;

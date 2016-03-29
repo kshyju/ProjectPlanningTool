@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc.Routing;
 using TeamBins.Common;
+using TeamBins.Common.Infrastructure.Enums.TeamBins.Helpers.Enums;
 using TeamBins.Common.ViewModels;
 using TeamBins.DataAccess;
 
@@ -19,18 +20,21 @@ namespace TeamBins6.Infrastrucutre.Services
         IEnumerable<ActivityDto> GeActivityItems(int count);
         bool DoesCurrentUserBelongsToTeam();
 
+        Task<DashBoardItemSummaryVM> GetDashboardSummary();
         void Delete(int id);
     }
     public class TeamManager : ITeamManager
     {
+        private IIssueRepository issueRepository;
         IActivityRepository activityRepository;
         IUserSessionHelper userSessionHelper;
         private readonly ITeamRepository teamRepository;
-        public TeamManager( IUserSessionHelper userSessionHelper, IActivityRepository activityRepository, ITeamRepository teamRepository)
+        public TeamManager(IUserSessionHelper userSessionHelper, IActivityRepository activityRepository, ITeamRepository teamRepository, IIssueRepository issueRepository)
         {
-           this.teamRepository = teamRepository;
+            this.teamRepository = teamRepository;
             this.userSessionHelper = userSessionHelper;
             this.activityRepository = activityRepository;
+            this.issueRepository = issueRepository;
         }
 
         public TeamDto GetTeam(int id)
@@ -51,7 +55,7 @@ namespace TeamBins6.Infrastrucutre.Services
         }
         public List<TeamDto> GetTeams()
         {
-             var teams= teamRepository.GetTeams(userSessionHelper.UserId);
+            var teams = teamRepository.GetTeams(userSessionHelper.UserId);
             foreach (var teamDto in teams)
             {
                 teamDto.IsRequestingUserTeamOwner = teamDto.CreatedById == this.userSessionHelper.UserId;
@@ -63,15 +67,22 @@ namespace TeamBins6.Infrastrucutre.Services
         {
             var isNewTeam = team.Id == 0;
             team.CreatedById = this.userSessionHelper.UserId;
-            var teamId= teamRepository.SaveTeam(team);
+            var teamId = teamRepository.SaveTeam(team);
             return teamId;
         }
 
-       
+        public async Task<DashBoardItemSummaryVM> GetDashboardSummary()
+        {
+            var vm = new DashBoardItemSummaryVM
+            {
+                IssueCountsByStatus = await issueRepository.GetIssueCountsPerStatus(this.userSessionHelper.TeamId)
+            };
+            return vm;
+        }
 
         public IEnumerable<ActivityDto> GeActivityItems(int count)
         {
-            var activities = activityRepository.GetActivityItems(userSessionHelper.TeamId,count);
+            var activities = activityRepository.GetActivityItems(userSessionHelper.TeamId, count);
 
             foreach (var activity in activities)
             {

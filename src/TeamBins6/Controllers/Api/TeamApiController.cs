@@ -27,6 +27,13 @@ namespace TeamBins6.Controllers.Api
         {
             return this.teamManager.GeActivityItems(count);
         }
+
+        [HttpGet]    
+        [Route("Summary")]
+        public async Task<ObjectResult> GetSummary(int count)
+        {
+            return Ok(await this.teamManager.GetDashboardSummary());
+        }
         //public ObjectResult GetActivityStream()
         //{
         //    var token = "d";

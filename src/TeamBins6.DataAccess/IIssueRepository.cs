@@ -28,6 +28,7 @@ namespace TeamBins.DataAccess
 
         Task<IEnumerable<UserDto>> GetNonIssueMembers(int issueId, int teamId);
         Task<IEnumerable<UserDto>> GetIssueMembers(int issueId);
+        Task<IEnumerable<ItemCount>> GetIssueCountsPerStatus(int teamId);
 
     }
 
@@ -135,6 +136,20 @@ namespace TeamBins.DataAccess
             }
         }
 
+
+        public async Task<IEnumerable<ItemCount>> GetIssueCountsPerStatus(int teamId)
+        {
+            var q = @"SELECT  S.ID ItemId,S.NAME ItemName,COUNT(I.ID) COUNT						 
+                        FROM STATUS S  WITH (NOLOCK)  
+                        LEFT JOIN (SELECT I.ID,I.STATUSID FROM ISSUE I  WITH (NOLOCK) WHERE I.TeamID=@t) I ON I.STATUSID =S.ID
+                        GROUP BY S.ID,S.NAME";
+
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                return await con.QueryAsync<ItemCount>(q,new {@t=teamId});
+            }
+        }
         public IEnumerable<IssuesPerStatusGroup> GetIssuesGroupedByStatusGroup(int count,int teamId)
         {
             var results = new List<IssuesPerStatusGroup>();
