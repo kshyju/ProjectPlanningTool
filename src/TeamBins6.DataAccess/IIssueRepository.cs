@@ -14,26 +14,54 @@ namespace TeamBins.DataAccess
 
     public interface IIssueRepository
     {
+
         IEnumerable<NameValueItem> GetStatuses();
         IEnumerable<CategoryDto> GetCategories();
         IEnumerable<NameValueItem> GetPriorities();
         IEnumerable<IssueDetailVM> GetIssues(List<int> statusIds, int count);
-        IssueDetailVM GetIssue(int id);
+        IssueDetailVM GetIssue(int id, int requestingUserId);
         int SaveIssue(CreateIssue issue);
         DashBoardItemSummaryVM GetDashboardSummaryVM(int teamId);
 
-        IEnumerable<IssuesPerStatusGroup> GetIssuesGroupedByStatusGroup(int count,int teamId);
+        IEnumerable<IssuesPerStatusGroup> GetIssuesGroupedByStatusGroup(int count,int teamId, int requestingUserId);
         Task SaveIssueMember(int issueId, int memberId, int createdById, string relationShipType);
         void Delete(int id, int userId);
 
         Task<IEnumerable<UserDto>> GetNonIssueMembers(int issueId, int teamId);
         Task<IEnumerable<UserDto>> GetIssueMembers(int issueId);
-        Task<IEnumerable<ItemCount>> GetIssueCountsPerStatus(int teamId);
+        Task<IEnumerable<ChartItem>> GetIssueCountsPerStatus(int teamId);
+        Task StarIssue(int issueId, int userId, bool isRequestForToStar);
 
     }
 
     public class IssueRepository : BaseRepo, IIssueRepository
     {
+        public async Task StarIssue(int issueId, int userId, bool isRequestForToStar)
+        {
+            await DeleteIssueMemberRecord(issueId, userId, "Star");
+            if(isRequestForToStar)
+                await AddIssueMemberRecord(issueId, userId,"Star");
+        }
+
+        private async Task AddIssueMemberRecord(int issueId, int userId,string type)
+        {
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                await con.ExecuteAsync("INSERT INTO IssueMember(IssueID,MemberID,RelationType,CreatedDate,CreatedByID) VALUES(@id,@userId,@type,@dt,@userId);",
+                    new {@id = issueId, @userId = userId, @type = type, @dt=DateTime.Now, });
+            }
+        }
+        private async Task DeleteIssueMemberRecord(int issueId, int userId, string type)
+        {
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                await con.ExecuteAsync("DELETE FROM IssueMember WHERE IssueID=@id AND MemberID=@userId and RelationType=@type",
+                    new { @id = issueId, @userId = userId, @type = type });
+            }
+        }
+
         public DashBoardItemSummaryVM GetDashboardSummaryVM(int teamId)
         {
             throw new NotImplementedException();
@@ -71,12 +99,13 @@ namespace TeamBins.DataAccess
             }
         }
 
-        public IssueDetailVM GetIssue(int id)
+        public IssueDetailVM GetIssue(int id,int requestingUserId)
         {
             var q = @"SELECT I.Id,I.Title,I.Description,ISNULL(I.Description,'') as Description,
                         U.FirstName + + ISNULL(U.LastName,'') as OpenedBy,
                         I.CreatedDate,
                         I.Active,
+                        CASE WHEN IM.ID IS NULL THEN 0 ELSE 1 END AS IsStarredForUser	,
                         SG.Id,
                         SG.Code,
                         SG.Name,
@@ -97,6 +126,7 @@ namespace TeamBins.DataAccess
                         INNER JOIN Category C  WITH (NOLOCK) on C.Id = I.CategoryID
                         INNER JOIN Priority P  WITH (NOLOCK) on P.Id = I.PriorityID
                         INNER JOIN Project Pr  WITH (NOLOCK) ON Pr.Id=I.ProjectID
+                        LEFT JOIN (SELECT IssueId,ID FROM IssueMember WITH (NOLOCK) WHERE RelationType='Star' AND MemberID=@userId) IM ON IM.IssueID=I.ID
                         WHERE I.Id=@id";
 
 
@@ -117,7 +147,7 @@ namespace TeamBins.DataAccess
                                 issue.Author = user;
                                 issue.Category = cat;
                                 return issue;
-                            }, new {@id = id}, null, true, "Id,Id,Id,Id,Id,Id");
+                            }, new {@id = id, @userId = requestingUserId }, null, true, "Id,Id,Id,Id,Id,Id");
                 return projects.FirstOrDefault();
             }
 
@@ -137,40 +167,49 @@ namespace TeamBins.DataAccess
         }
 
 
-        public async Task<IEnumerable<ItemCount>> GetIssueCountsPerStatus(int teamId)
+        public async Task<IEnumerable<ChartItem>> GetIssueCountsPerStatus(int teamId)
         {
-            var q = @"SELECT  S.ID ItemId,S.NAME ItemName,COUNT(I.ID) COUNT						 
+            var q = @"SELECT  S.ID ItemId,S.NAME ItemName,S.ChartColor, COUNT(I.ID) COUNT						 
                         FROM STATUS S  WITH (NOLOCK)  
                         LEFT JOIN (SELECT I.ID,I.STATUSID FROM ISSUE I  WITH (NOLOCK) WHERE I.TeamID=@t) I ON I.STATUSID =S.ID
-                        GROUP BY S.ID,S.NAME";
+                        GROUP BY S.ID,S.NAME,S.ChartColor";
 
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                return await con.QueryAsync<ItemCount>(q,new {@t=teamId});
+                return await con.QueryAsync<ChartItem>(q,new {@t=teamId});
             }
         }
-        public IEnumerable<IssuesPerStatusGroup> GetIssuesGroupedByStatusGroup(int count,int teamId)
+        
+        public IEnumerable<IssuesPerStatusGroup> GetIssuesGroupedByStatusGroup(int count,int teamId,int requestingUserId)
         {
+           
+
+
             var results = new List<IssuesPerStatusGroup>();
             var q = @"SELECT I.Id,I.Title,
                         U.FirstName + + ISNULL(U.LastName,'') as OpenedBy,
                         I.CreatedDate,
+                        CASE WHEN IM.ID IS NULL THEN 0 ELSE 1 END AS IsStarredForUser	,
                         SG.Id,
                         SG.Code,
                         SG.Name,
+                        SG.DisplayOrder,
                         C.Id,
                         C.Name,C.Code,
                         P.Id,
                         P.Name,
                        
-                        S.Id,S.Name						 
+                        S.Id,S.Name
+                     									 
                         from Issue I  WITH (NOLOCK)
                         INNER JOIN Status S  WITH (NOLOCK) ON I.StatusID =S.Id
                         INNER JOIN StatusGroup SG  WITH (NOLOCK) ON SG.Id =S.StatusGroupId
                         INNER JOIN dbo.[USer] U  WITH (NOLOCK) ON U.Id=I.CreatedByid
                         INNER JOIN Category C  WITH (NOLOCK) on C.Id = I.CategoryID
-                        INNER JOIN Priority P  WITH (NOLOCK) on P.Id = I.PriorityID WHERE I.Active=1 and TeamId=@t";
+                        INNER JOIN Priority P  WITH (NOLOCK) on P.Id = I.PriorityID 
+                        LEFT JOIN (SELECT IssueId,ID FROM IssueMember WITH (NOLOCK) WHERE RelationType='Star' AND MemberID=@userId) IM ON IM.IssueID=I.ID
+                        WHERE I.Active=1 and TeamId=@t";
 
             using (var con = new SqlConnection(ConnectionString))
             {
@@ -186,13 +225,13 @@ namespace TeamBins.DataAccess
                         issue.Priority = priority;
                         issue.Category = cat;
                         return issue;
-                    }, new { @t = teamId },null, splitOn: "Id,Id,Id,Id");
+                    }, new { @t = teamId, @userId= requestingUserId },null, splitOn: "Id,Id,Id,Id");
                 //var projects = con.Query<IssueDetailVM>(q);
 
 
 
-                results = projects.GroupBy(s => s.StatusGroup.Code, x => x,
-                    (k, v) => new IssuesPerStatusGroup {GroupCode = k, GroupName = k, Issues = v.ToList()}).ToList();
+                results = projects.GroupBy(s => s.StatusGroup, x => x,
+                    (k, v) => new IssuesPerStatusGroup {GroupCode = k.Code, DisplayOrder  = k.DisplayOrder, GroupName = k.Name, Issues = v.ToList()}).OrderBy(s=>s.DisplayOrder).ToList();
 
                 //grou py now
             }

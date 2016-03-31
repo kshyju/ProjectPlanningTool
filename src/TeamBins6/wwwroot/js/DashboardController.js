@@ -1,7 +1,9 @@
+/// <reference path="../../../teambins.common/scripts/typings/angularjs/angular.d.ts" />
+/// <reference path="../../../TeamBins.Common/Scripts/typings/chartjs/chart.d.ts" />
 var TeamBins;
 (function (TeamBins) {
     var DashboardController = (function () {
-        function DashboardController(summaryService) {
+        function DashboardController($scope, summaryService) {
             this.summaryService = summaryService;
             this.getActivityStream();
             this.getSummary();
@@ -15,8 +17,18 @@ var TeamBins;
         DashboardController.prototype.getSummary = function () {
             var self = this;
             this.summaryService.getSummary().then(function (data) {
-                self.summary = data.IssueCountsByStatus;
+                self.summaryItems = data.IssueCountsByStatus;
+                var pieChartData = [];
+                angular.forEach(self.summaryItems, function (a, b) {
+                    var pieChartItem = { value: a.Count, color: a.ChartColor, highlight: "#FF5A5E", label: a.ItemName };
+                    pieChartData.push(pieChartItem);
+                });
+                self.renderPie(pieChartData);
             });
+        };
+        DashboardController.prototype.renderPie = function (pieChartDataSet) {
+            var ctx = document.getElementById("myChart").getContext("2d");
+            new Chart(ctx).Pie(pieChartDataSet);
         };
         return DashboardController;
     })();

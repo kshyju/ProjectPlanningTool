@@ -114,6 +114,7 @@ namespace TeamBins.Common.ViewModels
         public string StatusGroupCode { get; set; }
         public KeyValueItem StatusGroup { set; get; }
 
+      
 
     }
 
@@ -135,6 +136,8 @@ namespace TeamBins.Common.ViewModels
         public string GroupCode { set; get; }
         public string GroupName { set; get; }
         public List<IssueDetailVM> Issues { set; get; }
+
+        public int DisplayOrder { set; get; }
     }
     public class IssueVM
     {

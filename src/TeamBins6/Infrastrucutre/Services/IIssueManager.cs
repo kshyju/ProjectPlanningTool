@@ -36,7 +36,7 @@ namespace TeamBins.Services
 
         public IssueDetailVM GetIssue(int id)
         {
-            return this.issueRepository.GetIssue(id);
+            return this.issueRepository.GetIssue(id,this.userSessionHelper.UserId);
         }
 
         public IEnumerable<IssueVM> GetIssues(List<int> statusIds, int count)
@@ -46,7 +46,7 @@ namespace TeamBins.Services
 
         public IEnumerable<IssuesPerStatusGroup> GetIssuesGroupedByStatusGroup(int count)
         {
-            return this.issueRepository.GetIssuesGroupedByStatusGroup(count,this.userSessionHelper.TeamId);
+            return this.issueRepository.GetIssuesGroupedByStatusGroup(count,this.userSessionHelper.TeamId,this.userSessionHelper.UserId);
         }
 
         public ActivityDto SaveActivity(CreateIssue model, IssueDetailVM previousVersion, IssueDetailVM newVersion)
@@ -156,7 +156,7 @@ namespace TeamBins.Services
 
 
 
-            var issueDetail = this.issueRepository.GetIssue(issueId);
+            var issueDetail = this.issueRepository.GetIssue(issueId,this.userSessionHelper.UserId);
             return issueDetail;
             ;
         }
@@ -194,6 +194,11 @@ namespace TeamBins.Services
             return members;
         }
 
+        public async Task StarIssue(int issueId, int userId, bool isRequestForToStar)
+        {
+            await this.issueRepository.StarIssue(issueId, this.userSessionHelper.UserId, isRequestForToStar);
+        }
+
     }
     public interface IIssueManager
     {
@@ -210,5 +215,7 @@ namespace TeamBins.Services
         IEnumerable<IssuesPerStatusGroup> GetIssuesGroupedByStatusGroup(int count);
         void Delete(int id);
         void LoadDropdownData(CreateIssue issue);
+
+        Task StarIssue(int issueId, int userId, bool isRequestForToStar);
     }
 }

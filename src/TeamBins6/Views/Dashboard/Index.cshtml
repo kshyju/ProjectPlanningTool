@@ -15,19 +15,20 @@
     <div class="dbItemContainer">
         <div class="dashboardItem">
             <h4>At a glance {{summary1}}</h4>
-            <div class="dashboard-ataglance" ng-repeat="item in vm.summary">
-                <span>{{item.ItemName}}</span> <span>{{item.Count}} </span> 
+            <div class="dashboard-ataglance" ng-repeat="item in vm.summaryItems">
+                <span>{{item.ItemName}}</span> <span>{{item.Count}} </span>
             </div>
-           
+
         </div>
         <div class="dashboardItem">
             <div id="pieChart">
                 <canvas id="myChart" width="200" height="200"></canvas>
                 <div class="db-pieChartLegends">
                     <ul class="legends">
-                        <li><div class="db-chart-legend spn-new"></div><span class="legendtext">New Items</span></li>
-                        <li><div class="db-chart-legend spn-inprogress"></div><span class="legendtext">In Progress</span></li>
-                        <li><div class="db-chart-legend spn-closed"></div><span class="legendtext">Closed</span></li>
+                        <li ng-repeat="legend in vm.summaryItems">
+                            <div class="db-chart-legend spn-new" style="background-color:{{legend.ChartColor}}"></div><span class="legendtext">{{legend.ItemName}}</span>
+                        </li>
+                       
                     </ul>
                 </div>
             </div>
@@ -93,12 +94,17 @@
 {
     <script src="~/js/dashboardcontroller.js"></script>
     <script src="~/js/dashboardservice.js"></script>
+    <script src="~/js/chart.min.js"></script>
     <script type="text/javascript">
 
-        var a = angular.module("teamBins", [])
+       
+
+        var a = angular.module("teamBins")
             .service('summaryService', TeamBins.DashboardService)
             .controller("dashboardCtrl", TeamBins.DashboardController);
 
-      
+       
+
+        
     </script>
 }

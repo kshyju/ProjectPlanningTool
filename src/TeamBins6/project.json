@@ -23,8 +23,7 @@
     "Microsoft.Extensions.Caching.Memory": "1.0.0-rc1-final",
     "TeamBins6.Common": "",
     "TeamBins6.DataAccess": "",
-    "StackExchange.Exceptional": "1.0.122"
- 
+    "StackExchange.Exceptional": "1.0.122"    
   },
 
   "commands": {

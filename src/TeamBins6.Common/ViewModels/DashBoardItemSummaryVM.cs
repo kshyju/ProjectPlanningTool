@@ -10,6 +10,6 @@ namespace TeamBins.Common.ViewModels
         public int BacklogItems { set; get; }
         public int CompletedItems { set; get; }
 
-        public IEnumerable<ItemCount> IssueCountsByStatus { set; get; } 
+        public IEnumerable<ChartItem> IssueCountsByStatus { set; get; } 
     }
 }

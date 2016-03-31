@@ -38,6 +38,8 @@ var issueDetailsCtrl = function ($http, issue, issueDetailService) {
             });
     };
 
+
+
     //vm.deleteIssue = function () {
     //    issueDetailService.deleteIssue(vm.issue.Id)
     //        .then(function (response) {

@@ -31,8 +31,23 @@ namespace TeamBins6.Controllers
             this.userSessionHelper = userSessionHelper;
             this.commentManager = commentManager;
         }
-      
 
+
+        [HttpPost]
+        [Route("~/api/issue/{issueId}/star/{mode}")]
+        public async Task<IActionResult> StarIssue(bool mode, int issueId)
+        {
+            await issueManager.StarIssue(issueId, 0, !mode);
+            if (!mode)
+            {
+              
+                return Json(new {Status = "Success", Class = "glyphicon-star", Starred = true});
+            }
+            else
+            {
+                return Json(new { Status = "Success", Class = "glyphicon-star-empty", Starred = false });
+            }
+        }
 
         [HttpGet]
         [Route("~/api/issue/{issueId}/noissuemembers")]

@@ -38,7 +38,7 @@
             <table class="tblGrid" id="issueTbl" ng-show="vm.issuesGrouped.length>0">
                 <tr>
                     <th>#</th>
-                    <th></th>
+                    <th></th><th></th>
                     <th>Title</th>
                     <th>Opened By</th>
                     <th>PriorityName</th>
@@ -46,6 +46,10 @@
                     <th>Opened Date</th>
                 </tr>
                 <tr ng-repeat="issue in vm.currentlyShowingGroup.Issues|orderBy:'Id':true" ng-class-odd="'trOdd'" ng-class-even="'trEven'">
+                    <td>
+                        <span ng-show="issue.IsStarredForUser"  class="glyphicon glyphicon-star"  title="Starred by you"></span>
+
+                    </td>
                     <td>{{issue.Id}}</td>
                     <td>
                         <div class="issue-icon-{{issue.Category.Name}}" title="{{issue.Category.Name}}"></div>
@@ -90,7 +94,7 @@ else
 <script src="~/js/issueList.service.js"></script>
 
     <script src="~/js/IssueListController.js"></script>
-
+<script src="~/js/chart.min.js"></script>
     <script>
 
     </script>

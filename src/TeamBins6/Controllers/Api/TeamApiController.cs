@@ -34,6 +34,7 @@ namespace TeamBins6.Controllers.Api
         {
             return Ok(await this.teamManager.GetDashboardSummary());
         }
+
         //public ObjectResult GetActivityStream()
         //{
         //    var token = "d";

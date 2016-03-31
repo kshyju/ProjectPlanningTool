@@ -60,10 +60,8 @@
                 Issue # @Model.Id.ToString()
 
                 <div class="starHolder">
-                    <span id="issue-star" ng-click="vm.starIssue()" 
-
-                      class="glyphicon @(Model.IsStarredForUser ? "glyphicon-star " : "glyphicon-star-empty")" 
-                      data-starred="@(Model.IsStarredForUser ? "starred" : "unstarred")"></span>
+                    <span id="issue-star" class="glyphicon @(Model.IsStarredForUser ? "glyphicon-star " : "glyphicon-star-empty")" 
+                      data-starred="@Model.IsStarredForUser"></span>
                 </div>
 
             </div>

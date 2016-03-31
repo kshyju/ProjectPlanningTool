@@ -71,14 +71,14 @@ $(function () {
 
 
 
-    //$("#issue-star").click(function (e) {
-    //    var _this = $(this);
-    //    $.post("../Star/" + $("#Id").val()+"?mode="+_this.attr("data-starred"), function (res) {
-    //        if (res.Status === "Success") {
-    //            _this.removeClass().addClass("glyphicon").addClass(res.StarClass).attr("data-starred",res.Mode);
-    //        }
-    //    });
-    //});
+    $("#issue-star").click(function (e) {
+        var _this = $(this);
+        $.post("../api/Issue/" + $("#Id").val()+"/star/"+_this.attr("data-starred"), function (res) {
+            if (res.Status === "Success") {
+                _this.removeClass("glyphicon-star-empty glyphicon-star").addClass(res.Class).attr("data-starred", res.Starred);
+            }
+        });
+    });
 
 
     $(document).on("click", "#btnSaveIssue", function (e) {

@@ -12,6 +12,7 @@ namespace TeamBins.DataAccess
 
     public interface IIssueRepository
     {
+        void StarIssue(int issueId, int userId, bool isRequestForToStar);
         IEnumerable<IssueDetailVM> GetIssues(List<int> statusIds, int count);
         IssueDetailVM GetIssue(int id);
         int SaveIssue(CreateIssue issue);
@@ -26,6 +27,10 @@ namespace TeamBins.DataAccess
     public class IssueRepository : IIssueRepository
     {
 
+        public void StarIssue(int issueId, int userId, bool isRequestForToStar)
+        {
+            
+        }
         public int SaveIssue(CreateIssue issue)
         {
             Issue issueEntity = null;
