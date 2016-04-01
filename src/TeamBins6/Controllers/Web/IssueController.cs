@@ -21,7 +21,7 @@ using TeamBins6.Infrastrucutre.Services;
 
 namespace TeamBins6.Controllers.Web
 {
-    public class IssueController : Controller
+    public class IssueController : BaseController
     {
         private ITeamManager teamManager;
         ICommentManager commentManager;

@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using StackExchange.Exceptional.Stores;
 using TeamBins.DataAccess;
 using TeamBins.Services;
+using TeamBins6.Infrastrucutre.Filters;
 using TeamBins6.Infrastrucutre.Services;
 
 namespace TeamBins6
@@ -49,7 +50,10 @@ namespace TeamBins6
             services.AddSession(s => s.IdleTimeout = TimeSpan.FromMinutes(30));
             
             // Add framework services.
-            services.AddMvc();
+            services.AddMvc(o =>
+            {
+                o.Filters.Add(new ReqProcessFilter());
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

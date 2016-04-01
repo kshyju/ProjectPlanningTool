@@ -11,7 +11,8 @@ using TeamBins6.Infrastrucutre.Services;
 
 namespace TeamBins6.Controllers.Web
 {
-    public class DashboardController : Controller
+
+    public class DashboardController : BaseController
     {
         private readonly IUserSessionHelper userSessionHelper;
         private readonly IUserAccountManager userAccountManager;
@@ -31,6 +32,7 @@ namespace TeamBins6.Controllers.Web
         //[Route("~/Dashboard/{id}")]
         public async Task<IActionResult> Index(int? id)
         {
+           
             var vm = new DashBoardVM {  };
             if (id != null)
             {

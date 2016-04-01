@@ -1,7 +1,6 @@
 ﻿var issueService = function ($http, appSettings) {
 
-    console.log('service');
-    console.log(appSettings);
+   
     
     return {
         getActivityStream: getActivityStream,
@@ -11,7 +10,7 @@
 
     function create(newIssue) {
         
-        return $http.post(appSettings.appSettings.baseUrl + 'issue/add', newIssue)
+        return $http.post(appSettings.urls.baseUrl + '/issue/add', newIssue)
       .then(createIssueCompleted)
       .catch(createIssueFailed);
 
@@ -19,7 +18,7 @@
             // console.log("r");
             //console.log(response.data);
             var s = response.headers(0);
-            console.log(s);
+           
             return response.data;
         }
 
@@ -30,7 +29,7 @@
     }
 
     function getIssues(count) {
-        return $http.get(appSettings.appSettings.baseUrl + 'api/issue/' + count)
+        return $http.get(appSettings.urls.baseUrl + '/api/issue/' + count)
       .then(getIssuesCompleted)
       .catch(getIssuesFailed);
 

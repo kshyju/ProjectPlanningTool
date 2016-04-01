@@ -1,6 +1,4 @@
-﻿@using System.Threading.Tasks
-@using TeamBins.Common
-@model TeamBins.Common.UserMenuHeaderVM
+﻿@model TechiesWeb.TeamBins.ViewModels.UserMenuHeaderVM
 <div class="header">
     <div class="headerLeft">
         <a class="header-logo" href="@Url.Action("Index","dashboard")">
@@ -20,7 +18,7 @@
             <p>Switch team</p>
             @foreach (var team in Model.Teams)
             {
-                <a asp-action="index" class="team-item"  asp-route-id="@team.Id" asp-controller="Dashboard"><div class="available-team">@team.Name</div></a>
+                <a href="~/t/@team.Id/@team.Name"><div class="available-team">@team.Name</div></a>
             }
             <div class="team-operations">
                 <a href="@Url.Action("index","team")">Manage Teams</a>
@@ -29,23 +27,24 @@
     }
     </div>
     <div class="navigation">
-    @if (!String.IsNullOrEmpty(Model.UserDisplayName))
-    {
-        <a asp-action="index" asp-controller="Dashboard">Home</a>
-        <a asp-action="index" asp-controller="issue">Issues</a>
-        <a asp-action="index" asp-controller="projects">Projects</a>
-        <a asp-action="index" asp-controller="users">Users</a>
+    @if(!String.IsNullOrEmpty(Model.UserDisplayName))
+    { 
+        <a href="@Url.Action( "index", "dashboard")">Home</a>
+        <a href="@Url.Action("index","issues")">Issues</a>
+        <a href="@Url.Action("index","projects")">Projects</a>
+        <a href="@Url.Action("index","users")">Members</a>
+       
     }
     </div>
     <div class="userInfo">
-
-        <span>Howdy, <a href="@Url.Action("index","Settings")">@Model.UserDisplayName</a> </span>
-        <img class="menubar-gravatar" src="@Model.UserAvatarHash?s=26" />
-        @Html.ActionLink("Logout", "logout", "account", null, new { @class = "aLogout" })
-@if (String.IsNullOrEmpty(Model.UserDisplayName))
-
-
+    @if (Session["TB_NickName"] != null)
     {
+        <span>Howdy, <a href="@Url.Action("index","Settings")">@Model.UserDisplayName</a> </span>
+        <img src="@Model.UserAvatarHash?s=26" />
+        @Html.ActionLink("Logout", "logout", "account", null, new { @class = "aLogout" })
+    }
+    else
+    {       
         @Html.ActionLink("Signup or Login to enjoy the full version", "login", "account", null, new { @class = "aLogout" })
     }
     </div>

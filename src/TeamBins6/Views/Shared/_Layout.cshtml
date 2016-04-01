@@ -55,8 +55,8 @@
 <script type="text/javascript">
 
     var teamBins = teamBins || {};
-    teamBins.appSettings = teamBins.appSettings || {};
-    teamBins.appSettings.baseUrl = '@Url.Content("~")';
+    teamBins.urls = teamBins.urls || {};
+    teamBins.urls.baseUrl = '@ViewBag.AppBaseUrl';
 
     var issueListApp = angular.module('teamBins', ['ngSanitize']);
     issueListApp.value("appSettings", teamBins);
@@ -70,9 +70,15 @@
     $(function () {
         $(document).on("click", "a.popup", function (e) {
             e.preventDefault();
-         
+
             ShowModel($(this).attr("href"));
         });
+
+        //$("a.team-item").click(function(e) {
+        //    e.preventDefault();
+        //});
+
+
         $("a.a-current-team").click(function (e) {
             e.preventDefault();
             var _this = $(this);

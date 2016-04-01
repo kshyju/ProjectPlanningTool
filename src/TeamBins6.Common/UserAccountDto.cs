@@ -20,6 +20,8 @@ namespace TeamBins.Common
         public string GravatarUrl { get; set; }
 
         public double? TestVal { set; get; }
+
+       
     }
 
     public class AppUser 

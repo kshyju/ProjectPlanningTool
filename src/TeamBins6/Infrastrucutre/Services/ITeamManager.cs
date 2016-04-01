@@ -9,6 +9,7 @@ using TeamBins.Common;
 using TeamBins.Common.Infrastructure.Enums.TeamBins.Helpers.Enums;
 using TeamBins.Common.ViewModels;
 using TeamBins.DataAccess;
+using TeamBins6.Infrastrucutre.Extensions;
 
 namespace TeamBins6.Infrastrucutre.Services
 {
@@ -22,6 +23,9 @@ namespace TeamBins6.Infrastrucutre.Services
 
         Task<DashBoardItemSummaryVM> GetDashboardSummary();
         void Delete(int id);
+
+        Task<TeamVM> GetTeamInoWithMembers();
+
     }
     public class TeamManager : ITeamManager
     {
@@ -37,6 +41,23 @@ namespace TeamBins6.Infrastrucutre.Services
             this.issueRepository = issueRepository;
         }
 
+
+        public async Task<TeamVM> GetTeamInoWithMembers()
+        {
+            var vm = new TeamVM();
+
+            var team = teamRepository.GetTeam(this.userSessionHelper.TeamId);
+            vm.Name = team.Name;
+
+            var members = await teamRepository.GetTeamMembers(this.userSessionHelper.TeamId);
+            foreach (var teamMemberDto in members)
+            {
+                teamMemberDto.GravatarUrl = teamMemberDto.EmailAddress.ToGravatarUrl();
+            }
+            vm.Members = members;
+
+            return vm;
+        }
         public TeamDto GetTeam(int id)
         {
             return this.teamRepository.GetTeam(id);

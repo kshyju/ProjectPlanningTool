@@ -6,54 +6,54 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
 using StackExchange.Exceptional;
 using TeamBins.Common;
+using TeamBins.Services;
 using TeamBins6.Infrastrucutre.Services;
 
 namespace TeamBins6.Controllers
 {
-    public class Test
-    {
-       // public List<SelectL> 
-      //  [Required]
-        public string Name { set; get; }
-    }
-    public class GraphPoint 
-    {
-        /// <summary>
-        /// Date represented as a unix epoch
-        /// </summary>
-        public virtual long DateEpoch { get; set; }
-        /// <summary>
-        /// Value of the top (or only) point
-        /// </summary>
-        public virtual double? Value { get; set; }
-    }
 
-    public class DoubleGraphPoint : GraphPoint
+    public class BaseController : Controller
     {
-        /// <summary>
-        /// Value of the bottom (or second) point
-        /// </summary>
-        public virtual double? BottomValue { get; set; }
+        public string AppBaseUrl
+        {
+            get
+            {
+                return string.Format("{0}://{1}{2}", Request.Scheme, Request.Host, Url.Content("~"));
+            }
+        }
+
     }
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private IUserSessionHelper userSessionHelper;
+        private IUserAccountManager userAccountManager;
 
-        public HomeController(IUserSessionHelper userSessionHelper)
+        public HomeController(IUserSessionHelper userSessionHelper,IUserAccountManager userAccountManager)
         {
             this.userSessionHelper = userSessionHelper;
+            this.userAccountManager = userAccountManager;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SwitchTeam(int teamId)
+        {
+
+            userSessionHelper.SetTeamId(teamId);
+            await userAccountManager.SetDefaultTeam(userSessionHelper.UserId, teamId);
+
+            return Json("Changed");
         }
 
         public IActionResult Index()
         {
-           
+
             this.userSessionHelper.SetUserIDToSession(new LoggedInSessionInfo { TeamId = 13109, UserId = 12095 });
 
             if (this.userSessionHelper.UserId > 0)
             {
-                return RedirectToAction("Index","Issue");
-           }
-               
+                return RedirectToAction("Index", "Issue");
+            }
+
 
             return View();
         }

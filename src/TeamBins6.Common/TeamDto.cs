@@ -49,12 +49,12 @@ namespace TeamBins.Common
 
     public class TeamVM : TeamDto
     {
-        public List<MemberVM> Members { set; get; }
+        public IEnumerable<TeamMemberDto> Members { set; get; }
         public List<MemberInvitation> MembersInvited { set; get; }
        
         public TeamVM()
         {
-            Members = new List<MemberVM>();
+            Members = new List<TeamMemberDto>();
             MembersInvited = new List<MemberInvitation>();
         }
     }
@@ -63,6 +63,13 @@ namespace TeamBins.Common
         public string EmailAddress { set; get; }
         public string DateInvited { set; get; }
         public string AvatarHash { set; get; }
+    }
+
+
+    public class TeamMemberDto : UserDto
+    {
+        public DateTime JoinedDate { set; get; }
+        public DateTime LastLoginDate { set; get; }
     }
 
     

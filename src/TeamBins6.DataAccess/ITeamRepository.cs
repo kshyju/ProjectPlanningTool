@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Threading.Tasks;
 using Dapper;
 using TeamBins.Common;
 
@@ -9,6 +10,7 @@ namespace TeamBins.DataAccess
 {
     public interface ITeamRepository
     {
+      
         TeamDto GetTeam(int teamId);
         int SaveTeam(TeamDto team);
 
@@ -19,7 +21,7 @@ namespace TeamBins.DataAccess
         void SaveDefaultTeamForUser(int userId, int teamId);
         MemberVM GetTeamMember(int teamId, int userId);
         void Delete(int id);
-        //IEnumerable<MemberVM> 
+        Task<IEnumerable<TeamMemberDto>> GetTeamMembers(int teamId);
 
     }
 
@@ -36,6 +38,21 @@ namespace TeamBins.DataAccess
             }
         }
 
+        public async Task<IEnumerable<TeamMemberDto>> GetTeamMembers(int teamId)
+        {
+            var q = @"SELECT U.ID,
+                        U.FirstName,
+                        U.EmailAddress,
+                        U.LastLoginDate,
+                        TM.CreatedDate as JoinedDate
+                        FROM [Team].[dbo].[User] U
+                        INNER JOIN TeamMember TM ON U.ID=TM.MemberID WHERE TM.TeamID=@teamId";
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                return await con.QueryAsync<TeamMemberDto>(q, new {@teamId = teamId});
+            }
+        }
         public int SaveTeam(TeamDto team)
         {
             using (var con = new SqlConnection(ConnectionString))
