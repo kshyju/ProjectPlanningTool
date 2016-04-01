@@ -81,7 +81,7 @@ namespace TeamBins.Common
         [DataType(DataType.EmailAddress)]
         [StringLength(100)]
         public string EmailAddress { set; get; }
-        public string EmailHash { set; get; }
+        public string GravatarUrl { set; get; }
         public string JoinedDate { set; get; }
         public string MemberType { set; get; }
         public string AvatarHash { set; get; }
@@ -93,6 +93,11 @@ namespace TeamBins.Common
     public class AddTeamMemberRequestVM : MemberVM
     {
         public int TeamID { set; get; }
+        public int CreatedById { set; get; }
+
+        public string ActivationCode { set; get; }
+
+        public DateTime CreatedDate { set; get; }
     }
 
     public class CommentVM

@@ -14,6 +14,7 @@ namespace TeamBins.DataAccess
         TeamDto GetTeam(int teamId);
         int SaveTeam(TeamDto team);
 
+     
         void SaveTeamMember(int teamId, int memberId, int createdById);
         void SaveDefaultProject(int userId, int teamId, int? selectedProject);
         List<TeamDto> GetTeams(int userId);
@@ -23,6 +24,8 @@ namespace TeamBins.DataAccess
         void Delete(int id);
         Task<IEnumerable<TeamMemberDto>> GetTeamMembers(int teamId);
 
+        Task SaveTeamMemberRequest(AddTeamMemberRequestVM teamMemberRequest);
+        Task<IEnumerable<AddTeamMemberRequestVM>> GetTeamMemberInvitations(int teamId);
     }
 
     public class TeamRepository : BaseRepo, ITeamRepository
@@ -35,6 +38,34 @@ namespace TeamBins.DataAccess
                 con.Open();
                 var teams = con.Query<TeamDto>(q, new { @id = teamId });
                 return teams.FirstOrDefault();
+            }
+        }
+
+        public async Task SaveTeamMemberRequest(AddTeamMemberRequestVM teamMemberRequest)
+        {
+            var q = @"INSERT INTO TeamMemberRequest(EmailAddress,TeamID,ActivationCode,CreatedByID,CreatedDate) VALUES(@email,@teamId,@a,@userId,@dt);";
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                var a = Guid.NewGuid().ToString("n").Replace("-", "");
+                con.Open();
+                await con.ExecuteAsync(q, new
+                {
+                    @teamId = teamMemberRequest.TeamID,
+                    @email = teamMemberRequest.EmailAddress,
+                    @a = a,
+                    @userId = teamMemberRequest.CreatedById,
+                    @dt = DateTime.Now
+                });
+            }
+        }
+
+        public async Task<IEnumerable<AddTeamMemberRequestVM>> GetTeamMemberInvitations(int teamId)
+        {
+            var q = @"SELECT *  FROM TeamMemberRequest WHERE TeamID=@teamId";
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                return await con.QueryAsync<AddTeamMemberRequestVM>(q, new { @teamId = teamId });
             }
         }
 

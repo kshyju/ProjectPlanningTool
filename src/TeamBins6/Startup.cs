@@ -43,6 +43,7 @@ namespace TeamBins6
             services.AddTransient<ICommentRepository, CommentRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IUserAccountManager, UserAccountManager>();
+            services.AddTransient<IEmailManager, EmailManager>();
 
             // Rechecking in
 

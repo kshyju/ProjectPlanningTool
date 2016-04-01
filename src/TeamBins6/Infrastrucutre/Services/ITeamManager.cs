@@ -9,6 +9,7 @@ using TeamBins.Common;
 using TeamBins.Common.Infrastructure.Enums.TeamBins.Helpers.Enums;
 using TeamBins.Common.ViewModels;
 using TeamBins.DataAccess;
+using TeamBins.Services;
 using TeamBins6.Infrastrucutre.Extensions;
 
 namespace TeamBins6.Infrastrucutre.Services
@@ -26,21 +27,50 @@ namespace TeamBins6.Infrastrucutre.Services
 
         Task<TeamVM> GetTeamInoWithMembers();
 
+        Task AddNewTeamMember(AddTeamMemberRequestVM teamMemberRequest);
+
+        Task<IEnumerable<AddTeamMemberRequestVM>> GetTeamMemberInvitations();
+
     }
     public class TeamManager : ITeamManager
     {
+        private IUserRepository userRepository;
         private IIssueRepository issueRepository;
         IActivityRepository activityRepository;
         IUserSessionHelper userSessionHelper;
         private readonly ITeamRepository teamRepository;
-        public TeamManager(IUserSessionHelper userSessionHelper, IActivityRepository activityRepository, ITeamRepository teamRepository, IIssueRepository issueRepository)
+        private IEmailManager emailManager;
+        public TeamManager(IUserSessionHelper userSessionHelper, IActivityRepository activityRepository, ITeamRepository teamRepository, IIssueRepository issueRepository,IUserRepository userRepository, IEmailManager emailManager)
         {
             this.teamRepository = teamRepository;
             this.userSessionHelper = userSessionHelper;
             this.activityRepository = activityRepository;
             this.issueRepository = issueRepository;
+            this.userRepository = userRepository;
+            this.emailManager = emailManager;
         }
 
+        public async Task<IEnumerable<AddTeamMemberRequestVM>> GetTeamMemberInvitations()
+        {
+             
+           return  await this.teamRepository.GetTeamMemberInvitations(this.userSessionHelper.TeamId);
+        }
+
+        public async  Task AddNewTeamMember(AddTeamMemberRequestVM teamMemberRequest)
+        {
+            var user = await userRepository.GetUser(teamMemberRequest.EmailAddress);
+            if (user != null)
+            {
+                teamRepository.SaveTeamMember(this.userSessionHelper.TeamId,user.Id, this.userSessionHelper.UserId);                
+            }
+            else
+            {
+                teamMemberRequest.TeamID = this.userSessionHelper.TeamId;
+                teamMemberRequest.CreatedById = this.userSessionHelper.UserId;
+                await teamRepository.SaveTeamMemberRequest(teamMemberRequest);
+                await emailManager.SendTeamMemberInvitationEmail(teamMemberRequest);
+            }
+        }
 
         public async Task<TeamVM> GetTeamInoWithMembers()
         {
@@ -54,6 +84,23 @@ namespace TeamBins6.Infrastrucutre.Services
             {
                 teamMemberDto.GravatarUrl = teamMemberDto.EmailAddress.ToGravatarUrl();
             }
+
+            var invitations = await teamRepository.GetTeamMemberInvitations(this.userSessionHelper.TeamId);
+            foreach (var teamMemberDto in invitations)
+            {
+                teamMemberDto.GravatarUrl = teamMemberDto.EmailAddress.ToGravatarUrl();
+            }
+            vm.MembersInvited =
+                invitations.Select(
+                    s =>
+                        new MemberInvitation
+                        {
+                            EmailAddress = s.EmailAddress,
+                            AvatarHash = s.GravatarUrl,
+                            DateInvited = s.CreatedDate.ToShortDateString()
+                        }).ToList();
+
+
             vm.Members = members;
 
             return vm;

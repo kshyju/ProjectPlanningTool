@@ -5,6 +5,19 @@ using TeamBins.Common.Infrastructure.Enums.TeamBins.Helpers.Enums;
 
 namespace TeamBins.Services
 {
+    public interface IEmailManager
+    {
+        Task SendTeamMemberInvitationEmail(AddTeamMemberRequestVM teamMemberRequest);
+
+    }
+
+    public class EmailManager : IEmailManager
+    {
+        public async Task SendTeamMemberInvitationEmail(AddTeamMemberRequestVM teamMemberRequest)
+        {
+           
+        }
+    }
     public interface ICommentEmailManager
     {
         Task SendNewCommentEmail(CommentVM comment, int teamId);

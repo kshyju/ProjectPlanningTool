@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
+using Microsoft.AspNet.Mvc.ModelBinding;
 using TeamBins.Common;
 using TeamBins6.Infrastrucutre.Services;
 
@@ -34,9 +35,25 @@ namespace TeamBins6.Controllers.Web
         }
 
         [HttpPost]
-        public ActionResult Add(AddTeamMemberRequestVM model)
+        public async Task<ActionResult> Add(AddTeamMemberRequestVM model)
         {
-            return Json(new { Status = "Success", Message = "Successfully added user to team" });
+            try
+            {
+                //if (ModelState.IsValid)
+                {
+                    await teamManager.AddNewTeamMember(model);
+                    return Json(new { Status = "Success", Message = "Successfully added user to team" });
+                }
+                ////else
+                //{
+                //    var errors = ViewData.ModelState.Values.SelectMany(s => s.Errors.Select(g => g.ErrorMessage));
+                //    return Json(new { Status = "Error", Message = "Error adding user to team", Errors= errors });
+                //}
+            }
+            catch (Exception ex)
+            {
+                //Log
+            }
 
             return Json(new { Status = "Error", Message = "Error adding user to team" });  
         }
