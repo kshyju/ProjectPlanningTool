@@ -24,6 +24,8 @@ namespace TeamBins6
                 .AddJsonFile("appsettings.json")
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
+
+            
         }
 
         public IConfigurationRoot Configuration { get; set; }
@@ -44,7 +46,9 @@ namespace TeamBins6
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IUserAccountManager, UserAccountManager>();
             services.AddTransient<IEmailManager, EmailManager>();
+            services.AddTransient<IEmailRepository, EmailRepository>();
 
+            services.AddInstance<IConfiguration>(Configuration);
             // Rechecking in
 
             services.AddCaching();

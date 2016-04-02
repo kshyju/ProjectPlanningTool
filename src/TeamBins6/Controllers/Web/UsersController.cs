@@ -11,7 +11,7 @@ using TeamBins6.Infrastrucutre.Services;
 
 namespace TeamBins6.Controllers.Web
 {
-    public class UsersController : Controller
+    public class UsersController : BaseController
     {
         private ITeamManager teamManager;
         public UsersController(ITeamManager teamManager)
@@ -41,6 +41,7 @@ namespace TeamBins6.Controllers.Web
             {
                 //if (ModelState.IsValid)
                 {
+                    model.SiteBaseUrl = AppBaseUrl;
                     await teamManager.AddNewTeamMember(model);
                     return Json(new { Status = "Success", Message = "Successfully added user to team" });
                 }

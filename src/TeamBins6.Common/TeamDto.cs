@@ -92,13 +92,28 @@ namespace TeamBins.Common
     }
     public class AddTeamMemberRequestVM : MemberVM
     {
+        public int Id { set; get; }
         public int TeamID { set; get; }
         public int CreatedById { set; get; }
 
         public string ActivationCode { set; get; }
 
         public DateTime CreatedDate { set; get; }
+
+        public string SiteBaseUrl { set; get; }
+
+        public UserDto CreatedBy { set; get; }
+
+        public TeamDto Team { set; get; }
+
+        public AddTeamMemberRequestVM()
+        {
+            this.CreatedBy = new UserDto();
+            this.Team = new TeamDto();
+        }
     }
+
+    
 
     public class CommentVM
     {

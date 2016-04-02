@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
+using Microsoft.Extensions.Configuration;
 using StackExchange.Exceptional;
 using TeamBins.Common;
 using TeamBins.Services;
@@ -27,11 +28,13 @@ namespace TeamBins6.Controllers
     {
         private IUserSessionHelper userSessionHelper;
         private IUserAccountManager userAccountManager;
+        private IConfiguration configuration; 
 
-        public HomeController(IUserSessionHelper userSessionHelper,IUserAccountManager userAccountManager)
+        public HomeController(IUserSessionHelper userSessionHelper,IUserAccountManager userAccountManager,IConfiguration configuration)
         {
             this.userSessionHelper = userSessionHelper;
             this.userAccountManager = userAccountManager;
+            this.configuration = configuration;
         }
 
         [HttpPost]
@@ -46,6 +49,8 @@ namespace TeamBins6.Controllers
 
         public IActionResult Index()
         {
+
+            var test = configuration.Get<string>("TeamBins:Email:UserName");
 
             this.userSessionHelper.SetUserIDToSession(new LoggedInSessionInfo { TeamId = 13109, UserId = 12095 });
 

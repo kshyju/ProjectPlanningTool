@@ -5,6 +5,7 @@ using System.Security.Policy;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc.Routing;
+using Remotion.Linq.Clauses;
 using TeamBins.Common;
 using TeamBins.Common.Infrastructure.Enums.TeamBins.Helpers.Enums;
 using TeamBins.Common.ViewModels;
@@ -67,8 +68,12 @@ namespace TeamBins6.Infrastrucutre.Services
             {
                 teamMemberRequest.TeamID = this.userSessionHelper.TeamId;
                 teamMemberRequest.CreatedById = this.userSessionHelper.UserId;
-                await teamRepository.SaveTeamMemberRequest(teamMemberRequest);
-                await emailManager.SendTeamMemberInvitationEmail(teamMemberRequest);
+                var id=await teamRepository.SaveTeamMemberRequest(teamMemberRequest);
+                var requests = await teamRepository.GetTeamMemberInvitations(this.userSessionHelper.TeamId)
+                    ;
+                var r= requests.FirstOrDefault(s => s.Id == id);
+                
+                await emailManager.SendTeamMemberInvitationEmail(r);
             }
         }
 
