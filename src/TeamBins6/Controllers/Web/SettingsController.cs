@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
 using TeamBins.Common.ViewModels;
@@ -35,9 +36,9 @@ namespace TeamBins.Controllers
             if (ModelState.IsValid)
             {
                 await userAccountManager.UpdateProfile(model);
-                //var msg = new AlertMessageStore();
-                //msg.AddMessage("success", "Profile updated successfully");
-                //TempData["AlertMessages"] = msg;
+
+                var tt = new Dictionary<string, string> { { "success", "Profile updated successfully" } };
+                TempData["AlertMessages"] = tt;
                 return RedirectToAction("Index", "Settings");
 
             }
@@ -64,19 +65,14 @@ namespace TeamBins.Controllers
         [HttpPost]
         public ActionResult Settings(DefaultIssueSettings model)
         {
-            if (ModelState.IsValid)
-            {
-               userAccountManager.SaveDefaultProjectForTeam(model);
 
-                //var msg = new AlertMessageStore();
-                //msg.AddMessage("success", "Settings updated successfully");
-                //TempData["AlertMessages"] = msg;
-                return RedirectToAction("settings");
+            userAccountManager.SaveDefaultProjectForTeam(model);
 
-            }
-            //
-            //  model.Projects = GetProjectListItem();
-            return RedirectToAction("Index");
+            var tt = new Dictionary<string, string> { { "success", "Settings successfully" } };
+            TempData["AlertMessages"] = tt;
+            return RedirectToAction("Index", "Settings");
+
+
         }
 
     }

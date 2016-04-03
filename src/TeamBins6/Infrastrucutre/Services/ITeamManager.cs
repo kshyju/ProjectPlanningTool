@@ -32,6 +32,8 @@ namespace TeamBins6.Infrastrucutre.Services
 
         Task<IEnumerable<AddTeamMemberRequestVM>> GetTeamMemberInvitations();
 
+        
+
     }
     public class TeamManager : ITeamManager
     {

@@ -49,9 +49,6 @@ namespace TeamBins6.Controllers
 
         public IActionResult Index()
         {
-
-            var test = configuration.Get<string>("TeamBins:Email:UserName");
-
             this.userSessionHelper.SetUserIDToSession(new LoggedInSessionInfo { TeamId = 13109, UserId = 12095 });
 
             if (this.userSessionHelper.UserId > 0)

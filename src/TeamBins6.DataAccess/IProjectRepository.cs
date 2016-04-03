@@ -5,6 +5,7 @@ using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using TeamBins.Common;
 using Dapper;
 using TeamBins.Common.ViewModels;
@@ -83,7 +84,7 @@ namespace TeamBins.DataAccess
         ProjectDto GetDefaultProjectForTeam(int teamId);
         int GetIssueCountForProject(int projectId);
 
-        int GetDefaultProjectForTeamMember(int teamId, int userId);
+        Task<ProjectDto> GetDefaultProjectForTeamMember(int teamId, int userId);
 
         void Delete(int projectId);
     }
@@ -221,15 +222,18 @@ namespace TeamBins.DataAccess
             }
         }
 
-        public int GetDefaultProjectForTeamMember(int teamId, int userId)
+        public async Task<ProjectDto> GetDefaultProjectForTeamMember(int teamId, int userId)
         {
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                var projects = con.Query<int>("SELECT DefaultProjectID from TeamMember where TeamId=@teamId and MemberId=@memberId", new { @teamId = teamId, @memberId = userId });
+                var projects = con.Query<ProjectDto>(@"SELECT P.ID,P.Name from TeamMember TM
+                                                JOIN Project P ON P.ID = TM.DefaultProjectID 
+                                                where TM.TeamId =@teamId and MemberId=@memberId", 
+                                                new { @teamId = teamId, @memberId = userId });
                 if (!projects.Any())
                 {
-                    return 0;
+                    return null;
 
                 }
                 return projects.First();

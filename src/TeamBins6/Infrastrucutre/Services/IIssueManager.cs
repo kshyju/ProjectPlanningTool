@@ -122,17 +122,17 @@ namespace TeamBins.Services
 
         }
 
-        public IssueDetailVM SaveIssue(CreateIssue issue, List<IFormFile> files)
+        public async Task<IssueDetailVM> SaveIssue(CreateIssue issue, List<IFormFile> files)
         {
             if (issue.SelectedProject == 0)
             {
-                var defaultProjectId = this.iProjectRepository.GetDefaultProjectForTeamMember(this.userSessionHelper.TeamId,
+                var defaultProject = await this.iProjectRepository.GetDefaultProjectForTeamMember(this.userSessionHelper.TeamId,
                      this.userSessionHelper.UserId);
-                if (defaultProjectId == 0)
+                if (defaultProject==null)                
                 {
                     throw new MissingSettingsException("Missing data", "Default project");
                 }
-                issue.SelectedProject = defaultProjectId;
+                issue.SelectedProject = defaultProject.Id;
 
             }
             if (issue.SelectedCategory == 0)
@@ -207,7 +207,7 @@ namespace TeamBins.Services
         Task<IEnumerable<UserDto>> GetNonIssueMembers(int issueId);
         Task<int> StarIssue(int issueId);
         IEnumerable<IssueVM> GetIssues(List<int> statusIds, int count);
-        IssueDetailVM SaveIssue(CreateIssue issue, List<IFormFile> files);
+        Task<IssueDetailVM> SaveIssue(CreateIssue issue, List<IFormFile> files);
         DashBoardItemSummaryVM GetDashboardSummaryVM(int teamId);
         IssueDetailVM GetIssue(int id);
         ActivityDto SaveActivity(CreateIssue model, IssueDetailVM previousVersion, IssueDetailVM newVersion);

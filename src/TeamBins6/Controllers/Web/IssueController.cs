@@ -113,14 +113,14 @@ namespace TeamBins6.Controllers.Web
 
         [HttpPost]
         [Route("Issue/Add")]
-        public ActionResult Add([FromBody] CreateIssue model) //, List<IFormFile> files
+        public async Task<IActionResult> Add([FromBody] CreateIssue model) //, List<IFormFile> files
         {
             try
             {
                 if (ModelState.IsValid)
                 {
                     var previousVersion = issueManager.GetIssue(model.Id);
-                    var newVersion = issueManager.SaveIssue(model, null);
+                    var newVersion = await issueManager.SaveIssue(model, null);
                     var issueActivity = issueManager.SaveActivity(model, previousVersion, newVersion);
 
                     //if ((files != null) && (files.Any()))

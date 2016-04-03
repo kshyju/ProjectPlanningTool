@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using TeamBins.Common;
 using TeamBins.Common.ViewModels;
 using TeamBins.DataAccess;
@@ -12,7 +13,7 @@ namespace TeamBins.Services
 
         bool DoesProjectsExist();
 
-        ProjectDto GetDefaultProjectForCurrentTeam();
+        Task<ProjectDto> GetDefaultProjectForCurrentTeam();
 
         IEnumerable<ProjectDto> GetProjects();
 
@@ -45,9 +46,11 @@ namespace TeamBins.Services
             return this.projectRepository.DoesProjectsExist(this.userSessionHelper.TeamId);
         }
 
-        public ProjectDto GetDefaultProjectForCurrentTeam()
+        public async Task<ProjectDto> GetDefaultProjectForCurrentTeam()
         {
-            return this.projectRepository.GetDefaultProjectForTeam(this.userSessionHelper.TeamId);
+            return await this.projectRepository.GetDefaultProjectForTeamMember(this.userSessionHelper.TeamId,
+                this.userSessionHelper.UserId);
+          
         }
 
         public IEnumerable<ProjectDto> GetProjects()
@@ -67,6 +70,7 @@ namespace TeamBins.Services
             this.projectRepository.Save(model);
         }
 
+         
         public int GetIssueCountForProject(int projectId)
         {
             return this.projectRepository.GetIssueCountForProject(projectId);

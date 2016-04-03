@@ -2,13 +2,6 @@
 @{
     ViewBag.Title = "Issues";
 }
-@*<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-    <link href="http://code.jquery.com/ui/1.10.3/themes/ui-lightness/jquery-ui.css" rel="stylesheet" />
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.min.js"></script>
-    <script src="~/Scripts/jquery.signalR-2.0.2.min.js"></script>
-    <script src="~/signalr/hubs"></script>*@
-
-
 
 @if (Model.ProjectsExist)
 {
@@ -24,11 +17,11 @@
                         </div>
                     </div>
                 </div>
-               
+
                 <div class="iterations">
                     <ul class="navtab">
                         <li ng-repeat="group in vm.issuesGrouped">
-                            <a href="#current" id="tab-current" ng-click="vm.updateview(group, $event)" class="aIteration" ng-class="{'tab-selected':group.GroupName==vm.currentlyShowingGroup.GroupName}">{{group.GroupName}}</a>
+                            <a href="#" id="tab-current" ng-click="vm.updateview(group, $event)" class="aIteration" ng-class="{'tab-selected':group.GroupName==vm.currentlyShowingGroup.GroupName}">{{group.GroupName}}</a>
                         </li>
                     </ul>
                     <div class="spinner" ng-show="loading"></div>
@@ -38,7 +31,8 @@
             <table class="tblGrid" id="issueTbl" ng-show="vm.issuesGrouped.length>0">
                 <tr>
                     <th>#</th>
-                    <th></th><th></th>
+                    <th></th>
+                    <th></th>
                     <th>Title</th>
                     <th>Opened By</th>
                     <th>PriorityName</th>
@@ -47,7 +41,7 @@
                 </tr>
                 <tr ng-repeat="issue in vm.currentlyShowingGroup.Issues|orderBy:'Id':true" ng-class-odd="'trOdd'" ng-class-even="'trEven'">
                     <td>
-                        <span ng-show="issue.IsStarredForUser"  class="glyphicon glyphicon-star"  title="Starred by you"></span>
+                        <span ng-show="issue.IsStarredForUser" class="glyphicon glyphicon-star" title="Starred by you"></span>
 
                     </td>
                     <td>{{issue.Id}}</td>
@@ -91,10 +85,9 @@ else
 
 @section Scripts
 {
-<script src="~/js/issueList.service.js"></script>
-
+    <script src="~/js/issueList.service.js"></script>
     <script src="~/js/IssueListController.js"></script>
-<script src="~/js/chart.min.js"></script>
+    <script src="~/js/chart.min.js"></script>
     <script>
 
     </script>
@@ -107,8 +100,4 @@ else
     var addIssueUrl = "@Url.Action("Add","ISsues")";
     var editIssueUrl = "@Url.Action("edit","issues")";
     var savePrefUrl = "@Url.Action("SavePreference", "Issues")";
-
-
-
-
 </script>

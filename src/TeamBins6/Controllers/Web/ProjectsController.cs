@@ -6,6 +6,7 @@ using Microsoft.AspNet.Mvc;
     using Microsoft.AspNet.Mvc.ViewFeatures;
     using TeamBins.Common.ViewModels;
 using TeamBins.Services;
+    using TeamBins6.Infrastrucutre.Services;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -13,16 +14,25 @@ namespace TeamBins6.Controllers.Web
 {
     public class ProjectsController : Controller
     {
+        private ITeamManager teamManager;
         private IProjectManager projectManager;
-        public ProjectsController(IProjectManager projectManager)
+        public ProjectsController(IProjectManager projectManager,ITeamManager teamManager)
         {
             this.projectManager = projectManager;
+            this.teamManager = teamManager;
         }
       
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             var vm = new TeamProjectListVM();
-            vm.Projects =  projectManager.GetProjects().Select(s=> new ProjectVM { Id = s.Id, Name = s.Name}).ToList();
+            var defaultProject = await projectManager.GetDefaultProjectForCurrentTeam();
+            vm.Projects =  projectManager.GetProjects().Select(s=> new ProjectVM { Id = s.Id,
+                Name = s.Name,
+                IsDefaultProject =  (defaultProject!=null && s.Id== defaultProject.Id)
+
+            }).ToList();
+           
+            
             return View(vm);
         }
 

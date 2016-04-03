@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@addTagHelper "*, TeamBins6"
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -19,6 +20,8 @@
 <body>
     <div>
         @await Component.InvokeAsync("MenuHeader",1)
+        <div message-duration="4000"></div>
+
         @*@Html.AlertMessages()*@
         <div class="content">
             <div class="central">
@@ -91,7 +94,8 @@
                 _this.data("state", "selected");
             }
         });
-        setTimeout(function () { $('#success-message').slideUp(300); }, 6000);
+        var duration = $('.alert').data("duration");
+        setTimeout(function () { $('.alert').slideUp(300); }, duration);
 
 
     });

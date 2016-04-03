@@ -62,12 +62,7 @@ namespace TeamBins.DataAccess
             {
                 con.Open();
 
-                var defaultProjectId =
-                    con.Query<int?>(
-                        "SELECT TOP 1 DefaultProjectId from TEAMMEMBER WHERE TeamId = @teamId and MemberId = @userId",
-                        new {@teamId = model.TeamId, @userId = model.UserId});
-
-                con.Query<int>(
+                   con.Query<int>(
                     " UPDATE TEAMMEMBER SET DEFAULTPROJECTID=@projectId WHERE TEAMID=@teamId AND MEMBERID=@userId",
                     new
                     {

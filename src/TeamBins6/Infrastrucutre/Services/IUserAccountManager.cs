@@ -61,6 +61,8 @@ namespace TeamBins.Services
 
         public async Task SaveDefaultProjectForTeam(DefaultIssueSettings defaultIssueSettings)
         {
+            defaultIssueSettings.TeamId = this.userSessionHelper.TeamId;
+            defaultIssueSettings.UserId = this.userSessionHelper.UserId;
              await this.userRepository.SaveDefaultIssueSettings(defaultIssueSettings);
         }
         public async Task<EditProfileVm> GetUserProfile()
@@ -83,7 +85,10 @@ namespace TeamBins.Services
             vm.Projects=this.projectManager.GetProjects()
                     .Select(s => new SelectListItem {Value = s.Id.ToString(), Text = s.Name})
                     .ToList();
-            
+
+
+            var tm = this.teamRepository.GetTeamMember(this.userSessionHelper.TeamId, this.userSessionHelper.UserId);
+            vm.SelectedProject = tm.DefaultProjectId;
             return await Task.FromResult(vm);
         }
 
