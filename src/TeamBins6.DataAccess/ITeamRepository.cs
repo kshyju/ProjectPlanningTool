@@ -17,7 +17,7 @@ namespace TeamBins.DataAccess
     {
         public async Task<EmailTemplateDto> GetEmailTemplate(string name)
         {
-            var q = @"SELECT * FROM EmailTemplate WHERE Name=@name";
+            var q = @"SELECT Name,EmailBody,EmailSubject as Subject FROM EmailTemplate WHERE Name=@name";
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();

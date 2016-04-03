@@ -218,8 +218,14 @@ a.toolLink {
     #issueStatus span
     {
         font-weight:bold;
-           padding:8px; padding-top:2px;padding-bottom:2px;
+           padding:8px; padding-top:2px;padding-bottom:2px;margin-left: 8px;
     }
+
+span.ToDo
+{
+    background-color: #d4c5f9;
+    border:1px solid #784be9;
+}
 span.New
 {
     background-color:#F1FB9A;

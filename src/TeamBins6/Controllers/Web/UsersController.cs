@@ -18,7 +18,7 @@ namespace TeamBins6.Controllers.Web
         {
             this.teamManager = teamManager;
         }
-        public async Task<IActionResult> Index()
+        public async Task<ActionResult> Index()
         {
 
             var teamVm = new TeamVM();

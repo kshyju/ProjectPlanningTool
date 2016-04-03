@@ -20,7 +20,7 @@ var TeamBins;
                 self.summaryItems = data.IssueCountsByStatus;
                 var pieChartData = [];
                 angular.forEach(self.summaryItems, function (a, b) {
-                    var pieChartItem = { value: a.Count, color: a.ChartColor, highlight: "#FF5A5E", label: a.ItemName };
+                    var pieChartItem = { value: a.Count, color: a.Color, highlight: "#FF5A5E", label: a.ItemName };
                     pieChartData.push(pieChartItem);
                 });
                 self.renderPie(pieChartData);

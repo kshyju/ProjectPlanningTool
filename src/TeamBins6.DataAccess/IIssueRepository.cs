@@ -114,7 +114,7 @@ namespace TeamBins.DataAccess
                         P.Id,
                         P.Name,
                         I.CreatedDate,
-                        S.Id,S.Name,
+                        S.Id,S.Name,S.Code,
                         Pr.Id,
                         Pr.Name,
                         U.Id,U.FirstName as Name,
@@ -169,10 +169,10 @@ namespace TeamBins.DataAccess
 
         public async Task<IEnumerable<ChartItem>> GetIssueCountsPerStatus(int teamId)
         {
-            var q = @"SELECT  S.ID ItemId,S.NAME ItemName,S.ChartColor, COUNT(I.ID) COUNT						 
+            var q = @"SELECT  S.ID ItemId,S.NAME ItemName,S.Color, COUNT(I.ID) COUNT						 
                         FROM STATUS S  WITH (NOLOCK)  
                         LEFT JOIN (SELECT I.ID,I.STATUSID FROM ISSUE I  WITH (NOLOCK) WHERE I.TeamID=@t) I ON I.STATUSID =S.ID
-                        GROUP BY S.ID,S.NAME,S.ChartColor";
+                        GROUP BY S.ID,S.NAME,S.Color";
 
             using (var con = new SqlConnection(ConnectionString))
             {

@@ -8,6 +8,8 @@ namespace TeamBins.Common.ViewModels
         public string Name { set; get; }
         public string Code { set; get; }
 
+        public string Color { set; get; }
+
         public int DisplayOrder { set; get; }
 
         public  bool Equals(KeyValueItem obj)

@@ -10,5 +10,5 @@
 
 public class ChartItem : ItemCount
 {
-    public string ChartColor { set; get; }
+    public string Color { set; get; }
 }
