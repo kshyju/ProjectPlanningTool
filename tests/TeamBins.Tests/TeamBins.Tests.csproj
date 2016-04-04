@@ -84,16 +84,6 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\TeamBins.DataAccess\TeamBins.DataAccess.csproj">
-      <Project>{381ceafa-e0c2-4d2f-8454-e8aa7a264096}</Project>
-      <Name>TeamBins.DataAccess</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\TeamBins\TeamBins.csproj">
-      <Project>{6a01c5bd-ea5c-4255-999f-76f0971b2c36}</Project>
-      <Name>TeamBins</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
