@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using Dapper;
+using Microsoft.Extensions.Configuration;
 using TeamBins.Common;
 using TeamBins.Common.ViewModels;
 using TeamBins6.Common;
@@ -18,6 +19,11 @@ namespace TeamBins.DataAccess
 
     public class ActivityRepository : BaseRepo, IActivityRepository
     {
+
+        public ActivityRepository(IConfiguration configuration) : base(configuration)
+        {
+        }
+
         public IEnumerable<ActivityDto> GetActivityItems(int teamId, int count)
         {
 

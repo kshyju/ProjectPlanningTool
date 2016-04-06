@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.Extensions.Configuration;
 using TeamBins.Common;
 using TeamBins.Common.Infrastructure.Enums.TeamBins.Helpers.Enums;
 using TeamBins.Common.ViewModels;
@@ -45,6 +46,9 @@ namespace TeamBins.DataAccess
 
     public class UserRepository : BaseRepo, IUserRepository
     {
+        public UserRepository(IConfiguration configuration) : base(configuration)
+        {
+        }
         public async Task SetDefaultTeam(int userId, int teamId)
         {
             var q = @"UPDATE [User] SET DefaultTeamId=@teamId WHERE ID=@userId";

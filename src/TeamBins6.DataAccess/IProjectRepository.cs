@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using TeamBins.Common;
 using Dapper;
+using Microsoft.Extensions.Configuration;
 using TeamBins.Common.ViewModels;
 
 namespace TeamBins.DataAccess
@@ -23,6 +21,10 @@ namespace TeamBins.DataAccess
 
     public class CommentRepository : BaseRepo, ICommentRepository
     {
+        public CommentRepository(IConfiguration configuration) : base(configuration)
+        {
+        }
+
         public int Save(CommentVM comment)
         {
             using (var con = new SqlConnection(ConnectionString))
@@ -91,6 +93,9 @@ namespace TeamBins.DataAccess
 
     public class ProjectRepository : BaseRepo, IProjectRepository
     {
+        public ProjectRepository(IConfiguration configuration) : base(configuration)
+        {
+        }
 
         public void Delete(int projectId)
         {

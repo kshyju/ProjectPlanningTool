@@ -41,11 +41,11 @@ namespace TeamBins6.Controllers.Web
         }
 
 
-        public ActionResult Index(int size = 50, string iteration = "current")
+        public ActionResult Index()
         {
             try
             {
-                IssueListVM bugListVM = new IssueListVM { TeamID = userSessionHelper.TeamId };
+                var bugListVm = new IssueListVM { TeamID = userSessionHelper.TeamId };
                 var projectExists = projectManager.DoesProjectsExist();
 
                 if (!projectExists)
@@ -55,19 +55,15 @@ namespace TeamBins6.Controllers.Web
                 else
                 {
 
-                    bugListVM.ProjectsExist = true;
+                    bugListVm.ProjectsExist = true;
 
                     bool defaultProjectExist = projectManager.GetDefaultProjectForCurrentTeam() != null;
                     if (!defaultProjectExist)
                     {
-                        var some = new TestClass { Name = "Tes" };
-                        var alertMessages = new AlertMessageStore();
-
-                        // alertMessages.AddMessage("system", String.Format("Hey!, You need to set a default project for the current team. Go to your <a href='{0}account/settings'>profile</a> and set a project as default project.",""));
-                        //TempData["AlertMessages"] = some; //alertMessages;// "alertMessages";
+                        var tt = new Dictionary<string, string> { { "warning", "Hey!, You need to set a default project for the current team. Go to your profile settings and set a project as default project." } };
+                        TempData["AlertMessages"] = tt;
                     }
-                    return View("Index", bugListVM);
-
+                    return View("Index", bugListVm);
                 }
 
             }
@@ -101,9 +97,6 @@ namespace TeamBins6.Controllers.Web
             {
                 var vm = new CreateIssue(issue);
                 this.issueManager.LoadDropdownData(vm);
-
-
-
 
                 vm.IsEditableForCurrentUser = this.teamManager.DoesCurrentUserBelongsToTeam();
                 return PartialView("~/Views/Issue/Partial/Edit.cshtml", vm);

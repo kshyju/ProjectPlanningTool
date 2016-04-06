@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.Extensions.Configuration;
 using TeamBins.Common;
 
 namespace TeamBins.DataAccess
@@ -15,9 +16,13 @@ namespace TeamBins.DataAccess
 
     public class EmailRepository : BaseRepo,IEmailRepository
     {
+        public EmailRepository(IConfiguration configuration) : base(configuration)
+        {
+        }
+
         public async Task<EmailTemplateDto> GetEmailTemplate(string name)
         {
-            var q = @"SELECT Name,EmailBody,EmailSubject as Subject FROM EmailTemplate WHERE Name=@name";
+            var q = @"SELECT Name,EmailBody,EmailSubject as Subject FROM EmailTemplate  WITH (NOLOCK) WHERE Name=@name";
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
@@ -46,6 +51,10 @@ namespace TeamBins.DataAccess
 
     public class TeamRepository : BaseRepo, ITeamRepository
     {
+        public TeamRepository(IConfiguration configuration) : base(configuration)
+        {
+        }
+
         public TeamDto GetTeam(int teamId)
         {
             var q =@"SELECT [Id],[Name]  FROM Team WHERE ID=@id";
@@ -113,8 +122,8 @@ namespace TeamBins.DataAccess
                         U.EmailAddress,
                         U.LastLoginDate,
                         TM.CreatedDate as JoinedDate
-                        FROM [Team].[dbo].[User] U
-                        INNER JOIN TeamMember TM ON U.ID=TM.MemberID WHERE TM.TeamID=@teamId";
+                        FROM [dbo].[User] U WITH (NOLOCK) 
+                        INNER JOIN TeamMember TM  WITH (NOLOCK) ON U.ID=TM.MemberID WHERE TM.TeamID=@teamId";
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
@@ -161,9 +170,9 @@ namespace TeamBins.DataAccess
         {
             var q =
               @" SELECT T.ID,T.Name,T.CreatedDate,T.CreatedByID,TeamMemberCount.Count as MemberCount 
-                FROM Team T
-                JOIN TeamMember TM ON T.ID=TM.TeamId
-				JOIN (SELECT TeamId,COUNT(1) Count FROM TeamMember  group  by TeamId ) TeamMemberCount on TeamMemberCount.TeamId=T.ID
+                FROM Team T WITH (NOLOCK) 
+                JOIN TeamMember TM  WITH (NOLOCK) ON T.ID=TM.TeamId
+				JOIN (SELECT TeamId,COUNT(1) Count FROM TeamMember  WITH (NOLOCK)  group  by TeamId ) TeamMemberCount on TeamMemberCount.TeamId=T.ID
                 WHERE @userId=@userId";
             using (var con = new SqlConnection(ConnectionString))
             {
@@ -191,7 +200,7 @@ namespace TeamBins.DataAccess
         public MemberVM GetTeamMember(int teamId, int userId)
         {
             var q =
-                @"SELECT [Id],[MemberID] ,[TeamID] ,[DefaultProjectID] FROM TeamMember WHERE TeamID=@t AND MemberID=@m";
+                @"SELECT [Id],[MemberID] ,[TeamID] ,[DefaultProjectID] FROM TeamMember  WITH (NOLOCK) WHERE TeamID=@t AND MemberID=@m";
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();

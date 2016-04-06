@@ -7,7 +7,6 @@ using TeamBins.Common.ViewModels;
 using TeamBins.Services;
 using TeamBins6.Infrastrucutre.Services;
 
-// For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace TeamBins6.Controllers.Web
 {
@@ -28,8 +27,6 @@ namespace TeamBins6.Controllers.Web
 
         }
 
-        // GET: /<controller>/
-        //[Route("~/Dashboard/{id}")]
         public async Task<IActionResult> Index(int? id)
         {
            

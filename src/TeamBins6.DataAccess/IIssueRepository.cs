@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.Extensions.Configuration;
 using TeamBins.Common;
 using TeamBins.Common.Infrastructure.Enums.TeamBins.Helpers.Enums;
 using TeamBins.Common.ViewModels;
@@ -36,6 +37,10 @@ namespace TeamBins.DataAccess
 
     public class IssueRepository : BaseRepo, IIssueRepository
     {
+        public IssueRepository(IConfiguration configuration) : base(configuration)
+        {
+        }
+
         public async Task StarIssue(int issueId, int userId, bool isRequestForToStar)
         {
             await DeleteIssueMemberRecord(issueId, userId, "Star");
