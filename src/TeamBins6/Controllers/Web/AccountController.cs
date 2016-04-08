@@ -117,8 +117,8 @@ namespace TeamBins6.Controllers.Web
                             userSessionHelper.SetUserIDToSession(userSession);
                         }
 
-                        //if (!String.IsNullOrEmpty(model.ReturnUrl))
-                        //    return RedirectToAction("joinmyteam", "users", new { id = model.ReturnUrl });
+                        if (!String.IsNullOrEmpty(model.ReturnUrl))
+                            return RedirectToAction("joinmyteam", "users", new { id = model.ReturnUrl });
 
                         return RedirectToAction("accountcreated");
 

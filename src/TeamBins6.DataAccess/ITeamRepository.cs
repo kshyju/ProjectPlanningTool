@@ -14,7 +14,7 @@ namespace TeamBins.DataAccess
         Task<EmailTemplateDto> GetEmailTemplate(string name);
     }
 
-    public class EmailRepository : BaseRepo,IEmailRepository
+    public class EmailRepository : BaseRepo, IEmailRepository
     {
         public EmailRepository(IConfiguration configuration) : base(configuration)
         {
@@ -36,7 +36,7 @@ namespace TeamBins.DataAccess
         TeamDto GetTeam(int teamId);
         TeamDto GetTeam(string name);
         int SaveTeam(TeamDto team);
-     
+
         void SaveTeamMember(int teamId, int memberId, int createdById);
         void SaveDefaultProject(int userId, int teamId, int? selectedProject);
         List<TeamDto> GetTeams(int userId);
@@ -48,6 +48,9 @@ namespace TeamBins.DataAccess
 
         Task<int> SaveTeamMemberRequest(AddTeamMemberRequestVM teamMemberRequest);
         Task<IEnumerable<AddTeamMemberRequestVM>> GetTeamMemberInvitations(int teamId);
+
+        Task<AddTeamMemberRequestVM> GetTeamMemberInvitation(string activationCode);
+        Task DeleteTeamMemberInvitation(int id);
     }
 
     public class TeamRepository : BaseRepo, ITeamRepository
@@ -83,7 +86,7 @@ namespace TeamBins.DataAccess
             {
                 var a = Guid.NewGuid().ToString("n").Replace("-", "");
                 con.Open();
-                var p= await con.QueryAsync<int>(q, new
+                var p = await con.QueryAsync<int>(q, new
                 {
                     @teamId = teamMemberRequest.TeamID,
                     @email = teamMemberRequest.EmailAddress,
@@ -95,6 +98,47 @@ namespace TeamBins.DataAccess
             }
         }
 
+        public async Task DeleteTeamMemberInvitation(int id)
+        {
+            var q = @"DELETE FROM TeamMemberRequest WHERE ID = @id";
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                await con.ExecuteAsync(q, new { @id = id });
+            }
+        }
+
+        public async Task<AddTeamMemberRequestVM> GetTeamMemberInvitation(string activationCode)
+        {
+            var q = @"SELECT 
+                        TM.*,
+                        U.ID,
+                        U.FirstName as Name,
+                        U.EmailAddress,
+                        T.ID,
+                        T.Name
+                        FROM TeamMemberRequest TM
+                        JOIN [User] U ON TM.CreatedByID = U.ID JOIN Team T ON T.ID=TM.TeamID WHERE ActivationCode=@code";
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+
+                var items =
+                    await
+                        con.QueryAsync<AddTeamMemberRequestVM, UserDto, TeamDto, AddTeamMemberRequestVM>(q,
+                            (r, u, t) =>
+                            {
+                                r.CreatedBy = u;
+                                r.Team = t;
+                                return r;
+                            },
+                            new { @code = activationCode }, null, true, "ID,ID");
+
+                return items.FirstOrDefault();
+
+
+            }
+        }
         public async Task<IEnumerable<AddTeamMemberRequestVM>> GetTeamMemberInvitations(int teamId)
         {
             var q = @"SELECT 
@@ -109,19 +153,21 @@ namespace TeamBins.DataAccess
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-               
+
                 return
                     await
-                        con.QueryAsync<AddTeamMemberRequestVM, UserDto,TeamDto, AddTeamMemberRequestVM>(q,
-                            (r, u,t) => { r.CreatedBy = u;
-                                            r.Team = t;
-                                          return r;
+                        con.QueryAsync<AddTeamMemberRequestVM, UserDto, TeamDto, AddTeamMemberRequestVM>(q,
+                            (r, u, t) =>
+                            {
+                                r.CreatedBy = u;
+                                r.Team = t;
+                                return r;
                             },
-                            new {@teamid = teamId},null,true,"ID,ID");
-                
-            
-            
-            
+                            new { @teamid = teamId }, null, true, "ID,ID");
+
+
+
+
             }
         }
 
@@ -137,7 +183,7 @@ namespace TeamBins.DataAccess
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                return await con.QueryAsync<TeamMemberDto>(q, new {@teamId = teamId});
+                return await con.QueryAsync<TeamMemberDto>(q, new { @teamId = teamId });
             }
         }
         public int SaveTeam(TeamDto team)
@@ -152,7 +198,7 @@ namespace TeamBins.DataAccess
                     team.Id = p.First();
 
                     con.Execute("INSERT INTO TeamMember(MemberID,TeamID,CreatedDate,CreatedByID) VALUES (@memberId,@teamId,@dt,@createdById)",
-                                           new { memberId = team.CreatedById, @teamId=team.Id, @dt = DateTime.Now, @createdById = team.CreatedById });
+                                           new { memberId = team.CreatedById, @teamId = team.Id, @dt = DateTime.Now, @createdById = team.CreatedById });
 
 
                 }
@@ -168,7 +214,13 @@ namespace TeamBins.DataAccess
 
         public void SaveTeamMember(int teamId, int memberId, int createdById)
         {
-            throw new System.NotImplementedException();
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                con.Execute("INSERT INTO TeamMember(MemberID,TeamID,CreatedDate,CreatedByID) VALUES (@memberId,@teamId,@dt,@createdById)",
+                                       new { memberId = memberId, @teamId = teamId, @dt = DateTime.Now, @createdById = memberId });
+
+            }
         }
 
         public void SaveDefaultProject(int userId, int teamId, int? selectedProject)
@@ -187,7 +239,7 @@ namespace TeamBins.DataAccess
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                var projects = con.Query<TeamDto>(q, new { @userId = userId});
+                var projects = con.Query<TeamDto>(q, new { @userId = userId });
                 return projects.ToList();
             }
         }
@@ -199,7 +251,7 @@ namespace TeamBins.DataAccess
 
         public void Delete(int id)
         {
-            var q =@"DELETE FROM TeamMember WHERE TeamId=@teamId";
+            var q = @"DELETE FROM TeamMember WHERE TeamId=@teamId";
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
@@ -214,7 +266,7 @@ namespace TeamBins.DataAccess
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                var projects = con.Query<MemberVM>(q, new { @t = teamId,@m=userId });
+                var projects = con.Query<MemberVM>(q, new { @t = teamId, @m = userId });
                 return projects.FirstOrDefault();
             }
         }

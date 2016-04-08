@@ -17,6 +17,7 @@ namespace TeamBins6.Infrastrucutre.Services
 {
     public interface ITeamManager
     {
+        Task<bool> ValidateAndAssociateNewUserToTeam(string activationCode);
         int SaveTeam(TeamDto team);
         TeamBins.Common.TeamDto GetTeam(int id);
         List<TeamDto> GetTeams();
@@ -51,6 +52,27 @@ namespace TeamBins6.Infrastrucutre.Services
             this.issueRepository = issueRepository;
             this.userRepository = userRepository;
             this.emailManager = emailManager;
+        }
+
+        public async Task<bool> ValidateAndAssociateNewUserToTeam(string activationCode)
+        {
+
+            var invitation =  await this.teamRepository.GetTeamMemberInvitation(activationCode);
+            if(invitation!=null)
+            {
+                var currentUser = await userRepository.GetUser(this.userSessionHelper.UserId);
+                if(currentUser!=null && currentUser.EmailAddress ==invitation.EmailAddress)
+                {
+                    // Now asssociate this user to the team.
+                    this.teamRepository.SaveTeamMember(invitation.TeamID, this.userSessionHelper.UserId,this.userSessionHelper.UserId);
+                    this.userSessionHelper.SetTeamId(invitation.TeamID);
+
+                    await this.teamRepository.DeleteTeamMemberInvitation(invitation.Id);
+                    return true;
+                }
+
+            }
+            return false;
         }
 
         public async Task<IEnumerable<AddTeamMemberRequestVM>> GetTeamMemberInvitations()

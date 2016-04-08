@@ -50,5 +50,28 @@ namespace TeamBins6.Controllers.Web
             return Json(new { Status = "Error", Message = "Error adding user to team" });  
         }
 
+
+        public async Task<IActionResult> JoinMyTeam(string id)
+        {
+            // For users who received an email with the join link to join a team.
+            // The user must have created an account by now and coming back to this link after registration
+
+            try
+            {
+                var result = await teamManager.ValidateAndAssociateNewUserToTeam(id);
+                // TO DO : Add activity item
+                if (result)
+                {
+                    return View("WelcomeToTeam");
+                }
+                return View("NotFound");
+            }
+            catch (Exception ex)
+            {
+               
+                return View("Error");
+            }
+        }
+
     }
 }
