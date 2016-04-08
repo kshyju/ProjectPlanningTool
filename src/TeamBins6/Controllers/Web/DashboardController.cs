@@ -17,27 +17,35 @@ namespace TeamBins6.Controllers.Web
         private readonly IUserAccountManager userAccountManager;
         private readonly IProjectManager projectManager;
         private IIssueManager issueManager;
+        private ITeamManager teamManager;
 
-        public DashboardController(IUserSessionHelper userSessionHelper,IUserAccountManager userAccountManager,IIssueManager issueManager,IProjectManager projectManager)
+        public DashboardController(IUserSessionHelper userSessionHelper,IUserAccountManager userAccountManager,IIssueManager issueManager,IProjectManager projectManager,ITeamManager teamManager)
         {
             this.userSessionHelper = userSessionHelper;
             this.userAccountManager = userAccountManager;
             this.issueManager = issueManager;
             this.projectManager = projectManager;
+            this.teamManager = teamManager;
 
         }
 
         public async Task<IActionResult> Index(int? id)
         {
-           
+
+            int teamId = userSessionHelper.TeamId;
             var vm = new DashBoardVM {  };
             if (id != null)
             {
+                var team = teamManager.GetTeam(id.Value);
+                if (team != null && team.IsPublic)
+                {
+                    teamId = id.Value;
+                }
                 userSessionHelper.SetTeamId(id.Value);
                 await userAccountManager.SetDefaultTeam(userSessionHelper.UserId, id.Value);
             }
 
-            var issues = this.issueManager.GetIssuesGroupedByStatusGroup(25).SelectMany(f => f.Issues).ToList();
+            var issues = this.issueManager.GetIssuesGroupedByStatusGroup(teamId,25).SelectMany(f => f.Issues).ToList();
             vm.RecentIssues = issues;
 
             vm.Projects = this.projectManager.GetProjects().ToList();

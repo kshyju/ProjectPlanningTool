@@ -40,31 +40,69 @@ namespace TeamBins6.Controllers.Web
             this.teamManager = teamManager;
         }
 
-
-        public ActionResult Index()
+         [Route("Issue")]
+        [Route("Issue/{teamId}/{teamName}")]
+       
+        public ActionResult Index(int? teamId, string teamName = "")
         {
             try
             {
-                var bugListVm = new IssueListVM { TeamID = userSessionHelper.TeamId };
-                var projectExists = projectManager.DoesProjectsExist();
+                var teamIdToUse = userSessionHelper.TeamId;
+                var bugListVm = new IssueListVM();
 
-                if (!projectExists)
+                if (teamId != null)
                 {
-                    return RedirectToAction("Index", "Projects");
-                }
-                else
-                {
-
-                    bugListVm.ProjectsExist = true;
-
-                    bool defaultProjectExist = projectManager.GetDefaultProjectForCurrentTeam() != null;
-                    if (!defaultProjectExist)
+                    teamIdToUse = teamId.Value;
+                    // a publicily visible Issue board
+                    var team = this.teamManager.GetTeam(teamId.Value);
+                    if (team != null && team.IsPublic)
                     {
-                        var tt = new Dictionary<string, string> { { "warning", "Hey!, You need to set a default project for the current team. Go to your profile settings and set a project as default project." } };
-                        TempData["AlertMessages"] = tt;
+                        bugListVm.TeamID = team.Id;
+                        bugListVm.IsPublicTeam = true;
+                        bugListVm.ProjectsExist = true;
+                        bugListVm.IsReadonlyView = true;
+
                     }
-                    return View("Index", bugListVm);
+                    else
+                    {
+                        teamIdToUse = 0;
+                    }
                 }
+
+                bugListVm.TeamID = teamIdToUse;
+
+
+
+                if (!bugListVm.IsReadonlyView)
+                {
+                    var projectExists = projectManager.DoesProjectsExist();
+
+                    if (!projectExists)
+                    {
+                        return RedirectToAction("Index", "Projects");
+                    }
+                }
+                bugListVm.ProjectsExist = true;
+
+
+
+
+                bool defaultProjectExist = projectManager.GetDefaultProjectForCurrentTeam() != null;
+                if (!defaultProjectExist)
+                {
+                    var tt = new Dictionary<string, string>
+                        {
+                            {
+                                "warning",
+                                "Hey!, You need to set a default project for the current team. Go to your profile settings and set a project as default project."
+                            }
+                        };
+                    TempData["AlertMessages"] = tt;
+                }
+
+
+
+                return View("Index", bugListVm);
 
             }
             catch (Exception ex)
@@ -84,12 +122,13 @@ namespace TeamBins6.Controllers.Web
             if (vm != null && vm.Active)
             {
                 vm.IsEditableForCurrentUser = this.teamManager.DoesCurrentUserBelongsToTeam();
-
+                vm.IsReadOnly = this.userSessionHelper.UserId == 0;
                 return View(vm);
             }
             return View("NotFound");
         }
 
+        [Route("Issue/edit/{id}")]
         public IActionResult Edit(int id)
         {
             var issue = this.issueManager.GetIssue(id);
@@ -148,6 +187,7 @@ namespace TeamBins6.Controllers.Web
             return View(model);
         }
 
+        [Route("Issue/delete/{id}")]
         public IActionResult Delete(int id)
         {
             var deleteConfirmVM = new DeleteIssueConfirmationVM { Id = id };
@@ -155,6 +195,7 @@ namespace TeamBins6.Controllers.Web
         }
 
 
+        [Route("Issue/{id}/Members")]
         public async Task<IActionResult> Members(int id)
         {
             var issue = new IssueDetailVM();

@@ -28,14 +28,12 @@
         }
     }
 
-    function getIssues(count) {
-        return $http.get(appSettings.urls.baseUrl + '/api/issue/' + count)
+    function getIssues(team,count) {
+        return $http.get(appSettings.urls.baseUrl + '/api/issue/' + team.id +"/"+count)
       .then(getIssuesCompleted)
       .catch(getIssuesFailed);
 
         function getIssuesCompleted(response) {
-           // console.log("r");
-            //console.log(response.data);
            return response.data;
         }
 
@@ -48,7 +46,7 @@
 
     function getActivityStream(count) {
 
-        return $http.get('api/team/activitystream?count=' + count)
+        return $http.get(appSettings.urls.baseUrl +'/api/team/activitystream?count=' +count)
            .then(getActivityStreamCompleted)
            .catch(getActivityStreamFailed);
 
@@ -63,8 +61,7 @@
 
     }
 }
-//console.log('appSettings');
-//console.log(appSettings);
+
 issueService.$inject = ['$http', 'appSettings'];
 
 angular.module("teamBins").service("issueService", issueService);

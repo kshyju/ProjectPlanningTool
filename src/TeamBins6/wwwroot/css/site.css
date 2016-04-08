@@ -862,9 +862,7 @@ a.aIteration:hover
      margin: 0 0px 10px;
 
 }
-.issue-detail-item {
 
-}
 .important {
     font-size:22px;
 }
@@ -873,22 +871,22 @@ a.aIteration:hover
     background-image: url(images/feature-icon.png);
     background-repeat: no-repeat;
     display: block;
-    height: 24px;
-    width: 24px;
+    height: 16px;
+    width: 16px;
 }
 .issue-icon-Bug {
     background-image: url(images/bug-icon.png);
     background-repeat: no-repeat;
     display: block;
-    height: 24px;
-    width: 24px;
+    height: 16px;
+    width: 16px;
 }
 .issue-icon-Idea {
     background-image: url(images/idea-icon-16.png);
     background-repeat: no-repeat;
     display: block;
-    height: 24px;
-    width: 24px;
+    height: 16px;
+    width: 16px;
 }
 .dbItemContainer {
     width: 33%; float: left;
@@ -1121,4 +1119,18 @@ color: #111;
 .menubar-gravatar {
     width: 25px;
     height: 25px;   
+}
+
+.issue-detail-item {
+  
+    margin-bottom: 3px;
+}
+.issue-detail-item span{
+    display: table-cell;
+}
+.issue-detail-item>.type-icon {
+  
+}
+.issue-detail-item>.type-name {
+       padding-left: 6px; margin-top:4px;
 }

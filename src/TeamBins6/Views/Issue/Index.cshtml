@@ -9,15 +9,17 @@
         <div id="leftContentPane">
             <h4>Recent Issues</h4>
             <div class="btnBar">
-                <div id="quick_create">
-                    <input type="text" ng-keyup="vm.create($event)" ng-model="vm.newIssue" name="NewItemTitle" placeholder="Create Item" id="NewItemTitle" />
-                    <div id="default_items">
-                        <div class="default_item">
-                            <img class="default_item_img" src="~/Content/images/feature-icon.png" />
+                @if (!Model.IsReadonlyView)
+                {
+                    <div id="quick_create">
+                        <input type="text" ng-keyup="vm.create($event)" ng-model="vm.newIssue" name="NewItemTitle" placeholder="Create Item" id="NewItemTitle"/>
+                        <div id="default_items">
+                            <div class="default_item">
+                                <img class="default_item_img" src="~/Content/images/feature-icon.png"/>
+                            </div>
                         </div>
                     </div>
-                </div>
-
+                }
                 <div class="iterations">
                     <ul class="navtab">
                         <li ng-repeat="group in vm.issuesGrouped">
@@ -85,12 +87,14 @@ else
 
 @section Scripts
 {
+    <script>
+        var issueListApp = angular.module('teamBins').value("currentTeam", { id:@Model.TeamID});
+    </script>
+
     <script src="~/js/issueList.service.js"></script>
     <script src="~/js/IssueListController.js"></script>
     <script src="~/js/chart.min.js"></script>
-    <script>
 
-    </script>
 
 
 

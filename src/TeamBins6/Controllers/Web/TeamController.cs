@@ -46,6 +46,7 @@ namespace TeamBins6.Controllers.Web
             {
                 if (ModelState.IsValid)
                 {
+                    model.Name = model.Name.Replace(" ", "");
                     var teamId = teamManager.SaveTeam(model);
                     return Json(new { Status = "Success" });
 

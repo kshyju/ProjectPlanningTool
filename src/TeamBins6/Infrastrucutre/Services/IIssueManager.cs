@@ -44,9 +44,9 @@ namespace TeamBins.Services
             throw new NotImplementedException();
         }
 
-        public IEnumerable<IssuesPerStatusGroup> GetIssuesGroupedByStatusGroup(int count)
+        public IEnumerable<IssuesPerStatusGroup> GetIssuesGroupedByStatusGroup(int teamId, int count)
         {
-            return this.issueRepository.GetIssuesGroupedByStatusGroup(count,this.userSessionHelper.TeamId,this.userSessionHelper.UserId);
+            return this.issueRepository.GetIssuesGroupedByStatusGroup(count,teamId,this.userSessionHelper.UserId);
         }
 
         public ActivityDto SaveActivity(CreateIssue model, IssueDetailVM previousVersion, IssueDetailVM newVersion)
@@ -208,11 +208,11 @@ namespace TeamBins.Services
         Task<int> StarIssue(int issueId);
         IEnumerable<IssueVM> GetIssues(List<int> statusIds, int count);
         Task<IssueDetailVM> SaveIssue(CreateIssue issue, List<IFormFile> files);
-        DashBoardItemSummaryVM GetDashboardSummaryVM(int teamId);
+        DashBoardItemSummaryVM GetDashboardSummaryVM(int count);
         IssueDetailVM GetIssue(int id);
         ActivityDto SaveActivity(CreateIssue model, IssueDetailVM previousVersion, IssueDetailVM newVersion);
 
-        IEnumerable<IssuesPerStatusGroup> GetIssuesGroupedByStatusGroup(int count);
+        IEnumerable<IssuesPerStatusGroup> GetIssuesGroupedByStatusGroup(int teamId, int count);
         void Delete(int id);
         void LoadDropdownData(CreateIssue issue);
 

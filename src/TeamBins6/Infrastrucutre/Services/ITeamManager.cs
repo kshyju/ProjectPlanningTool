@@ -116,6 +116,10 @@ namespace TeamBins6.Infrastrucutre.Services
         {
             return this.teamRepository.GetTeam(id);
         }
+        public TeamDto GetTeam(string name)
+        {
+            return this.teamRepository.GetTeam(name);
+        }
 
         public void Delete(int id)
         {

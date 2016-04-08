@@ -39,14 +39,18 @@
     </div>
     <div class="userInfo">
 
-        <span>Howdy, <a href="@Url.Action("index","Settings")">@Model.UserDisplayName</a> </span>
-        <img class="menubar-gravatar" src="@Model.UserAvatarHash?s=26" />
-        @Html.ActionLink("Logout", "logout", "account", null, new { @class = "aLogout" })
 @if (String.IsNullOrEmpty(Model.UserDisplayName))
 
 
-    {
-        @Html.ActionLink("Signup or Login to enjoy the full version", "login", "account", null, new { @class = "aLogout" })
-    }
+{
+    @Html.ActionLink("Signup or Login to enjoy the full version", "login", "account", null, new {@class = "aLogout"})
+}
+else
+{
+
+    <span>Howdy, <a href="@Url.Action("index","Settings")">@Model.UserDisplayName</a> </span>
+        <img class="menubar-gravatar" src="@Model.UserAvatarHash?s=26" />
+        @Html.ActionLink("Logout", "logout", "account", null, new { @class = "aLogout" })
+}
     </div>
 </div>

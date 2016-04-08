@@ -17,6 +17,7 @@ namespace TeamBins.Common
 
     public class TeamDto : BaseEntityDto
     {
+        public bool IsPublic { set; get; }
         public int CreatedById { get; set; }
         public int MemberCount { set; get; }    
 

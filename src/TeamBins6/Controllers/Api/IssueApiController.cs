@@ -66,11 +66,11 @@ namespace TeamBins6.Controllers
         }
 
         // GET api/values/5
-        [HttpGet("{id}")]
-        public ObjectResult Get(int id)
+        [HttpGet("{teamId}/{count}")]
+        public ObjectResult Get(int teamId,int count)
         {
 
-            var issues= this.issueManager.GetIssuesGroupedByStatusGroup(25);
+            var issues= this.issueManager.GetIssuesGroupedByStatusGroup(teamId,count);
 
             return Ok(issues);
         }

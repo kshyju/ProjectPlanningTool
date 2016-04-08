@@ -61,6 +61,8 @@ namespace TeamBins.Common.ViewModels
     }
     public class IssueListVM
     {
+        public bool IsReadonlyView { set; get; }
+        public bool IsPublicTeam { set; get; }
         public int TeamID { set; get; }
         public List<IssueVM> Bugs { set; get; }
 
@@ -89,6 +91,7 @@ namespace TeamBins.Common.ViewModels
     }
     public class IssueDetailVM : IssueVM
     {
+        public bool IsReadOnly { set; get; }
         public bool IsStarredForUser { set; get; }
         public List<DocumentVM> Images { set; get; }
         public List<DocumentVM> Attachments { set; get; }

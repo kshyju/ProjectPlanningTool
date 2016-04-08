@@ -34,6 +34,7 @@ namespace TeamBins.DataAccess
     public interface ITeamRepository
     {
         TeamDto GetTeam(int teamId);
+        TeamDto GetTeam(string name);
         int SaveTeam(TeamDto team);
      
         void SaveTeamMember(int teamId, int memberId, int createdById);
@@ -57,7 +58,7 @@ namespace TeamBins.DataAccess
 
         public TeamDto GetTeam(int teamId)
         {
-            var q =@"SELECT [Id],[Name]  FROM Team WHERE ID=@id";
+            var q = @"SELECT [Id],[Name],[IsPublic]  FROM Team WHERE ID=@id";
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
@@ -65,7 +66,16 @@ namespace TeamBins.DataAccess
                 return teams.FirstOrDefault();
             }
         }
-
+        public TeamDto GetTeam(string name)
+        {
+            var q = @"SELECT [Id],[Name],[IsPublic]  FROM Team WHERE Name=@name";
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                var teams = con.Query<TeamDto>(q, new { @name = name });
+                return teams.FirstOrDefault();
+            }
+        }
         public async Task<int> SaveTeamMemberRequest(AddTeamMemberRequestVM teamMemberRequest)
         {
             var q = @"INSERT INTO TeamMemberRequest(EmailAddress,TeamID,ActivationCode,CreatedByID,CreatedDate) VALUES(@email,@teamId,@a,@userId,@dt);;SELECT CAST(SCOPE_IDENTITY() as int)";

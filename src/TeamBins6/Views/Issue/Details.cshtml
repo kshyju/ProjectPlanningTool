@@ -33,7 +33,7 @@
                 @foreach (var img in Model.Images)
                 {
                     <div>
-                        <a href="~/uploads/@(img.FileKey)" target="_blank"><img class="detailImg" src="~/uploads/@(img.FileKey)"/></a>
+                        <a href="~/uploads/@(img.FileKey)" target="_blank"><img class="detailImg" src="~/uploads/@(img.FileKey)" /></a>
                     </div>
                 }
             </div>
@@ -59,13 +59,20 @@
             <div class="issue-detail-item important">
                 Issue # @Model.Id.ToString()
 
-                <div class="starHolder">
-                    <span id="issue-star" class="glyphicon @(Model.IsStarredForUser ? "glyphicon-star " : "glyphicon-star-empty")" 
-                      data-starred="@Model.IsStarredForUser"></span>
-                </div>
+                @if (!Model.IsReadOnly)
+                {
+                    <div class="starHolder">
+                        <span id="issue-star" class="glyphicon @(Model.IsStarredForUser ? "glyphicon-star " : "glyphicon-star-empty")"
+                              data-starred="@Model.IsStarredForUser"></span>
+                    </div>
+                }
 
             </div>
-            <div class="issue-detail-item">Type : @Model.Category.Name</div>
+            <div class="issue-detail-item">
+                <span  class="type-icon issue-icon-@Model.Category.Code"></span>
+                <span class="type-name">@Model.Category.Name</span>
+            </div>
+
             <div class="issue-detail-item">Priority: @Model.Priority.Name</div>
         </div>
 
@@ -79,24 +86,24 @@
                 <span id="dueDate">@Model.IssueDueDate</span>
                 <a href="#" id="aChangeDueDate" class="hiddenChangeLink">Change</a>
                 <div id="dueDatePicker" style="display: none;">
-                    <input type="text" name="IssueDueDate" value="@Model.IssueDueDate" id="IssueDueDate"/>
+                    <input type="text" name="IssueDueDate" value="@Model.IssueDueDate" id="IssueDueDate" />
                 </div>
             </div>
         }
     </div>
 </div>
-@Html.HiddenFor(d=>d.Id)
+@Html.HiddenFor(d => d.Id)
 
 
 @Html.HiddenFor(x => x.TeamID)
 
 @section Scripts
 {
-<script src="~/js/issuedetail.service.js"></script>
-<script src="~/js/issuedetailcontroller.js"></script>
-<script src="~/js/issue.js"></script>
+    <script src="~/js/issuedetail.service.js"></script>
+    <script src="~/js/issuedetailcontroller.js"></script>
+    <script src="~/js/issue.js"></script>
 
-@*<script src="~/js/issue.js"></script>*@
+    @*<script src="~/js/issue.js"></script>*@
 
     <script>
         angular.module("teamBins").value("issue",  @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model)));

@@ -4,9 +4,9 @@ issueListApp.config(['$httpProvider', function ($httpProvider) {
 }]);
 
 
-var issueListCtrl = function ($http, issueService, appSettings) {
+var issueListCtrl = function ($http, issueService, appSettings, currentTeam) {
 
-    console.log(appSettings);
+    console.log(currentTeam);
 
 
     var vm = this;
@@ -26,7 +26,7 @@ var issueListCtrl = function ($http, issueService, appSettings) {
 
 
     vm.getIssues = function () {
-        issueService.getIssues(25)
+        issueService.getIssues(currentTeam,25)
         .then(function (response) {
 
             vm.issuesGrouped = response;
@@ -76,7 +76,7 @@ var issueListCtrl = function ($http, issueService, appSettings) {
 }
 
 
-issueListCtrl.inject = ['$http', 'issueService'];
+issueListCtrl.inject = ['$http', 'issueService','appSettings', 'currentTeam'];
 issueListApp.controller("IssueListCtrl", issueListCtrl);
 //issueListApp.controller('IssueListCtrl', function ($scope, $http, issueService) {
 

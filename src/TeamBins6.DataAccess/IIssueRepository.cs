@@ -106,6 +106,10 @@ namespace TeamBins.DataAccess
 
         public IssueDetailVM GetIssue(int id,int requestingUserId)
         {
+
+          
+
+
             var q = @"SELECT I.Id,I.Title,I.Description,ISNULL(I.Description,'') as Description,
                         U.FirstName + + ISNULL(U.LastName,'') as OpenedBy,
                         I.CreatedDate,
@@ -316,6 +320,8 @@ namespace TeamBins.DataAccess
 
         public async Task<IEnumerable<UserDto>> GetNonIssueMembers(int issueId, int teamId)
         {
+
+
             using (var con = new SqlConnection(ConnectionString))
             {
                 var q = @"  SELECT U.ID,U.FirstName as Name,
@@ -341,233 +347,5 @@ namespace TeamBins.DataAccess
                 return await con.QueryAsync<UserDto>(q, new { @issueId = issueId });
             }
         }
-
-
-        //public class IssueRepository : IIssueRepository
-        //{
-
-        //    public int SaveIssue(CreateIssue issue)
-        //    {
-        //        Issue issueEntity = null;
-        //        using (var db = new TeamEntitiesConn())
-        //        {
-
-        //            if (issue.Id > 0)
-        //            {
-        //                issueEntity = db.Issues.FirstOrDefault(s => s.Id == issue.Id);
-        //                if (issueEntity == null)
-        //                {
-        //                    return 0;
-        //                }
-        //            }
-        //            else
-        //            {
-        //                issueEntity = new Issue();
-        //            }
-        //            issueEntity.Title = issue.Title;
-        //            issueEntity.Description = issue.Description;
-        //            issueEntity.ProjectID = issue.ProjectID;
-        //            issueEntity.TeamID = issue.TeamID;
-        //            issueEntity.CategoryID = issue.SelectedCategory;
-
-        //            issueEntity.CreatedByID = issue.CreatedByID;
-        //            issueEntity.Location = issue.Iteration;
-        //            issueEntity.StatusID = issue.SelectedStatus;
-        //            issueEntity.PriorityID = issue.SelectedPriority;
-
-        //            if (issueEntity.CategoryID == 0)
-        //            {
-        //                issueEntity.CategoryID = db.Categories.FirstOrDefault().Id;
-        //            }
-        //            if (issueEntity.StatusID == 0)
-        //            {
-
-        //                var status = db.Status.FirstOrDefault(s => s.Code == "New");
-        //                issueEntity.StatusID = status.Id;
-        //            }
-        //            if (issueEntity.PriorityID == null || issueEntity.PriorityID.Value == 0)
-        //            {
-        //                var priority = db.Priorities.FirstOrDefault(s => s.Code == "Normal");
-        //                issueEntity.PriorityID = priority.Id;
-        //            }
-
-        //            if (issue.Id == 0)
-        //            {
-        //                issueEntity.CreatedDate = DateTime.UtcNow;
-        //                issueEntity.Active = true;
-        //                db.Issues.Add(issueEntity);
-        //            }
-        //            else
-        //            {
-        //                issueEntity.ModifiedDate = DateTime.Now;
-        //                issueEntity.ModifiedByID = issue.CreatedByID;
-
-        //                db.Entry(issueEntity).State = EntityState.Modified;
-
-        //            }
-
-        //            db.SaveChanges();
-        //            return issueEntity.Id;
-        //        }
-        //    }
-        //    public IssueDetailVM GetIssue(int id)
-        //    {
-        //        using (var db = new TeamEntitiesConn())
-        //        {
-        //            var issue = db.Issues.FirstOrDefault(s => s.Id == id);
-        //            if (issue != null)
-        //            {
-        //                var issueDto = new IssueDetailVM
-        //                {
-        //                    Id = issue.Id,
-        //                    Title = issue.Title,
-        //                    Description = issue.Description ?? string.Empty,
-        //                    Author = new UserDto { Id = issue.CreatedBy.Id, Name = issue.CreatedBy.FirstName },
-        //                    Project = new KeyValueItem { Id = issue.Project.Id, Name = issue.Project.Name },
-        //                    TeamID = issue.TeamID,
-        //                    Status = new KeyValueItem { Id = issue.Category.Id, Name = issue.Status.Name },
-        //                    CreatedDate = issue.CreatedDate,
-        //                    Category = new KeyValueItem { Id = issue.Category.Id, Name = issue.Category.Name },
-        //                    StatusGroupCode = issue.Status.StatusGroup.Code
-
-        //                };
-        //                if (issue.Priority != null)
-        //                {
-        //                    issueDto.Priority = new KeyValueItem { Id = issue.Priority.Id, Name = issue.Priority.Name };
-        //                }
-
-
-        //                if (issue.ModifiedDate.HasValue && issue.ModifiedDate.Value > DateTime.MinValue && issue.ModifiedBy != null)
-        //                {
-        //                    issueDto.LastModifiedDate = issue.ModifiedDate.Value.ToString("g");
-        //                    issueDto.LastModifiedBy = issue.ModifiedBy.FirstName;
-        //                }
-
-        //                return issueDto;
-        //            }
-        //        }
-        //        return null;
-        //    }
-
-        //    //var issueVM = new IssueVM { Id = bug.Id, Title = bug.Title, Description = bug.Description };
-        //    //issueVM.OpenedBy = bug.CreatedBy.FirstName;
-        //    //    issueVM.PriorityName = bug.PriorityName.Name;
-        //    //    issueVM.StatusName = bug.StatusName.Name;
-        //    //    issueVM.CategoryName = bug.CategoryName.Name;
-        //    //    issueVM.Project = (bug.Project!=null?bug.Project.Name:"");
-        //    //    issueVM.CreatedDate = bug.CreatedDate.ToShortDateString();
-
-
-        //    public DashBoardItemSummaryVM GetDashboardSummaryVM(int teamId)
-        //    {
-        //        var vm = new DashBoardItemSummaryVM();
-        //        using (var db = new TeamEntitiesConn())
-        //        {
-        //            var statusCounts = db.Issues
-        //                .Where(s => s.TeamID == teamId)
-        //                .GroupBy(d => d.Status, g => g.Id, (k, i) => new
-        //            ItemCount
-        //                {
-        //                    ItemId = k.Id,
-        //                    ItemName = k.Name,
-        //                    Count = i.Count()
-        //                }).ToList();
-
-        //            vm.IssueCountsByStatus = statusCounts;
-        //        }
-
-        //        return vm;
-        //    }
-
-        //    public IEnumerable<IssuesPerStatusGroup> GetIssuesGroupedByStatusGroup(int count)
-        //    {
-        //        using (var db = new TeamEntitiesConn())
-        //        {
-
-        //            return db.Status.GroupBy(s => s.StatusGroup, s => s, (k, items) =>
-        //                new IssuesPerStatusGroup
-        //                {
-        //                    GroupName = k.Name,
-        //                    GroupCode = k.Code,
-        //                    Issues = items.SelectMany(d => d.Issues)
-        //                        .Select(p => new IssueDetailVM
-        //                        {
-        //                            Id = p.Id,
-        //                            Title = p.Title,
-        //                            Description = p.Description,
-        //                            PriorityName = p.Priority.Name,
-        //                            StatusName = p.Status.Name,
-        //                            CategoryName = p.Category.Name,
-        //                            Category = new KeyValueItem { Id = p.Category.Id, Name = p.Category.Name },
-        //                            Priority = new KeyValueItem { Id = p.Project.Id, Name = p.Priority.Name },
-        //                            Author = new UserDto { Id = p.CreatedBy.Id, Name = p.CreatedBy.FirstName },
-        //                            Status = new KeyValueItem { Id = p.Project.Id, Name = p.Status.Name },
-        //                            Project = new KeyValueItem { Id = p.Project.Id, Name = p.Project.Name },
-        //                            CreatedDate = p.CreatedDate
-        //                        }).ToList()
-        //                }).ToList();
-        //        }
-
-        //    }
-
-        //    public IEnumerable<IssueDetailVM> GetIssues(List<int> statusIds, int count)
-        //    {
-        //        using (var db = new TeamEntitiesConn())
-        //        {
-
-        //            return db.Issues.AsNoTracking().Where(s => statusIds.Contains(s.StatusID))
-        //                .OrderByDescending(s => s.CreatedDate)
-        //                .Take(count)
-
-        //                .Select(s => new IssueDetailVM
-        //                {
-        //                    Id = s.Id,
-        //                    Title = s.Title,
-        //                    Description = s.Description,
-        //                    PriorityName = s.Priority.Name,
-        //                    StatusName = s.Status.Name,
-        //                    CategoryName = s.Category.Name,
-        //                    Category = new KeyValueItem { Id = s.Category.Id, Name = s.Category.Name },
-        //                    Priority = new KeyValueItem { Id = s.Project.Id, Name = s.Priority.Name },
-        //                    Author = new UserDto { Id = s.CreatedBy.Id, Name = s.CreatedBy.FirstName },
-        //                    //  Project = s.Project.Name,
-        //                    Status = new KeyValueItem { Id = s.Project.Id, Name = s.Status.Name },
-        //                    Project = new KeyValueItem { Id = s.Project.Id, Name = s.Project.Name },
-        //                    CreatedDate = s.CreatedDate
-        //                })
-        //                .ToList();
-        //        }
-        //    }
-
-        //    public async Task<int> SaveIssueMember(int issueId, int userId, string relationShipType)
-        //    {
-        //        using (var db = new TeamEntitiesConn())
-        //        {
-        //            var re =
-        //                db.IssueMembers.FirstOrDefault(
-        //                    s => s.IssueID == issueId && s.MemberID == userId && s.RelationType == relationShipType);
-        //            if (re == null)
-        //            {
-        //                re = new IssueMember
-        //                {
-        //                    MemberID = userId,
-        //                    IssueID = issueId,
-        //                    CreatedByID = userId,
-        //                    CreatedDate = DateTime.UtcNow
-        //                };
-        //                db.IssueMembers.Add(re);
-        //                await db.SaveChangesAsync();
-        //                return 1;
-
-        //            }
-        //            else
-        //            {
-        //                db.IssueMembers.Remove(re);
-        //                await db.SaveChangesAsync();
-        //                return 0;
-        //            }
-        //        }
-        //    }
-        //}
     }
 }
