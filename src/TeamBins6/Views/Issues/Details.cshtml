@@ -8,8 +8,8 @@
 @if (Model.IsEditableForCurrentUser)
 {
     <div class="divToobar">
-        @Html.ActionLink("Edit", "Edit", "Issue", new { id = Model.Id }, new { @class = "toolLink popup" })
-        @Html.ActionLink("Delete", "Delete", "Issue", new { id = Model.Id }, new { @class = "toolLink popup" })
+        @Html.ActionLink("Edit", "Edit", "Issues", new { id = Model.Id }, new { @class = "toolLink popup" })
+        @Html.ActionLink("Delete", "Delete", "Issues", new { id = Model.Id }, new { @class = "toolLink popup" })
     </div>
 }
 <div class="divPageContent" ng-app="teamBins" ng-cloak ng-controller="issueDetailsCtrl as vm">

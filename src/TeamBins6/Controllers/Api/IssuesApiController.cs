@@ -13,8 +13,8 @@ using TeamBins6.Infrastrucutre.Services;
 
 namespace TeamBins6.Controllers
 {
-    [Route("api/issue")]
-    public class IssueApiController : Controller
+    [Route("api/issues")]
+    public class IssuesApiController : Controller
     {
 
         ICommentManager commentManager;
@@ -24,7 +24,7 @@ namespace TeamBins6.Controllers
         IUserSessionHelper userSessionHelper;
 
 
-        public IssueApiController(ICommentManager commentManager, IUserSessionHelper userSessionHelper, IProjectManager projectManager, IIssueManager issueManager) //: base(repositary)
+        public IssuesApiController(ICommentManager commentManager, IUserSessionHelper userSessionHelper, IProjectManager projectManager, IIssueManager issueManager) //: base(repositary)
         {
             this.issueManager = issueManager;
             this.projectManager = projectManager;

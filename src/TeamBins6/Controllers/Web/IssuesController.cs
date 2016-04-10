@@ -21,7 +21,7 @@ using TeamBins6.Infrastrucutre.Services;
 
 namespace TeamBins6.Controllers.Web
 {
-    public class IssueController : BaseController
+    public class IssuesController : BaseController
     {
         private ITeamManager teamManager;
         ICommentManager commentManager;
@@ -31,7 +31,7 @@ namespace TeamBins6.Controllers.Web
         IUserSessionHelper userSessionHelper;
 
 
-        public IssueController(ICommentManager commentManager, IUserSessionHelper userSessionHelper, IProjectManager projectManager, IIssueManager issueManager, ITeamManager teamManager) //: base(repositary)
+        public IssuesController(ICommentManager commentManager, IUserSessionHelper userSessionHelper, IProjectManager projectManager, IIssueManager issueManager, ITeamManager teamManager) //: base(repositary)
         {
             this.issueManager = issueManager;
             this.projectManager = projectManager;
@@ -40,8 +40,8 @@ namespace TeamBins6.Controllers.Web
             this.teamManager = teamManager;
         }
 
-         [Route("Issue")]
-        [Route("Issue/{teamId}/{teamName}")]
+         [Route("Issues")]
+        [Route("Issues/{teamId}/{teamName}")]
        
         public ActionResult Index(int? teamId, string teamName = "")
         {
@@ -114,7 +114,7 @@ namespace TeamBins6.Controllers.Web
 
 
 
-        [Route("Issue/{id}")]
+        [Route("Issues/{id}")]
         public IActionResult Details(int id)
         {
             var vm = new IssueDetailVM();
@@ -128,7 +128,7 @@ namespace TeamBins6.Controllers.Web
             return View("NotFound");
         }
 
-        [Route("Issue/edit/{id}")]
+        [Route("Issues/edit/{id}")]
         public IActionResult Edit(int id)
         {
             var issue = this.issueManager.GetIssue(id);
@@ -138,13 +138,13 @@ namespace TeamBins6.Controllers.Web
                 this.issueManager.LoadDropdownData(vm);
 
                 vm.IsEditableForCurrentUser = this.teamManager.DoesCurrentUserBelongsToTeam();
-                return PartialView("~/Views/Issue/Partial/Edit.cshtml", vm);
+                return PartialView("~/Views/Issues/Partial/Edit.cshtml", vm);
             }
             return PartialView("NotFound");
         }
 
         [HttpPost]
-        [Route("Issue/Add")]
+        [Route("Issues/Add")]
         public async Task<IActionResult> Add([FromBody] CreateIssue model) //, List<IFormFile> files
         {
             try
@@ -187,7 +187,7 @@ namespace TeamBins6.Controllers.Web
             return View(model);
         }
 
-        [Route("Issue/delete/{id}")]
+        [Route("Issues/delete/{id}")]
         public IActionResult Delete(int id)
         {
             var deleteConfirmVM = new DeleteIssueConfirmationVM { Id = id };
@@ -195,7 +195,7 @@ namespace TeamBins6.Controllers.Web
         }
 
 
-        [Route("Issue/{id}/Members")]
+        [Route("Issues/{id}/Members")]
         public async Task<IActionResult> Members(int id)
         {
             var issue = new IssueDetailVM();

@@ -67,7 +67,7 @@
             }
         }
         function getComments(issueId) {
-            return $http.get('../api/issue/' + issueId + "/comments")
+            return $http.get('../api/issues/' + issueId + "/comments")
           .then(getCommentsCompleted)
           .catch(getCommentsFailed);
 

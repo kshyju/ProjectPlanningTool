@@ -21,7 +21,7 @@ namespace TeamBins6.Infrastrucutre.Services
         int SaveTeam(TeamDto team);
         TeamBins.Common.TeamDto GetTeam(int id);
         List<TeamDto> GetTeams();
-        IEnumerable<ActivityDto> GeActivityItems(int count);
+        IEnumerable<ActivityDto> GeActivityItems(int teamId, int count);
         bool DoesCurrentUserBelongsToTeam();
 
         Task<DashBoardItemSummaryVM> GetDashboardSummary();
@@ -181,9 +181,9 @@ namespace TeamBins6.Infrastrucutre.Services
             return vm;
         }
 
-        public IEnumerable<ActivityDto> GeActivityItems(int count)
+        public IEnumerable<ActivityDto> GeActivityItems(int teamId,int count)
         {
-            var activities = activityRepository.GetActivityItems(userSessionHelper.TeamId, count);
+            var activities = activityRepository.GetActivityItems(teamId, count);
 
             foreach (var activity in activities)
             {

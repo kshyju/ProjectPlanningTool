@@ -14,18 +14,28 @@ namespace TeamBins6.Controllers.Api
     public class TeamApiController : Controller
     {
         private ITeamManager teamManager;
+        private IUserSessionHelper userSessionHelper;
 
-
-        public TeamApiController(ITeamManager teamManager)
+        public TeamApiController(ITeamManager teamManager,IUserSessionHelper userSessionHelper)
         {
             this.teamManager = teamManager;
+            this.userSessionHelper = userSessionHelper;
         }
        // GET: api/values
        [HttpGet]
-       [Route("ActivityStream")]
-        public IEnumerable<ActivityDto> GetActivityStream(int count)
-        {
-            return this.teamManager.GeActivityItems(count);
+       [Route("ActivityStream/{teamid}")]
+        public IEnumerable<ActivityDto> GetActivityStream(int count,int? teamId)
+       {
+           var teamIdToUse = this.userSessionHelper.TeamId;
+           if (teamId != null)
+           {
+               var t = teamManager.GetTeam(teamId.Value);
+               if (t != null && t.IsPublic)
+               {
+                   teamIdToUse = t.Id;
+               }
+           }
+            return this.teamManager.GeActivityItems(teamIdToUse,count);
         }
 
         [HttpGet]    

@@ -10,7 +10,7 @@
 
     function create(newIssue) {
         
-        return $http.post(appSettings.urls.baseUrl + '/issue/add', newIssue)
+        return $http.post(appSettings.urls.baseUrl + '/issues/add', newIssue)
       .then(createIssueCompleted)
       .catch(createIssueFailed);
 
@@ -29,7 +29,7 @@
     }
 
     function getIssues(team,count) {
-        return $http.get(appSettings.urls.baseUrl + '/api/issue/' + team.id +"/"+count)
+        return $http.get(appSettings.urls.baseUrl + '/api/issues/' + team.id +"/"+count)
       .then(getIssuesCompleted)
       .catch(getIssuesFailed);
 
@@ -44,9 +44,9 @@
     }
 
 
-    function getActivityStream(count) {
+    function getActivityStream(currentTeam,count) {
 
-        return $http.get(appSettings.urls.baseUrl +'/api/team/activitystream?count=' +count)
+        return $http.get(appSettings.urls.baseUrl +'/api/team/activitystream/'+currentTeam.id+'?count=' +count)
            .then(getActivityStreamCompleted)
            .catch(getActivityStreamFailed);
 

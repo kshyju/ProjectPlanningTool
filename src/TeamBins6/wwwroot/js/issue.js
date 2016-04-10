@@ -2,7 +2,7 @@
 
     $(function () {
 
-        var membersUrl = teamBins.urls.baseUrl + "/issue/" + $("#Id").val() + "/members";
+        var membersUrl = teamBins.urls.baseUrl + "/issues/" + $("#Id").val() + "/members";
         $.get(membersUrl).success(function (data) {
             $("#members").html(data);
         });
@@ -11,7 +11,7 @@
         $("#txtAssignMember").autocomplete({
             source: function (request, response) {
                 $.ajax({
-                    url: teamBins.urls.baseUrl + "/api/Issue/" + $("#Id").val() + "/noissuemembers",
+                    url: teamBins.urls.baseUrl + "/api/Issues/" + $("#Id").val() + "/noissuemembers",
                     data: { term: request.term },
                     success: function (data) {
                         response($.map(data, function (item) {
@@ -32,10 +32,10 @@
             },
             select: function (event, ui) {
                 $("#txtAssignMember").val(ui.item.label);
-                $.post(teamBins.urls.baseUrl + "/api/issue/" + $("#Id").val() + "/assignteammember/" + ui.item.value, function (res) {
+                $.post(teamBins.urls.baseUrl + "/api/issues/" + $("#Id").val() + "/assignteammember/" + ui.item.value, function (res) {
                     if (res.Status === "success") {
                         $("#txtAssignMember").val("");
-                        $.get('../issue/members/' + $("#Id").val()).success(function (data) {
+                        $.get('../issues/members/' + $("#Id").val()).success(function (data) {
                             $("#members").html(data);
                         });
                     }
@@ -67,7 +67,7 @@
 
         $("#issue-star").click(function (e) {
             var _this = $(this);
-            $.post(teamBins.urls.baseUrl + +"/api/Issue/" + $("#Id").val() + "/star/" + _this.attr("data-starred"), function (res) {
+            $.post(teamBins.urls.baseUrl + +"/api/Issues/" + $("#Id").val() + "/star/" + _this.attr("data-starred"), function (res) {
                 if (res.Status === "Success") {
                     _this.removeClass("glyphicon-star-empty glyphicon-star").addClass(res.Class).attr("data-starred", res.Starred);
                 }
@@ -98,6 +98,7 @@
                 data: JSON.stringify(model)
             })
                 .done(function (response) {
+                    console.log(response);
                     if (response.Status === "Success") {
                         $('#modal').modal('hide');
                         window.location.href = window.location.href;

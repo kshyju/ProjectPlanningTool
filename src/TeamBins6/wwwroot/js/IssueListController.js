@@ -17,7 +17,7 @@ var issueListCtrl = function ($http, issueService, appSettings, currentTeam) {
     vm.issuesGrouped = [];
      
 
-    issueService.getActivityStream(25)
+    issueService.getActivityStream(currentTeam,25)
     .then(function (response) {
         console.log(response);
         vm.activities = response;
