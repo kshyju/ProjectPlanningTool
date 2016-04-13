@@ -9,7 +9,7 @@
             @if(Model.IsEditableForCurrentUser)
             {
                 <span>
-                    <a class="aRemove hiddenchangelink"  href="">remove</a>
+                    <a class="aRemove hiddenchangelink"  data-member="@member.Id" data-issue="@Model.Id">remove</a>
                 </span>
             }
         </div>

@@ -24,7 +24,8 @@
     "TeamBins6.Common": "",
     "TeamBins6.DataAccess": "",
     "StackExchange.Exceptional": "1.0.122",
-    "Microsoft.AspNet.SignalR": "2.2.0"
+    "Microsoft.AspNet.SignalR": "2.2.0",
+   
   },
 
   "commands": {

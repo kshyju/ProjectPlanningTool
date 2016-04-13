@@ -19,7 +19,7 @@
 </head>
 <body>
     <div>
-        @await Component.InvokeAsync("MenuHeader",1)
+        @await Component.InvokeAsync("MenuHeader", 1)
         <div message-duration="4000"></div>
 
         @*@Html.AlertMessages()*@
@@ -35,71 +35,71 @@
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
     </environment>
-<environment names="Staging,Production">
-    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.1.4.min.js"
-            asp-fallback-src="~/lib/jquery/dist/jquery.js"
-            asp-fallback-test="window.jQuery">
-        
-    </script>
+    <environment names="Staging,Production">
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.1.4.min.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.js"
+                asp-fallback-test="window.jQuery">
 
-    <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.5/bootstrap.min.js"
-            asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
-            asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal">
-        
-    </script>
-    <script src="~/js/site.min.js" asp-append-version="true"></script>
-</environment>
+        </script>
+
+        <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.5/bootstrap.min.js"
+                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal">
+
+        </script>
+        <script src="~/js/site.min.js" asp-append-version="true"></script>
+    </environment>
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular-sanitize.js"></script>
 
 
-<script type="text/javascript">
+    <script type="text/javascript">
 
-    var teamBins = teamBins || {};
-    teamBins.urls = teamBins.urls || {};
-    teamBins.urls.baseUrl = '@ViewBag.AppBaseUrl';
+        var teamBins = teamBins || {};
+        teamBins.urls = teamBins.urls || {};
+        teamBins.urls.baseUrl = '@ViewBag.AppBaseUrl';
 
-    var issueListApp = angular.module('teamBins', ['ngSanitize']);
-    issueListApp.value("appSettings", teamBins);
+        var issueListApp = angular.module('teamBins', ['ngSanitize']);
+        issueListApp.value("appSettings", teamBins);
 
-    function ShowModel(url, title) {
-        $("#modal").remove();
-        $.get(url, function (data) {
-            $('<div id="modal" class="modal fade">' + data + '</div>').modal();
+        function ShowModel(url, title) {
+            $("#modal").remove();
+            $.get(url, function (data) {
+                $('<div id="modal" class="modal fade">' + data + '</div>').modal();
+            });
+        }
+        $(function () {
+            $(document).on("click", "a.popup", function (e) {
+                e.preventDefault();
+
+                ShowModel($(this).attr("href"));
+            });
+
+            //$("a.team-item").click(function(e) {
+            //    e.preventDefault();
+            //});
+
+
+            $("a.a-current-team").click(function (e) {
+                e.preventDefault();
+                var _this = $(this);
+                if (_this.data("state") === "selected") {
+                    $("#available-teams").fadeIn(100);
+                    _this.data("state", "expanded");
+                }
+                else {
+                    $("#available-teams").fadeOut(100);
+                    _this.data("state", "selected");
+                }
+            });
+            var duration = $('.alert').data("duration");
+            setTimeout(function () { $('.alert').slideUp(300); }, duration);
+
+
         });
-    }
-    $(function () {
-        $(document).on("click", "a.popup", function (e) {
-            e.preventDefault();
-
-            ShowModel($(this).attr("href"));
-        });
-
-        //$("a.team-item").click(function(e) {
-        //    e.preventDefault();
-        //});
-
-
-        $("a.a-current-team").click(function (e) {
-            e.preventDefault();
-            var _this = $(this);
-            if (_this.data("state") === "selected") {
-                $("#available-teams").fadeIn(100);
-                _this.data("state", "expanded");
-            }
-            else {
-                $("#available-teams").fadeOut(100);
-                _this.data("state", "selected");
-            }
-        });
-        var duration = $('.alert').data("duration");
-        setTimeout(function () { $('.alert').slideUp(300); }, duration);
-
-
-    });
-</script>
+    </script>
     @RenderSection("scripts", required: false)
 </body>
 </html>

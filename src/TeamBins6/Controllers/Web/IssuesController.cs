@@ -201,7 +201,7 @@ namespace TeamBins6.Controllers.Web
             var issue = new IssueDetailVM();
             issue.IsEditableForCurrentUser = this.teamManager.DoesCurrentUserBelongsToTeam();
             var members = await issueManager.GetIssueMembers(id);
-            issue.Members = members;
+            issue.Members = members.Select(x=>x.Member);
 
 
 

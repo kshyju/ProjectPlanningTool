@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc.Rendering;
 using TeamBins.Common;
+using TeamBins.Common.Infrastructure.Enums.TeamBins.Helpers.Enums;
 using TeamBins.Common.ViewModels;
 using TeamBins.DataAccess;
 using TeamBins6.Common.Infrastructure.Exceptions;
@@ -180,16 +181,22 @@ namespace TeamBins.Services
             return members;
         }
 
+        public async Task RemoveIssueMember(int issueId, int memberId)
+        {
+            await issueRepository.RemoveIssueMember(issueId, memberId);
+        }
+
         public async Task SaveIssueAssignee(int issueId, int userId)
         {
             await issueRepository.SaveIssueMember(issueId, userId,userSessionHelper.UserId ,"ASSIGNEE");
         }
-        public async Task<IEnumerable<UserDto>> GetIssueMembers(int issueId)
+        public async Task<IEnumerable<IssueMember>> GetIssueMembers(int issueId)
         {
             var members = await this.issueRepository.GetIssueMembers(issueId);
+            members= members.Where(s => s.Relationtype == IssueMemberRelationType.Assigned.ToString()).ToList();
             foreach (var userDto in members)
             {
-                userDto.GravatarUrl = userDto.EmailAddress.ToGravatarUrl();
+                userDto.Member.GravatarUrl = userDto.Member.EmailAddress.ToGravatarUrl();
             }
             return members;
         }
@@ -207,7 +214,8 @@ namespace TeamBins.Services
     }
     public interface IIssueManager
     {
-        Task<IEnumerable<UserDto>> GetIssueMembers(int issueId);
+        Task RemoveIssueMember(int issueId, int memberId);
+        Task<IEnumerable<IssueMember>> GetIssueMembers(int issueId);
         Task SaveIssueAssignee(int issueId, int userId);
         Task<IEnumerable<UserDto>> GetNonIssueMembers(int issueId);
         Task<int> StarIssue(int issueId);

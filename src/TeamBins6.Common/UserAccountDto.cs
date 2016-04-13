@@ -24,6 +24,11 @@ namespace TeamBins.Common
        
     }
 
+    public class IssueMember
+    {
+        public UserDto Member { set; get; }
+        public string Relationtype { set; get; }
+    }
     public class AppUser 
     {
         public string Id { get; set; }

@@ -15,7 +15,7 @@ namespace TeamBins.DataAccess
 
     public interface IIssueRepository
     {
-
+        Task RemoveIssueMember(int issueId, int userId);
         IEnumerable<NameValueItem> GetStatuses();
         IEnumerable<CategoryDto> GetCategories();
         IEnumerable<NameValueItem> GetPriorities();
@@ -29,7 +29,7 @@ namespace TeamBins.DataAccess
         void Delete(int id, int userId);
 
         Task<IEnumerable<UserDto>> GetNonIssueMembers(int issueId, int teamId);
-        Task<IEnumerable<UserDto>> GetIssueMembers(int issueId);
+        Task<IEnumerable<IssueMember>> GetIssueMembers(int issueId);
         Task<IEnumerable<ChartItem>> GetIssueCountsPerStatus(int teamId);
         Task StarIssue(int issueId, int userId, bool isRequestForToStar);
         Task SaveDueDate(int issueId, DateTime? dueDate,int userId);
@@ -52,6 +52,11 @@ namespace TeamBins.DataAccess
             }
         }
 
+        public async Task RemoveIssueMember(int issueId, int userId)
+        {
+            await DeleteIssueMemberRecord(issueId, userId, "ASSIGNEE");
+         
+        }
         public async Task StarIssue(int issueId, int userId, bool isRequestForToStar)
         {
             await DeleteIssueMemberRecord(issueId, userId, "Star");
@@ -347,17 +352,21 @@ namespace TeamBins.DataAccess
                 return await con.QueryAsync<UserDto>(q, new {@teamId = teamId});
             }
         }
-        public async Task<IEnumerable<UserDto>> GetIssueMembers(int issueId)
+        public async Task<IEnumerable<IssueMember>> GetIssueMembers(int issueId)
         {
             using (var con = new SqlConnection(ConnectionString))
             {
-                var q = @"SELECT U.ID,U.FirstName as Name,
+                var q = @"SELECT TM.RelationType,U.ID,U.FirstName as Name,
                         U.EmailAddress
                         FROM [USER] U WITH (NOLOCK) 
                         INNER JOIN IssueMember TM  WITH (NOLOCK) ON TM.MemberID=U.ID 
                         WHERE TM.IssueID=@issueId  ";
                 con.Open();
-                return await con.QueryAsync<UserDto>(q, new { @issueId = issueId });
+                return await con.QueryAsync<IssueMember,UserDto, IssueMember>(q, (im, u) =>
+                {
+                    im.Member = u;
+                    return im; },
+                    new { @issueId = issueId },null,true,"ID");
             }
         }
     }

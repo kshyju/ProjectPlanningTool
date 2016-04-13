@@ -10,16 +10,11 @@ namespace TeamBins.Common.Infrastructure.Enums
     {
         public enum IssueMemberRelationType
         {
-            Member,
-            Star,
+            Assigned,
+            Starred,
             Following
         }
-        public enum LocationType
-        {
-            SPRNT,
-            ARCHV,
-            BKLOG
-        }
+       
         public enum ActivityObjectType
         {
             Issue,

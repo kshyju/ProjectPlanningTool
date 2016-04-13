@@ -34,7 +34,7 @@ namespace TeamBins6.Controllers
 
 
         [HttpPost]
-        [Route("~/api/issue/{issueId}/star/{mode}")]
+        [Route("~/api/issues/{issueId}/star/{mode}")]
         public async Task<IActionResult> StarIssue(bool mode, int issueId)
         {
             await issueManager.StarIssue(issueId, 0, !mode);
@@ -50,7 +50,7 @@ namespace TeamBins6.Controllers
         }
 
         [HttpGet]
-        [Route("~/api/issue/{issueId}/noissuemembers")]
+        [Route("~/api/issues/{issueId}/noissuemembers")]
         public async Task<IActionResult> GetIssueMembers(string term,int issueId)
         {
             var list= await issueManager.GetNonIssueMembers(issueId);
@@ -58,13 +58,19 @@ namespace TeamBins6.Controllers
         }
 
         [HttpPost]
-        [Route("~/api/issue/{issueId}/assignteammember/{userId}")]
+        [Route("~/api/issues/{issueId}/assignteammember/{userId}")]
         public async Task<IActionResult> GetIssueMembers(int issueId,int userId)
         {
             await this.issueManager.SaveIssueAssignee(issueId,userId);
             return Json( new { Status="Success"});
         }
-
+        [HttpPost]
+        [Route("~/api/issues/{issueId}/removeissuemember/{userId}")]
+        public async Task<IActionResult> RemoveIssueMembers(int issueId, int userId)
+        {
+            await this.issueManager.RemoveIssueMember(issueId, userId);
+            return Json(new { Status = "Success" });
+        }
         // GET api/values/5
         [HttpGet("{teamId}/{count}")]
         public ObjectResult Get(int teamId,int count)
