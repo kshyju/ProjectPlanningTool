@@ -32,6 +32,7 @@ namespace TeamBins.DataAccess
         Task<IEnumerable<UserDto>> GetIssueMembers(int issueId);
         Task<IEnumerable<ChartItem>> GetIssueCountsPerStatus(int teamId);
         Task StarIssue(int issueId, int userId, bool isRequestForToStar);
+        Task SaveDueDate(int issueId, DateTime? dueDate,int userId);
 
     }
 
@@ -39,6 +40,16 @@ namespace TeamBins.DataAccess
     {
         public IssueRepository(IConfiguration configuration) : base(configuration)
         {
+        }
+
+        public async Task SaveDueDate(int issueId, DateTime? dueDate, int userId)
+        {
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                await con.ExecuteAsync("UPDATE Issue SET DueDate=@dueDate,ModifiedDate=@modifiedDate,ModifiedByID=@userId WHERE ID=@issueId",
+                    new {  @modifiedDate = DateTime.Now, issueId , dueDate, userId });
+            }
         }
 
         public async Task StarIssue(int issueId, int userId, bool isRequestForToStar)
@@ -113,6 +124,7 @@ namespace TeamBins.DataAccess
             var q = @"SELECT I.Id,I.Title,I.Description,ISNULL(I.Description,'') as Description,
                         U.FirstName + + ISNULL(U.LastName,'') as OpenedBy,
                         I.CreatedDate,
+                        I.DueDate,
                         I.Active,
                         CASE WHEN IM.ID IS NULL THEN 0 ELSE 1 END AS IsStarredForUser	,
                         SG.Id,
@@ -169,7 +181,7 @@ namespace TeamBins.DataAccess
                 con.Open();
                 var projects =
                     con.Query<IssueDetailVM>(
-                        "SELECT Id,Title,Description,CreatedDate,DueDate as IssueDueDate FROM Issue");
+                        "SELECT Id,Title,Description,CreatedDate,DueDate FROM Issue");
                 return projects;
                 // Status
             }
@@ -199,6 +211,7 @@ namespace TeamBins.DataAccess
             var q = @"SELECT I.Id,I.Title,
                         U.FirstName + + ISNULL(U.LastName,'') as OpenedBy,
                         I.CreatedDate,
+                        I.DueDate,
                         CASE WHEN IM.ID IS NULL THEN 0 ELSE 1 END AS IsStarredForUser	,
                         SG.Id,
                         SG.Code,
@@ -326,8 +339,8 @@ namespace TeamBins.DataAccess
             {
                 var q = @"  SELECT U.ID,U.FirstName as Name,
                               U.EmailAddress
-                              FROM [USER] U
-                              INNER JOIN TeamMember TM ON TM.MemberID=U.ID 
+                              FROM [USER] U WITH (NOLOCK) 
+                              INNER JOIN TeamMember TM  WITH (NOLOCK) ON TM.MemberID=U.ID 
                               WHERE TM.TeamID=@teamId  
                               AND U.ID NOT IN ( SELECT MemberID FROM IssueMember WHERE IssueID=@teamId)";
                 con.Open();
@@ -340,8 +353,8 @@ namespace TeamBins.DataAccess
             {
                 var q = @"SELECT U.ID,U.FirstName as Name,
                         U.EmailAddress
-                        FROM [USER] U
-                        INNER JOIN IssueMember TM ON TM.MemberID=U.ID 
+                        FROM [USER] U WITH (NOLOCK) 
+                        INNER JOIN IssueMember TM  WITH (NOLOCK) ON TM.MemberID=U.ID 
                         WHERE TM.IssueID=@issueId  ";
                 con.Open();
                 return await con.QueryAsync<UserDto>(q, new { @issueId = issueId });

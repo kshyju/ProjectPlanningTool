@@ -7,7 +7,7 @@
             $("#members").html(data);
         });
 
-
+        
         $("#txtAssignMember").autocomplete({
             source: function (request, response) {
                 $.ajax({
@@ -44,14 +44,16 @@
             }
         });
 
-        //$('#IssueDueDate').datepicker({
-        //    onSelect: function (date) {
-        //        var selectedDate = date;//$("#IssueDueDate").val();
-        //        $("span#dueDate").text(selectedDate);
-        //        $("#dueDatePicker").fadeOut(50);
-        //        $.post("../../Issues/SaveDueDate", { issueDueDate: selectedDate, issueId: $("#Id").val() });
-        //    }
-        //});
+        $('#IssueDueDate').datepicker({
+            onSelect: function (date) {
+                var selectedDate = date;//$("#IssueDueDate").val();
+                $("span#dueDate").text(selectedDate);
+                $("#dueDatePicker").fadeOut(50);
+                $.post(teamBins.urls.baseUrl + "/api/issues/" + $("#Id").val() + "/SaveDueDate", { issueDueDate: selectedDate }, function (res) {
+                    console.log(res);
+                });
+            }
+        });
 
         $("#aChangeDueDate").click(function (e) {
             e.preventDefault();

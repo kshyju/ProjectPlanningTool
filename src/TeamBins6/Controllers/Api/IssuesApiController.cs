@@ -75,7 +75,25 @@ namespace TeamBins6.Controllers
             return Ok(issues);
         }
 
-        
+        [HttpPost]
+        [Route("~/api/issues/{id}/SaveDueDate")]
+        public async Task<ObjectResult> SaveDueDate(int id, DateTime? issueDueDate)
+        {
+            try
+            {
+                var issue = this.issueManager.GetIssue(id);
+                if (issue != null)
+                {
+                    await this.issueManager.SaveDueDate(id, issueDueDate);
+                }
+                return Ok(new { Status = "Success" });
+            }
+            catch (Exception)
+            {
+
+                return Ok(new { Status = "Error", Message = "Can not delete comment!" });
+            }
+        }
         [HttpPost]
         [Route("~/api/issue/{id}/delete")]
         public ObjectResult Delete(int id, string token = "")

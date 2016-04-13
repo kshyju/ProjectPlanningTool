@@ -69,7 +69,7 @@
 
             </div>
             <div class="issue-detail-item">
-                <span  class="type-icon issue-icon-@Model.Category.Code"></span>
+                <span class="type-icon issue-icon-@Model.Category.Code"></span>
                 <span class="type-name">@Model.Category.Name</span>
             </div>
 
@@ -79,17 +79,18 @@
         <div id="members" class="changableWidget right-detail-items">
             @Html.Partial("Partial/Members", Model)
         </div>
-        @if (Model.IsEditableForCurrentUser)
-        {
-            <div id="dueDate" class="changableWidget">
-                <h4>Due Date</h4>
-                <span id="dueDate">@Model.IssueDueDate</span>
+        <div id="dueDate" class="changableWidget">
+            <h4>Due Date</h4>
+            <span id="dueDate">@(Model.DueDate != null ? Model.DueDate.Value.ToShortDateString() : "Not set")</span>
+            @if (Model.IsEditableForCurrentUser)
+            {
                 <a href="#" id="aChangeDueDate" class="hiddenChangeLink">Change</a>
                 <div id="dueDatePicker" style="display: none;">
-                    <input type="text" name="IssueDueDate" value="@Model.IssueDueDate" id="IssueDueDate" />
+                    <input type="text" name="IssueDueDate" value="@(Model.DueDate != null ? Model.DueDate.Value.ToShortDateString() : "")" class="datefield" id="IssueDueDate"/>
                 </div>
-            </div>
-        }
+            }
+        </div>
+
     </div>
 </div>
 @Html.HiddenFor(d => d.Id)

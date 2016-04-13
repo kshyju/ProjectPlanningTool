@@ -199,6 +199,11 @@ namespace TeamBins.Services
             await this.issueRepository.StarIssue(issueId, this.userSessionHelper.UserId, isRequestForToStar);
         }
 
+        public async Task SaveDueDate(int issueId, DateTime? dueDate)
+        {
+            await issueRepository.SaveDueDate(issueId, dueDate, this.userSessionHelper.UserId);
+        }
+
     }
     public interface IIssueManager
     {
@@ -217,5 +222,8 @@ namespace TeamBins.Services
         void LoadDropdownData(CreateIssue issue);
 
         Task StarIssue(int issueId, int userId, bool isRequestForToStar);
+
+        Task SaveDueDate(int issueId, DateTime? dueDate);
+
     }
 }

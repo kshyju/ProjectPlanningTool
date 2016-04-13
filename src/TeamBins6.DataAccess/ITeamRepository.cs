@@ -55,12 +55,20 @@ namespace TeamBins.DataAccess
 
     public class TeamRepository : BaseRepo, ITeamRepository
     {
+        public class MyModel
+        {
+            public long ID;
+            public long NUMBER_COLUMN;
+            public long TEXT_COLUMN; //this is an error (since the type in the database is text)
+        }
         public TeamRepository(IConfiguration configuration) : base(configuration)
         {
         }
 
         public TeamDto GetTeam(int teamId)
         {
+          
+
             var q = @"SELECT [Id],[Name],[IsPublic]  FROM Team WHERE ID=@id";
             using (var con = new SqlConnection(ConnectionString))
             {

@@ -158,6 +158,8 @@ namespace TeamBins.Common.ViewModels
         public string Iteration { set; get; }
         public string ProjectName { get; set; }
         public DateTime CreatedDate { set; get; }
+
+        public DateTime? DueDate { set; get; }
         public string IssueDueDate { set; get; }
         public UserDto Author { get; set; }
 

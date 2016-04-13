@@ -53,7 +53,7 @@ namespace TeamBins6.Controllers
 
             if (this.userSessionHelper.UserId > 0)
             {
-                return RedirectToAction("Index", "Issue");
+                return RedirectToAction("Index", "Issues");
             }
 
 
