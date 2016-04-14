@@ -188,7 +188,7 @@ namespace TeamBins.Services
 
         public async Task SaveIssueAssignee(int issueId, int userId)
         {
-            await issueRepository.SaveIssueMember(issueId, userId,userSessionHelper.UserId ,"ASSIGNEE");
+            await issueRepository.SaveIssueMember(issueId, userId,userSessionHelper.UserId , IssueMemberRelationType.Assigned.ToString());
         }
         public async Task<IEnumerable<IssueMember>> GetIssueMembers(int issueId)
         {

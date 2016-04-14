@@ -28,10 +28,11 @@
             select: function (event, ui) {
                 $("#txtAssignMember").val(ui.item.label);
                 $.post(teamBins.urls.baseUrl + "/api/issues/" + $("#Id").val() + "/assignteammember/" + ui.item.value, function (res) {
+                    console.log(res);
                     if (res.Status === "Success") {
                         $("#txtAssignMember").val("");
 
-                        $("#members").load(teamBins.urls.baseUrl + 'issues/members/' + $("#Id").val());
+                        $("#members").load(teamBins.urls.baseUrl + '/issues/' + $("#Id").val()+"/members");
 
                     }
                 });

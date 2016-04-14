@@ -54,14 +54,14 @@ namespace TeamBins.DataAccess
 
         public async Task RemoveIssueMember(int issueId, int userId)
         {
-            await DeleteIssueMemberRecord(issueId, userId, "ASSIGNEE");
+            await DeleteIssueMemberRecord(issueId, userId, IssueMemberRelationType.Assigned.ToString());
          
         }
         public async Task StarIssue(int issueId, int userId, bool isRequestForToStar)
         {
-            await DeleteIssueMemberRecord(issueId, userId, "Star");
+            await DeleteIssueMemberRecord(issueId, userId, IssueMemberRelationType.Starred.ToString());
             if(isRequestForToStar)
-                await AddIssueMemberRecord(issueId, userId,"Star");
+                await AddIssueMemberRecord(issueId, userId, IssueMemberRelationType.Starred.ToString());
         }
 
         private async Task AddIssueMemberRecord(int issueId, int userId,string type)
