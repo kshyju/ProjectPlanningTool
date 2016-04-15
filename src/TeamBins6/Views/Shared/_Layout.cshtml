@@ -1,4 +1,5 @@
-﻿@addTagHelper "*, TeamBins6"
+﻿@using TeamBins6.Controllers.Web
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,14 +22,15 @@
     <div>
         @await Component.InvokeAsync("MenuHeader", 1)
         <div message-duration="4000"></div>
-
-        @*@Html.AlertMessages()*@
+        
+        
         <div class="content">
             <div class="central">
                 @RenderBody()
             </div>
         </div>
     </div>
+   
 
     <environment names="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>

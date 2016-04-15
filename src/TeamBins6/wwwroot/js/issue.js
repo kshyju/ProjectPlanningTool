@@ -86,13 +86,11 @@
 
         $(document).on("click", ".aRemove", function (e) {
             e.preventDefault();
-
-            console.log("re,pve" + $("#Id").val());
             var _this = $(this);
             $.post(teamBins.urls.baseUrl + "/api/Issues/" + $("#Id").val() + "/removeissuemember/" + _this.data("member"), function (res) {
-                _this.closest(".issueMember").fadeOut();
+                $("#members").load(teamBins.urls.baseUrl + '/issues/' + $("#Id").val() + "/members");
             });
-        })
+        });
 
         $(document).on("click", "#btnSaveIssue", function (e) {
             e.preventDefault();

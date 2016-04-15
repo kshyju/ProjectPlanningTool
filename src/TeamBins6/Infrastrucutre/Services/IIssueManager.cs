@@ -45,6 +45,10 @@ namespace TeamBins.Services
             throw new NotImplementedException();
         }
 
+        public async Task<IEnumerable<IssueDetailVM>> GetIssuesAssignedToUser(int userId)
+        {
+            return await this.issueRepository.GetIssuesAssignedToUser(userId);
+        }
         public IEnumerable<IssuesPerStatusGroup> GetIssuesGroupedByStatusGroup(int teamId, int count)
         {
             return this.issueRepository.GetIssuesGroupedByStatusGroup(count,teamId,this.userSessionHelper.UserId);
@@ -214,6 +218,7 @@ namespace TeamBins.Services
     }
     public interface IIssueManager
     {
+        Task<IEnumerable<IssueDetailVM>> GetIssuesAssignedToUser(int userId);
         Task RemoveIssueMember(int issueId, int memberId);
         Task<IEnumerable<IssueMember>> GetIssueMembers(int issueId);
         Task SaveIssueAssignee(int issueId, int userId);

@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using StackExchange.Exceptional;
 using TeamBins.Common;
 using TeamBins.Services;
+using TeamBins6.Controllers.Web;
 using TeamBins6.Infrastrucutre.Services;
 
 namespace TeamBins6.Controllers

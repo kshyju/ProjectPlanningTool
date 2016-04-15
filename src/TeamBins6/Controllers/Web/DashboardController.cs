@@ -48,6 +48,8 @@ namespace TeamBins6.Controllers.Web
             var issues = this.issueManager.GetIssuesGroupedByStatusGroup(teamId,25).SelectMany(f => f.Issues).ToList();
             vm.RecentIssues = issues;
 
+            var myIssues =await issueManager.GetIssuesAssignedToUser(this.userSessionHelper.UserId);
+            vm.IssuesAssignedToMe = myIssues;
             vm.Projects = this.projectManager.GetProjects().ToList();
 
             return View(vm);

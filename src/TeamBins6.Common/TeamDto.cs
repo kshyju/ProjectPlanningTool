@@ -41,7 +41,7 @@ namespace TeamBins.Common
         //  public int CurrentTeamID { set; get; }
         public string CurrentTeamName { set; get; }
         public string UserDisplayName { set; get; }
-        public string UserAvatarHash { set; get; }
+        public string UserEmailAddress { set; get; }
         public UserMenuHeaderVM()
         {
             Teams = new List<TeamDto>();

@@ -4,9 +4,10 @@
     @foreach (var member in Model.Members)
     {
         <div class="issueMember">
-            <img class="memberAvatar" src="@member.GravatarUrl" />
+            <span gravatar-email="@member.EmailAddress" image-size="24"></span>
+           
             <h5>@member.Name</h5>
-            @if(Model.IsEditableForCurrentUser)
+            @if (Model.IsEditableForCurrentUser)
             {
                 <span>
                     <a class="aRemove hiddenchangelink"  data-member="@member.Id" data-issue="@Model.Id">remove</a>
@@ -23,7 +24,7 @@
 
 @if (Model.IsEditableForCurrentUser)
 {
-    <h4>Assign New Member</h4>
+    <h5>Assign New Member</h5>
     <input id="txtAssignMember" value="" />
 }
 

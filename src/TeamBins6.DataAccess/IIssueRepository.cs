@@ -15,6 +15,7 @@ namespace TeamBins.DataAccess
 
     public interface IIssueRepository
     {
+        Task<IEnumerable<IssueDetailVM>> GetIssuesAssignedToUser(int userId);
         Task RemoveIssueMember(int issueId, int userId);
         IEnumerable<NameValueItem> GetStatuses();
         IEnumerable<CategoryDto> GetCategories();
@@ -206,7 +207,56 @@ namespace TeamBins.DataAccess
                 return await con.QueryAsync<ChartItem>(q,new {@t=teamId});
             }
         }
-        
+
+        public async Task<IEnumerable<IssueDetailVM>> GetIssuesAssignedToUser(int userId)
+        {
+            var q = @"SELECT I.Id,I.Title,
+                        U.FirstName + + ISNULL(U.LastName,'') as OpenedBy,
+                        I.CreatedDate,
+                        I.DueDate,
+                        CASE WHEN IM.ID IS NULL THEN 0 ELSE 1 END AS IsStarredForUser	,
+                        SG.Id,
+                        SG.Code,
+                        SG.Name,
+                        SG.DisplayOrder,
+                        C.Id,
+                        C.Name,C.Code,
+                        P.Id,
+                        P.Name,                       
+                        S.Id,S.Name                     				 
+                        from Issue I  WITH (NOLOCK)
+                        INNER JOIN Status S  WITH (NOLOCK) ON I.StatusID =S.Id
+                        INNER JOIN StatusGroup SG  WITH (NOLOCK) ON SG.Id =S.StatusGroupId
+                        INNER JOIN dbo.[USer] U  WITH (NOLOCK) ON U.Id=I.CreatedByid
+                        INNER JOIN Category C  WITH (NOLOCK) on C.Id = I.CategoryID
+                        INNER JOIN Priority P  WITH (NOLOCK) on P.Id = I.PriorityID 
+						INNER JOIN IssueMember IssuesAssigned WITH (NOLOCK) on IssuesAssigned.IssueID= I.ID
+					    LEFT JOIN (SELECT IssueId,ID FROM IssueMember WITH (NOLOCK) WHERE RelationType=@starredRelationShipType AND MemberID=@userId) IM ON IM.IssueID=I.ID
+                        WHERE I.Active=1 
+						AND IssuesAssigned.MemberID=@userId AND IssuesAssigned.RelationType=@assignedRelationShipType";
+
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+
+                return await con.QueryAsync<IssueDetailVM, KeyValueItem, KeyValueItem, KeyValueItem, KeyValueItem, IssueDetailVM>
+                    (q, (issue, sg, cat, priority, status)
+                        =>
+                    {
+                        issue.Status = status;
+                        issue.StatusGroup = sg;
+                        issue.Priority = priority;
+                        issue.Category = cat;
+                        return issue;
+                    }, new
+                    {
+                        @userId,
+                        @starredRelationShipType = IssueMemberRelationType.Starred.ToString(),
+                        @assignedRelationShipType = IssueMemberRelationType.Assigned.ToString()
+                    }, null, splitOn: "Id,Id,Id,Id");
+
+            }
+        }
         public IEnumerable<IssuesPerStatusGroup> GetIssuesGroupedByStatusGroup(int count,int teamId,int requestingUserId)
         {
            

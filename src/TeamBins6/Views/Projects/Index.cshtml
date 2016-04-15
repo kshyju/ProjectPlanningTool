@@ -27,9 +27,7 @@
                         <td>
                             <a asp-action="edit" class="popup" asp-route-id="@project.Id" asp-controller="Projects">Edit</a>
                             <a asp-action="DeleteConfirm" class="popup deletess" asp-route-id="@project.Id" asp-controller="Projects">Delete</a>
-                            @*@Html.ActionLink("Edit", "Edit", "Projects", new { id = @project.Id }, new { @class = "popup" }) |
-                            @Html.ActionLink("Delete", "DeleteConfirm", "Projects", new { id = project.Id }, new { @class = "popup delete", @data_id = project.Id })*@
-                        </td>
+                         </td>
                     </tr>
                 }
             </tbody>

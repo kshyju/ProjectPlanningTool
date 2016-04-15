@@ -40,16 +40,15 @@
     <div class="userInfo">
 
 @if (String.IsNullOrEmpty(Model.UserDisplayName))
-
-
 {
-    @Html.ActionLink("Signup or Login to enjoy the full version", "login", "account", null, new {@class = "aLogout"})
+    <a asp-action="login" asp-controller="account" class="aLogout">Signup or Login to enjoy the full version</a>
 }
 else
 {
 
-    <span>Howdy, <a href="@Url.Action("index","Settings")">@Model.UserDisplayName</a> </span>
-        <img class="menubar-gravatar" src="@Model.UserAvatarHash?s=26" />
+    <span>Howdy, <a asp-action="index" asp-controller="settings">@Model.UserDisplayName</a> </span>
+    <span class="menubar-gravatar"  gravatar-email="@Model.UserEmailAddress" image-size="26"></span>
+
         @Html.ActionLink("Logout", "logout", "account", null, new { @class = "aLogout" })
 }
     </div>
