@@ -27,5 +27,12 @@ namespace TeamBins.Common.Infrastructure.Enums
             NewIssue
         }
 
+        public enum MessageType
+        {
+            Success,
+            Warning,
+            Error,
+            Info
+        }
     }
 }

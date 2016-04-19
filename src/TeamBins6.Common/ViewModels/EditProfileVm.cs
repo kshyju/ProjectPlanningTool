@@ -80,8 +80,10 @@ namespace TeamBins.Common.ViewModels
 
     public class UserEmailNotificationSettingsVM
     {
-        public int TeamID { set; get; }
-        public List<EmailSubscriptionVM> EmailSubscriptions { set; get; }
+        public int TeamId { set; get; }
+        public IEnumerable<EmailSubscriptionVM> EmailSubscriptions { set; get; }
+        public int UserId { get; set; }
+
         public UserEmailNotificationSettingsVM()
         {
             EmailSubscriptions = new List<EmailSubscriptionVM>();
@@ -89,7 +91,7 @@ namespace TeamBins.Common.ViewModels
     }
     public class EmailSubscriptionVM
     {
-        public int NotificationTypeID { set; get; }
+        public int NotificationTypeId { set; get; }
         public string Name { set; get; }
         public bool IsSelected { set; get; }
     }

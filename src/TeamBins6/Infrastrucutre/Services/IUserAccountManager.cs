@@ -14,6 +14,7 @@ namespace TeamBins.Services
 
     public interface IUserAccountManager
     {
+        Task SaveNotificationSettings(UserEmailNotificationSettingsVM model);
         Task<DefaultIssueSettings> GetIssueSettingsForUser();
         Task<EditProfileVm> GetUserProfile();
         Task SetDefaultTeam(int userId, int teamId);
@@ -43,6 +44,7 @@ namespace TeamBins.Services
         Task SaveDefaultProjectForTeam(DefaultIssueSettings defaultIssueSettings);
         Task<UserAccountDto> GetUser(string email);
         Task<LoggedInSessionInfo> CreateAccount(UserAccountDto userAccount);
+        Task<UserEmailNotificationSettingsVM> GetNotificationSettings();
     }
 
     public class UserAccountManager : IUserAccountManager
@@ -123,6 +125,22 @@ namespace TeamBins.Services
         {
             model.Id = this.userSessionHelper.UserId;
             await userRepository.SaveUserProfile(model);
+        }
+
+        public async Task<UserEmailNotificationSettingsVM> GetNotificationSettings()
+        {
+            return  new UserEmailNotificationSettingsVM
+            {
+                TeamId = userSessionHelper.TeamId,
+                EmailSubscriptions = await userRepository.EmailSubscriptions(userSessionHelper.UserId,userSessionHelper.TeamId)
+            };
+        }
+        public async Task SaveNotificationSettings(UserEmailNotificationSettingsVM model)
+        {
+            model.UserId = userSessionHelper.UserId;
+            model.TeamId = userSessionHelper.TeamId;
+            await userRepository.SaveNotificationSettings(model);
+
         }
     }
 

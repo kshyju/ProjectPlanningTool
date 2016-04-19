@@ -2,14 +2,16 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
+using TeamBins.Common.Infrastructure.Enums.TeamBins.Helpers.Enums;
 using TeamBins.Common.ViewModels;
 using TeamBins.Services;
+using TeamBins6.Controllers;
 using TeamBins6.Infrastrucutre;
 
 
 namespace TeamBins.Controllers
 {
-    public class SettingsController : Controller
+    public class SettingsController : BaseController
     {
         readonly IUserAccountManager userAccountManager;
         public SettingsController(IUserAccountManager userAccountManager)
@@ -23,22 +25,28 @@ namespace TeamBins.Controllers
             var vm = new SettingsVm
             {
                 Profile = await userAccountManager.GetUserProfile(),
-                //NotificationSettings = userAccountManager.GetNotificationSettings(),
+                NotificationSettings =await userAccountManager.GetNotificationSettings(),
                 IssueSettings = await userAccountManager.GetIssueSettingsForUser()
             };
 
             return View(vm);
         }
 
+
+        [HttpPost]
+        public async Task<ActionResult> Notifications(UserEmailNotificationSettingsVM model)
+        {
+            await userAccountManager.SaveNotificationSettings(model);
+            SetMessage(MessageType.Success,"Settings updated successfully");
+            return RedirectToAction("Index", "Settings");
+        }
         [HttpPost]
         public async Task<ActionResult> EditProfile(EditProfileVm model)
         {
             if (ModelState.IsValid)
             {
                 await userAccountManager.UpdateProfile(model);
-
-                var tt = new Dictionary<string, string> { { "success", "Profile updated successfully" } };
-                TempData["AlertMessages"] = tt;
+                SetMessage(MessageType.Success, "Profile updated successfully");
                 return RedirectToAction("Index", "Settings");
 
             }
@@ -67,9 +75,7 @@ namespace TeamBins.Controllers
         {
 
             userAccountManager.SaveDefaultProjectForTeam(model);
-
-            var tt = new Dictionary<string, string> { { "success", "Settings successfully" } };
-            TempData["AlertMessages"] = tt;
+            SetMessage(MessageType.Success, "Settings updated successfully");
             return RedirectToAction("Index", "Settings");
 
 

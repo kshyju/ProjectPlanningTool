@@ -7,6 +7,7 @@ using Microsoft.AspNet.Mvc;
 using Microsoft.Extensions.Configuration;
 using StackExchange.Exceptional;
 using TeamBins.Common;
+using TeamBins.Common.Infrastructure.Enums.TeamBins.Helpers.Enums;
 using TeamBins.Services;
 using TeamBins6.Controllers.Web;
 using TeamBins6.Infrastrucutre.Services;
@@ -22,6 +23,11 @@ namespace TeamBins6.Controllers
             {
                 return string.Format("{0}://{1}{2}", Request.Scheme, Request.Host, Url.Content("~"));
             }
+        }
+
+        protected void SetMessage(MessageType messageType, string message)
+        {
+            TempData["AlertMessages"] = new Dictionary<string, string> { { messageType.ToString().ToLower(), message } }; 
         }
 
     }

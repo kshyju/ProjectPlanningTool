@@ -2,33 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using TeamBins.Common;
-using TeamBins.Common.Infrastructure.Enums.TeamBins.Helpers.Enums;
 using TeamBins.Common.ViewModels;
 
 namespace TeamBins.DataAccess
 {
-    //public class UserRepository : IUserRepository
-    //{
-    //    public async Task<List<UserDto>> GetSubscribers(int teamId, NotificationTypeCode notificationType)
-    //    {
-    //        using (var db = new TeamEntitiesConn())
-    //        {
-    //            var notificationTypeCode = notificationType.ToString();
-    //            return await db.UserNotificationSubscriptions.Where(s => s.NotificationType.Code == notificationTypeCode)
-    //                .Select(x => new UserDto
-    //                {
-    //                    EmailAddress = x.User.EmailAddress,
-    //                    Id = x.User.Id,
-    //                    Name = x.User.FirstName
-    //                }).ToListAsync();
-    //        }
-    //    }
-    //}
     public interface IUserRepository
     {
         Task<IEnumerable<TeamDto>> GetTeams(int userId);
@@ -36,12 +17,10 @@ namespace TeamBins.DataAccess
         Task<UserAccountDto> GetUser(string email);
         Task SetDefaultTeam(int userId, int teamId);
         Task SaveUserProfile(EditProfileVm userProfileVm);
-
         Task SaveDefaultIssueSettings(DefaultIssueSettings model);
-
         Task<int> CreateAccount(UserAccountDto userAccount);
-
-        // Task<List<UserDto>> GetSubscribers(int teamId, NotificationTypeCode notificationType);
+        Task<IEnumerable<EmailSubscriptionVM>> EmailSubscriptions(int userId, int teamId);
+        Task SaveNotificationSettings(UserEmailNotificationSettingsVM model);
     }
 
     public class UserRepository : BaseRepo, IUserRepository
@@ -55,9 +34,8 @@ namespace TeamBins.DataAccess
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                await con.ExecuteAsync(q, new {@userId = userId, @teamId = teamId});
+                await con.ExecuteAsync(q, new { @userId = userId, @teamId = teamId });
             }
-
         }
 
         public async Task SaveDefaultIssueSettings(DefaultIssueSettings model)
@@ -66,35 +44,27 @@ namespace TeamBins.DataAccess
             {
                 con.Open();
 
-                   con.Query<int>(
-                    " UPDATE TEAMMEMBER SET DEFAULTPROJECTID=@projectId WHERE TEAMID=@teamId AND MEMBERID=@userId",
-                    new
-                    {
-                        @projectId = model.SelectedProject.Value,
-                        @teamId = model.TeamId,
-                        @userId = model.UserId
-                    });
-
+                con.Query<int>("UPDATE TEAMMEMBER SET DEFAULTPROJECTID=@projectId WHERE TEAMID=@teamId AND MEMBERID=@userId",
+                 new
+                 {
+                     @projectId = model.SelectedProject.Value,
+                     @teamId = model.TeamId,
+                     @userId = model.UserId
+                 });
             }
         }
 
         public async Task<UserAccountDto> GetUser(string email)
         {
-            var q = @"SELECT [ID]
-                      ,[FirstName] as Name                    
-                      ,[EmailAddress],
-                        Password
-                      ,[Avatar] as GravatarUrl
-                      ,[DefaultTeamID]
-                    FROM [dbo].[User]
+            var q = @"SELECT [ID],[FirstName] as Name ,[EmailAddress],Password,[Avatar] as GravatarUrl ,[DefaultTeamID]
+                    FROM [dbo].[User] 
                     WHERE EmailAddress=@id";
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                var com = await con.QueryAsync<UserAccountDto>(q, new {@id = email});
+                var com = await con.QueryAsync<UserAccountDto>(q, new { @id = email });
                 return com.FirstOrDefault();
             }
-
         }
 
         public async Task<UserAccountDto> GetUser(int id)
@@ -109,7 +79,7 @@ namespace TeamBins.DataAccess
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                var com = await con.QueryAsync<UserAccountDto>(q, new {@id = id});
+                var com = await con.QueryAsync<UserAccountDto>(q, new { @id = id });
                 return com.FirstOrDefault();
             }
 
@@ -121,7 +91,7 @@ namespace TeamBins.DataAccess
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                await con.ExecuteAsync(q, new {@userId = userProfileVm.Id, @name = userProfileVm.Name});
+                await con.ExecuteAsync(q, new { @userId = userProfileVm.Id, @name = userProfileVm.Name });
             }
         }
 
@@ -134,7 +104,7 @@ namespace TeamBins.DataAccess
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                return await con.QueryAsync<TeamDto>(q, new {@id = userId});
+                return await con.QueryAsync<TeamDto>(q, new { @id = userId });
             }
         }
 
@@ -145,7 +115,7 @@ namespace TeamBins.DataAccess
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                var ss=
+                var ss =
                     await
                         con.QueryAsync<int>
                         (q,
@@ -160,7 +130,55 @@ namespace TeamBins.DataAccess
             }
         }
 
+        public async Task<IEnumerable<EmailSubscriptionVM>> EmailSubscriptions(int userId, int teamId)
+        {
+            var q = @"SELECT NT.ID as NotificationTypeId
+                    ,[Code]
+                    ,[Name],
+                    ISNULL(UNS.Subscribed,0) as IsSelected 
+                    FROM [dbo].[NotificationType] NT WITH (NOLOCK)
+                    LEFT JOIN
+                    UserNotificationSubscription UNS  WITH (NOLOCK) ON NT.ID=UNS.NotificationTypeID
+                    AND UNS.UserID=@userId and UNS.TeamId=@teamId";
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                return await con.QueryAsync<EmailSubscriptionVM>(q, new { userId, teamId });
 
+            }
+        }
 
+        public async Task SaveNotificationSettings(UserEmailNotificationSettingsVM model)
+        {
+            //DELETE EXISTING 
+            var q = @"DELETE FROM UserNotificationSubscription WHERE UserId=@userId and TeamId=@teamId;";
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                await con.ExecuteAsync(q, new { @userId = model.UserId, @teamId = model.TeamId });
+
+            }
+            //Insert new
+            foreach (var setting in model.EmailSubscriptions.Where(s=>s.IsSelected))
+            {
+                var q2 = @"INSERT INTO
+                    UserNotificationSubscription(UserID,NotificationTypeID,TeamID,Subscribed,ModifiedDate) VALUES
+                    (@userId,@notificationTypeId,@teamId,@subscibed,@dt)";
+                using (var con = new SqlConnection(ConnectionString))
+                {
+                    con.Open();
+                    await con.ExecuteAsync(q2, new
+                    {
+                        @userId = model.UserId,
+                        @subscibed =true,
+                        @notificationTypeId = setting.NotificationTypeId,
+                        @dt = DateTime.Now,
+                        @teamId = model.TeamId
+                    });
+
+                }
+            }
+
+        }
     }
 }
