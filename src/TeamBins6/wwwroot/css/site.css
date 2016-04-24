@@ -217,6 +217,7 @@ a.toolLink {
 }
     #issueStatus span
     {
+         border-radius: 2px;
         font-weight:bold;
            padding:8px; padding-top:2px;padding-bottom:2px;margin-left: 8px;
     }
@@ -406,7 +407,7 @@ div#quick_create input:focus
 #leftContentPane
 {
     float:left;
-     width:80%;min-height:400px;
+     width:82%;min-height:400px;
    }
 input.sleekInput
 {
@@ -1133,4 +1134,15 @@ color: #111;
 }
 .issue-detail-item>.type-name {
        padding-left: 6px; margin-top:4px;
+}
+.due-date {
+    padding: 2px 6px 2px 4px;
+   
+    border-radius: 3px;
+    margin-left: 4px;
+}
+
+.due-date-past {
+    background-color: #e15440;
+    color: #fff;
 }

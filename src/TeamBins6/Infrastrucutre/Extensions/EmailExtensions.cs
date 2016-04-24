@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 
 namespace TeamBins6.Infrastrucutre.Extensions
 {
-
     //Not really an extension method on string ! I still prefer to just call it like the ext method style ;)
     public static class EmailExtensions
     {

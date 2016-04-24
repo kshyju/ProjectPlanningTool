@@ -1,4 +1,5 @@
 ﻿@using Newtonsoft.Json
+@using TeamBins6.Infrastrucutre.Extensions
 @model TeamBins.Common.ViewModels.IssueDetailVM
 @{
     ViewBag.Title = "Issue #" + Model.Id;
@@ -79,9 +80,9 @@
         <div id="members" class="changableWidget right-detail-items">
             @Html.Partial("Partial/Members", Model)
         </div>
-        <div id="dueDate" class="changableWidget">
+        <div class="changableWidget  right-detail-items">
             <h4>Due Date</h4>
-            <span id="dueDate">@(Model.DueDate != null ? Model.DueDate.Value.ToShortDateString() : "Not set")</span>
+            <span id="dueDate" title="@(Model.DueDate.IsPastDue()?"This issue is past due!":"")"  class="due-date @(Model.DueDate.IsPastDue()?"due-date-past":"")"> @(Model.DueDate != null ? Model.DueDate.Value.ToShortDateString()  : "Not set")</span>
             @if (Model.IsEditableForCurrentUser)
             {
                 <a href="#" id="aChangeDueDate" class="hiddenChangeLink">Change</a>

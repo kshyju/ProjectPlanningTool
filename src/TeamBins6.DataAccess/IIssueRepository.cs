@@ -397,9 +397,9 @@ namespace TeamBins.DataAccess
                               FROM [USER] U WITH (NOLOCK) 
                               INNER JOIN TeamMember TM  WITH (NOLOCK) ON TM.MemberID=U.ID 
                               WHERE TM.TeamID=@teamId  
-                              AND U.ID NOT IN ( SELECT MemberID FROM IssueMember WHERE IssueID=@teamId)";
+                              AND U.ID NOT IN ( SELECT MemberID FROM IssueMember WHERE IssueID=@issueId)";
                 con.Open();
-                return await con.QueryAsync<UserDto>(q, new {@teamId = teamId});
+                return await con.QueryAsync<UserDto>(q, new {teamId, issueId });
             }
         }
         public async Task<IEnumerable<IssueMember>> GetIssueMembers(int issueId)
