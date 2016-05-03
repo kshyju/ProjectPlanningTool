@@ -23,7 +23,7 @@
                 <a asp-action="index" class="team-item"  asp-route-id="@team.Id" asp-controller="Dashboard"><div class="available-team">@team.Name</div></a>
             }
             <div class="team-operations">
-                <a href="@Url.Action("index","team")">Manage Teams</a>
+                <a asp-action="index" asp-controller="team">Manage Teams</a>
             </div>
         </div>
     }
@@ -35,6 +35,7 @@
         <a asp-action="index" asp-controller="issues">Issues</a>
         <a asp-action="index" asp-controller="projects">Projects</a>
         <a asp-action="index" asp-controller="users">Users</a>
+        <a asp-action="index" asp-controller="team">Team</a>
     }
     </div>
     <div class="userInfo">

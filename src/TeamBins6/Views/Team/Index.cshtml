@@ -17,14 +17,9 @@
     {
         <tr>
             <td>
-                @if (team.IsRequestingUserTeamOwner)
-                {
-                    @Html.ActionLink(team.Name, "edit", "Team", new {id = team.Id}, new {@class = "popup"})
-                }
-                else
-                {
-                    <span>@team.Name</span>
-                }
+
+                @Html.ActionLink(team.Name, "View", "Team", new {id = team.Id})
+               
             </td>
             <td>
                 @(team.IsRequestingUserTeamOwner ? "Team Admin" : "Team Member")

@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using StackExchange.Exceptional.Stores;
 using TeamBins.DataAccess;
 using TeamBins.Services;
+using TeamBins6.Infrastrucutre.Cache;
 using TeamBins6.Infrastrucutre.Filters;
 using TeamBins6.Infrastrucutre.Services;
 
@@ -49,8 +50,8 @@ namespace TeamBins6
             services.AddTransient<IEmailRepository, EmailRepository>();
 
             services.AddInstance<IConfiguration>(Configuration);
-            // Rechecking in
-
+            services.AddTransient<ICache, InMemoryCache>();
+          
             services.AddCaching();
             services.AddSession(s => s.IdleTimeout = TimeSpan.FromMinutes(30));
             

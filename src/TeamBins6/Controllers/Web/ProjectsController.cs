@@ -26,6 +26,7 @@ namespace TeamBins6.Controllers.Web
         {
             var vm = new TeamProjectListVM();
             var defaultProject = await projectManager.GetDefaultProjectForCurrentTeam();
+
             vm.Projects =  projectManager.GetProjects().Select(s=> new ProjectVM { Id = s.Id,
                 Name = s.Name,
                 IsDefaultProject =  (defaultProject!=null && s.Id== defaultProject.Id)

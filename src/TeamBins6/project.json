@@ -25,6 +25,7 @@
     "TeamBins6.DataAccess": "",
     "StackExchange.Exceptional": "1.0.122",
     "Microsoft.AspNet.SignalR": "2.2.0",
+    "Microsoft.Extensions.Caching.Abstractions": "1.0.0-rc1-final",
    
   },
 

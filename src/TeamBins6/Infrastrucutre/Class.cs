@@ -5,8 +5,6 @@ using System.Threading.Tasks;
 
 namespace TeamBins6.Infrastrucutre
 {
-
-
     [Serializable]
     public class TestClass
     {

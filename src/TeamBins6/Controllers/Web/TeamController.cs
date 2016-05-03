@@ -81,6 +81,8 @@ namespace TeamBins6.Controllers.Web
             return Json(new { Status = "Error" });
         }
 
+
+
         public ActionResult DeleteConfirm(int id)
         {
             var vm = new DeleteProjectConfirmVM();
@@ -102,6 +104,18 @@ namespace TeamBins6.Controllers.Web
 
                 return Json(new { Status = "Error", Message = "Error deleting project" });
             }
+        }
+
+        public IActionResult View(int id)
+        {
+            var team = this.teamManager.GetTeam(id);
+            if (team != null && team.IsRequestingUserTeamOwner)
+            {
+
+                return View();
+            }
+            return View("NotFound");
+
         }
     }
 }

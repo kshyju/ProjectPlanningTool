@@ -51,7 +51,7 @@ namespace TeamBins.Services
             }
         }
 
-        public async Task Send(Email email)
+        private async Task Send(Email email)
         {
 
             try
