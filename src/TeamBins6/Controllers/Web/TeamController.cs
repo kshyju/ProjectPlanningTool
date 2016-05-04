@@ -112,7 +112,7 @@ namespace TeamBins6.Controllers.Web
             if (team != null && team.IsRequestingUserTeamOwner)
             {
 
-                return View();
+                return View(team);
             }
             return View("NotFound");
 

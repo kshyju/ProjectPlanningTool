@@ -67,15 +67,18 @@ namespace TeamBins.DataAccess
 
         public TeamDto GetTeam(int teamId)
         {
-          
-
-            var q = @"SELECT [Id],[Name],[IsPublic]  FROM Team WHERE ID=@id";
+            var q = @" SELECT T.ID,T.Name,T.IsPublic,T.CreatedDate,T.CreatedByID,TeamMemberCount.Count as MemberCount 
+                FROM Team T WITH (NOLOCK) 
+                JOIN TeamMember TM  WITH (NOLOCK) ON T.ID=TM.TeamId
+				JOIN (SELECT TeamId,COUNT(1) Count FROM TeamMember  WITH (NOLOCK)  group  by TeamId ) TeamMemberCount on TeamMemberCount.TeamId=T.ID
+                WHERE T.ID=@teamId";
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                var teams = con.Query<TeamDto>(q, new { @id = teamId });
-                return teams.FirstOrDefault();
+                var projects = con.Query<TeamDto>(q, new { teamId });
+                return projects.FirstOrDefault();
             }
+            
         }
         public TeamDto GetTeam(string name)
         {
@@ -243,7 +246,7 @@ namespace TeamBins.DataAccess
                 FROM Team T WITH (NOLOCK) 
                 JOIN TeamMember TM  WITH (NOLOCK) ON T.ID=TM.TeamId
 				JOIN (SELECT TeamId,COUNT(1) Count FROM TeamMember  WITH (NOLOCK)  group  by TeamId ) TeamMemberCount on TeamMemberCount.TeamId=T.ID
-                WHERE @userId=@userId";
+                ";
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();

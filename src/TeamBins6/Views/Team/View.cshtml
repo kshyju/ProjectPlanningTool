@@ -1,22 +1,6 @@
 ﻿@model TeamBins.Common.TeamVM
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Team";
 }
 
 <h2>@Model.Name</h2>
-<div>
-    <table>
-        <tr>
-            <th>Visibility</th>
-            <td>
-                @Html.DropDownListFor(s => s.SelectedVisibility, new SelectList(Model.Visibilities));
-            </td>
-        </tr>
-        <tr>
-            <th></th>
-            <td>
-                
-            </td>
-        </tr>
-    </table>
-</div>

@@ -136,7 +136,9 @@ namespace TeamBins6.Infrastrucutre.Services
         }
         public TeamDto GetTeam(int id)
         {
-            return this.teamRepository.GetTeam(id);
+            var t= this.teamRepository.GetTeam(id);
+            t.IsRequestingUserTeamOwner = t.CreatedById == userSessionHelper.UserId;
+            return t;
         }
         public TeamDto GetTeam(string name)
         {
