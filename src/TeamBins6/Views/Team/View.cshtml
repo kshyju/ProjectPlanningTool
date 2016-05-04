@@ -4,3 +4,15 @@
 }
 
 <h2>@Model.Name</h2>
+<p>
+    @if (Model.IsPublic)
+    {
+        <h5>Public</h5>
+        <p>This team board is publicly visible to everyone</p>
+    }
+    else
+    {
+        <h5>Private</h5>
+        <p>Visible to only team members</p>
+    }
+</p>

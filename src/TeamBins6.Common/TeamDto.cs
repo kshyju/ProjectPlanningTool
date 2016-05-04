@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNet.Mvc.Rendering;
 using TeamBins.Common.ViewModels;
 
 namespace TeamBins.Common
@@ -48,8 +49,14 @@ namespace TeamBins.Common
         }
     }
 
+    public class EditTeamVm : TeamVM
+    {public List<SelectListItem> Visibilities { set; get; }
+        public int SelectedVisibility { set; get; }
+    }
+
     public class TeamVM : TeamDto
     {
+        public bool IsPublic { set; get; }
         public IEnumerable<TeamMemberDto> Members { set; get; }
         public List<MemberInvitation> MembersInvited { set; get; }
        

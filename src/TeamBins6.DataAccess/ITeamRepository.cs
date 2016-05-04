@@ -9,11 +9,6 @@ using TeamBins.Common;
 
 namespace TeamBins.DataAccess
 {
-    public interface IEmailRepository
-    {
-        Task<EmailTemplateDto> GetEmailTemplate(string name);
-    }
-
     public class EmailRepository : BaseRepo, IEmailRepository
     {
         public EmailRepository(IConfiguration configuration) : base(configuration)
@@ -245,12 +240,12 @@ namespace TeamBins.DataAccess
               @" SELECT T.ID,T.Name,T.CreatedDate,T.CreatedByID,TeamMemberCount.Count as MemberCount 
                 FROM Team T WITH (NOLOCK) 
                 JOIN TeamMember TM  WITH (NOLOCK) ON T.ID=TM.TeamId
-				JOIN (SELECT TeamId,COUNT(1) Count FROM TeamMember  WITH (NOLOCK)  group  by TeamId ) TeamMemberCount on TeamMemberCount.TeamId=T.ID
+				JOIN (SELECT TeamId,COUNT(1) Count FROM TeamMember  WITH (NOLOCK) WHERE MemberID=@userId  group  by TeamId ) TeamMemberCount on TeamMemberCount.TeamId=T.ID
                 ";
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                var projects = con.Query<TeamDto>(q, new { @userId = userId });
+                var projects = con.Query<TeamDto>(q, new {userId });
                 return projects.ToList();
             }
         }
@@ -272,8 +267,7 @@ namespace TeamBins.DataAccess
 
         public MemberVM GetTeamMember(int teamId, int userId)
         {
-            var q =
-                @"SELECT [Id],[MemberID] ,[TeamID] ,[DefaultProjectID] FROM TeamMember  WITH (NOLOCK) WHERE TeamID=@t AND MemberID=@m";
+            var q = @"SELECT [Id],[MemberID] ,[TeamID] ,[DefaultProjectID] FROM TeamMember  WITH (NOLOCK) WHERE TeamID=@t AND MemberID=@m";
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();

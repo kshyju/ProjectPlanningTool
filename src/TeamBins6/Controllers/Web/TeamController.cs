@@ -109,10 +109,11 @@ namespace TeamBins6.Controllers.Web
         public IActionResult View(int id)
         {
             var team = this.teamManager.GetTeam(id);
-            if (team != null && team.IsRequestingUserTeamOwner)
+            if (team != null)
             {
+                var vm = new TeamVM {Id = team.Id, Name = team.Name, IsPublic = team.IsPublic, IsRequestingUserTeamOwner = team.IsRequestingUserTeamOwner};
 
-                return View(team);
+                return View(vm);
             }
             return View("NotFound");
 
