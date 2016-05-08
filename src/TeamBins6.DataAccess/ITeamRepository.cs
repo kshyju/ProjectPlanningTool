@@ -9,23 +9,6 @@ using TeamBins.Common;
 
 namespace TeamBins.DataAccess
 {
-    public class EmailRepository : BaseRepo, IEmailRepository
-    {
-        public EmailRepository(IConfiguration configuration) : base(configuration)
-        {
-        }
-
-        public async Task<EmailTemplateDto> GetEmailTemplate(string name)
-        {
-            var q = @"SELECT Name,EmailBody,EmailSubject as Subject FROM EmailTemplate  WITH (NOLOCK) WHERE Name=@name";
-            using (var con = new SqlConnection(ConnectionString))
-            {
-                con.Open();
-                var teams = await con.QueryAsync<EmailTemplateDto>(q, new { @name = name });
-                return teams.FirstOrDefault();
-            }
-        }
-    }
     public interface ITeamRepository
     {
         TeamDto GetTeam(int teamId);
@@ -46,6 +29,7 @@ namespace TeamBins.DataAccess
 
         Task<AddTeamMemberRequestVM> GetTeamMemberInvitation(string activationCode);
         Task DeleteTeamMemberInvitation(int id);
+        Task SaveVisibility(int id, bool isPublic);
     }
 
     public class TeamRepository : BaseRepo, ITeamRepository
@@ -111,6 +95,16 @@ namespace TeamBins.DataAccess
             {
                 con.Open();
                 await con.ExecuteAsync(q, new { @id = id });
+            }
+        }
+
+        public async Task SaveVisibility(int id, bool isPublic)
+        {
+            var q = @"UPDATE Team SET IsPublic=@isPublic WHERE ID = @id";
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                await con.ExecuteAsync(q, new {id,isPublic });
             }
         }
 

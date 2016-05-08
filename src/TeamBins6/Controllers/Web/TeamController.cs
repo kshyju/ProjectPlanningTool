@@ -82,6 +82,32 @@ namespace TeamBins6.Controllers.Web
         }
 
 
+        public IActionResult ChangeVisibility(int id)
+        {
+            var team = teamManager.GetTeam(id);
+            if (team != null && team.IsRequestingUserTeamOwner)
+            {
+                
+                return PartialView("Partial/ChangeVisibility",team);
+            }
+            return PartialView();
+            
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangeVisibility(TeamDto model)
+        {
+            try
+            {
+                await this.teamManager.SaveVisibility(model.Id, model.IsPublic);
+                return Json(new { Status = "Success", Message = "Team Visiblity updated successfully" });
+            }
+            catch (Exception)
+            {
+                return Json(new { Status = "Error", Message = "Error updating team visibility" });
+            }
+
+        }
 
         public ActionResult DeleteConfirm(int id)
         {
@@ -120,3 +146,4 @@ namespace TeamBins6.Controllers.Web
         }
     }
 }
+

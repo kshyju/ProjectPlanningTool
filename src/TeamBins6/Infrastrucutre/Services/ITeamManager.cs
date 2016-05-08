@@ -33,8 +33,8 @@ namespace TeamBins6.Infrastrucutre.Services
 
         Task<IEnumerable<AddTeamMemberRequestVM>> GetTeamMemberInvitations();
 
-        
 
+        Task SaveVisibility(int id, bool isPublic);
     }
     public class TeamManager : ITeamManager
     {
@@ -214,5 +214,9 @@ namespace TeamBins6.Infrastrucutre.Services
             ;
         }
 
+        public async Task SaveVisibility(int id, bool isPublic)
+        {
+            await this.teamRepository.SaveVisibility(id, isPublic);
+        }
     }
 }

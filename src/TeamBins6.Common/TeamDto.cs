@@ -50,8 +50,9 @@ namespace TeamBins.Common
     }
 
     public class EditTeamVm : TeamVM
-    {public List<SelectListItem> Visibilities { set; get; }
-        public int SelectedVisibility { set; get; }
+    {
+        //public List<SelectListItem> Visibilities { set; get; }
+        //public int Visibility { set; get; }
     }
 
     public class TeamVM : TeamDto

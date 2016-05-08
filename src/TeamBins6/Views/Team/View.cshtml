@@ -4,15 +4,37 @@
 }
 
 <h2>@Model.Name</h2>
-<p>
+<div>
     @if (Model.IsPublic)
     {
         <h5>Public</h5>
-        <p>This team board is publicly visible to everyone</p>
+        <span>This team board is publicly visible to everyone</span>
     }
     else
     {
         <h5>Private</h5>
-        <p>Visible to only team members</p>
+        <span>Visible to only team members</span>
     }
-</p>
+    <a href="@Url.Action("ChangeVisibility","Team",new {id=Model.Id})" data-modal-titles="Change visibility" class="popup">Change</a>
+</div>
+@section Scripts
+{
+    <script>
+
+        $(function() {
+            $(document).on("click", "#btnSaveTeamVisibility", function (e) {
+                $.post($(this).closest("form").attr("action"), $(this).closest("form").serialize(), function (res) {
+                    if (res.Status === "Success") {
+                        window.location.href = window.location.href;
+                    } else {
+                        alert("Error updating visibility!");
+                    }
+                });
+                return false;
+            });
+        })
+
+
+    </script>
+}
+
