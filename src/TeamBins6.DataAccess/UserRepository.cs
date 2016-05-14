@@ -99,7 +99,7 @@ namespace TeamBins.DataAccess
         {
             var q = @"SELECT T.ID,T.Name
                   FROM [dbo].[TeamMember] TM
-                  INNER JOIN TEAM T ON TM.TeamID=T.ID                 
+                  INNER JOIN TEAM T ON TM.TeamId=T.ID                 
                   WHERE TM.MemberID=@id";
             using (var con = new SqlConnection(ConnectionString))
             {
@@ -162,7 +162,7 @@ namespace TeamBins.DataAccess
             foreach (var setting in model.EmailSubscriptions.Where(s=>s.IsSelected))
             {
                 var q2 = @"INSERT INTO
-                    UserNotificationSubscription(UserID,NotificationTypeID,TeamID,Subscribed,ModifiedDate) VALUES
+                    UserNotificationSubscription(UserID,NotificationTypeID,TeamId,Subscribed,ModifiedDate) VALUES
                     (@userId,@notificationTypeId,@teamId,@subscibed,@dt)";
                 using (var con = new SqlConnection(ConnectionString))
                 {

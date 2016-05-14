@@ -22,8 +22,8 @@ namespace TeamBins.DataAccess
   //      public IEnumerable<TeamMemberRequest> GetTeamMembersWhoHasntJoined(int teamId)
   //      {
   //          return db.TeamMemberRequests
-  //              .Where(b=>b.TeamID==teamId)
-  //              .Where(s =>  !db.TeamMembers.Where(p => p.TeamID == teamId)
+  //              .Where(b=>b.TeamId==teamId)
+  //              .Where(s =>  !db.TeamMembers.Where(p => p.TeamId == teamId)
   //                                              .Any(d => d.Member.EmailAddress == s.EmailAddress));
 
   //      }
@@ -36,11 +36,11 @@ namespace TeamBins.DataAccess
   //          //Get a list of users who are not part of the current team
   //          return db.Users                
   //             // .Where(s=>s.FirstName.StartsWith(searchKey,StringComparison.OrdinalIgnoreCase)==true)
-  //              .Where(x=>!db.TeamMembers.Any(s=>s.MemberID==x.Id && s.TeamID==teamId))  ;
+  //              .Where(x=>!db.TeamMembers.Any(s=>s.MemberID==x.Id && s.TeamId==teamId))  ;
   //      }
   //      public IQueryable<TeamMember> GetTeamMembers(int teamId)
   //      {
-  //          return db.TeamMembers.Where(s => s.TeamID == teamId);
+  //          return db.TeamMembers.Where(s => s.TeamId == teamId);
   //      }
   //      public IQueryable<User> GetUsers()
   //      {
@@ -66,7 +66,7 @@ namespace TeamBins.DataAccess
   //      //public IEnumerable<User> GetSubscribers(int teamId,string notificationtypeCode)
   //      //{
   //      //    return db.UserNotificationSubscriptions
-  //      //        .Where(s => s.NotificationType.Code == notificationtypeCode && s.TeamID==teamId).Select(s => s.User);
+  //      //        .Where(s => s.NotificationType.Code == notificationtypeCode && s.TeamId==teamId).Select(s => s.User);
   //      //}
   //      public IEnumerable<NotificationType> GetNotificationTypes()
   //      {
@@ -74,7 +74,7 @@ namespace TeamBins.DataAccess
   //      }
   //      public void SaveUserNotificationSubscription(UserNotificationSubscription subscription)
   //      {
-  //          var existing = db.UserNotificationSubscriptions.FirstOrDefault(s => s.TeamID == subscription.TeamID && s.UserID == s.UserID && s.NotificationTypeID == subscription.NotificationTypeID);
+  //          var existing = db.UserNotificationSubscriptions.FirstOrDefault(s => s.TeamId == subscription.TeamId && s.UserID == s.UserID && s.NotificationTypeID == subscription.NotificationTypeID);
   //          if(existing==null)
   //          {
   //              subscription.ModifiedDate = DateTime.UtcNow;
@@ -117,7 +117,7 @@ namespace TeamBins.DataAccess
   //      }
   //      public TeamMember GetTeamMember(int userId, int teamId)
   //      {
-  //          return db.TeamMembers.Where(s => s.TeamID == teamId && s.MemberID == userId).FirstOrDefault();
+  //          return db.TeamMembers.Where(s => s.TeamId == teamId && s.MemberID == userId).FirstOrDefault();
   //      }
   //      public OperationStatus DeleteIssue(int issueId)
   //      {
@@ -227,7 +227,7 @@ namespace TeamBins.DataAccess
        
   //      public IEnumerable<Project> GetProjects(int teamId)
   //      {
-  //          return db.Projects.Where(s=>s.TeamID==teamId);
+  //          return db.Projects.Where(s=>s.TeamId==teamId);
   //      }
   //      public Project GetProject(int projectId)
   //      {
@@ -235,7 +235,7 @@ namespace TeamBins.DataAccess
   //      }
   //      public Project GetProject(int projectId, int teamId)
   //      {
-  //          return db.Projects.FirstOrDefault(s => s.Id == projectId && s.TeamID == teamId);
+  //          return db.Projects.FirstOrDefault(s => s.Id == projectId && s.TeamId == teamId);
   //      }
 
   //      public Project GetProject(string name, int createdById)
@@ -386,7 +386,7 @@ namespace TeamBins.DataAccess
   //      }
   //      public IEnumerable<Issue> GetIssues(int teamId)
   //      {
-  //          return db.Issues.Where(s => s.TeamID == teamId && s.Active==true);
+  //          return db.Issues.Where(s => s.TeamId == teamId && s.Active==true);
   //      }
   //      public Issue GetIssue(int issueId)
   //      {
@@ -476,7 +476,7 @@ namespace TeamBins.DataAccess
 
   //      public IEnumerable<Activity> GetTeamActivity(int teamId)
   //      {
-  //          return db.Activities.Where(s => s.TeamID == teamId);
+  //          return db.Activities.Where(s => s.TeamId == teamId);
   //      }
 
   //      public OperationStatus SaveActivity(Activity activity)

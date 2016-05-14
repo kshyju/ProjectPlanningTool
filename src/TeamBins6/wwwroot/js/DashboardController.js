@@ -3,14 +3,16 @@
 var TeamBins;
 (function (TeamBins) {
     var DashboardController = (function () {
-        function DashboardController($scope, summaryService) {
+        function DashboardController($scope, summaryService, pageContext) {
+            if (pageContext === void 0) { pageContext = any; }
             this.summaryService = summaryService;
-            this.getActivityStream();
+            this.pageContext = pageContext;
+            this.getActivityStream(this.pageContext.TeamId);
             this.getSummary();
         }
-        DashboardController.prototype.getActivityStream = function () {
+        DashboardController.prototype.getActivityStream = function (teamId) {
             var self = this;
-            this.summaryService.getActivityStream().then(function (data) {
+            this.summaryService.getActivityStream(teamId, 10).then(function (data) {
                 self.activities = data;
             });
         };
@@ -31,6 +33,6 @@ var TeamBins;
             new Chart(ctx).Pie(pieChartDataSet);
         };
         return DashboardController;
-    })();
+    }());
     TeamBins.DashboardController = DashboardController;
 })(TeamBins || (TeamBins = {}));

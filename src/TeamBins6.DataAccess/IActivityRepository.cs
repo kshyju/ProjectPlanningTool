@@ -34,14 +34,14 @@ namespace TeamBins.DataAccess
                     ,[ObjectTitle]
                     ,[OldState]
                     ,[NewState]
-                    ,[TeamID]
+                    ,[TeamId]
                     ,A.[CreatedDate] as CreatedTime
                     ,U.Id
                     ,U.FirstName as Name
                     ,U.EmailAddress
                     FROM [Activity] A
                     INNER JOIN [User] U ON A.CreatedByID = U.Id
-                    WHERE A.TeamID=@teamId";
+                    WHERE A.TeamId=@teamId";
 
             using (var con = new SqlConnection(ConnectionString))
             {
@@ -64,7 +64,7 @@ namespace TeamBins.DataAccess
 
                 var q =
                     con.Query<int>(
-                        @"INSERT INTO Activity(ObjectID,ObjectType,ActivityDesc,ObjectTitle,OldState,NewState,TeamID,CreatedDate,CreatedByID) 
+                        @"INSERT INTO Activity(ObjectID,ObjectType,ActivityDesc,ObjectTitle,OldState,NewState,TeamId,CreatedDate,CreatedByID) 
                         VALUES(@objectId,@objectType,@desc,@title,@oldState,@newState,@teamId,@createdDate,@userId);SELECT CAST(SCOPE_IDENTITY() as int)",
                         new
                         {
@@ -95,7 +95,7 @@ namespace TeamBins.DataAccess
                     ,[ObjectTitle]
                     ,[OldState]
                     ,[NewState]
-                    ,[TeamID]
+                    ,[TeamId]
                     ,A.[CreatedDate] as CreatedTime
                     ,U.Id
                     ,U.FirstName as Name
@@ -177,7 +177,7 @@ namespace TeamBins.DataAccess
     //                ActivityDesc = activity.Description,
     //                ObjectTitle = activity.ObjectTite,
     //                CreatedByID = activity.Actor.Id,
-    //                TeamID = activity.TeamId,
+    //                TeamId = activity.TeamId,
     //                CreatedDate = DateTime.Now
     //            };
 

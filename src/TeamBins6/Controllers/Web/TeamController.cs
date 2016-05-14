@@ -66,7 +66,7 @@ namespace TeamBins6.Controllers.Web
                     //{
                     //    if (isNew)
                     //    {
-                    //        var teamMember = new TeamMember { MemberID = UserID, TeamID = team.ID, CreatedByID = UserID };
+                    //        var teamMember = new TeamMember { MemberID = UserID, TeamId = team.ID, CreatedByID = UserID };
                     //        repo.SaveTeamMember(teamMember);
                     //    }
                     //    return Json(new { Status = "Success" });

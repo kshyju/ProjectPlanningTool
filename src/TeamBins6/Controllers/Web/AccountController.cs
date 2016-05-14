@@ -218,14 +218,14 @@ namespace TeamBins6.Controllers.Web
 //  
 //        public ActionResult NotificationSettings()
 //        {
-//            var vm = new UserEmailNotificationSettingsVM { TeamID = TeamID };
+//            var vm = new UserEmailNotificationSettingsVM { TeamId = TeamId };
 //            var userSubscriptions = repo.GetUser(UserID).UserNotificationSubscriptions.ToList();
 
 //            var notificationTypes = repo.GetNotificationTypes().ToList();
 //            foreach (var item in notificationTypes)
 //            {
 //                var emailSubscription = new EmailSubscriptionVM { NotificationTypeID = item.ID, Name = item.Name };
-//                emailSubscription.IsSelected = userSubscriptions.Any(s => s.UserID == UserID && s.TeamID == TeamID && s.NotificationTypeID == item.ID && s.Subscribed == true);
+//                emailSubscription.IsSelected = userSubscriptions.Any(s => s.UserID == UserID && s.TeamId == TeamId && s.NotificationTypeID == item.ID && s.Subscribed == true);
 //                vm.EmailSubscriptions.Add(emailSubscription);
 //            }
 
@@ -238,7 +238,7 @@ namespace TeamBins6.Controllers.Web
 //            {
 //                foreach (var setting in model.EmailSubscriptions)
 //                {
-//                    var userNotification = new UserNotificationSubscription { TeamID = TeamID, UserID = UserID };
+//                    var userNotification = new UserNotificationSubscription { TeamId = TeamId, UserID = UserID };
 //                    userNotification.Subscribed = setting.IsSelected;
 //                    userNotification.ModifiedDate = DateTime.UtcNow;
 //                    userNotification.NotificationTypeID = setting.NotificationTypeID;

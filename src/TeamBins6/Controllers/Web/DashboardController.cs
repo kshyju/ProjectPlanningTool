@@ -52,6 +52,8 @@ namespace TeamBins6.Controllers.Web
             vm.IssuesAssignedToMe = myIssues;
             vm.Projects = this.projectManager.GetProjects().ToList();
 
+            vm.TeamId = teamId;
+
             return View(vm);
         }
     }

@@ -71,7 +71,7 @@ namespace TeamBins.DataAccess
         }
         public async Task<int> SaveTeamMemberRequest(AddTeamMemberRequestVM teamMemberRequest)
         {
-            var q = @"INSERT INTO TeamMemberRequest(EmailAddress,TeamID,ActivationCode,CreatedByID,CreatedDate) VALUES(@email,@teamId,@a,@userId,@dt);;SELECT CAST(SCOPE_IDENTITY() as int)";
+            var q = @"INSERT INTO TeamMemberRequest(EmailAddress,TeamId,ActivationCode,CreatedByID,CreatedDate) VALUES(@email,@teamId,@a,@userId,@dt);;SELECT CAST(SCOPE_IDENTITY() as int)";
             using (var con = new SqlConnection(ConnectionString))
             {
                 var a = Guid.NewGuid().ToString("n").Replace("-", "");
@@ -118,7 +118,7 @@ namespace TeamBins.DataAccess
                         T.ID,
                         T.Name
                         FROM TeamMemberRequest TM
-                        JOIN [User] U ON TM.CreatedByID = U.ID JOIN Team T ON T.ID=TM.TeamID WHERE ActivationCode=@code";
+                        JOIN [User] U ON TM.CreatedByID = U.ID JOIN Team T ON T.ID=TM.TeamId WHERE ActivationCode=@code";
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
@@ -149,7 +149,7 @@ namespace TeamBins.DataAccess
                         T.ID,
                         T.Name
                         FROM TeamMemberRequest TM
-                        JOIN [User] U ON TM.CreatedByID = U.ID JOIN Team T ON T.ID=TM.TeamID WHERE TeamID=@teamId";
+                        JOIN [User] U ON TM.CreatedByID = U.ID JOIN Team T ON T.ID=TM.TeamId WHERE TeamId=@teamId";
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
@@ -179,7 +179,7 @@ namespace TeamBins.DataAccess
                         U.LastLoginDate,
                         TM.CreatedDate as JoinedDate
                         FROM [dbo].[User] U WITH (NOLOCK) 
-                        INNER JOIN TeamMember TM  WITH (NOLOCK) ON U.ID=TM.MemberID WHERE TM.TeamID=@teamId";
+                        INNER JOIN TeamMember TM  WITH (NOLOCK) ON U.ID=TM.MemberID WHERE TM.TeamId=@teamId";
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
@@ -197,7 +197,7 @@ namespace TeamBins.DataAccess
                                             new { @name = team.Name, @dt = DateTime.Now, @createdById = team.CreatedById });
                     team.Id = p.First();
 
-                    con.Execute("INSERT INTO TeamMember(MemberID,TeamID,CreatedDate,CreatedByID) VALUES (@memberId,@teamId,@dt,@createdById)",
+                    con.Execute("INSERT INTO TeamMember(MemberID,TeamId,CreatedDate,CreatedByID) VALUES (@memberId,@teamId,@dt,@createdById)",
                                            new { memberId = team.CreatedById, @teamId = team.Id, @dt = DateTime.Now, @createdById = team.CreatedById });
 
 
@@ -217,7 +217,7 @@ namespace TeamBins.DataAccess
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                con.Execute("INSERT INTO TeamMember(MemberID,TeamID,CreatedDate,CreatedByID) VALUES (@memberId,@teamId,@dt,@createdById)",
+                con.Execute("INSERT INTO TeamMember(MemberID,TeamId,CreatedDate,CreatedByID) VALUES (@memberId,@teamId,@dt,@createdById)",
                                        new { memberId = memberId, @teamId = teamId, @dt = DateTime.Now, @createdById = memberId });
 
             }
@@ -261,7 +261,7 @@ namespace TeamBins.DataAccess
 
         public MemberVM GetTeamMember(int teamId, int userId)
         {
-            var q = @"SELECT [Id],[MemberID] ,[TeamID] ,[DefaultProjectID] FROM TeamMember  WITH (NOLOCK) WHERE TeamID=@t AND MemberID=@m";
+            var q = @"SELECT [Id],[MemberID] ,[TeamId] ,[DefaultProjectID] FROM TeamMember  WITH (NOLOCK) WHERE TeamId=@t AND MemberID=@m";
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();

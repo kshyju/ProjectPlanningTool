@@ -172,7 +172,7 @@ namespace TeamBins.DataAccess
                 con.Open();
                 if (model.Id == 0)
                 {
-                    var p = con.Query<int>("INSERT INTO Project(Name,TeamID,CreatedDate,CreatedByID) VALUES (@name,@teamId,@dt,@createdById);SELECT CAST(SCOPE_IDENTITY() as int)",
+                    var p = con.Query<int>("INSERT INTO Project(Name,TeamId,CreatedDate,CreatedByID) VALUES (@name,@teamId,@dt,@createdById);SELECT CAST(SCOPE_IDENTITY() as int)",
                                             new { @name = model.Name, @teamId = model.TeamId, @dt = DateTime.Now, @createdById = model.CreatedById });
                     model.Id = p.First();
                 }
@@ -257,7 +257,7 @@ namespace TeamBins.DataAccess
 
     //    public bool DoesProjectsExist(int teamId)
     //    {
-    //        return db.Projects.Any(s => s.TeamID == teamId);
+    //        return db.Projects.Any(s => s.TeamId == teamId);
     //    }
 
     //    public IEnumerable<ProjectDto> GetProjects(int teamId)

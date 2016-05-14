@@ -88,7 +88,7 @@
         </div>
     </div>
 </div>
-@Html.HiddenFor(s => s.TeamID)
+@Html.HiddenFor(s => s.TeamId)
 
 @section Scripts
 {
@@ -102,7 +102,9 @@
         var a = angular.module("teamBins")
             .service('summaryService', TeamBins.DashboardService)
             .controller("dashboardCtrl", TeamBins.DashboardController);
+       // TeamBins.DashboardController.inject = ['$http', 'issueDetailService'];
 
+        angular.module("teamBins").value("pageContext", @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model)));
        
 
         

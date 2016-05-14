@@ -48,7 +48,7 @@ namespace TeamBins.Common.ViewModels
 
     public class DashBoardVM
     {
-        public int TeamID { set; get; }
+        public int TeamId { set; get; }
         public List<ProjectDto> Projects { set; get; }
         public List<IssueDetailVM> RecentIssues { set; get; }
         public IEnumerable<IssueDetailVM> IssuesAssignedToMe { set; get; }

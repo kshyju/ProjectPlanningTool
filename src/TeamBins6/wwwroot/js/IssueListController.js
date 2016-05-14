@@ -145,7 +145,7 @@ issueListApp.controller("IssueListCtrl", issueListCtrl);
 //       // $scope.issueList
 //    };
 //    $.connection.hub.start().done(function () {
-//        console.log($("#TeamID").val());
-//        chat.server.subscribeToTeam($("#TeamID").val());
+//        console.log($("#TeamId").val());
+//        chat.server.subscribeToTeam($("#TeamId").val());
 //    });
 //});

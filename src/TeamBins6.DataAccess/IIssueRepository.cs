@@ -198,7 +198,7 @@ namespace TeamBins.DataAccess
         {
             var q = @"SELECT  S.ID ItemId,S.NAME ItemName,S.Color, COUNT(I.ID) COUNT						 
                         FROM STATUS S  WITH (NOLOCK)  
-                        LEFT JOIN (SELECT I.ID,I.STATUSID FROM ISSUE I  WITH (NOLOCK) WHERE I.TeamID=@t) I ON I.STATUSID =S.ID
+                        LEFT JOIN (SELECT I.ID,I.STATUSID FROM ISSUE I  WITH (NOLOCK) WHERE I.TeamId=@t) I ON I.STATUSID =S.ID
                         GROUP BY S.ID,S.NAME,S.Color";
 
             using (var con = new SqlConnection(ConnectionString))
@@ -325,7 +325,7 @@ namespace TeamBins.DataAccess
                 {
                     var q =
                         con.Query<int>(
-                            @"INSERT INTO Issue(Title,Description,DueDate,CategoryId,StatusID,PriorityID,ProjectID,TeamID,Active,CreatedDate,CreatedByID) 
+                            @"INSERT INTO Issue(Title,Description,DueDate,CategoryId,StatusID,PriorityID,ProjectID,TeamId,Active,CreatedDate,CreatedByID) 
                         VALUES(@title,@description,@dueDate,@categoryId,@statusId,@priortiyId,@projectId,@teamId,1,@createdDate,@userId);SELECT CAST(SCOPE_IDENTITY() as int)",
                             new
                             {
@@ -396,7 +396,7 @@ namespace TeamBins.DataAccess
                               U.EmailAddress
                               FROM [USER] U WITH (NOLOCK) 
                               INNER JOIN TeamMember TM  WITH (NOLOCK) ON TM.MemberID=U.ID 
-                              WHERE TM.TeamID=@teamId  
+                              WHERE TM.TeamId=@teamId  
                               AND U.ID NOT IN ( SELECT MemberID FROM IssueMember WHERE IssueID=@issueId)";
                 con.Open();
                 return await con.QueryAsync<UserDto>(q, new {teamId, issueId });

@@ -5,8 +5,8 @@ var TeamBins;
             this.$http = $http;
             this.appSettings = appSettings;
         }
-        DashboardService.prototype.getActivityStream = function () {
-            return this.$http.get(this.appSettings.urls.baseUrl + "/api/team/ActivityStream")
+        DashboardService.prototype.getActivityStream = function (teamId, count) {
+            return this.$http.get(this.appSettings.urls.baseUrl + "/api/team/ActivityStream/" + teamId + "?count=" + count)
                 .then(function (response) {
                 return response.data;
             });
@@ -18,6 +18,6 @@ var TeamBins;
             });
         };
         return DashboardService;
-    })();
+    }());
     TeamBins.DashboardService = DashboardService;
 })(TeamBins || (TeamBins = {}));

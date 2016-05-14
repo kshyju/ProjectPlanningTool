@@ -10,16 +10,16 @@ module TeamBins {
         activities: any[];
 
 
-        constructor($scope: ng.IScope,private summaryService: any) {
+        constructor($scope: ng.IScope, private summaryService: any, private pageContext any) {
 
-
-            this.getActivityStream();
+            
+            this.getActivityStream(this.pageContext.TeamId);
             this.getSummary();
 
         }
-        getActivityStream() {
+        getActivityStream(teamId) {
             var self = this;
-            this.summaryService.getActivityStream().then(function (data) {
+            this.summaryService.getActivityStream(teamId,10).then(function (data) {
                 self.activities = data;
             });
         }

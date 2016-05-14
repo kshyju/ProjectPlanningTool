@@ -6,8 +6,8 @@
             
         }
 
-        getActivityStream() {
-            return this.$http.get(this.appSettings.urls.baseUrl + "/api/team/ActivityStream")
+        getActivityStream(teamId,count) {
+            return this.$http.get(this.appSettings.urls.baseUrl + "/api/team/ActivityStream/" + teamId+"?count="+count)
                 .then((response:any): any=> {
                     return response.data;
                 });
