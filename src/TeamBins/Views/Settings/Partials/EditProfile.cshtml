@@ -1,0 +1,42 @@
+﻿@model TeamBins.Common.ViewModels.EditProfileVm
+@{
+    ViewBag.Title = "Edit Profile";
+}
+
+<div class="page">
+    <h3>Edit Profile</h3>
+   
+    <div class="tabbable tabs-left">
+      
+        <div class="tab-content">
+            <div class="tab-pane active" >
+                @Html.ValidationSummary()
+                <form method="post" asp-action="EditProfile">
+                    <table class="settings-form-tbl">
+                        <tr>
+                            <th>Name</th>
+                            <td>
+                                <input type="text" asp-for="Name" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Email Address</th>
+                            <td><input type="text" asp-for="Email" readonly="readonly" /></td>
+                        </tr>
+
+                        <tr>
+                            <th></th>
+                            <td>
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+               
+            </div>
+            <br/>
+            <p><i>Your gravatar will be used as the profile picture. Click <a href="http://en.gravatar.com">here</a> to add or edit your gravatar</i></p>               
+            </div>
+    </div>
+
+</div>

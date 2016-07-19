@@ -1,0 +1,41 @@
+﻿@model TeamBins.Common.TeamDto
+
+
+<form asp-controller="Team" asp-action="ChangeVisibility">
+
+    <div class="modal-dialog">
+        <div class="modal-content" style="width:500px;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Team Visibility</h4>
+            </div>
+            <div class="modal-body">
+
+                <div>
+                    <div>
+                        <h5>Private</h5>
+                        <p>Private team boards are only visible to the members of the team.By default all team boards are private</p>
+                    </div>
+                    <div>
+                        <h5>Public</h5>
+                        <p>Public team boards are visible to anyone with the link to the team board</p>
+                    </div>
+
+                    <p>Enable the checkbox below to make this board public</p>
+                    <div>
+                        <input asp-for="IsPublic" /> Public
+                    </div>
+                    @Html.HiddenFor(s => s.Id)
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" id="btnSaveTeamVisibility" class="ajax-form-submit-btn btn btn-primary">Save</button>
+
+            </div>
+        </div>
+    </div>
+
+</form>

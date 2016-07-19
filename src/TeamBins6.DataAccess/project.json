@@ -2,17 +2,13 @@
   "version": "1.0.0-*",
   "description": "TeamBins6.DataAccess Class Library",
   "authors": [ "skrishnankutty" ],
-  "tags": [ "" ],
-  "projectUrl": "",
-  "licenseUrl": "",
+
   "dependencies": {
-    "Dapper": "1.42.0",
-    "TeamBins6.Common": "",
-    "Microsoft.Extensions.Configuration.FileProviderExtensions": "1.0.0-rc1-final",
-    "Microsoft.Extensions.Configuration.Json": "1.0.0-rc1-final"
+   
   },
   "frameworks": {
-    "net451": { }
-    
+    "netstandard1.5": {
+      "imports": "dnxcore50"
+    }
   }
 }

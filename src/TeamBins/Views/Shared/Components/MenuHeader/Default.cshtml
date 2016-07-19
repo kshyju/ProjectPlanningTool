@@ -1,0 +1,56 @@
+﻿@using System.Threading.Tasks
+@using TeamBins.Common
+@model TeamBins.Common.UserMenuHeaderVM
+<div class="header">
+    <div class="headerLeft">
+        <a class="header-logo" href="@Url.Action("Index","dashboard")">
+            <span class="logo"></span>
+        </a>
+    </div>
+    <div class="switch-teams">
+    @if(!String.IsNullOrEmpty(Model.UserDisplayName))
+    {
+        <a href="#" class="a-current-team" data-state="selected" title="switch between teams">
+            <div class="current-team">
+                <span class="current-team-icon glyphicon glyphicon-th-list"></span>
+                <span class="current-team-name">@Model.CurrentTeamName</span>
+            </div>
+        </a>
+        <div class="available-teams" id="available-teams" style="display:none;">
+            <p>Switch team</p>
+            @foreach (var team in Model.Teams)
+            {
+                <a asp-action="index" class="team-item"  asp-route-id="@team.Id" asp-controller="Dashboard"><div class="available-team">@team.Name</div></a>
+            }
+            <div class="team-operations">
+                <a asp-action="index" asp-controller="team">Manage Teams</a>
+            </div>
+        </div>
+    }
+    </div>
+    <div class="navigation">
+    @if (!String.IsNullOrEmpty(Model.UserDisplayName))
+    {
+        <a asp-action="index" asp-controller="Dashboard">Home</a>
+        <a asp-action="index" asp-controller="issues">Issues</a>
+        <a asp-action="index" asp-controller="projects">Projects</a>
+        <a asp-action="index" asp-controller="users">Users</a>
+        <a asp-action="index" asp-controller="team">Team</a>
+    }
+    </div>
+    <div class="userInfo">
+
+@if (String.IsNullOrEmpty(Model.UserDisplayName))
+{
+    <a asp-action="login" asp-controller="account" class="aLogout">Signup or Login to enjoy the full version</a>
+}
+else
+{
+
+    <span>Howdy, <a asp-action="index" asp-controller="settings">@Model.UserDisplayName</a> </span>
+    <span class="menubar-gravatar"  gravatar-email="@Model.UserEmailAddress" image-size="26"></span>
+
+        @Html.ActionLink("Logout", "logout", "account", null, new { @class = "aLogout" })
+}
+    </div>
+</div>

@@ -1,0 +1,81 @@
+﻿@{
+    ViewBag.Title = "Team Members";
+}
+@model TeamBins.Common.TeamVM
+
+<h4>Team Members (@Model.Name)</h4>
+<a asp-action="add" asp-controller="users" class="popup">Add new member</a>
+<table class="tblGrid table">
+    <thead>
+        <tr>            
+            <th>Name</th>
+            <th>Email</th>
+            <th>Joined date</th>
+            <th>Last Login</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var member in Model.Members)
+        {
+            <tr>
+                <td>
+                    <span gravatar-email="@member.EmailAddress" image-size="30"></span>
+                    @member.Name
+                </td>
+                <td>@member.EmailAddress</td>
+                <td>@member.JoinedDate</td>
+                <td><span title="@member.LastLoginDate (UTC time)" class="relativeTime">@member.LastLoginDate</span></td>
+            </tr>
+        }
+    </tbody>
+</table>
+<h4>Lazy friends who hasn't joined yet</h4>
+<table class="table table-condensed">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Date Invited</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var member in Model.MembersInvited)
+        {
+            <tr>
+                <td><span gravatar-email="@member.EmailAddress" image-size="30"></span></td>
+                <td><span title="@member.DateInvited (UTC time)" class="relativeTime">@member.DateInvited</span></td>
+            </tr>
+        }
+    </tbody>
+</table>
+@section Scripts
+{
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/moment.min.js"></script>
+<script type="text/javascript">
+        $(function() {
+
+
+            $(document).on("click", "#btnAddMember", function(e) {
+               
+                e.preventDefault();
+                $.post($(this).closest("form").attr("action"), $(this).closest("form").serialize(), function(res) {
+                    if (res.Status === "Success")
+                        window.location.href = "@Url.Action("Index")";
+                    else
+                        $("#msg").text(res.Message).addClass("error").slideDown();
+                    $("#Name").focus();
+                });
+            });
+            $('span.relativeTime').each(function() {
+                var _this = $(this);
+                if (_this.html() != "") {
+                    var myUtcDate = new Date($(this).html() + " UTC");
+                    var a = moment(myUtcDate);
+                    var res = a.format("MMM Do YYYY, h:mm a");
+                    _this.html(res);
+                }
+            });
+        });
+
+    </script>
+}

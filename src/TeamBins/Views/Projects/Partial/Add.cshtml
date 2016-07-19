@@ -1,0 +1,34 @@
+﻿@using System.Threading.Tasks
+@using TeamBins.Common.ViewModels
+@model  TeamBins.Common.ViewModels.CreateProjectVM
+@{
+    Layout=null;
+}
+<form asp-controller="Projects" asp-action="Add">
+
+    <div class="modal-dialog">
+        <div class="modal-content" style="width:500px;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Add Project</h4>
+            </div>
+            <div class="modal-body">
+                <div id="msg" style="display:none;"></div>
+                <table class="tblform sleek modelTblFull">
+                    <tr>
+                        <th>Project Name</th>
+                    </tr>
+                    <tr>
+                        <td>@Html.TextBoxFor(x=>x.Name)</td>
+                    </tr>
+                </table>
+                @Html.HiddenFor(x=>x.Id)
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" id="btnSaveProject" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+
+</form>
