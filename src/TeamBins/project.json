@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "Microsoft.AspNet.Mvc.Core": "6.0.0-rc1-final",
-  "Microsoft.AspNetCore.Session": "1.0.0-rc2-final",
+    "Microsoft.AspNetCore.Session": "1.0.0-rc2-final",
     "Microsoft.AspNetCore.Diagnostics": "1.0.0-rc2-final",
     "Microsoft.AspNetCore.Mvc": "1.0.0-rc2-final",
     "Microsoft.AspNetCore.Razor.Tools": {
@@ -10,7 +10,6 @@
     },
     "Microsoft.AspNetCore.Server.IISIntegration": "1.0.0-rc2-final",
     "Microsoft.AspNetCore.Server.Kestrel": "1.0.0-rc2-final",
-
     "Microsoft.AspNetCore.StaticFiles": "1.0.0-rc2-final",
     "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.0.0-rc2-final",
     "Microsoft.Extensions.Configuration.Json": "1.0.0-rc2-final",
@@ -18,8 +17,11 @@
     "Microsoft.Extensions.Logging.Console": "1.0.0-rc2-final",
     "Microsoft.Extensions.Logging.Debug": "1.0.0-rc2-final",
     "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0-rc2-final",
+
     "TeamBins.Common": "1.0.0",
-    "TeamBins.DataAccess": "1.0.0"
+    "TeamBins.DataAccess": "1.0.0",
+    "Microsoft.AspNet.SignalR.Core": "2.2.0",
+    "Microsoft.AspNetCore.WebSockets.Server": "0.2.0-alpha1-21668"
   },
 
   "tools": {
@@ -34,7 +36,16 @@
   },
 
   "frameworks": {
-    "net461": { }
+    "net461": { },
+    "netcoreapp1.0": {
+      "dependencies": {
+        "Microsoft.NETCore.App": {
+          "version": "1.0.0-*",
+          "type": "platform"
+        },
+        "System.Runtime.Serialization.Primitives": "4.1.1-*"
+      }
+    }
   },
 
   "buildOptions": {

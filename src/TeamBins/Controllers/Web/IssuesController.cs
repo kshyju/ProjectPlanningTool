@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Threading.Tasks;
-
+using Microsoft.AspNet.SignalR;
 using Newtonsoft.Json;
 
 using TeamBins.Common;
@@ -14,6 +14,8 @@ using TeamBins6.Common.Infrastructure.Exceptions;
 using TeamBins6.Infrastrucutre;
 using TeamBins6.Infrastrucutre.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNet.SignalR.Infrastructure;
+using TeamBins.Hubs;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -152,6 +154,12 @@ namespace TeamBins6.Controllers.Web
                     var previousVersion = issueManager.GetIssue(model.Id);
                     var newVersion = await issueManager.SaveIssue(model, null);
                     var issueActivity = issueManager.SaveActivity(model, previousVersion, newVersion);
+
+                    ConnectionManager c = new ConnectionManager(new DefaultDependencyResolver());
+
+                    var context = c.GetHubContext<IssuesHub>();
+
+                    context.Clients.All.addNewTeamActivity(issueActivity);
 
                     //if ((files != null) && (files.Any()))
                     //{

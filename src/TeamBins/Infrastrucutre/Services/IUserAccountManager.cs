@@ -2,9 +2,6 @@ using System;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
-using TeamBins.Common;
-using TeamBins.Common.ViewModels;
-using TeamBins.DataAccess;
 using TeamBins6.Infrastrucutre.Services;
 using System.Collections.Generic;
 using System.Linq;

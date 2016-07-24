@@ -2,16 +2,25 @@
   "version": "1.0.0-*",
 
   "dependencies": {
-    "Microsoft.AspNetCore.Mvc.ViewFeatures": "1.0.0-rc2-final",
+    //"Microsoft.AspNetCore.Mvc.ViewFeatures": "1.0.0-rc2-final",
     "Microsoft.Extensions.Configuration.Abstractions": "1.0.0-rc2-final",
     "NETStandard.Library": "1.5.0-rc2-24027",
     "System.ComponentModel.Annotations": "4.1.0-rc2-24027"
   },
 
   "frameworks": {
-    "net461": {
-      "frameworkAssemblies": {
+    //"net461": {
+    //  "frameworkAssemblies": {
+    //  },
+      "netcoreapp1.0": {
+        "dependencies": {
+          "Microsoft.NETCore.App": {
+            "version": "1.0.0-*",
+            "type": "platform"
+          },
+          "System.Runtime.Serialization.Primitives": "4.1.1-*"
+        }
       }
     }
-  }
+  
 }

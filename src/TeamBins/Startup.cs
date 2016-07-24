@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -13,10 +10,7 @@ using TeamBins6.Infrastrucutre.Services;
 using TeamBins6.Infrastrucutre.Filters;
 using TeamBins6.Infrastrucutre.Cache;
 using Microsoft.AspNetCore.Http;
-
-namespace TeamBins
-{
-    public class Startup
+public class Startup
     {
         public Startup(IHostingEnvironment env)
         {
@@ -86,7 +80,9 @@ namespace TeamBins
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-
+            app.UseWebSockets();
+          
+            //app.UseSignalR();
             app.UseSession();
             app.UseStaticFiles();
 
