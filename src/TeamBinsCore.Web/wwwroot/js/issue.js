@@ -77,9 +77,10 @@
 
         $("#issue-star").click(function (e) {
             var _this = $(this);
-            $.post(teamBins.urls.baseUrl + +"/api/Issues/" + $("#Id").val() + "/star/" + _this.attr("data-starred"), function (res) {
-                if (res.Status === "Success") {
-                    _this.removeClass("glyphicon-star-empty glyphicon-star").addClass(res.Class).attr("data-starred", res.Starred);
+            console.log('Id:'+$("#Id").val());
+            $.post("/api/Issues/" + $("#Id").val() + "/star/" + _this.attr("data-starred"), function (res) {
+                if (res.status === "Success") {
+                    _this.removeClass("glyphicon-star-empty glyphicon-star").addClass(res.class).attr("data-starred", res.starred);
                 }
             });
         });

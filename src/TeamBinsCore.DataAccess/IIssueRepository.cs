@@ -129,8 +129,9 @@ namespace TeamBinsCore.DataAccess
                         INNER JOIN Category C  WITH (NOLOCK) on C.Id = I.CategoryID
                         INNER JOIN Priority P  WITH (NOLOCK) on P.Id = I.PriorityID
                         INNER JOIN Project Pr  WITH (NOLOCK) ON Pr.Id=I.ProjectID
-                        LEFT JOIN (SELECT IssueId,ID FROM IssueMember WITH (NOLOCK) WHERE RelationType='Star' AND MemberID=@userId) IM ON IM.IssueID=I.ID
-                        WHERE I.Id=@id";
+                        LEFT JOIN (SELECT IssueId,ID FROM IssueMember WITH (NOLOCK) 
+                        WHERE RelationType='Starred' AND MemberID=@userId) IM ON IM.IssueID=I.ID
+                        where I.Id=@id";
 
 
             using (var con = new SqlConnection(ConnectionString))
@@ -207,7 +208,8 @@ namespace TeamBinsCore.DataAccess
                         INNER JOIN Category C  WITH (NOLOCK) on C.Id = I.CategoryID
                         INNER JOIN Priority P  WITH (NOLOCK) on P.Id = I.PriorityID 
 						INNER JOIN IssueMember IssuesAssigned WITH (NOLOCK) on IssuesAssigned.IssueID= I.ID
-					    LEFT JOIN (SELECT IssueId,ID FROM IssueMember WITH (NOLOCK) WHERE RelationType=@starredRelationShipType AND MemberID=@userId) IM ON IM.IssueID=I.ID
+					    LEFT JOIN (SELECT IssueId,ID FROM IssueMember WITH (NOLOCK) WHERE RelationType=@starredRelationShipType 
+                                    AND MemberID=@userId) IM ON IM.IssueID=I.ID
                         WHERE I.Active=1 
 						AND IssuesAssigned.MemberID=@userId AND IssuesAssigned.RelationType=@assignedRelationShipType";
 
@@ -261,7 +263,7 @@ namespace TeamBinsCore.DataAccess
                         INNER JOIN dbo.[USer] U  WITH (NOLOCK) ON U.Id=I.CreatedByid
                         INNER JOIN Category C  WITH (NOLOCK) on C.Id = I.CategoryID
                         INNER JOIN Priority P  WITH (NOLOCK) on P.Id = I.PriorityID 
-                        LEFT JOIN (SELECT IssueId,ID FROM IssueMember WITH (NOLOCK) WHERE RelationType='Star' AND MemberID=@userId) IM ON IM.IssueID=I.ID
+                        LEFT JOIN (SELECT IssueId,ID FROM IssueMember WITH (NOLOCK) WHERE RelationType='Starred' AND MemberID=@userId) IM ON IM.IssueID=I.ID
                         WHERE I.Active=1 and TeamId=@t";
 
             using (var con = new SqlConnection(ConnectionString))
