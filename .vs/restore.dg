@@ -1,4 +1,4 @@
-#:C:\Shyju\OSS\ProjectPlanningTool\src\TeamBinsCore\TeamBinsCore.xproj
-C:\Shyju\OSS\ProjectPlanningTool\src\TeamBinsCore\TeamBinsCore.xproj|C:\Shyju\OSS\ProjectPlanningTool\src\TeamBins.CommonCore\TeamBins.CommonCore.xproj
-C:\Shyju\OSS\ProjectPlanningTool\src\TeamBinsCore\TeamBinsCore.xproj|C:\Shyju\OSS\ProjectPlanningTool\src\TeamBins.DataAccessCore\TeamBins.DataAccessCore.xproj
-C:\Shyju\OSS\ProjectPlanningTool\src\TeamBins.DataAccessCore\TeamBins.DataAccessCore.xproj|C:\Shyju\OSS\ProjectPlanningTool\src\TeamBins.CommonCore\TeamBins.CommonCore.xproj
+#:C:\Shyju\OSS\ProjectPlanningTool\src\TeamBinsCore.Web\TeamBinsCore.Web.xproj
+C:\Shyju\OSS\ProjectPlanningTool\src\TeamBinsCore.Web\TeamBinsCore.Web.xproj|C:\Shyju\OSS\ProjectPlanningTool\src\TeamBinsCore.Common\TeamBinsCore.Common.xproj
+C:\Shyju\OSS\ProjectPlanningTool\src\TeamBinsCore.Web\TeamBinsCore.Web.xproj|C:\Shyju\OSS\ProjectPlanningTool\src\TeamBinsCore.DataAccess\TeamBinsCore.DataAccess.xproj
+C:\Shyju\OSS\ProjectPlanningTool\src\TeamBinsCore.DataAccess\TeamBinsCore.DataAccess.xproj|C:\Shyju\OSS\ProjectPlanningTool\src\TeamBinsCore.Common\TeamBinsCore.Common.xproj
