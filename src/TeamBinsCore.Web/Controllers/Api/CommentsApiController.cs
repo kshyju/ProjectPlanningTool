@@ -55,6 +55,7 @@ namespace TeamBins6.Controllers.Api
         {
             var commentId = this.commentManager.SaveComment(value);
             var c = this.commentManager.GetComment(commentId);
+            this.commentManager.SaveActivity(commentId, value.IssueId);
             return Json(new { Status = "Success", Data = c });
 
 

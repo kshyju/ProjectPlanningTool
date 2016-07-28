@@ -66,7 +66,7 @@
                 <h4>Activity</h4>
                 <div id="activityList">
                     <div class="activity-item" ng-repeat="activity in vm.activities | orderBy:'CreatedTime':true">
-                        <a href="#" class="activity-author">{{activity.actor.Name}}</a> {{activity.description}}
+                        <a href="#" class="activity-author">{{activity.actor.name}}</a> {{activity.description}}
                         <a href="{{activity.objectURL}}" class="activity-name">{{activity.objectTitle}}</a>
                         <i>{{activity.newState}}</i>
                         <p class="activity-date">{{activity.createdTime | date:'medium'}}</p>

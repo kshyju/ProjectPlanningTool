@@ -71,7 +71,7 @@ textarea {
    background-color:#373737; overflow:auto;
 }
 .content {
-    padding:10px; min-height:500px; height:100%;
+    padding:10px; min-height:500px; height:100%; overflow:auto;
 }
 .tblGrid {
     width:100%; margin:0px; padding:0px;
@@ -150,7 +150,7 @@ input[type='submit'],input[type='button'] {
     
 }
 .central {
-    margin:10 auto;min-height:500px; height:100%;
+    margin:10 auto;min-height:500px; height:100%;overflow: auto;
        
     padding:0px; padding-top:0px;
 	background-color:white;

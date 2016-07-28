@@ -40,6 +40,7 @@ local.properties
 *.suo
 *.user
 *.sln.docstates
+appsettings.json
 
 # Build results
 
@@ -213,3 +214,5 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+*.psm1
+src/TeamBinsCore.Web/Properties/PublishProfiles/teambins - Web Deploy-publish.ps1

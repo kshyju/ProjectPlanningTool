@@ -73,7 +73,7 @@ namespace TeamBins.DataAccessCore
                         VALUES(@objectId,@objectType,@desc,@title,@oldState,@newState,@teamId,@createdDate,@userId);SELECT CAST(SCOPE_IDENTITY() as int)",
                         new
                         {
-                            @objectId = activity.TeamId,
+                            @objectId = activity.ObjectId,
                             @objectType = activity.ObjectType,
                             @title = activity.ObjectTitle,
                             @oldState = activity.OldState,
@@ -106,7 +106,7 @@ namespace TeamBins.DataAccessCore
                     ,U.FirstName as Name
                     ,U.EmailAddress
                     FROM [Activity] A
-                    INNER JOIN [User] U ON A.CreatedByID = U.Id
+                    INNER JOIN [User] U WITH (NOLOCK) ON A.CreatedByID = U.Id
                     WHERE A.Id=@id";
 
             using (var con = new SqlConnection(ConnectionString))

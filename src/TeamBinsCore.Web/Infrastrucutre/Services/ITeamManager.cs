@@ -211,6 +211,14 @@ namespace TeamBins6.Infrastrucutre.Services
                         activity.NewState = "to " + activity.NewState;
                     }
                 }
+                else if (activity.ObjectType == "Comment")
+                {
+                    activity.ObjectUrl = "Issue/" + activity.ObjectId;
+                    if (activity.Description.ToUpper() == "COMMENTED")
+                    {
+                        activity.NewState = "";
+                    }
+                }
             }
 
             return activities;

@@ -9,7 +9,7 @@
 
 
 
-<div ng-app="teamBins" ng-controller="dashboardCtrl as vm">
+<div ng-app="teamBins" ng-controller="dashboardCtrl as vm" ng-cloak>
     <div class="dbItemContainer">
         <div class="dashboardItem">
             <h4>At a glance {{summary1}}</h4>
@@ -72,7 +72,7 @@
             <h4>Team Activity</h4>
             <ul class="db-recent-activity">
                 <li ng-repeat="activity in vm.activities |  orderBy:'CreatedTime':true" | limitTo:8">
-                    <a href="#" class="activity-author">{{activity.actor.Name}}</a> {{activity.description}}
+                    <a href="#" class="activity-author">{{activity.actor.name}}</a> {{activity.description}}
 
                     <a href="{{activity.objectUrl}}" class="activity-name">{{activity.objectTitle}}</a>
                     <i>{{activity.newState}}</i>

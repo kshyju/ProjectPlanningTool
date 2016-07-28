@@ -3,7 +3,7 @@
 <h4>{{vm.comments.length}} comments</h4> 
 <div id="commentList" > 
     <div class="commentItem" ng-repeat="comment in vm.comments">          
-        <img ng-src="{{comment.Author.GravatarUrl}}" />    
+        <img ng-src="{{comment.author.gravatarUrl}}" />    
         <div class="commentItemBody" >
             <div class="comment-rightpart">
            
@@ -15,7 +15,7 @@
                 </div>
             </div>
             <div class="comment-body">
-            <p ng-bind-html="comment.CommentText"></p>
+            <p ng-bind-html="comment.commentText"></p>
             </div>  
             </div>          
         </div>
