@@ -11,20 +11,22 @@ A Project management/Planning/Customer service tool built with Microsoft technol
 Built with
 -----------
 
-* ASP.NET MVC 6
-* ASP.NET SignalR
+* <del>ASP.NET MVC 6</del> Asp.Net Core 1.0
+* <del>ASP.NET SignalR</del> Needs to be changed to support dot net core.
 * Angular JS
 * jQuery
 * jQuery UI
 * Chart.Js
 * Twitter bootstrap
-* Log4net
+* Typescript
 * <del>Entity framework</del> Dapper
 * Passion for developing something cool and giving to the community
 
 
 Installation / Setup
 --------------
+You need VS2015 + Dot net core installed to run the project.
+
 + Download the source code from github
 + Publish the Web project
 + Create a database called "Team" in your SQL server. Restore the db backup available in the Data Access project.
