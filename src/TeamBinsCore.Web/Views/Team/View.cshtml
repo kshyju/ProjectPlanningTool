@@ -1,4 +1,4 @@
-﻿@model TeamBins.Common.TeamVM
+﻿@model TeamBins.Common.ViewModels.TeamVM
 @{
     ViewBag.Title = "Team";
 }
@@ -24,7 +24,7 @@
         $(function() {
             $(document).on("click", "#btnSaveTeamVisibility", function (e) {
                 $.post($(this).closest("form").attr("action"), $(this).closest("form").serialize(), function (res) {
-                    if (res.Status === "Success") {
+                    if (res.status === "Success") {
                         window.location.href = window.location.href;
                     } else {
                         alert("Error updating visibility!");

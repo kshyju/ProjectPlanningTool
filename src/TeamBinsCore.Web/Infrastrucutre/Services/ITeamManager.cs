@@ -194,7 +194,7 @@ namespace TeamBins6.Infrastrucutre.Services
             {
                 if (activity.ObjectType == "Issue")
                 {
-                    activity.ObjectUrl = "Issue/" + activity.ObjectId;
+                    activity.ObjectUrl = "Issues/" + activity.ObjectId;
                     if (activity.Description.ToUpper() == "CREATED")
                     {
                         activity.NewState = "";
@@ -213,7 +213,7 @@ namespace TeamBins6.Infrastrucutre.Services
                 }
                 else if (activity.ObjectType == "Comment")
                 {
-                    activity.ObjectUrl = "Issue/" + activity.ObjectId;
+                    activity.ObjectUrl = "Issues/" + activity.ObjectId;
                     if (activity.Description.ToUpper() == "COMMENTED")
                     {
                         activity.NewState = "";
