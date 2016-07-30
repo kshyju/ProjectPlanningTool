@@ -11,6 +11,7 @@ using TeamBins6.Controllers.Web;
 using TeamBins6.Infrastrucutre.Services;
 using Microsoft.AspNetCore.Mvc;
 using TeamBins.Common.ViewModels;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace TeamBins6.Controllers
 {
@@ -56,6 +57,9 @@ namespace TeamBins6.Controllers
 
         public IActionResult Index()
         {
+           // HttpContext.Request.HttpContext.Request.
+            //ViewContext
+           
            // this.userSessionHelper.SetUserIDToSession(new LoggedInSessionInfo { TeamId = 13109, UserId = 12095 });
 
             if (this.userSessionHelper.UserId > 0)

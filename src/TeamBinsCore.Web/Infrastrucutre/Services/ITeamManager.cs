@@ -195,17 +195,17 @@ namespace TeamBins6.Infrastrucutre.Services
                 if (activity.ObjectType == "Issue")
                 {
                     activity.ObjectUrl = "Issues/" + activity.ObjectId;
-                    if (activity.Description.ToUpper() == "CREATED")
+                    if (String.Equals(activity.Description , "CREATED",StringComparison.OrdinalIgnoreCase))
                     {
                         activity.NewState = "";
                     }
-                    else if (activity.Description.ToUpper() == "CHANGED STATUS")
+                    else if (String.Equals(activity.Description, "CHANGED STATUS", StringComparison.OrdinalIgnoreCase))
                     {
                         activity.Description = "changed status of";
 
                         activity.NewState = "from " + activity.OldState + " to " + activity.NewState;
                     }
-                    else if (activity.Description.ToUpper() == "DUE DATE UPDATED")
+                    else if (String.Equals(activity.Description, "DUE DATE UPDATED",StringComparison.OrdinalIgnoreCase))
                     {
                         activity.Description = "updated due date of";
                         activity.NewState = "to " + activity.NewState;
