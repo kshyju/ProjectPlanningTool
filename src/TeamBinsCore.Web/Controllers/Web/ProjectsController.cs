@@ -107,7 +107,6 @@ namespace TeamBins6.Controllers.Web
             try
             {
                 this.projectManager.Delete(model.Id);
-              //  var result = repo.DeleteProject(model.Id);
                 return Json(new { Status = "Success", Message = "Project deleted successfully" });
             }
             catch (Exception ex)
@@ -116,5 +115,7 @@ namespace TeamBins6.Controllers.Web
                 return Json(new { Status = "Error", Message = "Error deleting project" });
             }
         }
+
+
     }
 }

@@ -23,7 +23,7 @@ namespace TeamBins6.Infrastrucutre.Services
         IEnumerable<ActivityDto> GeActivityItems(int teamId, int count);
         bool DoesCurrentUserBelongsToTeam();
 
-        Task<DashBoardItemSummaryVM> GetDashboardSummary();
+        Task<DashBoardItemSummaryVm> GetDashboardSummary();
         void Delete(int id);
 
         Task<TeamVM> GetTeamInoWithMembers();
@@ -171,15 +171,14 @@ namespace TeamBins6.Infrastrucutre.Services
 
         public int SaveTeam(TeamDto team)
         {
-            var isNewTeam = team.Id == 0;
             team.CreatedById = this.userSessionHelper.UserId;
             var teamId = teamRepository.SaveTeam(team);
             return teamId;
         }
 
-        public async Task<DashBoardItemSummaryVM> GetDashboardSummary()
+        public async Task<DashBoardItemSummaryVm> GetDashboardSummary()
         {
-            var vm = new DashBoardItemSummaryVM
+            var vm = new DashBoardItemSummaryVm
             {
                 IssueCountsByStatus = await issueRepository.GetIssueCountsPerStatus(this.userSessionHelper.TeamId)
             };

@@ -49,6 +49,9 @@ namespace TeamBins6.Controllers
         public async Task<IActionResult> SwitchTeam(int teamId)
         {
 
+           
+
+
             userSessionHelper.SetTeamId(teamId);
             await userAccountManager.SetDefaultTeam(userSessionHelper.UserId, teamId);
 

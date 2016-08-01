@@ -12,7 +12,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TeamBins.Common.ViewModels
 {
-    public class DashBoardItemSummaryVM
+    public class DashBoardItemSummaryVm
     {
         public int CurrentItems { set; get; }
         public int ItemsInProgress { set; get; }

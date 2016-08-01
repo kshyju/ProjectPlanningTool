@@ -1,15 +1,4 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Security.Claims;
-//using System.Threading.Tasks;
-//using Microsoft.AspNet.Http.Authentication;
-//using Microsoft.AspNet.Mvc;
-//using TeamBins.Services;
-
-//// For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-
-
+﻿
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;

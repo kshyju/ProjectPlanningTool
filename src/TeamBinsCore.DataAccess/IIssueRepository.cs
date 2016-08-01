@@ -60,7 +60,7 @@ namespace TeamBinsCore.DataAccess
             }
         }
 
-        public DashBoardItemSummaryVM GetDashboardSummaryVM(int teamId)
+        public DashBoardItemSummaryVm GetDashboardSummaryVM(int teamId)
         {
             throw new NotImplementedException();
         }
@@ -162,11 +162,7 @@ namespace TeamBinsCore.DataAccess
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                var projects =
-                    con.Query<IssueDetailVM>(
-                        "SELECT Id,Title,Description,CreatedDate,DueDate FROM Issue");
-                return projects;
-                // Status
+                return con.Query<IssueDetailVM>("SELECT Id,Title,Description,CreatedDate,DueDate FROM Issue").ToList();
             }
         }
 
@@ -411,7 +407,7 @@ namespace TeamBinsCore.DataAccess
         IEnumerable<IssueDetailVM> GetIssues(List<int> statusIds, int count);
         IssueDetailVM GetIssue(int id, int requestingUserId);
         int SaveIssue(CreateIssue issue);
-        DashBoardItemSummaryVM GetDashboardSummaryVM(int teamId);
+        DashBoardItemSummaryVm GetDashboardSummaryVM(int teamId);
 
         IEnumerable<IssuesPerStatusGroup> GetIssuesGroupedByStatusGroup(int count, int teamId, int requestingUserId);
         Task SaveIssueMember(int issueId, int memberId, int createdById, string relationShipType);

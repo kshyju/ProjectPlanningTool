@@ -30,7 +30,7 @@ namespace TeamBins.Services
             this.activityRepository = activityRepository;
             this.userSessionHelper = userSessionHelper;
         }
-        public DashBoardItemSummaryVM GetDashboardSummaryVM(int teamId)
+        public DashBoardItemSummaryVm GetDashboardSummaryVM(int teamId)
         {
             throw new NotImplementedException();
         }
@@ -228,7 +228,7 @@ namespace TeamBins.Services
         Task<int> StarIssue(int issueId);
         IEnumerable<IssueVM> GetIssues(List<int> statusIds, int count);
         Task<IssueDetailVM> SaveIssue(CreateIssue issue, List<IFormFile> files);
-        DashBoardItemSummaryVM GetDashboardSummaryVM(int count);
+        DashBoardItemSummaryVm GetDashboardSummaryVM(int count);
         IssueDetailVM GetIssue(int id);
         ActivityDto SaveActivity(CreateIssue model, IssueDetailVM previousVersion, IssueDetailVM newVersion);
 
