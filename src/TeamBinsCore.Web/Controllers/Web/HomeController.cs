@@ -36,22 +36,16 @@ namespace TeamBins6.Controllers
     {
         private IUserAuthHelper userSessionHelper;
         private IUserAccountManager userAccountManager;
-        private IConfiguration configuration; 
 
-        public HomeController(IUserAuthHelper userSessionHelper,IUserAccountManager userAccountManager,IConfiguration configuration)
+        public HomeController(IUserAuthHelper userSessionHelper,IUserAccountManager userAccountManager)
         {
             this.userSessionHelper = userSessionHelper;
             this.userAccountManager = userAccountManager;
-            this.configuration = configuration;
         }
 
         [HttpPost]
         public async Task<IActionResult> SwitchTeam(int teamId)
-        {
-
-           
-
-
+        { 
             userSessionHelper.SetTeamId(teamId);
             await userAccountManager.SetDefaultTeam(userSessionHelper.UserId, teamId);
 
@@ -60,16 +54,10 @@ namespace TeamBins6.Controllers
 
         public IActionResult Index()
         {
-           // HttpContext.Request.HttpContext.Request.
-            //ViewContext
-           
-           // this.userSessionHelper.SetUserIDToSession(new LoggedInSessionInfo { TeamId = 13109, UserId = 12095 });
-
             if (this.userSessionHelper.UserId > 0)
             {
                 return RedirectToAction("Index", "Issues");
             }
-
 
             return View();
         }

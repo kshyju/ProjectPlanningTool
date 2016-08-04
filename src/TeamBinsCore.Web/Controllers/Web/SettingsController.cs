@@ -21,8 +21,10 @@ namespace TeamBins.Controllers
         }
 
         // GET: Settings
-        public async Task<ActionResult> Index()
+        public async Task<IActionResult> Index()
         {
+           //var msg= TempData["AlertMessages"] as Dictionary<string,string>;
+            
             var vm = new SettingsVm
             {
                 Profile = await userAccountManager.GetUserProfile(),

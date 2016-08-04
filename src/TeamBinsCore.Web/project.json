@@ -23,6 +23,7 @@
     "TeamBinsCore.Common": "1.0.0",
     "TeamBinsCore.DataAccess": "1.0.0",
     "Microsoft.AspNetCore.Session": "1.1.0-alpha1-21657"
+   
   },
 
   "tools": {

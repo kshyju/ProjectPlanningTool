@@ -217,3 +217,4 @@ pip-log.txt
 *.psm1
 src/TeamBinsCore.Web/Properties/PublishProfiles/teambins - Web Deploy-publish.ps1
 src/TeamBinsCore.Web/appsettings.json
+src/TeamBinsCore.Web/appsettings.json

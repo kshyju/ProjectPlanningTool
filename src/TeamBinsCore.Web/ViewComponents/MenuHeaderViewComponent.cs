@@ -14,8 +14,8 @@ namespace TeamBins6.ViewComponents
     public class MenuHeaderViewComponent : ViewComponent
     {
         
-        private IUserAuthHelper userSessionHelper;
-        private IUserAccountManager userAccountManager;
+        private readonly IUserAuthHelper userSessionHelper;
+        private readonly IUserAccountManager userAccountManager;
         public MenuHeaderViewComponent(IUserAuthHelper userSessionHelper, IUserAccountManager userAccountManager)
         {
             this.userSessionHelper = userSessionHelper;
