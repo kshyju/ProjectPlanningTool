@@ -8,10 +8,12 @@ using TeamBins.Common.ViewModels;
 using TeamBins.Services;
 using TeamBins6.Controllers;
 using TeamBins6.Infrastrucutre;
+using TeamBins6.Infrastrucutre.Filters;
 
 
 namespace TeamBins.Controllers
 {
+    [LoginCheckFilter]
     public class SettingsController : BaseController
     {
         readonly IUserAccountManager userAccountManager;

@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 
 using TeamBins.Common.ViewModels;
 using TeamBins.Services;
+using TeamBins6.Infrastrucutre.Filters;
 using TeamBins6.Infrastrucutre.Services;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace TeamBins6.Controllers.Web
 {
+    [LoginCheckFilter]
     public class ProjectsController : Controller
     {
         private ITeamManager teamManager;

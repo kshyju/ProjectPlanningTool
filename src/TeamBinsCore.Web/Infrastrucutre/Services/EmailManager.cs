@@ -58,7 +58,7 @@ namespace TeamBins.Services
 
             try
             {
-                //var mail = new MailMessage();
+              // var mail = new MailMessage();
                 //string smtpServerName = configuration.Get<string>("TeamBins:Email:SmtpServer");
                 //var smtp = new SmtpClient(smtpServerName);
                 //smtp.Port = configuration.Get<int>("TeamBins:Email:Port");

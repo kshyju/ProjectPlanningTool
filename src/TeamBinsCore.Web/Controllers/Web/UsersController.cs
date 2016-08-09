@@ -1,14 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
-using TeamBins.Common;
-using TeamBins.Common.ViewModels;
 
+using TeamBins.Common.ViewModels;
+using TeamBins6.Infrastrucutre.Filters;
 using TeamBins6.Infrastrucutre.Services;
 
 
 namespace TeamBins6.Controllers.Web
 {
+    [LoginCheckFilter]
     public class UsersController : BaseController
     {
         readonly ITeamManager teamManager;

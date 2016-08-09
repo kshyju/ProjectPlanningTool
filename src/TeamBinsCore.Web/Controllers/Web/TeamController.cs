@@ -5,13 +5,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using TeamBins.Common;
 using TeamBins.Common.ViewModels;
-
+using TeamBins6.Infrastrucutre.Filters;
 using TeamBins6.Infrastrucutre.Services;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace TeamBins6.Controllers.Web
 {
+    [LoginCheckFilter]
     public class TeamController : Controller
     {
         private ITeamManager teamManager;
@@ -51,27 +52,7 @@ namespace TeamBins6.Controllers.Web
                     var teamId = teamManager.SaveTeam(model);
                     return Json(new { Status = "Success" });
 
-                    //Team team = new Team { Name = model.Name, ID = model.Id };
-                    //bool isNew = (model.Id == 0);
-                    //if (!isNew)
-                    //{
-                    //    team = repo.GetTeam(model.Id);
-                    //    team.Name = model.Name;
-                    //}
-                    //else
-                    //{
-                    //    team.CreatedByID = UserID;
-                    //}
-                    //var result = repo.SaveTeam(team);
-                    //if (result != null)
-                    //{
-                    //    if (isNew)
-                    //    {
-                    //        var teamMember = new TeamMember { MemberID = UserID, TeamId = team.ID, CreatedByID = UserID };
-                    //        repo.SaveTeamMember(teamMember);
-                    //    }
-                    //    return Json(new { Status = "Success" });
-                    //}
+                    
                 }
                 return View(model);
             }
