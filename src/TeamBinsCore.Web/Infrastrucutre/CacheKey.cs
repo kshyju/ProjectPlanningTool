@@ -8,6 +8,9 @@ namespace TeamBins6.Infrastrucutre
         public static readonly string Teams = "Teams";
         public static readonly string Issues = "Issues";
         public static readonly string Users = "Users";
+        public static readonly string Statuses = "Statuses";
+        public static readonly string Priorities = "Priorities";
+        public static readonly string Categories = "Categories";
 
         public static string GetKey(string key,int teamId)
         {

@@ -9,6 +9,8 @@ using TeamBins.Common.Infrastructure.Enums.TeamBins.Helpers.Enums;
 using TeamBins.Common.ViewModels;
 
 using TeamBins.DataAccessCore;
+using TeamBins6.Infrastrucutre;
+using TeamBins6.Infrastrucutre.Cache;
 using TeamBins6.Infrastrucutre.Extensions;
 using TeamBins6.Infrastrucutre.Services;
 using TeamBinsCore.Common;
@@ -23,12 +25,14 @@ namespace TeamBins.Services
         private IIssueRepository issueRepository;
         private IProjectRepository iProjectRepository;
         private IUserAuthHelper userSessionHelper;
-        public IssueManager(IIssueRepository issueRepository, IProjectRepository iProjectRepository, IActivityRepository activityRepository, IUserAuthHelper userSessionHelper)
+        private readonly ICache cache;
+        public IssueManager(IIssueRepository issueRepository, IProjectRepository iProjectRepository, IActivityRepository activityRepository, IUserAuthHelper userSessionHelper, ICache cache)
         {
             this.issueRepository = issueRepository;
             this.iProjectRepository = iProjectRepository;
             this.activityRepository = activityRepository;
             this.userSessionHelper = userSessionHelper;
+            this.cache = cache;
         }
         public DashBoardItemSummaryVm GetDashboardSummaryVM(int teamId)
         {
@@ -39,7 +43,7 @@ namespace TeamBins.Services
 
         public IssueDetailVM GetIssue(int id)
         {
-            return this.issueRepository.GetIssue(id,this.userSessionHelper.UserId);
+            return this.issueRepository.GetIssue(id, this.userSessionHelper.UserId);
         }
 
         public IEnumerable<IssueVM> GetIssues(List<int> statusIds, int count)
@@ -53,7 +57,7 @@ namespace TeamBins.Services
         }
         public IEnumerable<IssuesPerStatusGroup> GetIssuesGroupedByStatusGroup(int teamId, int count)
         {
-            return this.issueRepository.GetIssuesGroupedByStatusGroup(count,teamId,this.userSessionHelper.UserId);
+            return this.issueRepository.GetIssuesGroupedByStatusGroup(count, teamId, this.userSessionHelper.UserId);
         }
 
         public ActivityDto SaveActivity(CreateIssue model, IssueDetailVM previousVersion, IssueDetailVM newVersion)
@@ -108,22 +112,18 @@ namespace TeamBins.Services
 
         public void LoadDropdownData(CreateIssue issue)
         {
-            issue.Projects =
-                   this.iProjectRepository.GetProjects(this.userSessionHelper.TeamId)
+            issue.Projects =this.iProjectRepository.GetProjects(this.userSessionHelper.TeamId)
                        .Select(s => new SelectListItem { Value = s.Id.ToString(), Text = s.Name })
                        .ToList();
 
-         issue.Statuses = this.issueRepository.GetStatuses()
-                  .Select(s => new SelectListItem { Value = s.Id.ToString(), Text = s.Name })
-                       .ToList();
 
-            issue.Priorities = this.issueRepository.GetPriorities()
-                      .Select(s => new SelectListItem { Value = s.Id.ToString(), Text = s.Name })
-                           .ToList();
+            var statuses = this.cache.Get(CacheKey.Statuses, () => this.issueRepository.GetStatuses());
+            var priorities = this.cache.Get(CacheKey.Priorities, () => this.issueRepository.GetPriorities());
+            var catagories = this.cache.Get(CacheKey.Categories, () => this.issueRepository.GetCategories());
 
-            issue.Categories = this.issueRepository.GetCategories()
-          .Select(s => new SelectListItem { Value = s.Id.ToString(), Text = s.Name })
-               .ToList();
+            issue.Statuses = statuses.Select(s => new SelectListItem { Value = s.Id.ToString(), Text = s.Name }).ToList();
+            issue.Priorities = priorities.Select(s => new SelectListItem { Value = s.Id.ToString(), Text = s.Name }).ToList();
+            issue.Categories = catagories.Select(s => new SelectListItem { Value = s.Id.ToString(), Text = s.Name }).ToList();
 
 
 
@@ -133,9 +133,9 @@ namespace TeamBins.Services
         {
             if (issue.SelectedProject == 0)
             {
-                var defaultProject = await this.iProjectRepository.GetDefaultProjectForTeamMember(this.userSessionHelper.TeamId,
+                var defaultProject = await iProjectRepository.GetDefaultProjectForTeamMember(this.userSessionHelper.TeamId,
                      this.userSessionHelper.UserId);
-                if (defaultProject==null)                
+                if (defaultProject == null)
                 {
                     throw new MissingSettingsException("Missing data", "Default project");
                 }
@@ -163,9 +163,9 @@ namespace TeamBins.Services
 
 
 
-            var issueDetail = this.issueRepository.GetIssue(issueId,this.userSessionHelper.UserId);
+            var issueDetail = this.issueRepository.GetIssue(issueId, this.userSessionHelper.UserId);
             return issueDetail;
-            ;
+            
         }
 
         public Task<int> StarIssue(int issueId)
@@ -179,7 +179,7 @@ namespace TeamBins.Services
         }
         public async Task<IEnumerable<UserDto>> GetNonIssueMembers(int issueId)
         {
-            var members = await this.issueRepository.GetNonIssueMembers(issueId,this.userSessionHelper.TeamId);
+            var members = await this.issueRepository.GetNonIssueMembers(issueId, this.userSessionHelper.TeamId);
             foreach (var userDto in members)
             {
                 userDto.GravatarUrl = userDto.EmailAddress.ToGravatarUrl();
@@ -194,12 +194,12 @@ namespace TeamBins.Services
 
         public async Task SaveIssueAssignee(int issueId, int userId)
         {
-            await issueRepository.SaveIssueMember(issueId, userId,userSessionHelper.UserId , IssueMemberRelationType.Assigned.ToString());
+            await issueRepository.SaveIssueMember(issueId, userId, userSessionHelper.UserId, IssueMemberRelationType.Assigned.ToString());
         }
         public async Task<IEnumerable<IssueMember>> GetIssueMembers(int issueId)
         {
             var members = await this.issueRepository.GetIssueMembers(issueId);
-            members= members.Where(s => s.Relationtype == IssueMemberRelationType.Assigned.ToString()).ToList();
+            members = members.Where(s => s.Relationtype == IssueMemberRelationType.Assigned.ToString()).ToList();
             foreach (var userDto in members)
             {
                 userDto.Member.GravatarUrl = userDto.Member.EmailAddress.ToGravatarUrl();
