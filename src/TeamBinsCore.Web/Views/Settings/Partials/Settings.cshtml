@@ -8,13 +8,17 @@
 
         <div class="tab-content">
             <div class="tab-pane active">
-                @Html.ValidationSummary()
-                @using (Html.BeginForm("Settings","Settings"))
-                {
+                <div asp-validation-summary="All"></div>
+
+                <form asp-action="Settings" asp-controller="Settings">
                     <table class="settings-form-tbl">
                         <tr>
                             <th>Default Project</th>
-                            <td>@Html.DropDownListFor(s => s.SelectedProject, Model.Projects, "select")</td>
+                            <td>
+                                <select asp-for="SelectedProject" asp-items="Model.Projects">
+                                    <option>Please select</option>
+                                </select>
+                            </td>
                         </tr>
                         <tr>
                             <th></th>
@@ -23,11 +27,8 @@
                             </td>
                         </tr>
                     </table>
-                }
+                </form>
             </div>
-
-
-       
     </div>
 
 </div>
