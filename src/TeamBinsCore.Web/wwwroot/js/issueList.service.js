@@ -15,10 +15,6 @@
       .catch(createIssueFailed);
 
         function createIssueCompleted(response) {
-            // console.log("r");
-            //console.log(response.data);
-            var s = response.headers(0);
-           
             return response.data;
         }
 

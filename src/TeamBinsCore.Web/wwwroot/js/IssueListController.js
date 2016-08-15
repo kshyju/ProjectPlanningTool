@@ -6,9 +6,6 @@ issueListApp.config(['$httpProvider', function ($httpProvider) {
 
 var issueListCtrl = function ($http, issueService, appSettings, currentTeam) {
 
-    console.log(currentTeam);
-
-
     var vm = this;
     vm.newIssue = "";
     vm.loading = true;
@@ -19,9 +16,7 @@ var issueListCtrl = function ($http, issueService, appSettings, currentTeam) {
 
     issueService.getActivityStream(currentTeam,25)
     .then(function (response) {
-        console.log(response);
         vm.activities = response;
-
     });
 
 
@@ -49,7 +44,7 @@ var issueListCtrl = function ($http, issueService, appSettings, currentTeam) {
                         if (res.status === "Success") {
                             vm.newIssue = "";
                             if (vm.issuesGrouped.length > 0) {
-                                vm.issuesGrouped[0].Issues.push(res.data);
+                                vm.issuesGrouped[0].issues.push(res.data);
                             } else {
                                 //very first issue
                                 vm.getIssues();
@@ -57,73 +52,20 @@ var issueListCtrl = function ($http, issueService, appSettings, currentTeam) {
                         } else {
                             alert(res.message);
                         }
-                        console.log(res);
-
                     });
-
             }
         }
     };
 
-
     vm.updateview = function (group, $event) {
-
         vm.currentlyShowingGroup = group;
-
     };
-
 
 }
 
 
 issueListCtrl.inject = ['$http', 'issueService','appSettings', 'currentTeam'];
 issueListApp.controller("IssueListCtrl", issueListCtrl);
-//issueListApp.controller('IssueListCtrl', function ($scope, $http, issueService) {
-
-//    var vm = this;
-
-//    $scope.loading = true;
-//    $scope.activities = [];
-//    $scope.issuesList = [];
-//    $scope.issuesGrouped = [];
-
-//    $scope.currentlyShowingGroup = {};
-
-//    issueService.getIssues(25)
-//        .then(function (response) {
-//            console.log(response);
-//            $scope.issuesGrouped = response;
-//            $scope.currentlyShowingGroup = response[0];
-//            $scope.loading = false;
-//        });
-
-//    issueService.getActivityStream(25)
-//    .then(function (response) {
-//        $scope.activities = response;
-//        $scope.loading = false;
-//    });
-
-
-//    $scope.create = function (e) {
-//        if (e.keyCode === 13) {
-//            if ($("#NewItemTitle").val() !== "") {
-//                $.post(addIssueUrl, { Title: $("#NewItemTitle").val() }, function (data) {
-//                    if (data.Status === "Error") {
-//                        alert(data.Message);
-//                    }
-//                    else {
-//                        $("#NewItemTitle").val("");
-//                    }
-//                });
-//            }
-//        }
-//    };
-
-//    $scope.updateview = function (group, $event) {
-
-//        $scope.currentlyShowingGroup = group;
-
-//    };
 
 //    var chat = $.connection.issuesHub;
 //    chat.client.addNewTeamActivity = function (comment) {
