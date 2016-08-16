@@ -5,7 +5,8 @@ module TeamBins {
     
 
      export class DashboardController {
-       
+
+         issuesGroupedByPriority : any[];
         summaryItems: any[];
         activities: any[];
 
@@ -15,6 +16,7 @@ module TeamBins {
             
             this.getActivityStream(this.pageContext.TeamId);
             this.getSummary();
+            this.getIssuesGroupedByPriority();
 
         }
         getActivityStream(teamId) {
@@ -23,7 +25,20 @@ module TeamBins {
                 self.activities = data;
             });
         }
+        getIssuesGroupedByPriority() {
+            var self = this;
+            this.summaryService.getIssuesGroupedByPriority().then(function (data) {
+                self.issuesGroupedByPriority = data;
+                var pieChartData2 = [];
+                angular.forEach(self.issuesGroupedByPriority, function (a, b) {
+                    var pieChartItem = { value: a.count, color: a.color, highlight: "#FF5A5E", label: a.itemName };
+                    pieChartData2.push(pieChartItem);
+                });
 
+                self.renderPie(pieChartData2,"issuesPriorityPieChart");
+
+            });
+        }
         getSummary() {
             var self = this;
             this.summaryService.getSummary().then(function (data) {
@@ -34,13 +49,13 @@ module TeamBins {
                     pieChartData.push(pieChartItem);
                 });
 
-                self.renderPie(pieChartData);
+                self.renderPie(pieChartData, "myChart");
 
             });
-        }
-        renderPie(pieChartDataSet:any[]) {
+        }          
+        renderPie(pieChartDataSet: any[],elementId:String) {
 
-            var ctx = document.getElementById("myChart").getContext("2d");
+            var ctx = document.getElementById(elementId).getContext("2d");
             new Chart(ctx).Pie(pieChartDataSet);
         }
     }

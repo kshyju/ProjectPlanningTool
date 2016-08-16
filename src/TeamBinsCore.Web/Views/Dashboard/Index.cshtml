@@ -24,9 +24,23 @@
                 <div class="db-pieChartLegends">
                     <ul class="legends">
                         <li ng-repeat="legend in vm.summaryItems">
-                            <div class="db-chart-legend spn-new" style="background-color:{{legend.color}}"></div><span class="legendtext">{{legend.itemName}}</span>
+                            <div class="db-chart-legend spn-new" style="background-color: { {legend.color}}"></div><span class="legendtext">{{legend.itemName}}</span>
                         </li>
-                       
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="dashboardItem">
+            <h4>Issues by priority </h4>
+            <div id="issuesPriority">
+                <canvas id="issuesPriorityPieChart" width="200" height="200"></canvas>
+                <div class="db-pieChartLegends">
+                    <ul class="legends">
+                        <li ng-repeat="legend in vm.issuesGroupedByPriority">
+                            <div class="db-chart-legend spn-new" style="background-color: { {legend.color}}"></div><span class="legendtext">{{legend.itemName}}</span>
+                        </li>
+
                     </ul>
                 </div>
             </div>

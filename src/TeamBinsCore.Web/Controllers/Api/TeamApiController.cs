@@ -42,6 +42,11 @@ namespace TeamBins6.Controllers.Api
         {
             return Ok(await this.teamManager.GetDashboardSummary());
         }
-        
+        [HttpGet]
+        [Route("IssuesGroupedByPrioroty")]
+        public async Task<ObjectResult> GetIssuesGroupedByPrioroty(int count)
+        {
+            return Ok(await this.teamManager.GetIssueCountPerPriority());
+        }
     }
 }

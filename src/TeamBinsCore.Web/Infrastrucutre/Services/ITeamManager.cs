@@ -31,7 +31,7 @@ namespace TeamBins6.Infrastrucutre.Services
         Task AddNewTeamMember(AddTeamMemberRequestVM teamMemberRequest);
 
         Task<IEnumerable<AddTeamMemberRequestVM>> GetTeamMemberInvitations();
-
+        Task<IEnumerable<ChartItem>> GetIssueCountPerPriority();
 
         Task SaveVisibility(int id, bool isPublic);
     }
@@ -184,7 +184,11 @@ namespace TeamBins6.Infrastrucutre.Services
             };
             return vm;
         }
-
+        public async Task<IEnumerable<ChartItem>> GetIssueCountPerPriority()
+        {
+            var IssueCountsByStatus = await issueRepository.GetIssueCountsPerPriority(this.userSessionHelper.TeamId);
+           return IssueCountsByStatus;
+        }
         public IEnumerable<ActivityDto> GeActivityItems(int teamId,int count)
         {
             var activities = activityRepository.GetActivityItems(teamId, count);

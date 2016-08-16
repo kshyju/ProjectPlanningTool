@@ -21,6 +21,13 @@
                 });
 
         }
+        getIssuesGroupedByPriority() {
+            return this.$http.get(this.appSettings.urls.baseUrl + "/api/team/IssuesGroupedByPrioroty")
+                .then((response: any): any => {
+                    return response.data;
+                });
+
+        }
 
     }
 }

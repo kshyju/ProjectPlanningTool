@@ -17,6 +17,12 @@ var TeamBins;
                 return response.data;
             });
         };
+        DashboardService.prototype.getIssuesGroupedByPriority = function () {
+            return this.$http.get(this.appSettings.urls.baseUrl + "/api/team/IssuesGroupedByPrioroty")
+                .then(function (response) {
+                return response.data;
+            });
+        };
         return DashboardService;
     }());
     TeamBins.DashboardService = DashboardService;
