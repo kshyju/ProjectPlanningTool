@@ -70,7 +70,7 @@ namespace TeamBinsCore.DataAccess
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                var projects = con.Query<NameValueItem>("SELECT * from Status");
+                var projects = con.Query<NameValueItem>("SELECT * from Status  WITH (NOLOCK)");
                 return projects;
             }
 
@@ -81,7 +81,7 @@ namespace TeamBinsCore.DataAccess
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                var projects = con.Query<NameValueItem>("SELECT * from Priority");
+                var projects = con.Query<NameValueItem>("SELECT * from Priority  WITH (NOLOCK)");
                 return projects;
             }
 
@@ -92,7 +92,7 @@ namespace TeamBinsCore.DataAccess
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                var projects = con.Query<CategoryDto>("SELECT * from Category");
+                var projects = con.Query<CategoryDto>("SELECT * from Category  WITH (NOLOCK)");
                 return projects;
             }
         }
@@ -171,26 +171,26 @@ namespace TeamBinsCore.DataAccess
         {
             var q = @"SELECT  S.ID ItemId,S.NAME ItemName,S.Color, COUNT(I.ID) COUNT						 
                         FROM STATUS S  WITH (NOLOCK)  
-                        LEFT JOIN (SELECT I.ID,I.STATUSID FROM ISSUE I  WITH (NOLOCK) WHERE I.TeamId=@t) I ON I.STATUSID =S.ID
+                        LEFT JOIN (SELECT I.ID,I.STATUSID FROM ISSUE I  WITH (NOLOCK) WHERE I.TeamId=@teamId) I ON I.STATUSID =S.ID
                         GROUP BY S.ID,S.NAME,S.Color";
 
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                return await con.QueryAsync<ChartItem>(q, new { @t = teamId });
+                return await con.QueryAsync<ChartItem>(q, new { teamId });
             }
         }
         public async Task<IEnumerable<ChartItem>> GetIssueCountsPerPriority(int teamId)
         {
             var q = @"SELECT  S.ID ItemId,S.NAME ItemName,Color, COUNT(I.ID) COUNT						 
                     FROM Priority S  WITH (NOLOCK)  
-                    LEFT JOIN (SELECT I.ID,I.PriorityID FROM ISSUE I  WITH (NOLOCK) WHERE I.TeamId=13112) I ON I.PriorityID =S.ID
+                    LEFT JOIN (SELECT I.ID,I.PriorityID FROM ISSUE I  WITH (NOLOCK) WHERE I.TeamId=@teamId) I ON I.PriorityID =S.ID
                     GROUP BY S.ID,S.NAME,Color";
 
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                return await con.QueryAsync<ChartItem>(q, new { @t = teamId });
+                return await con.QueryAsync<ChartItem>(q, new {  teamId });
             }
         }
 

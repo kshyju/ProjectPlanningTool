@@ -23,7 +23,7 @@
                 <div class="iterations">
                     <ul class="navtab">
                         <li ng-repeat="group in vm.issuesGrouped">
-                            <a href="#" id="tab-current" ng-click="vm.updateview(group, $event)" class="aIteration" ng-class="{'tab-selected':group.GroupName==vm.currentlyShowingGroup.GroupName}">{{group.groupName}}</a>
+                            <a href="#" id="tab-current" ng-click="vm.updateview(group, $event)" class="aIteration" ng-class="{'tab-selected':group.groupName==vm.currentlyShowingGroup.groupName}">{{group.groupName}}</a>
                         </li>
                     </ul>
                     <div class="spinner" ng-show="loading"></div>

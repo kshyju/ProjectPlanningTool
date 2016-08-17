@@ -19,12 +19,13 @@
 
         </div>
         <div class="dashboardItem">
+            <h4>Issues by status </h4>
             <div id="pieChart">
                 <canvas id="myChart" width="200" height="200"></canvas>
                 <div class="db-pieChartLegends">
                     <ul class="legends">
                         <li ng-repeat="legend in vm.summaryItems">
-                            <div class="db-chart-legend spn-new" style="background-color: { {legend.color}}"></div><span class="legendtext">{{legend.itemName}}</span>
+                            <div class="db-chart-legend spn-new" style="background-color: {{legend.color}}"></div><span class="legendtext">{{legend.itemName}}</span>
                         </li>
 
                     </ul>
@@ -38,7 +39,7 @@
                 <div class="db-pieChartLegends">
                     <ul class="legends">
                         <li ng-repeat="legend in vm.issuesGroupedByPriority">
-                            <div class="db-chart-legend spn-new" style="background-color: { {legend.color}}"></div><span class="legendtext">{{legend.itemName}}</span>
+                            <div class="db-chart-legend spn-new" style="background-color: {{legend.color}}"></div><span class="legendtext">{{legend.itemName}}</span>
                         </li>
 
                     </ul>
@@ -104,8 +105,8 @@
 
 @section Scripts
 {
-@*<script src="~/Scripts/jquery.signalR-2.0.2.min.js"></script>
-<script src="~/signalr/hubs"></script>*@
+    @*<script src="~/Scripts/jquery.signalR-2.0.2.min.js"></script>
+        <script src="~/signalr/hubs"></script>*@
     @*<script src="~/Scripts/Chart.min.js"></script>*@
 
     <script src="~/js/dashboardcontroller.js"></script>
@@ -114,12 +115,12 @@
     <script src="~/js/chart.min.js"></script>
     <script type="text/javascript">
 
-       
+
 
         var a = angular.module("teamBins")
             .service('summaryService', TeamBins.DashboardService)
             .controller("dashboardCtrl", TeamBins.DashboardController);
-       // TeamBins.DashboardController.inject = ['$http', 'issueDetailService'];
+        // TeamBins.DashboardController.inject = ['$http', 'issueDetailService'];
 
         angular.module("teamBins").value("pageContext", @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model)));
 
@@ -128,6 +129,6 @@
         //    .done(function() {
         //        chat.server.subscribeToTeam($("#TeamID").val());
         //    });
-        
+
     </script>
 }
