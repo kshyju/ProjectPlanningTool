@@ -11,8 +11,8 @@ namespace TeamBins6.Controllers.Api
     [Route("api/team")]
     public class TeamApiController : Controller
     {
-        private ITeamManager teamManager;
-        private IUserAuthHelper userSessionHelper;
+        private readonly ITeamManager teamManager;
+        private readonly IUserAuthHelper userSessionHelper;
 
         public TeamApiController(ITeamManager teamManager,IUserAuthHelper userSessionHelper)
         {

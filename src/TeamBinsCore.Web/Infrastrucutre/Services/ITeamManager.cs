@@ -37,12 +37,12 @@ namespace TeamBins6.Infrastrucutre.Services
     }
     public class TeamManager : ITeamManager
     {
-        private IUserRepository userRepository;
-        private IIssueRepository issueRepository;
-        IActivityRepository activityRepository;
-        IUserAuthHelper userSessionHelper;
+        private readonly IUserRepository userRepository;
+        private readonly IIssueRepository issueRepository;
+        readonly IActivityRepository activityRepository;
+        readonly IUserAuthHelper userSessionHelper;
         private readonly ITeamRepository teamRepository;
-        private IEmailManager emailManager;
+        private readonly IEmailManager emailManager;
         public TeamManager(IUserAuthHelper userSessionHelper, IActivityRepository activityRepository, ITeamRepository teamRepository, IIssueRepository issueRepository,IUserRepository userRepository, IEmailManager emailManager)
         {
             this.teamRepository = teamRepository;
