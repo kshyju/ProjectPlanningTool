@@ -19,11 +19,12 @@ namespace TeamBins6.Infrastrucutre.Services
         Task<bool> ValidateAndAssociateNewUserToTeam(string activationCode);
         int SaveTeam(TeamDto team);
         TeamDto GetTeam(int id);
+        TeamDto GetTeam(string name);
         List<TeamDto> GetTeams();
         IEnumerable<ActivityDto> GeActivityItems(int teamId, int count);
         bool DoesCurrentUserBelongsToTeam();
 
-        Task<DashBoardItemSummaryVm> GetDashboardSummary();
+        Task<DashBoardItemSummaryVm> GetDashboardSummary(int teamId);
         void Delete(int id);
 
         Task<TeamVM> GetTeamInoWithMembers();
@@ -31,7 +32,7 @@ namespace TeamBins6.Infrastrucutre.Services
         Task AddNewTeamMember(AddTeamMemberRequestVM teamMemberRequest);
 
         Task<IEnumerable<AddTeamMemberRequestVM>> GetTeamMemberInvitations();
-        Task<IEnumerable<ChartItem>> GetIssueCountPerPriority();
+        Task<IEnumerable<ChartItem>> GetIssueCountPerPriority(int teamId);
 
         Task SaveVisibility(int id, bool isPublic);
     }
@@ -43,7 +44,7 @@ namespace TeamBins6.Infrastrucutre.Services
         readonly IUserAuthHelper userSessionHelper;
         private readonly ITeamRepository teamRepository;
         private readonly IEmailManager emailManager;
-        public TeamManager(IUserAuthHelper userSessionHelper, IActivityRepository activityRepository, ITeamRepository teamRepository, IIssueRepository issueRepository,IUserRepository userRepository, IEmailManager emailManager)
+        public TeamManager(IUserAuthHelper userSessionHelper, IActivityRepository activityRepository, ITeamRepository teamRepository, IIssueRepository issueRepository, IUserRepository userRepository, IEmailManager emailManager)
         {
             this.teamRepository = teamRepository;
             this.userSessionHelper = userSessionHelper;
@@ -56,14 +57,14 @@ namespace TeamBins6.Infrastrucutre.Services
         public async Task<bool> ValidateAndAssociateNewUserToTeam(string activationCode)
         {
 
-            var invitation =  await this.teamRepository.GetTeamMemberInvitation(activationCode);
-            if(invitation!=null)
+            var invitation = await this.teamRepository.GetTeamMemberInvitation(activationCode);
+            if (invitation != null)
             {
                 var currentUser = await userRepository.GetUser(this.userSessionHelper.UserId);
-                if(currentUser!=null && currentUser.EmailAddress ==invitation.EmailAddress)
+                if (currentUser != null && currentUser.EmailAddress == invitation.EmailAddress)
                 {
                     // Now asssociate this user to the team.
-                    this.teamRepository.SaveTeamMember(invitation.TeamID, this.userSessionHelper.UserId,this.userSessionHelper.UserId);
+                    this.teamRepository.SaveTeamMember(invitation.TeamID, this.userSessionHelper.UserId, this.userSessionHelper.UserId);
                     this.userSessionHelper.SetTeamId(invitation.TeamID);
 
                     await this.teamRepository.DeleteTeamMemberInvitation(invitation.Id);
@@ -76,26 +77,26 @@ namespace TeamBins6.Infrastrucutre.Services
 
         public async Task<IEnumerable<AddTeamMemberRequestVM>> GetTeamMemberInvitations()
         {
-             
-           return  await this.teamRepository.GetTeamMemberInvitations(this.userSessionHelper.TeamId);
+
+            return await this.teamRepository.GetTeamMemberInvitations(this.userSessionHelper.TeamId);
         }
 
-        public async  Task AddNewTeamMember(AddTeamMemberRequestVM teamMemberRequest)
+        public async Task AddNewTeamMember(AddTeamMemberRequestVM teamMemberRequest)
         {
             var user = await userRepository.GetUser(teamMemberRequest.EmailAddress);
             if (user != null)
             {
-                teamRepository.SaveTeamMember(this.userSessionHelper.TeamId,user.Id, this.userSessionHelper.UserId);                
+                teamRepository.SaveTeamMember(this.userSessionHelper.TeamId, user.Id, this.userSessionHelper.UserId);
             }
             else
             {
                 teamMemberRequest.TeamID = this.userSessionHelper.TeamId;
                 teamMemberRequest.CreatedById = this.userSessionHelper.UserId;
-                var id=await teamRepository.SaveTeamMemberRequest(teamMemberRequest);
+                var id = await teamRepository.SaveTeamMemberRequest(teamMemberRequest);
                 var requests = await teamRepository.GetTeamMemberInvitations(this.userSessionHelper.TeamId)
                     ;
-                var r= requests.FirstOrDefault(s => s.Id == id);
-                
+                var r = requests.FirstOrDefault(s => s.Id == id);
+
                 await emailManager.SendTeamMemberInvitationEmail(r);
             }
         }
@@ -135,7 +136,7 @@ namespace TeamBins6.Infrastrucutre.Services
         }
         public TeamDto GetTeam(int id)
         {
-            var t= this.teamRepository.GetTeam(id);
+            var t = this.teamRepository.GetTeam(id);
             if (t != null)
             {
                 t.IsRequestingUserTeamOwner = t.CreatedById == userSessionHelper.UserId;
@@ -176,20 +177,46 @@ namespace TeamBins6.Infrastrucutre.Services
             return teamId;
         }
 
-        public async Task<DashBoardItemSummaryVm> GetDashboardSummary()
+        public async Task<DashBoardItemSummaryVm> GetDashboardSummary(int teamId)
         {
+            var teamIdtoGetDataFor = GetTeamIdtoGetDataFor(teamId);
             var vm = new DashBoardItemSummaryVm
             {
-                IssueCountsByStatus = await issueRepository.GetIssueCountsPerStatus(this.userSessionHelper.TeamId)
+                IssueCountsByStatus = await issueRepository.GetIssueCountsPerStatus(teamIdtoGetDataFor)
             };
             return vm;
         }
-        public async Task<IEnumerable<ChartItem>> GetIssueCountPerPriority()
+
+        private int GetTeamIdtoGetDataFor(int teamId)
         {
-            var IssueCountsByStatus = await issueRepository.GetIssueCountsPerPriority(this.userSessionHelper.TeamId);
-           return IssueCountsByStatus;
+            var teamIdtoGetDataFor = 0;
+            var team = teamRepository.GetTeam(teamId);
+            if (team != null)
+            {
+                if (team.IsPublic)
+                {
+                    teamIdtoGetDataFor = team.Id;
+                }
+                else
+                {
+                    //May be a valid user requested for his private team
+                    if (team.Id == this.userSessionHelper.TeamId)
+                    {
+                        teamIdtoGetDataFor = team.Id;
+                    }
+                }
+            }
+            return teamIdtoGetDataFor;
         }
-        public IEnumerable<ActivityDto> GeActivityItems(int teamId,int count)
+
+        public async Task<IEnumerable<ChartItem>> GetIssueCountPerPriority(int teamId)
+        {
+            var teamIdtoGetDataFor = GetTeamIdtoGetDataFor(teamId);
+
+            var issueCountsByStatus = await issueRepository.GetIssueCountsPerPriority(teamIdtoGetDataFor);
+            return issueCountsByStatus;
+        }
+        public IEnumerable<ActivityDto> GeActivityItems(int teamId, int count)
         {
             var activities = activityRepository.GetActivityItems(teamId, count);
 
@@ -198,7 +225,7 @@ namespace TeamBins6.Infrastrucutre.Services
                 if (activity.ObjectType == "Issue")
                 {
                     activity.ObjectUrl = "Issues/" + activity.ObjectId;
-                    if (String.Equals(activity.Description , "CREATED",StringComparison.OrdinalIgnoreCase))
+                    if (String.Equals(activity.Description, "CREATED", StringComparison.OrdinalIgnoreCase))
                     {
                         activity.NewState = "";
                     }
@@ -208,7 +235,7 @@ namespace TeamBins6.Infrastrucutre.Services
 
                         activity.NewState = "from " + activity.OldState + " to " + activity.NewState;
                     }
-                    else if (String.Equals(activity.Description, "DUE DATE UPDATED",StringComparison.OrdinalIgnoreCase))
+                    else if (String.Equals(activity.Description, "DUE DATE UPDATED", StringComparison.OrdinalIgnoreCase))
                     {
                         activity.Description = "updated due date of";
                         activity.NewState = "to " + activity.NewState;
@@ -225,7 +252,7 @@ namespace TeamBins6.Infrastrucutre.Services
             }
 
             return activities;
-            ;
+
         }
 
         public async Task SaveVisibility(int id, bool isPublic)

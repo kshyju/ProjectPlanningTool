@@ -1,4 +1,4 @@
-﻿@model TeamBins.Common.ViewModels.DashBoardVM
+﻿@model TeamBins.Common.ViewModels.DashBoardVm
 @{
     ViewBag.Title = "Dashboard";
 
@@ -65,22 +65,27 @@
                 @foreach (var issue in Model.RecentIssues)
                 {
                     <tr>
-                        <td>@Html.ActionLink(issue.Title, "details", "issues", new { id = issue.Id }, null)</td>
+                        <td>@Html.ActionLink(issue.Title, "details", "issues", new {id = issue.Id}, null)</td>
                     </tr>
                 }
             </table>
         </div>
-        <div class="dashboardItem">
-            <h4>Issues assigned to me</h4>
-            <table>
-                @foreach (var issue in Model.IssuesAssignedToMe)
-            {
-                    <tr>
-                        <td>@Html.ActionLink(issue.Title, "details", "issues", new { id = issue.Id }, null)</td>
-                    </tr>
-                }
-            </table>
-        </div>
+
+        @if (Model.IsCurrentUserTeamMember)
+        {
+            <div class="dashboardItem">
+                <h4>Issues assigned to me</h4>
+                <table>
+                    @foreach (var issue in Model.IssuesAssignedToMe)
+                    {
+                        <tr>
+                            <td>@Html.ActionLink(issue.Title, "details", "issues", new {id = issue.Id}, null)</td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        }
+
     </div>
     <div class="dbItemContainer">
         <div class="dashboardItem">

@@ -13,21 +13,22 @@ module TeamBins {
 
         constructor($scope: ng.IScope, private summaryService: any, private pageContext any) {
 
-            
+
+            console.log(pageContext);
             this.getActivityStream(this.pageContext.TeamId);
-            this.getSummary();
-            this.getIssuesGroupedByPriority();
+            this.getSummary(this.pageContext.TeamId);
+            this.getIssuesGroupedByPriority(this.pageContext.TeamId);
 
         }
-        getActivityStream(teamId) {
+        getActivityStream(teamId:any) {
             var self = this;
             this.summaryService.getActivityStream(teamId,10).then(function (data) {
                 self.activities = data;
             });
         }
-        getIssuesGroupedByPriority() {
+        getIssuesGroupedByPriority(teamId: any) {
             var self = this;
-            this.summaryService.getIssuesGroupedByPriority().then(function (data) {
+            this.summaryService.getIssuesGroupedByPriority(teamId).then(function (data) {
                 self.issuesGroupedByPriority = data;
                 var pieChartData2 = [];
                 angular.forEach(self.issuesGroupedByPriority, function (a, b) {
@@ -39,9 +40,9 @@ module TeamBins {
 
             });
         }
-        getSummary() {
+        getSummary(teamId: any) {
             var self = this;
-            this.summaryService.getSummary().then(function (data) {
+            this.summaryService.getSummary(teamId).then(function (data) {
                 self.summaryItems = data.issueCountsByStatus;
                 var pieChartData = [];
                 angular.forEach(self.summaryItems, function(a, b) {                  

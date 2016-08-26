@@ -31,6 +31,7 @@ namespace TeamBins6.ViewComponents
                 var u = await userAccountManager.GetUser(userSessionHelper.UserId);
                 vm.UserDisplayName = u.Name;
                 vm.UserEmailAddress = u.EmailAddress;
+                vm.RKey = u.Id.GetHashCode();
 
                 var teams = await userAccountManager.GetTeams(userSessionHelper.UserId);
                 vm.Teams = teams.Select(x => new TeamDto {Id = x.Id, Name = x.Name}).ToList();

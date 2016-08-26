@@ -7,9 +7,10 @@ var TeamBins;
             if (pageContext === void 0) { pageContext = any; }
             this.summaryService = summaryService;
             this.pageContext = pageContext;
+            console.log(pageContext);
             this.getActivityStream(this.pageContext.TeamId);
-            this.getSummary();
-            this.getIssuesGroupedByPriority();
+            this.getSummary(this.pageContext.TeamId);
+            this.getIssuesGroupedByPriority(this.pageContext.TeamId);
         }
         DashboardController.prototype.getActivityStream = function (teamId) {
             var self = this;
@@ -17,9 +18,9 @@ var TeamBins;
                 self.activities = data;
             });
         };
-        DashboardController.prototype.getIssuesGroupedByPriority = function () {
+        DashboardController.prototype.getIssuesGroupedByPriority = function (teamId) {
             var self = this;
-            this.summaryService.getIssuesGroupedByPriority().then(function (data) {
+            this.summaryService.getIssuesGroupedByPriority(teamId).then(function (data) {
                 self.issuesGroupedByPriority = data;
                 var pieChartData2 = [];
                 angular.forEach(self.issuesGroupedByPriority, function (a, b) {
@@ -29,9 +30,9 @@ var TeamBins;
                 self.renderPie(pieChartData2, "issuesPriorityPieChart");
             });
         };
-        DashboardController.prototype.getSummary = function () {
+        DashboardController.prototype.getSummary = function (teamId) {
             var self = this;
-            this.summaryService.getSummary().then(function (data) {
+            this.summaryService.getSummary(teamId).then(function (data) {
                 self.summaryItems = data.issueCountsByStatus;
                 var pieChartData = [];
                 angular.forEach(self.summaryItems, function (a, b) {

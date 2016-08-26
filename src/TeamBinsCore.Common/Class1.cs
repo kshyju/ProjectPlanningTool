@@ -151,6 +151,7 @@ namespace TeamBins.Common.ViewModels
 
         public class UserMenuHeaderVM
         {
+            public int RKey { set; get; }
             public List<TeamDto> Teams { set; get; }
             public int SelectedTeam { set; get; }
             //  public int CurrentTeamID { set; get; }

@@ -14,15 +14,15 @@
 
         }
 
-        getSummary() {
-            return this.$http.get(this.appSettings.urls.baseUrl +"/api/team/summary")
+        getSummary(teamId) {
+            return this.$http.get(this.appSettings.urls.baseUrl + "/api/team/summary/" + teamId)
                 .then((response: any): any=> {
                     return response.data;
                 });
 
         }
-        getIssuesGroupedByPriority() {
-            return this.$http.get(this.appSettings.urls.baseUrl + "/api/team/IssuesGroupedByPrioroty")
+        getIssuesGroupedByPriority(teamId) {
+            return this.$http.get(this.appSettings.urls.baseUrl + "/api/team/IssuesGroupedByPrioroty/" + teamId)
                 .then((response: any): any => {
                     return response.data;
                 });

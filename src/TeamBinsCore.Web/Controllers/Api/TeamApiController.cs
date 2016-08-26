@@ -37,16 +37,16 @@ namespace TeamBins6.Controllers.Api
         }
 
         [HttpGet]    
-        [Route("Summary")]
-        public async Task<ObjectResult> GetSummary(int count)
+        [Route("Summary/{teamid}")]
+        public async Task<ObjectResult> GetSummary(int teamid,int count)
         {
-            return Ok(await this.teamManager.GetDashboardSummary());
+            return Ok(await this.teamManager.GetDashboardSummary(teamid));
         }
         [HttpGet]
-        [Route("IssuesGroupedByPrioroty")]
-        public async Task<ObjectResult> GetIssuesGroupedByPrioroty(int count)
+        [Route("IssuesGroupedByPrioroty/{teamid}")]
+        public async Task<ObjectResult> GetIssuesGroupedByPrioroty(int teamid,int count)
         {
-            return Ok(await this.teamManager.GetIssueCountPerPriority());
+            return Ok(await this.teamManager.GetIssueCountPerPriority(teamid));
         }
     }
 }

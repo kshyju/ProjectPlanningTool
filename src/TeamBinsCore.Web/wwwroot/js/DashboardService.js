@@ -11,14 +11,14 @@ var TeamBins;
                 return response.data;
             });
         };
-        DashboardService.prototype.getSummary = function () {
-            return this.$http.get(this.appSettings.urls.baseUrl + "/api/team/summary")
+        DashboardService.prototype.getSummary = function (teamId) {
+            return this.$http.get(this.appSettings.urls.baseUrl + "/api/team/summary/" + teamId)
                 .then(function (response) {
                 return response.data;
             });
         };
-        DashboardService.prototype.getIssuesGroupedByPriority = function () {
-            return this.$http.get(this.appSettings.urls.baseUrl + "/api/team/IssuesGroupedByPrioroty")
+        DashboardService.prototype.getIssuesGroupedByPriority = function (teamId) {
+            return this.$http.get(this.appSettings.urls.baseUrl + "/api/team/IssuesGroupedByPrioroty/" + teamId)
                 .then(function (response) {
                 return response.data;
             });

@@ -12,7 +12,7 @@ using TeamBins6.Infrastrucutre.Services;
 
 namespace TeamBins6.Controllers.Web
 {
-    [LoginCheckFilter]
+   // [LoginCheckFilter]
     public class DashboardController : BaseController
     {
         private readonly IUserAuthHelper userSessionHelper;
@@ -21,7 +21,7 @@ namespace TeamBins6.Controllers.Web
         private IIssueManager issueManager;
         private ITeamManager teamManager;
 
-        public DashboardController(IUserAuthHelper userSessionHelper,IUserAccountManager userAccountManager,IIssueManager issueManager,IProjectManager projectManager,ITeamManager teamManager)
+        public DashboardController(IUserAuthHelper userSessionHelper, IUserAccountManager userAccountManager, IIssueManager issueManager, IProjectManager projectManager, ITeamManager teamManager)
         {
             this.userSessionHelper = userSessionHelper;
             this.userAccountManager = userAccountManager;
@@ -31,30 +31,44 @@ namespace TeamBins6.Controllers.Web
 
         }
 
-        public async Task<IActionResult> Index(int? id)
+        [Route("dashboard/{teamName}")]
+        public async Task<IActionResult> Index(string teamName)
         {
-
-            int teamId = userSessionHelper.TeamId;
-            var vm = new DashBoardVM {  };
-            if (id != null)
+            var teamId = userSessionHelper.TeamId;
+            var vm = new DashBoardVm { };
+            if (!string.IsNullOrEmpty(teamName))
             {
-                var team = teamManager.GetTeam(id.Value);
+                var team = teamManager.GetTeam(teamName);
                 if (team != null && team.IsPublic)
                 {
-                    teamId = id.Value;
+                    teamId = team.Id;
+                    vm.TeamKey = teamId.GetHashCode();
+
+                    //If the user who is accessing is already a member of this team, then it is not a public dashboard response
+                    if (this.userSessionHelper.TeamId == team.Id && this.userSessionHelper.UserId > 0)
+                    {
+                        vm.IsCurrentUserTeamMember = true;
+                        userSessionHelper.SetTeamId(teamId);
+                    }
                 }
-                userSessionHelper.SetTeamId(id.Value);
-                await userAccountManager.SetDefaultTeam(userSessionHelper.UserId, id.Value);
+                //
+                await userAccountManager.SetDefaultTeam(userSessionHelper.UserId, teamId);
+            }
+            vm.TeamId = teamId;
+            if (userSessionHelper.TeamId > 0)
+            {
+                vm.IsCurrentUserTeamMember = true;
+                var myIssues = await issueManager.GetIssuesAssignedToUser(this.userSessionHelper.UserId);
+                vm.IssuesAssignedToMe = myIssues;
             }
 
-            var issues = this.issueManager.GetIssuesGroupedByStatusGroup(teamId,25).SelectMany(f => f.Issues).ToList();
+            var issues = this.issueManager.GetIssuesGroupedByStatusGroup(teamId, 25).SelectMany(f => f.Issues).ToList();
             vm.RecentIssues = issues;
 
-            var myIssues =await issueManager.GetIssuesAssignedToUser(this.userSessionHelper.UserId);
-            vm.IssuesAssignedToMe = myIssues;
+          
             vm.Projects = this.projectManager.GetProjects().ToList();
 
-            vm.TeamId = teamId;
+           
 
             return View(vm);
         }

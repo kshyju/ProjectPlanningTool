@@ -84,13 +84,16 @@ namespace TeamBins.Common.ViewModels
         public int DependableItemsCount { set; get; }
     }
 
-    public class DashBoardVM
+    public class DashBoardVm
     {
+        // The Request key ( A Hash of the UserID)
+        public int TeamKey { set; get; }
+        public bool IsCurrentUserTeamMember { set; get; }
         public int TeamId { set; get; }
         public List<ProjectDto> Projects { set; get; }
         public List<IssueDetailVM> RecentIssues { set; get; }
         public IEnumerable<IssueDetailVM> IssuesAssignedToMe { set; get; }
-        public DashBoardVM()
+        public DashBoardVm()
         {
             Projects = new List<ProjectDto>();
             RecentIssues = new List<IssueDetailVM>();
