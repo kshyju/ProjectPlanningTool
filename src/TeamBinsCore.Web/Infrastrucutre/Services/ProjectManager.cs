@@ -20,7 +20,7 @@ namespace TeamBins.Services
 
         Task<ProjectDto> GetDefaultProjectForCurrentTeam();
 
-        IEnumerable<ProjectDto> GetProjects();
+        IEnumerable<ProjectDto> GetProjects(int teamId);
 
         ProjectDto GetProject(int id);
 
@@ -61,10 +61,10 @@ namespace TeamBins.Services
         }
 
 
-        public IEnumerable<ProjectDto> GetProjects()
+        public IEnumerable<ProjectDto> GetProjects(int teamId)
         {
             var cacheKey = CacheKey.GetKey(CacheKey.Projects, userSessionHelper.TeamId);
-            return this.cache.Get(cacheKey, () => this.projectRepository.GetProjects(this.userSessionHelper.TeamId),60*60);
+            return this.cache.Get(cacheKey, () => this.projectRepository.GetProjects(teamId),60*60);
         }
 
         public ProjectDto GetProject(int id)

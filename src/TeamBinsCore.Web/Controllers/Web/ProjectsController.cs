@@ -18,10 +18,12 @@ namespace TeamBins6.Controllers.Web
     {
         private ITeamManager teamManager;
         private IProjectManager projectManager;
-        public ProjectsController(IProjectManager projectManager,ITeamManager teamManager)
+        private IUserAuthHelper userAuthHelper;
+        public ProjectsController(IProjectManager projectManager,ITeamManager teamManager, IUserAuthHelper userAuthHelper)
         {
             this.projectManager = projectManager;
             this.teamManager = teamManager;
+            this.userAuthHelper = userAuthHelper;
         }
       
         public async Task<IActionResult> Index()
@@ -29,7 +31,7 @@ namespace TeamBins6.Controllers.Web
             var vm = new TeamProjectListVM();
             var defaultProject = await projectManager.GetDefaultProjectForCurrentTeam();
 
-            vm.Projects =  projectManager.GetProjects().Select(s=> new ProjectVM { Id = s.Id,
+            vm.Projects =  projectManager.GetProjects(this.userAuthHelper.TeamId).Select(s=> new ProjectVM { Id = s.Id,
                 Name = s.Name,
                 IsDefaultProject =  (defaultProject!=null && s.Id== defaultProject.Id)
 

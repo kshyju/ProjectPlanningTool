@@ -1,0 +1,15 @@
+﻿@model TeamBins.Common.ViewModels.DashBoardVm
+@if (Model.IsCurrentUserTeamMember)
+{
+    <div class="dashboardItem">
+        <h4>Issues assigned to me</h4>
+        <table>
+            @foreach (var issue in Model.IssuesAssignedToMe)
+            {
+                <tr>
+                    <td>@Html.ActionLink(issue.Title, "details", "issues", new { id = issue.Id }, null)</td>
+                </tr>
+            }
+        </table>
+    </div>
+}

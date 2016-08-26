@@ -87,7 +87,7 @@ namespace TeamBins.Services
         public async Task<DefaultIssueSettings> GetIssueSettingsForUser()
         {
             var vm = new DefaultIssueSettings();
-            vm.Projects=this.projectManager.GetProjects()
+            vm.Projects=this.projectManager.GetProjects(this.userSessionHelper.TeamId)
                     .Select(s => new SelectListItem {Value = s.Id.ToString(), Text = s.Name})
                     .ToList();
 

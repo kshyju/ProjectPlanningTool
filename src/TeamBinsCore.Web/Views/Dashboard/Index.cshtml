@@ -48,43 +48,9 @@
         </div>
     </div>
     <div class="dbItemContainer">
-        <div class="dashboardItem">
-            <h4>Projects</h4>
-            <table>
-                @foreach (var project in Model.Projects)
-            {
-                    <tr>
-                        <td>@Html.ActionLink(project.Name, "index", "projects", new { id = project.Id }, null)</td>
-                    </tr>
-                }
-            </table>
-        </div>
-        <div class="dashboardItem">
-            <h4>Recent Issues</h4>
-            <table>
-                @foreach (var issue in Model.RecentIssues)
-                {
-                    <tr>
-                        <td>@Html.ActionLink(issue.Title, "details", "issues", new {id = issue.Id}, null)</td>
-                    </tr>
-                }
-            </table>
-        </div>
-
-        @if (Model.IsCurrentUserTeamMember)
-        {
-            <div class="dashboardItem">
-                <h4>Issues assigned to me</h4>
-                <table>
-                    @foreach (var issue in Model.IssuesAssignedToMe)
-                    {
-                        <tr>
-                            <td>@Html.ActionLink(issue.Title, "details", "issues", new {id = issue.Id}, null)</td>
-                        </tr>
-                    }
-                </table>
-            </div>
-        }
+        @Html.Partial("Partials/_Widget-Projects")
+        @Html.Partial("Partials/_Widget-RecentIssues")
+        @Html.Partial("Partials/_Widget-IssuesAssignedToMe")
 
     </div>
     <div class="dbItemContainer">

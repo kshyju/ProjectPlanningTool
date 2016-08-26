@@ -32,6 +32,7 @@ namespace TeamBins6.Controllers.Web
         }
 
         [Route("dashboard/{teamName}")]
+        [Route("dashboard")]
         public async Task<IActionResult> Index(string teamName)
         {
             var teamId = userSessionHelper.TeamId;
@@ -66,7 +67,7 @@ namespace TeamBins6.Controllers.Web
             vm.RecentIssues = issues;
 
           
-            vm.Projects = this.projectManager.GetProjects().ToList();
+            vm.Projects = this.projectManager.GetProjects(teamId).ToList();
 
            
 

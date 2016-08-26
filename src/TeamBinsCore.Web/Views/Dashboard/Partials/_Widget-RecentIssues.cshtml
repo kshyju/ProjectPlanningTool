@@ -1,0 +1,13 @@
+﻿@model TeamBins.Common.ViewModels.DashBoardVm
+<div class="dashboardItem">
+    <h4>Recent Issues</h4>
+    <table>
+        @foreach (var issue in Model.RecentIssues)
+        {
+            <tr>
+                <td><div class="issue-icon-@issue.Category.Name" style="margin-right: 6px;" title="@issue.Category.Name"></div></td>
+                <td>@Html.ActionLink(issue.Title, "details", "issues", new {id = issue.Id}, null)</td>
+            </tr>
+        }
+    </table>
+</div>
