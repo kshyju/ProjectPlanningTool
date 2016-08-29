@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace TeamBins.Common.ViewModels
@@ -163,7 +164,7 @@ namespace TeamBins.Common.ViewModels
 
         public string Version { set; get; }
 
-        // public List<HttpPostedFileBase> files { set; get; }
+         public List<IFormFile> Files { set; get; }
 
         public CreateIssue()
         {

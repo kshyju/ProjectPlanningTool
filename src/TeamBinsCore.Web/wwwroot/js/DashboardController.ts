@@ -12,9 +12,7 @@ module TeamBins {
 
 
         constructor($scope: ng.IScope, private summaryService: any, private pageContext any) {
-
-
-            console.log(pageContext);
+            
             this.getActivityStream(this.pageContext.TeamId);
             this.getSummary(this.pageContext.TeamId);
             this.getIssuesGroupedByPriority(this.pageContext.TeamId);

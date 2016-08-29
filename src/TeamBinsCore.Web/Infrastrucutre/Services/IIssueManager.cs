@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using TeamBins.Common;
@@ -217,9 +218,11 @@ namespace TeamBins.Services
             await issueRepository.SaveDueDate(issueId, dueDate, this.userSessionHelper.UserId);
         }
 
+     
     }
     public interface IIssueManager
     {
+        //Task<IEnumerable<string>> SaveAttachment(IFormFile formFile, int parentId);
         Task<IEnumerable<IssueDetailVM>> GetIssuesAssignedToUser(int userId);
         Task RemoveIssueMember(int issueId, int memberId);
         Task<IEnumerable<IssueMember>> GetIssueMembers(int issueId);

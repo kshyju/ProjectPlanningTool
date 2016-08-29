@@ -52,6 +52,10 @@ namespace TeamBins6.Controllers.Web
                         userSessionHelper.SetTeamId(teamId);
                     }
                 }
+                else
+                {
+                    return View("NotFound");
+                }
                 //
                 await userAccountManager.SetDefaultTeam(userSessionHelper.UserId, teamId);
             }

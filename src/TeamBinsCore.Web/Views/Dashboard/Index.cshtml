@@ -60,7 +60,7 @@
                 <li ng-repeat="activity in vm.activities |  orderBy:'CreatedTime':true" | limitTo:8">
                     <a href="#" class="activity-author">{{activity.actor.name}}</a> {{activity.description}}
 
-                    <a href="{{activity.objectUrl}}" class="activity-name">{{activity.objectTitle}}</a>
+                    <a href="@Url.Content("~")/{{activity.objectUrl}}" class="activity-name">{{activity.objectTitle}}</a>
                     <i>{{activity.newState}}</i>
                     <p class="activity-date">{{activity.createdTime | date:'medium'}}</p>
                 </li>

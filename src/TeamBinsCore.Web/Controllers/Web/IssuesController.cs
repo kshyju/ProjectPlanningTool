@@ -4,8 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Threading.Tasks;
-
-
+using Microsoft.AspNetCore.Http;
 using TeamBins.Common;
 using TeamBins.Common.ViewModels;
 using TeamBins.Services;
@@ -29,26 +28,27 @@ namespace TeamBins6.Controllers.Web
         private IIssueManager issueManager;
         //private IssueService issueService;
         IUserAuthHelper userSessionHelper;
+        private IUploadHandler uploadHandler;
 
-
-        public IssuesController(ICommentManager commentManager, IUserAuthHelper userSessionHelper, IProjectManager projectManager, IIssueManager issueManager, ITeamManager teamManager) //: base(repositary)
+        public IssuesController(ICommentManager commentManager, IUserAuthHelper userSessionHelper, IProjectManager projectManager, IIssueManager issueManager, ITeamManager teamManager, IUploadHandler uploadHandler) //: base(repositary)
         {
             this.issueManager = issueManager;
             this.projectManager = projectManager;
             this.userSessionHelper = userSessionHelper;
             this.commentManager = commentManager;
             this.teamManager = teamManager;
+            this.uploadHandler = uploadHandler;
         }
 
-         [Route("Issues")]
+        [Route("Issues")]
         [Route("Issues/{teamId}/{teamName}")]
-       
+
         public ActionResult Index(int? teamId, string teamName = "")
         {
             try
             {
                 var teamIdToUse = userSessionHelper.TeamId;
-                
+
 
                 var bugListVm = new IssueListVM();
 
@@ -148,8 +148,15 @@ namespace TeamBins6.Controllers.Web
         }
 
         [HttpPost]
+        [Route("Issues/QuickAdd")]
+        public async Task<IActionResult> QuickAdd([FromBody] CreateIssue model)
+        {
+            return await Add(model);
+        }
+
+        [HttpPost]
         [Route("Issues/Add")]
-        public async Task<IActionResult> Add([FromBody] CreateIssue model) //, List<IFormFile> files
+        public async Task<IActionResult> Add(CreateIssue model)
         {
             try
             {
@@ -159,20 +166,27 @@ namespace TeamBins6.Controllers.Web
                     var newVersion = await issueManager.SaveIssue(model, null);
                     var issueActivity = issueManager.SaveActivity(model, previousVersion, newVersion);
 
-                   // ConnectionManager c = new ConnectionManager(new DefaultDependencyResolver());
+                    // ConnectionManager c = new ConnectionManager(new DefaultDependencyResolver());
 
-                  //  var context = c.GetHubContext<IssuesHub>();
+                    //  var context = c.GetHubContext<IssuesHub>();
 
-                   // context.Clients.All.addNewTeamActivity(issueActivity);
+                    // context.Clients.All.addNewTeamActivity(issueActivity);
 
-                    //if ((files != null) && (files.Any()))
-                    //{
-                    //    int fileCounter = 0;
-                    //    foreach (var file in files)
-                    //    {
-                    //        // fileCounter = SaveAttachedDocument(model, result, fileCounter, file);
-                    //    }
-                    //}
+                    if ((model.Files != null) && (model.Files.Any()))
+                    {
+                        int fileCounter = 0;
+                        foreach (var file in model.Files)
+                        {
+                            using (Stream s = file.OpenReadStream())
+                            {
+                                var uploadResult =
+                                    await
+                                        uploadHandler.UploadFile(file.FileName,
+                                            MimeMapping.GetMimeMapping(file.FileName), s);
+                            }
+                            //fileCounter = SaveAttachedDocument(model, result, fileCounter, file);
+                        }
+                    }
                     if (model.IncludeIssueInResponse)
                     {
                         var newIssue = issueManager.GetIssue(newVersion.Id);
@@ -211,7 +225,7 @@ namespace TeamBins6.Controllers.Web
             var issue = new IssueDetailVM();
             issue.IsEditableForCurrentUser = this.teamManager.DoesCurrentUserBelongsToTeam();
             var members = await issueManager.GetIssueMembers(id);
-            issue.Members = members.Select(x=>x.Member);
+            issue.Members = members.Select(x => x.Member);
 
 
 

@@ -12,6 +12,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TeamBins.Common.ViewModels
 {
+    public class UploadResult
+    {
+        public string Identifier { get; set; }
+        public string Url { get; set; }
+        
+    }
+
     public class DashBoardItemSummaryVm
     {
         public int CurrentItems { set; get; }

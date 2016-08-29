@@ -15,6 +15,7 @@ using TeamBins6.Infrastrucutre.Cache;
 using Microsoft.AspNetCore.Http;
 using TeamBins6.Infrastrucutre.Filters;
 using TeamBins.Common.ViewModels;
+using TeamBins6.Infrastrucutre;
 
 namespace TeamBinsCore.Web
 {
@@ -49,13 +50,14 @@ namespace TeamBinsCore.Web
             services.AddTransient<IUserAccountManager, UserAccountManager>();
             services.AddTransient<IEmailManager, EmailManager>();
             services.AddTransient<IEmailRepository, EmailRepository>();
-
+            services.AddTransient<IUploadHandler, LocalFileSystemStorageHandler>();
             //services.AddScoped<>()
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddTransient<ICache, InMemoryCache>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddMemoryCache();
 
+            services.Configure<AppSettings>(Configuration.GetSection("TeamBins"));
 
 
             services.AddSession(s => s.IdleTimeout = TimeSpan.FromMinutes(30));

@@ -10,7 +10,7 @@
 
     function create(newIssue) {
         
-        return $http.post(appSettings.urls.baseUrl + '/issues/add', newIssue)
+        return $http.post(appSettings.urls.baseUrl + '/issues/quickadd', newIssue)
       .then(createIssueCompleted)
       .catch(createIssueFailed);
 

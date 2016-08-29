@@ -7,7 +7,6 @@ var TeamBins;
             if (pageContext === void 0) { pageContext = any; }
             this.summaryService = summaryService;
             this.pageContext = pageContext;
-            console.log(pageContext);
             this.getActivityStream(this.pageContext.TeamId);
             this.getSummary(this.pageContext.TeamId);
             this.getIssuesGroupedByPriority(this.pageContext.TeamId);

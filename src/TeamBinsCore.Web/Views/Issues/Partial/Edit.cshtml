@@ -1,6 +1,6 @@
 ﻿@model TeamBins.Common.ViewModels.CreateIssue
 
-@using (Html.BeginForm("Add", "Issues"))
+@using (Html.BeginForm("Add", "Issues",FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
 
     <div class="modal-dialog">
@@ -69,7 +69,7 @@
 
                                 </div>
                                 Add a file
-                                <input type="file" name="files" id="files" />
+                                <input type="file" name="Files" id="Files" />
                             </div>
                         </td>
                     </tr>

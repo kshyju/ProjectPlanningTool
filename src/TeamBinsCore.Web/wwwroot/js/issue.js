@@ -96,34 +96,73 @@
         $(document).on("click", "#btnSaveIssue", function (e) {
             e.preventDefault();
 
-            //var _this = $(this);
-
             var _this = $(this);
-            var model = {
-                Title: $("#Title").val(),
-                Id: $("#Id").val(),
-                Description: $("#Description").val(),
-                SelectedStatus: $("#SelectedStatus").val(),
-                SelectedPriority: $("#SelectedPriority").val(),
-                SelectedProject: $("#SelectedProject").val(),
-                SelectedCategory: $("#SelectedCategory").val()
-            };
-            console.log(model);
+
+
+            var fileUpload = $("#Files").get(0);
+            var files = fileUpload.files;
+
+            var formData = new FormData();
+
+            // Looping over all files and add it to FormData object  
+            for (var i = 0; i < files.length; i++) {
+                //console.log('(files[i].name:' + files[i].name);
+                formData.append('files', files[i]);
+            }
+
+            // You can update the jquery selector to use a css class if you want
+            $("input[type='text'],select,textarea").each(function (x, y) {
+                console.log('val', $(y).val());
+                formData.append($(y).attr("name"), $(y).val());
+            });
+
+            console.log(formData);
+
+            var fd = new FormData(document.querySelector("form"));
+            fd.append("Title", "This is some extra data");
+
             $.ajax({
-                type: "post",
-                contentType: 'application/json',
+                type: 'POST',
                 url: _this.closest("form").attr("action"),
-                data: JSON.stringify(model)
-            })
-                .done(function (response) {
-                    console.log(response);
-                    if (response.status === "Success") {
-                        $('#modal').modal('hide');
-                        window.location.href = window.location.href;
-                    } else {
-                        alert("Error updating issue!");
-                    }
-                });
+                data: formData,
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                console.log(response);
+                if (response.status === "Success") {
+                    $('#modal').modal('hide');
+                    window.location.href = window.location.href;
+                } else {
+                    alert("Error updating issue!");
+                }
+            });
+
+            
+            //var model = {
+            //    Title: $("#Title").val(),
+            //    Id: $("#Id").val(),
+            //    Description: $("#Description").val(),
+            //    SelectedStatus: $("#SelectedStatus").val(),
+            //    SelectedPriority: $("#SelectedPriority").val(),
+            //    SelectedProject: $("#SelectedProject").val(),
+            //    SelectedCategory: $("#SelectedCategory").val()
+            //};
+            //console.log(model);
+            //$.ajax({
+            //    type: "post",
+            //    contentType: 'application/json',
+            //    url: _this.closest("form").attr("action"),
+            //    data: JSON.stringify(model)
+            //})
+            //    .done(function (response) {
+            //        console.log(response);
+            //        if (response.status === "Success") {
+            //            $('#modal').modal('hide');
+            //            window.location.href = window.location.href;
+            //        } else {
+            //            alert("Error updating issue!");
+            //        }
+            //    });
 
         });
 
