@@ -111,7 +111,7 @@
             }
 
             // You can update the jquery selector to use a css class if you want
-            $("input[type='text'],select,textarea").each(function (x, y) {
+            $("input[type='text'],input[type='hidden'],select,textarea").each(function (x, y) {
                 console.log('val', $(y).val());
                 formData.append($(y).attr("name"), $(y).val());
             });

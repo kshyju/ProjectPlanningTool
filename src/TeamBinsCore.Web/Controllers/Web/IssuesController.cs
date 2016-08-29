@@ -14,6 +14,7 @@ using TeamBins6.Infrastrucutre.Services;
 using Microsoft.AspNetCore.Mvc;
 using TeamBinsCore.Common;
 using Microsoft.AspNetCore.Server.Kestrel.Internal.Http;
+using TeamBins.DataAccessCore;
 
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
@@ -29,8 +30,8 @@ namespace TeamBins6.Controllers.Web
         //private IssueService issueService;
         IUserAuthHelper userSessionHelper;
         private IUploadHandler uploadHandler;
-
-        public IssuesController(ICommentManager commentManager, IUserAuthHelper userSessionHelper, IProjectManager projectManager, IIssueManager issueManager, ITeamManager teamManager, IUploadHandler uploadHandler) //: base(repositary)
+        private IUploadManager uploadManager;
+        public IssuesController(ICommentManager commentManager, IUserAuthHelper userSessionHelper, IProjectManager projectManager, IIssueManager issueManager, ITeamManager teamManager, IUploadHandler uploadHandler, IUploadManager uploadManager) //: base(repositary)
         {
             this.issueManager = issueManager;
             this.projectManager = projectManager;
@@ -38,6 +39,7 @@ namespace TeamBins6.Controllers.Web
             this.commentManager = commentManager;
             this.teamManager = teamManager;
             this.uploadHandler = uploadHandler;
+            this.uploadManager = uploadManager;
         }
 
         [Route("Issues")]
@@ -167,25 +169,26 @@ namespace TeamBins6.Controllers.Web
                     var issueActivity = issueManager.SaveActivity(model, previousVersion, newVersion);
 
                     // ConnectionManager c = new ConnectionManager(new DefaultDependencyResolver());
-
                     //  var context = c.GetHubContext<IssuesHub>();
-
                     // context.Clients.All.addNewTeamActivity(issueActivity);
 
                     if ((model.Files != null) && (model.Files.Any()))
                     {
-                        int fileCounter = 0;
                         foreach (var file in model.Files)
                         {
-                            using (Stream s = file.OpenReadStream())
+                            var fileName = Path.GetFileName(file.FileName);
+                            using (var s = file.OpenReadStream())
                             {
-                                var uploadResult =
-                                    await
-                                        uploadHandler.UploadFile(file.FileName,
-                                            MimeMapping.GetMimeMapping(file.FileName), s);
+                                var uploadResult =await uploadHandler.UploadFile(fileName, MimeMapping.GetMimeMapping(fileName), s);
+                                if (!String.IsNullOrEmpty(uploadResult.Url))
+                                {
+                                    uploadResult.CreatedById = this.userSessionHelper.UserId;
+                                    uploadResult.Type = "Issue";
+                                    await this.uploadManager.SaveUpload(uploadResult);
+                                }
                             }
-                            //fileCounter = SaveAttachedDocument(model, result, fileCounter, file);
                         }
+                        
                     }
                     if (model.IncludeIssueInResponse)
                     {

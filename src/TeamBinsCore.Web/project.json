@@ -22,8 +22,8 @@
     "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0",
     "TeamBinsCore.Common": "1.0.0",
     "TeamBinsCore.DataAccess": "1.0.0",
-    "Microsoft.AspNetCore.Session": "1.1.0-alpha1-21657"
-   
+    "Microsoft.AspNetCore.Session": "1.1.0-alpha1-21657",
+    "WindowsAzure.Storage": "7.2.0"
   },
 
   "tools": {

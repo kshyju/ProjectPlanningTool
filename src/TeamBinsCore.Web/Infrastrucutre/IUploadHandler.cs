@@ -3,6 +3,8 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
 using TeamBins.Common.ViewModels;
 
 namespace TeamBins6.Infrastrucutre
@@ -10,7 +12,7 @@ namespace TeamBins6.Infrastrucutre
     public interface IUploadHandler
     {
         bool IsValid(string fileName, string contentType);
-        Task<UploadResult> UploadFile(string fileName, string contentType, Stream stream);
+        Task<UploadDto> UploadFile(string fileName, string contentType, Stream stream);
     }
     public class LocalFileSystemStorageHandler : IUploadHandler
     {
@@ -18,7 +20,7 @@ namespace TeamBins6.Infrastrucutre
         private IConfiguration configuration;
         public LocalFileSystemStorageHandler(IOptions<AppSettings> settings)
         {
-            
+
             this.settings = settings.Value;
         }
 
@@ -27,7 +29,7 @@ namespace TeamBins6.Infrastrucutre
             return (!String.IsNullOrEmpty(settings.LocalFileSystemStoragePath));
         }
 
-        public async Task<UploadResult> UploadFile(string fileName, string contentType, Stream stream)
+        public async Task<UploadDto> UploadFile(string fileName, string contentType, Stream stream)
         {
             string randomFile = Path.GetFileNameWithoutExtension(fileName) +
                                 "_" +
@@ -39,7 +41,7 @@ namespace TeamBins6.Infrastrucutre
                 Directory.CreateDirectory(settings.LocalFileSystemStoragePath);
             }
 
-           
+
             string targetFile = Path.GetFullPath(Path.Combine(settings.LocalFileSystemStoragePath, randomFile));
 
             using (FileStream destinationStream = File.Create(targetFile))
@@ -48,10 +50,10 @@ namespace TeamBins6.Infrastrucutre
             }
 
 
-            var result = new UploadResult
+            var result = new UploadDto
             {
-                Url = GetFullUrl(settings.LocalFileSystemStorageUriPrefix, randomFile),
-                Identifier = randomFile
+                FileName =  fileName,
+                Url = GetFullUrl(settings.LocalFileSystemStorageUriPrefix, randomFile)
             };
 
             return result;
@@ -69,55 +71,54 @@ namespace TeamBins6.Infrastrucutre
         }
     }
 
-    //public class AzureBlobStorageHandler : IUploadHandler
-    //{
+    public class AzureBlobStorageHandler : IUploadHandler
+    {
 
-    //    private const string JabbRUploadContainer = "teambins-issue-uploads";
-    //    private readonly IConfiguration configuration;
-    //    public AzureBlobStorageHandler(IConfiguration configuration)
-    //    {
-    //        this.configuration = configuration;
-    //    }
+        private const string JabbRUploadContainer = "teambins-issue-uploads";
+        private readonly IConfiguration configuration;
+        AppSettings settings;
+        // private IConfiguration configuration;
+        public AzureBlobStorageHandler(IOptions<AppSettings> settings)
+        {
 
-    //    public bool IsValid(string fileName, string contentType)
-    //    {
-    //        // Blob storage can handle any content
-    //        return true;
-    //    }
+            this.settings = settings.Value;
+        }
 
-    //    public async Task<UploadResult> UploadFile(string fileName, string contentType, Stream stream)
-    //    {
-    //        var account = CloudStorageAccount.Parse(_settingsFunc().AzureblobStorageConnectionString);
-    //        var client = account.CreateCloudBlobClient();
-    //        var container = client.GetContainerReference(JabbRUploadContainer);
+        public bool IsValid(string fileName, string contentType)
+        {
+            return !String.IsNullOrEmpty(this.settings.AzureblobStorageConnectionString);
+        }
 
-    //        // Randomize the filename everytime so we don't overwrite files
-    //        string randomFile = Path.GetFileNameWithoutExtension(fileName) +
-    //                            "_" +
-    //                            Guid.NewGuid().ToString().Substring(0, 4) + Path.GetExtension(fileName);
+        public async Task<UploadDto> UploadFile(string fileName, string contentType, Stream stream)
+        {
+            var account = CloudStorageAccount.Parse(settings.AzureblobStorageConnectionString);
+            var client = account.CreateCloudBlobClient();
+            var container = client.GetContainerReference(JabbRUploadContainer);
 
-    //        if (container.CreateIfNotExists())
-    //        {
-    //            // We need this to make files servable from blob storage
-    //            container.SetPermissions(new BlobContainerPermissions
-    //            {
-    //                PublicAccess = BlobContainerPublicAccessType.Blob
-    //            });
-    //        }
+            // Randomize the filename everytime so we don't overwrite files
+            string randomFile = Path.GetFileNameWithoutExtension(fileName) +
+                                "_" +
+                                Guid.NewGuid().ToString().Substring(0, 4) + Path.GetExtension(fileName);
 
-    //        CloudBlockBlob blockBlob = container.GetBlockBlobReference(randomFile);
-    //        blockBlob.Properties.ContentType = contentType;
+            await container.CreateIfNotExistsAsync(BlobContainerPublicAccessType.Blob, new BlobRequestOptions(), new OperationContext());
 
-    //        await Task.Factory.FromAsync((cb, state) => blockBlob.BeginUploadFromStream(stream, cb, state), ar => blockBlob.EndUploadFromStream(ar), null);
 
-    //        var result = new UploadResult
-    //        {
-    //            Url = blockBlob.Uri.ToString(),
-    //            Identifier = randomFile
-    //        };
 
-    //        return result;
-    //    }
-    //}
+            CloudBlockBlob blockBlob = container.GetBlockBlobReference(randomFile);
+            blockBlob.Properties.ContentType = contentType;
+
+            await blockBlob.UploadFromStreamAsync(stream);
+
+            //  await Task.Factory.FromAsync((cb, state) => blockBlob.UploadFromStreamAsync(stream, cb, state), ar => blockBlob.EndUploadFromStream(ar), null);
+
+            var result = new UploadDto
+            {
+                FileName = fileName,
+                Url = blockBlob.Uri.ToString(),
+            };
+
+            return result;
+        }
+    }
 
 }

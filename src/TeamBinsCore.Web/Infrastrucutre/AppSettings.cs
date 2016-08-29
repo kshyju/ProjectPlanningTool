@@ -4,5 +4,6 @@
     {
         public string LocalFileSystemStorageUriPrefix { set; get; }
         public string LocalFileSystemStoragePath { set; get; }
+        public string AzureblobStorageConnectionString { set; get; }
     }
 }
