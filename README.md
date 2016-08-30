@@ -13,6 +13,7 @@ Built with
 
 * <del>ASP.NET MVC 6</del> Asp.Net Core 1.0
 * <del>ASP.NET SignalR</del> Needs to be changed to support dot net core.
+* Windows Azure (Blog storage for file upload)
 * Angular JS
 * jQuery
 * jQuery UI
