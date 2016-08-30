@@ -60,7 +60,10 @@ namespace TeamBins.Services
             throw new NotImplementedException();
         }
 
-
+        private bool IsImageType(string fileExtension)
+        {
+            return fileExtension == ".png" || fileExtension == ".jpg" || fileExtension == ".tif";
+        }
 
         public async  Task<IssueDetailVM> GetIssue(int id)
         {
@@ -70,7 +73,7 @@ namespace TeamBins.Services
             foreach (var uploadDto in allUploads)
             {
                 uploadDto.FileExtn = Path.GetExtension(uploadDto.FileName);
-                if (uploadDto.FileExtn == ".png" || uploadDto.FileExtn == ".jpg")
+                if (IsImageType(uploadDto.FileExtn))
                 {
                     issue.Images.Add(uploadDto);
                 }
