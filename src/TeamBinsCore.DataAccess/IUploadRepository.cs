@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace TeamBins.DataAccessCore
 {
     public interface IUploadRepository
     {
+        Task<IEnumerable<UploadDto>> GetUploads(int parentId);
         Task<int> SaveUpload(UploadDto uploadDto);
     }
 
@@ -19,10 +21,20 @@ namespace TeamBins.DataAccessCore
         {
         }
 
+        public async Task<IEnumerable<UploadDto>> GetUploads(int parentId)
+        {
+            var q = @" SELECT * FROM  [dbo].[Upload] WHERE ParentId=@parentId";
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                return await con.QueryAsync<UploadDto>(q,new { parentId });
+            }
+        }
+
         public async Task<int> SaveUpload(UploadDto uploadDto)
         {
             var q =
-              @"INSERT INTO [dbo].[Upload](Filename,Type,Url,CreatedDate,CreatedById) VALUES(@fileName,@Type,@Url,@CreatedDate,@CreatedById);SELECT CAST(SCOPE_IDENTITY() as int)";
+              @"INSERT INTO [dbo].[Upload](Filename,Type,Url,CreatedDate,CreatedById,ParentId) VALUES(@fileName,@Type,@Url,@CreatedDate,@CreatedById,@ParentId);SELECT CAST(SCOPE_IDENTITY() as int)";
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();

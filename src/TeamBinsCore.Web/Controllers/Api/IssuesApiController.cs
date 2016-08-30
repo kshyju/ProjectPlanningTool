@@ -101,11 +101,11 @@ namespace TeamBins6.Controllers
         }
         [HttpPost]
         [Route("~/api/issue/{id}/delete")]
-        public ObjectResult Delete(int id, string token = "")
+        public async Task<ObjectResult> Delete(int id, string token = "")
         {
             try
             {
-                var issue = this.issueManager.GetIssue(id);
+                var issue = await this.issueManager.GetIssue(id);
                 if (issue != null && issue.Author.Id == this.userSessionHelper.UserId)
                 {
                     this.issueManager.Delete(id);

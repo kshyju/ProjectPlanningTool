@@ -74,7 +74,7 @@ namespace TeamBins6.Infrastrucutre
     public class AzureBlobStorageHandler : IUploadHandler
     {
 
-        private const string JabbRUploadContainer = "teambins-issue-uploads";
+        private const string UploadContainer = "teambins-issue-uploads";
         private readonly IConfiguration configuration;
         AppSettings settings;
         // private IConfiguration configuration;
@@ -93,7 +93,7 @@ namespace TeamBins6.Infrastrucutre
         {
             var account = CloudStorageAccount.Parse(settings.AzureblobStorageConnectionString);
             var client = account.CreateCloudBlobClient();
-            var container = client.GetContainerReference(JabbRUploadContainer);
+            var container = client.GetContainerReference(UploadContainer);
 
             // Randomize the filename everytime so we don't overwrite files
             string randomFile = Path.GetFileNameWithoutExtension(fileName) +

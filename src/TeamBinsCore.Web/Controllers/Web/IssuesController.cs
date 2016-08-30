@@ -121,10 +121,10 @@ namespace TeamBins6.Controllers.Web
 
 
         [Route("Issues/{id}")]
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
             var vm = new IssueDetailVM();
-            vm = this.issueManager.GetIssue(id);
+            vm = await this.issueManager.GetIssue(id);
             if (vm != null && vm.Active)
             {
                 vm.IsEditableForCurrentUser = this.teamManager.DoesCurrentUserBelongsToTeam();
@@ -135,9 +135,9 @@ namespace TeamBins6.Controllers.Web
         }
 
         [Route("Issues/edit/{id}")]
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            var issue = this.issueManager.GetIssue(id);
+            var issue = await this.issueManager.GetIssue(id);
             if (issue != null && issue.Active)
             {
                 var vm = new CreateIssue(issue);
@@ -164,7 +164,7 @@ namespace TeamBins6.Controllers.Web
             {
                 if (ModelState.IsValid)
                 {
-                    var previousVersion = issueManager.GetIssue(model.Id);
+                    var previousVersion =await  issueManager.GetIssue(model.Id);
                     var newVersion = await issueManager.SaveIssue(model, null);
                     var issueActivity = issueManager.SaveActivity(model, previousVersion, newVersion);
 
@@ -182,6 +182,7 @@ namespace TeamBins6.Controllers.Web
                                 var uploadResult =await uploadHandler.UploadFile(fileName, MimeMapping.GetMimeMapping(fileName), s);
                                 if (!String.IsNullOrEmpty(uploadResult.Url))
                                 {
+                                    uploadResult.ParentId = model.Id;
                                     uploadResult.CreatedById = this.userSessionHelper.UserId;
                                     uploadResult.Type = "Issue";
                                     await this.uploadManager.SaveUpload(uploadResult);

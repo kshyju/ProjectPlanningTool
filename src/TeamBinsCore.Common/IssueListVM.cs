@@ -52,8 +52,8 @@ namespace TeamBins.Common.ViewModels
     {
         public bool IsReadOnly { set; get; }
         public bool IsStarredForUser { set; get; }
-        public List<DocumentVM> Images { set; get; }
-        public List<DocumentVM> Attachments { set; get; }
+        public List<UploadDto> Images { set; get; }
+        public List<UploadDto> Attachments { set; get; }
         public IEnumerable<UserDto> Members { set; get; }
         //    public List<CommentVM> Comments { set; get; }
         public bool IsEditableForCurrentUser { set; get; }
@@ -63,8 +63,8 @@ namespace TeamBins.Common.ViewModels
         public string LastModifiedBy { set; get; }
         public IssueDetailVM()
         {
-            Images = new List<DocumentVM>();
-            Attachments = new List<DocumentVM>();
+            Images = new List<UploadDto>();
+            Attachments = new List<UploadDto>();
             Members = new List<UserDto>();
             //     Comments = new List<CommentVM>();
         }
@@ -125,17 +125,17 @@ namespace TeamBins.Common.ViewModels
         public bool Active { set; get; }
     }
 
-    public class DocumentVM
-    {
-        public int ID { set; get; }
-        public string FileName { set; get; }
-        public string FileKey { set; get; }
-        public string FileExtn { set; get; }
-    }
-    public class ImageVM : DocumentVM
-    {
+    //public class DocumentVM
+    //{
+    //    public int ID { set; get; }
+    //    public string FileName { set; get; }
+    //    public string FileKey { set; get; }
+    //    public string FileExtn { set; get; }
+    //}
+    //public class ImageVM : DocumentVM
+    //{
 
-    }
+    //}
 
     public class CreateIssue : IssueDetailVM
     {

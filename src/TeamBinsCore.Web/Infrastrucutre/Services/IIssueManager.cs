@@ -43,15 +43,17 @@ namespace TeamBins.Services
         private IActivityRepository activityRepository;
         private IIssueRepository issueRepository;
         private IProjectRepository iProjectRepository;
+        private IUploadRepository uploadRepository;
         private IUserAuthHelper userSessionHelper;
         private readonly ICache cache;
-        public IssueManager(IIssueRepository issueRepository, IProjectRepository iProjectRepository, IActivityRepository activityRepository, IUserAuthHelper userSessionHelper, ICache cache)
+        public IssueManager(IIssueRepository issueRepository, IProjectRepository iProjectRepository, IActivityRepository activityRepository, IUserAuthHelper userSessionHelper, ICache cache,IUploadRepository uploadRepository)
         {
             this.issueRepository = issueRepository;
             this.iProjectRepository = iProjectRepository;
             this.activityRepository = activityRepository;
             this.userSessionHelper = userSessionHelper;
             this.cache = cache;
+            this.uploadRepository = uploadRepository;
         }
         public DashBoardItemSummaryVm GetDashboardSummaryVM(int teamId)
         {
@@ -60,9 +62,24 @@ namespace TeamBins.Services
 
 
 
-        public IssueDetailVM GetIssue(int id)
+        public async  Task<IssueDetailVM> GetIssue(int id)
         {
-            return this.issueRepository.GetIssue(id, this.userSessionHelper.UserId);
+            var issue = this.issueRepository.GetIssue(id, this.userSessionHelper.UserId);
+            var uploads = await this.uploadRepository.GetUploads(id);
+            var allUploads = uploads.ToList();
+            foreach (var uploadDto in allUploads)
+            {
+                uploadDto.FileExtn = Path.GetExtension(uploadDto.FileName);
+                if (uploadDto.FileExtn == ".png" || uploadDto.FileExtn == ".jpg")
+                {
+                    issue.Images.Add(uploadDto);
+                }
+                else
+                {
+                    issue.Attachments.Add(uploadDto);
+                }
+            }
+            return issue;
         }
 
         public IEnumerable<IssueVM> GetIssues(List<int> statusIds, int count)
@@ -250,7 +267,7 @@ namespace TeamBins.Services
         IEnumerable<IssueVM> GetIssues(List<int> statusIds, int count);
         Task<IssueDetailVM> SaveIssue(CreateIssue issue, List<IFormFile> files);
         DashBoardItemSummaryVm GetDashboardSummaryVM(int count);
-        IssueDetailVM GetIssue(int id);
+        Task<IssueDetailVM> GetIssue(int id);
         ActivityDto SaveActivity(CreateIssue model, IssueDetailVM previousVersion, IssueDetailVM newVersion);
 
         IEnumerable<IssuesPerStatusGroup> GetIssuesGroupedByStatusGroup(int teamId, int count);

@@ -36,7 +36,7 @@
                 @foreach (var img in Model.Images)
                 {
                     <div>
-                        <a href="~/uploads/@(img.FileKey)" target="_blank"><img class="detailImg" src="~/uploads/@(img.FileKey)" /></a>
+                        <a href="@img.Url" target="_blank"><img class="detailImg" src="@img.Url" /></a>
                     </div>
                 }
             </div>
@@ -47,7 +47,7 @@
                     <ul>
                         @foreach (var img in Model.Attachments)
                         {
-                            <li><a href="~/uploads/@img.FileKey" target="_blank">@img.FileName</a></li>
+                            <li><a href="@img.Url" target="_blank">@img.FileName</a></li>
                         }
                     </ul>
                 </div>

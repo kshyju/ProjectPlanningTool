@@ -257,7 +257,10 @@ div#issueMeta
     padding:10px; float:left; padding-top:5px;
 }
 .detailImg {
-    width:98%;
+    max-width:98%; background:#FFF;
+     -webkit-box-shadow: 0 10px 6px -6px #777;
+       -moz-box-shadow: 0 10px 6px -6px #777;
+            box-shadow: 0 10px 6px -6px #777;
 }
 .logo
 {
