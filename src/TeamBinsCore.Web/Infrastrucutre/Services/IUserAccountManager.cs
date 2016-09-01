@@ -119,7 +119,7 @@ namespace TeamBins.Services
         public async Task<LoggedInSessionInfo> CreateAccount(UserAccountDto userAccount)
         {
             var userId = await userRepository.CreateAccount(userAccount);
-            var teamName = userAccount.Name.Replace(" ", "") + "'s Team";
+            var teamName = userAccount.Name.Replace(" ", "") + " Team";
             var teamId = await Task.FromResult(teamRepository.SaveTeam(new TeamDto {CreatedById = userId, Name = teamName }));
             await this.userRepository.SetDefaultTeam(userId, teamId);
             return new LoggedInSessionInfo() {TeamId = teamId, UserId = userId, UserDisplayName = userAccount.Name};

@@ -6,8 +6,13 @@
 
 }
 
-
-
+@if (!Model.IsCurrentUserTeamMember)
+{
+    <div>
+        <div data-duration="10000" class="alert alert-info" role="alert">You are seeing a view only version of the dashboard because the admin of this dashbaord made it public-readonly visible. </div>
+    </div>
+    
+}
 
 <div ng-app="teamBins" ng-controller="dashboardCtrl as vm" ng-cloak>
     <div class="dbItemContainer">

@@ -1,5 +1,4 @@
 ﻿@using System.Threading.Tasks
-@using TeamBins.Common
 @model TeamBins.Common.ViewModels.UserMenuHeaderVM
 <div class="header">
     <div class="headerLeft">
@@ -20,7 +19,7 @@
             <p>Switch team</p>
             @foreach (var team in Model.Teams)
             {
-                <a asp-action="index" class="team-item"  asp-route-id="@team.Id" asp-controller="Dashboard"><div class="available-team">@team.Name</div></a>
+                <a asp-action="index" class="team-item" data-id="@team.Id"  asp-route-teamName="@team.Name" asp-controller="Dashboard"><div class="available-team">@team.Name</div></a>
             }
             <div class="team-operations">
                 <a asp-action="index" asp-controller="team">Manage Teams</a>

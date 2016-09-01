@@ -16,11 +16,13 @@ namespace TeamBins6.Controllers.Web
     {
         IUserAccountManager userAccountManager;
         private IUserAuthHelper userSessionHelper;
+        private ITeamManager teamManager;
 
-        public AccountController(IUserAccountManager userAccountManager, IUserAuthHelper userSessionHelper)
+        public AccountController(IUserAccountManager userAccountManager, IUserAuthHelper userSessionHelper,ITeamManager teamManager)
         {
             this.userAccountManager = userAccountManager;
             this.userSessionHelper = userSessionHelper;
+            this.teamManager = teamManager;
         }
 
         public IActionResult Login()
@@ -136,6 +138,15 @@ namespace TeamBins6.Controllers.Web
         {
             this.userSessionHelper.Logout();
             return RedirectToAction("login", "account");
+        }
+        public async Task<JsonResult> SwitchTeam(int id)
+        {
+            if (!teamManager.DoesCurrentUserBelongsToTeam(this.userSessionHelper.UserId, id))
+                return Json(new {Status = "Error", Message = "You do not belong to this team!"});
+
+            userSessionHelper.SetTeamId(id);
+            await userAccountManager.SetDefaultTeam(userSessionHelper.UserId, id);
+            return Json(new {Status = "Success"});
         }
     }
 }

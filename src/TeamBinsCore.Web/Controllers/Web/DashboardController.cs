@@ -12,7 +12,7 @@ using TeamBins6.Infrastrucutre.Services;
 
 namespace TeamBins6.Controllers.Web
 {
-   // [LoginCheckFilter]
+    // [LoginCheckFilter]
     public class DashboardController : BaseController
     {
         private readonly IUserAuthHelper userSessionHelper;
@@ -40,40 +40,53 @@ namespace TeamBins6.Controllers.Web
             if (!string.IsNullOrEmpty(teamName))
             {
                 var team = teamManager.GetTeam(teamName);
-                if (team != null && team.IsPublic)
+                if (team != null)
                 {
-                    teamId = team.Id;
-                    vm.TeamKey = teamId.GetHashCode();
-
-                    //If the user who is accessing is already a member of this team, then it is not a public dashboard response
-                    if (this.userSessionHelper.TeamId == team.Id && this.userSessionHelper.UserId > 0)
+                    //If the current user who is accessing is already a member of this team,
+                    if (teamManager.DoesCurrentUserBelongsToTeam(this.userSessionHelper.UserId,team.Id))
                     {
                         vm.IsCurrentUserTeamMember = true;
-                        userSessionHelper.SetTeamId(teamId);
+                        //userSessionHelper.SetTeamId(team.Id);
+                        //await userAccountManager.SetDefaultTeam(userSessionHelper.UserId, teamId);
+                    }
+                    else
+                    {
+                        // He is either accessing a public dashboard or TRYING to peep into a private dashboard
+
+                        if (team.IsPublic)
+                        {
+                            teamId = team.Id;
+                            vm.TeamKey = teamId.GetHashCode();
+                        }
+                        else
+                        {
+                            return View("NotFound");
+                        }
                     }
                 }
                 else
                 {
                     return View("NotFound");
                 }
-                //
-                await userAccountManager.SetDefaultTeam(userSessionHelper.UserId, teamId);
             }
             vm.TeamId = teamId;
-            if (userSessionHelper.TeamId > 0)
+            if (userSessionHelper.TeamId > 0 )
             {
-                vm.IsCurrentUserTeamMember = true;
-                var myIssues = await issueManager.GetIssuesAssignedToUser(this.userSessionHelper.UserId);
-                vm.IssuesAssignedToMe = myIssues;
+                if (teamManager.DoesCurrentUserBelongsToTeam(this.userSessionHelper.UserId, teamId))
+                {
+                    vm.IsCurrentUserTeamMember = true;
+                    var myIssues = await issueManager.GetIssuesAssignedToUser(this.userSessionHelper.UserId);
+                    vm.IssuesAssignedToMe = myIssues;
+                }
             }
 
             var issues = this.issueManager.GetIssuesGroupedByStatusGroup(teamId, 25).SelectMany(f => f.Issues).ToList();
             vm.RecentIssues = issues;
 
-          
+
             vm.Projects = this.projectManager.GetProjects(teamId).ToList();
 
-           
+
 
             return View(vm);
         }

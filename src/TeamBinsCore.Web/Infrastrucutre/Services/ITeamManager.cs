@@ -22,7 +22,7 @@ namespace TeamBins6.Infrastrucutre.Services
         TeamDto GetTeam(string name);
         List<TeamDto> GetTeams();
         IEnumerable<ActivityDto> GeActivityItems(int teamId, int count);
-        bool DoesCurrentUserBelongsToTeam();
+        bool DoesCurrentUserBelongsToTeam(int userId, int teamId);
 
         Task<DashBoardItemSummaryVm> GetDashboardSummary(int teamId);
         void Delete(int id);
@@ -154,9 +154,9 @@ namespace TeamBins6.Infrastrucutre.Services
             teamRepository.Delete(id);
         }
 
-        public bool DoesCurrentUserBelongsToTeam()
+        public bool DoesCurrentUserBelongsToTeam(int userId, int teamId)
         {
-            var member = this.teamRepository.GetTeamMember(this.userSessionHelper.TeamId, this.userSessionHelper.UserId);
+            var member = this.teamRepository.GetTeamMember(teamId, userId);
             return member != null;
 
         }

@@ -15,10 +15,12 @@ namespace TeamBins6.Controllers.Web
     [LoginCheckFilter]
     public class TeamController : Controller
     {
+        private IUserAuthHelper userAuthHelper;
         private ITeamManager teamManager;
-        public TeamController(ITeamManager teamManager)
+        public TeamController(ITeamManager teamManager,IUserAuthHelper userAuthHelper)
         {
             this.teamManager = teamManager;
+            this.userAuthHelper = userAuthHelper;
         }
         // GET: /<controller>/
         public IActionResult Index()
@@ -126,6 +128,8 @@ namespace TeamBins6.Controllers.Web
             return View("NotFound");
 
         }
+
+
     }
 }
 

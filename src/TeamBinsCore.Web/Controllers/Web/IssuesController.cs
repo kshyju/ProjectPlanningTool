@@ -127,7 +127,7 @@ namespace TeamBins6.Controllers.Web
             vm = await this.issueManager.GetIssue(id);
             if (vm != null && vm.Active)
             {
-                vm.IsEditableForCurrentUser = this.teamManager.DoesCurrentUserBelongsToTeam();
+                vm.IsEditableForCurrentUser = this.teamManager.DoesCurrentUserBelongsToTeam(this.userSessionHelper.UserId,this.userSessionHelper.TeamId);
                 vm.IsReadOnly = this.userSessionHelper.UserId == 0;
                 return View(vm);
             }
@@ -143,7 +143,7 @@ namespace TeamBins6.Controllers.Web
                 var vm = new CreateIssue(issue);
                 this.issueManager.LoadDropdownData(vm);
 
-                vm.IsEditableForCurrentUser = this.teamManager.DoesCurrentUserBelongsToTeam();
+                vm.IsEditableForCurrentUser = this.teamManager.DoesCurrentUserBelongsToTeam(this.userSessionHelper.UserId, this.userSessionHelper.TeamId);
                 return PartialView("~/Views/Issues/Partial/Edit.cshtml", vm);
             }
             return PartialView("NotFound");
@@ -227,7 +227,7 @@ namespace TeamBins6.Controllers.Web
         public async Task<IActionResult> Members(int id)
         {
             var issue = new IssueDetailVM();
-            issue.IsEditableForCurrentUser = this.teamManager.DoesCurrentUserBelongsToTeam();
+            issue.IsEditableForCurrentUser = this.teamManager.DoesCurrentUserBelongsToTeam(this.userSessionHelper.UserId, this.userSessionHelper.TeamId);
             var members = await issueManager.GetIssueMembers(id);
             issue.Members = members.Select(x => x.Member);
 
