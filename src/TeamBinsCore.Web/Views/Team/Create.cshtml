@@ -1,27 +1,31 @@
-﻿@model TechiesWeb.TeamBins.ViewModels.TeamVM
+﻿@using System.Threading.Tasks
+@using TeamBins.Common.ViewModels
+@model TeamBins.Common.ViewModels.TeamVM
 @{
     ViewBag.Title = "Create";
 }
 
 <div class="centralHead">Add New Team</div>
 <div class="divPageContent">
-<div class="divForm">
-    
-    @using(Html.BeginForm())
-    {
-<table class="tblform">
-    <tr>
-        <th>Team Name</th>
-        <td>@Html.TextBoxFor(x=>x.Name)</td>
-    </tr>
->
-    <tr>
-        <th></th>
-        <td>
-            <input type="submit" value="Save" />
-        </td>
-    </tr>
-</table>
-    }
+    <div class="divForm">
+
+        <form asp-action="Create" asp-controller="Team">
+            <table class="tblform">
+                <tr>
+                    <th>Team Name</th>
+                    <td>
+                        <input type="text" asp-for="Name" />
+                    </td>
+                </tr>
+                >
+                <tr>
+                    <th></th>
+                    <td>
+                        <input type="submit" value="Save" />
+                    </td>
+                </tr>
+            </table>
+        </form>
+
     </div>
 </div>

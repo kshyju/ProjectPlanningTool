@@ -221,7 +221,7 @@ namespace TeamBins.Common.ViewModels
             public string JoinedDate { set; get; }
             public string MemberType { set; get; }
             public string AvatarHash { set; get; }
-            public string JobTitle { set; get; }
+           
             public string LastLoginDate { set; get; }
 
             public int? DefaultProjectId { set; get; }
@@ -229,7 +229,7 @@ namespace TeamBins.Common.ViewModels
         public class AddTeamMemberRequestVM : MemberVM
         {
             public int Id { set; get; }
-            public int TeamID { set; get; }
+            public int TeamId { set; get; }
             public int CreatedById { set; get; }
 
             public string ActivationCode { set; get; }

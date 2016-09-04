@@ -50,7 +50,7 @@ namespace TeamBinsCore.Web
             services.AddTransient<IUserAccountManager, UserAccountManager>();
             services.AddTransient<IEmailManager, EmailManager>();
             services.AddTransient<IEmailRepository, EmailRepository>();
-            services.AddTransient<IUploadHandler,LocalFileSystemStorageHandler>(); //AzureBlobStorageHandler
+            services.AddTransient<IUploadHandler, AzureBlobStorageHandler>(); //AzureBlobStorageHandler
             services.AddTransient<IUploadManager, UploadManager>();
             services.AddTransient<IUploadRepository, UploadRepository>();
             //services.AddScoped<>()

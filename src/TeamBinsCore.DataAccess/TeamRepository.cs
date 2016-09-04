@@ -56,7 +56,7 @@ namespace TeamBinsCore.DataAccess
                 con.Open();
                 var p = await con.QueryAsync<int>(q, new
                 {
-                    @teamId = teamMemberRequest.TeamID,
+                    @teamId = teamMemberRequest.TeamId,
                     @email = teamMemberRequest.EmailAddress,
                     @a = a,
                     @userId = teamMemberRequest.CreatedById,

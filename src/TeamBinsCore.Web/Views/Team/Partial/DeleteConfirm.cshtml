@@ -1,9 +1,7 @@
 ﻿@using System.Threading.Tasks
-@using TeamBins.Common.ViewModels
 @model TeamBins.Common.ViewModels.DeleteProjectConfirmVM
-@using(Html.BeginForm("DeleteConfirm","Team"))
-{
-<div class="modal-dialog">
+<form asp-action="DeleteConfirm" asp-controller="Team">
+    <div class="modal-dialog">
         <div class="modal-content" style="width:500px;">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -17,7 +15,8 @@
                     {
                         <tr>
                             <td>
-                                <div class="deleteMeta">You cannot delete this team because <b> @Model.DependableItemsCount</b> issues are associated to this project.</div>
+                                <div class="deleteMeta">You cannot delete this team because <b> @Model.DependableItemsCount</b> issues are associated to this project.
+                                </div>
                             </td>
                         </tr>
                     }
@@ -28,16 +27,16 @@
                         </tr>
                     }
                 </table>
-                @Html.HiddenFor(x => x.Id)
+                <input type="hidden"  asp-for="Id"/>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                @if (Model.DependableItemsCount==0)
+                @if (Model.DependableItemsCount == 0)
                 {
                     <button type="button" id="btnDelTeam" class="btn btn-primary">Delete</button>
                 }
             </div>
         </div>
-    </div>
-}
+    </div>  
+</form>
 

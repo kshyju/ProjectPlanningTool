@@ -23,10 +23,9 @@
 
                     <p>Enable the checkbox below to make this board public</p>
                     <div>
-                        <input asp-for="IsPublic" /> Public
+                        <input asp-for="IsPublic"/> Public
                     </div>
-                    @Html.HiddenFor(s => s.Id)
-
+                    <input type="hidden" asp-for="Id" />
                 </div>
 
             </div>

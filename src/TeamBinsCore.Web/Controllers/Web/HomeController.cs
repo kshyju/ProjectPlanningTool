@@ -43,7 +43,7 @@ namespace TeamBins6.Controllers
             this.userSessionHelper = userSessionHelper;
             this.userAccountManager = userAccountManager;
         }
-
+      
         [HttpPost]
         public async Task<IActionResult> SwitchTeam(int teamId)
         { 

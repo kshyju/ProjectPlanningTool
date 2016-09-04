@@ -64,8 +64,8 @@ namespace TeamBins6.Infrastrucutre.Services
                 if (currentUser != null && currentUser.EmailAddress == invitation.EmailAddress)
                 {
                     // Now asssociate this user to the team.
-                    this.teamRepository.SaveTeamMember(invitation.TeamID, this.userSessionHelper.UserId, this.userSessionHelper.UserId);
-                    this.userSessionHelper.SetTeamId(invitation.TeamID);
+                    this.teamRepository.SaveTeamMember(invitation.TeamId, this.userSessionHelper.UserId, this.userSessionHelper.UserId);
+                    this.userSessionHelper.SetTeamId(invitation.TeamId);
 
                     await this.teamRepository.DeleteTeamMemberInvitation(invitation.Id);
                     return true;
@@ -90,7 +90,7 @@ namespace TeamBins6.Infrastrucutre.Services
             }
             else
             {
-                teamMemberRequest.TeamID = this.userSessionHelper.TeamId;
+                teamMemberRequest.TeamId = this.userSessionHelper.TeamId;
                 teamMemberRequest.CreatedById = this.userSessionHelper.UserId;
                 var id = await teamRepository.SaveTeamMemberRequest(teamMemberRequest);
                 var requests = await teamRepository.GetTeamMemberInvitations(this.userSessionHelper.TeamId)
