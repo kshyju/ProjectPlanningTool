@@ -1,13 +1,11 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using TeamBins.Common.Infrastructure.Enums.TeamBins.Helpers.Enums;
 using TeamBins.Common.ViewModels;
 using TeamBins.Services;
 using TeamBins6.Controllers;
-using TeamBins6.Infrastrucutre;
 using TeamBins6.Infrastrucutre.Filters;
 
 
@@ -16,24 +14,21 @@ namespace TeamBins.Controllers
     [LoginCheckFilter]
     public class SettingsController : BaseController
     {
-        readonly IUserAccountManager userAccountManager;
+        readonly IUserAccountManager _userAccountManager;
         public SettingsController(IUserAccountManager userAccountManager)
         {
-            this.userAccountManager = userAccountManager;
+            this._userAccountManager = userAccountManager;
         }
 
         // GET: Settings
         public async Task<IActionResult> Index()
-        {
-           //var msg= TempData["AlertMessages"] as Dictionary<string,string>;
-            
+        {  
             var vm = new SettingsVm
             {
-                Profile = await userAccountManager.GetUserProfile(),
-                NotificationSettings =await userAccountManager.GetNotificationSettings(),
-                IssueSettings = await userAccountManager.GetIssueSettingsForUser()
+                Profile = await _userAccountManager.GetUserProfile(),
+                NotificationSettings =await _userAccountManager.GetNotificationSettings(),
+                IssueSettings = await _userAccountManager.GetIssueSettingsForUser()
             };
-
             return View(vm);
         }
 
@@ -41,7 +36,7 @@ namespace TeamBins.Controllers
         [HttpPost]
         public async Task<ActionResult> Notifications(UserEmailNotificationSettingsVM model)
         {
-            await userAccountManager.SaveNotificationSettings(model);
+            await _userAccountManager.SaveNotificationSettings(model);
             SetMessage(MessageType.Success,"Settings updated successfully");
             return RedirectToAction("Index", "Settings");
         }
@@ -50,7 +45,7 @@ namespace TeamBins.Controllers
         {
             if (ModelState.IsValid)
             {
-                await userAccountManager.UpdateProfile(model);
+                await _userAccountManager.UpdateProfile(model);
                 SetMessage(MessageType.Success, "Profile updated successfully");
                 return RedirectToAction("Index", "Settings");
 
@@ -79,7 +74,7 @@ namespace TeamBins.Controllers
         public ActionResult Settings(DefaultIssueSettings model)
         {
 
-            userAccountManager.SaveDefaultProjectForTeam(model);
+            _userAccountManager.SaveDefaultProjectForTeam(model);
             SetMessage(MessageType.Success, "Settings updated successfully");
             return RedirectToAction("Index", "Settings");
 

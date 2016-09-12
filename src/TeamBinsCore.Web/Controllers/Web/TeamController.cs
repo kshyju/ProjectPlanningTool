@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using TeamBins.Common;
 using TeamBins.Common.ViewModels;
 using TeamBins6.Infrastrucutre.Filters;
@@ -15,17 +16,17 @@ namespace TeamBins6.Controllers.Web
     [LoginCheckFilter]
     public class TeamController : Controller
     {
-        private IUserAuthHelper userAuthHelper;
-        private ITeamManager teamManager;
+        private IUserAuthHelper _userAuthHelper;
+        private ITeamManager _teamManager;
         public TeamController(ITeamManager teamManager,IUserAuthHelper userAuthHelper)
         {
-            this.teamManager = teamManager;
-            this.userAuthHelper = userAuthHelper;
+            this._teamManager = teamManager;
+            this._userAuthHelper = userAuthHelper;
         }
-        // GET: /<controller>/
+
         public IActionResult Index()
         {
-            var teams = this.teamManager.GetTeams();
+            var teams = this._teamManager.GetTeams();
             return View(new TeamListVM {  Teams = teams});
         }
         public ActionResult Add()
@@ -34,7 +35,7 @@ namespace TeamBins6.Controllers.Web
         }
         public ActionResult Edit(int id)
         {
-            var team = teamManager.GetTeam(id);
+            var team = _teamManager.GetTeam(id);
             if (team != null)
             {
                 var vm = new TeamVM { Name = team.Name, Id = team.Id };
@@ -51,7 +52,7 @@ namespace TeamBins6.Controllers.Web
                 if (ModelState.IsValid)
                 {
                     model.Name = model.Name.Replace(" ", "");
-                    var teamId = teamManager.SaveTeam(model);
+                    var teamId = _teamManager.SaveTeam(model);
                     return Json(new { Status = "Success" });
 
                     
@@ -60,7 +61,7 @@ namespace TeamBins6.Controllers.Web
             }
             catch (Exception ex)
             {
-                
+               
             }
             return Json(new { Status = "Error" });
         }
@@ -68,7 +69,7 @@ namespace TeamBins6.Controllers.Web
 
         public IActionResult ChangeVisibility(int id)
         {
-            var team = teamManager.GetTeam(id);
+            var team = _teamManager.GetTeam(id);
             if (team != null && team.IsRequestingUserTeamOwner)
             {
                 
@@ -83,7 +84,7 @@ namespace TeamBins6.Controllers.Web
         {
             try
             {
-                await this.teamManager.SaveVisibility(model.Id, model.IsPublic);
+                await this._teamManager.SaveVisibility(model.Id, model.IsPublic);
                 return Json(new { Status = "Success", Message = "Team Visiblity updated successfully" });
             }
             catch (Exception)
@@ -105,8 +106,7 @@ namespace TeamBins6.Controllers.Web
         {
             try
             {
-                this.teamManager.Delete(model.Id);
-                //  var result = repo.DeleteProject(model.Id);
+                this._teamManager.Delete(model.Id);
                 return Json(new { Status = "Success", Message = "Project deleted successfully" });
             }
             catch (Exception ex)
@@ -118,7 +118,7 @@ namespace TeamBins6.Controllers.Web
 
         public IActionResult View(int id)
         {
-            var team = this.teamManager.GetTeam(id);
+            var team = this._teamManager.GetTeam(id);
             if (team != null)
             {
                 var vm = new TeamVM {Id = team.Id, Name = team.Name, IsPublic = team.IsPublic, IsRequestingUserTeamOwner = team.IsRequestingUserTeamOwner};

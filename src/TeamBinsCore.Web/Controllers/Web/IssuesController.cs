@@ -153,7 +153,8 @@ namespace TeamBins6.Controllers.Web
         [Route("Issues/QuickAdd")]
         public async Task<IActionResult> QuickAdd([FromBody] CreateIssue model)
         {
-            return await Add(model);
+            var result = await Add(model);
+            return result;
         }
 
         [HttpPost]

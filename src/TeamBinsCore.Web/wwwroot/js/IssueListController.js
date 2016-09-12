@@ -43,8 +43,9 @@ var issueListCtrl = function ($http, issueService, appSettings, currentTeam) {
                     .then(function (res) {
                         if (res.status === "Success") {
                             vm.newIssue = "";
+                       
                             if (vm.issuesGrouped.length > 0) {
-                                vm.issuesGrouped[0].issues.push(res.data);
+                                vm.issuesGrouped[0].issues.push(res.data.result);
                             } else {
                                 //very first issue
                                 vm.getIssues();
