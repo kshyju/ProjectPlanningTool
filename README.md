@@ -30,7 +30,7 @@ You need VS2015 + Dot net core installed to run the project.
 
 + Download the source code from github
 + Publish the Web project
-+ Create a database called "Team" in your SQL server. Restore the db backup available in the Data Access project.
++ Create a new database, run the migration scripts against your database. I created a simple migration tool which i use to push db changes to the live hosted version. You can use the same. Go to `DbMigration/` and run the `SimpleSqlMigrate` exe. You need to input the location where you have the sql scripts(There is a sub folder called "scripts" which has the scripts needed) and the connection string.
 + Update the connection string,app settings values in your web.config
 + Profit !
 
