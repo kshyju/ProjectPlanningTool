@@ -48,6 +48,7 @@ namespace TeamBins.Services
         Task<UserAccountDto> GetUser(string email);
         Task<LoggedInSessionInfo> CreateAccount(UserAccountDto userAccount);
         Task<UserEmailNotificationSettingsVM> GetNotificationSettings();
+        Task UpdateLastLoginTime(int userId);
     }
 
     public class UserAccountManager : IUserAccountManager
@@ -97,7 +98,10 @@ namespace TeamBins.Services
             return await Task.FromResult(vm);
         }
 
-
+        public async Task UpdateLastLoginTime(int userId)
+        {
+            await this.userRepository.UpdateLastLoginTime(userId);
+        }
         public  async Task SetDefaultTeam(int userId, int teamId)
         {
             await this.userRepository.SetDefaultTeam(userId, teamId);

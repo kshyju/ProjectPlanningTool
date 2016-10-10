@@ -21,6 +21,8 @@ namespace TeamBins.DataAccessCore
         Task<int> CreateAccount(UserAccountDto userAccount);
         Task<IEnumerable<EmailSubscriptionVM>> EmailSubscriptions(int userId, int teamId);
         Task SaveNotificationSettings(UserEmailNotificationSettingsVM model);
+
+        Task UpdateLastLoginTime(int userId);
     }
 
     public class UserRepository : BaseRepo, IUserRepository
@@ -64,6 +66,17 @@ namespace TeamBins.DataAccessCore
                 con.Open();
                 var com = await con.QueryAsync<UserAccountDto>(q, new { @id = email });
                 return com.FirstOrDefault();
+            }
+        }
+
+        public async Task UpdateLastLoginTime(int userId)
+        {
+            var q = @"UPDATE [User] SET LastLoginDate=@date WHERE Id=@userId";
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                var com = await con.ExecuteAsync(q, new { @date = DateTime.UtcNow,userId });
+                
             }
         }
 

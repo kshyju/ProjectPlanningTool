@@ -2,21 +2,18 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
-using TeamBins.Common;
 using TeamBins.Common.ViewModels;
-
 using TeamBins.Services;
 using TeamBins6.Infrastrucutre.Services;
 
 namespace TeamBins6.Controllers.Web
 {
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
-        IUserAccountManager userAccountManager;
-        private IUserAuthHelper userSessionHelper;
-        private ITeamManager teamManager;
+        readonly IUserAccountManager userAccountManager;
+        private readonly IUserAuthHelper userSessionHelper;
+        private readonly ITeamManager teamManager;
 
         public AccountController(IUserAccountManager userAccountManager, IUserAuthHelper userSessionHelper,ITeamManager teamManager)
         {
@@ -43,6 +40,8 @@ namespace TeamBins6.Controllers.Web
                         var appUser = new AppUser {UserName = user.EmailAddress, Id = user.Id.ToString()};
                         if (user.Password == model.Password)
                         {
+                            await userAccountManager.UpdateLastLoginTime(user.Id);
+
                             if (user.DefaultTeamId == null)
                             {
                                 // This sould not happen! But if in case
@@ -68,7 +67,6 @@ namespace TeamBins6.Controllers.Web
             }
             return View(model);
         }
-
 
         public ActionResult reset(string id)
         {
@@ -150,173 +148,3 @@ namespace TeamBins6.Controllers.Web
         }
     }
 }
-
-//    {
-//        readonly IUserAccountManager accountManager;
-//        private UserManager<AppUser> um;
-//        public AccountController(IUserAccountManager accountManager)
-//        {
-//            this.accountManager = accountManager;
-
-
-//        }
-
-//        public AccountController(IRepositary repositary, IUserAccountManager accountManager) : base(repositary)
-//        {
-//            this.accountManager = accountManager;
-//        }
-
-//        public ActionResult Index()
-//        {
-//            return RedirectToAction("Login");
-//        }
-
-
-//        }
-
-
-
-//        public ActionResult Login()
-//        {
-
-
-
-
-//            return View("Login", new LoginVM());
-//        }
-//        private IAuthenticationManager AuthenticationManager
-//        {
-//            get
-//            {
-//                return HttpContext.GetOwinContext().Authentication;
-//            }
-//        }
-//        private async Task SignInAsync(AppUser user, bool isPersistent)
-//        {
-//            um = new UserManager<AppUser>(new UserStore());
-
-//            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-//            var identity = await um.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
-
-//            //identity.Claims =new 
-//            AuthenticationManager.SignIn(new AuthenticationProperties() { IsPersistent = isPersistent }, identity);
-
-//            //   var identity = new ClaimsIdentity(claims,DefaultAuthenticationTypes.ApplicationCookie);
-//            //ClaimsPrincipal principal = new ClaimsPrincipal(identity);
-//            //Thread.CurrentPrincipal = principal;
-//            //var context = Request.GetOwinContext();
-//            //var authManager = context.Authentication;
-
-//            //authManager.SignIn(new AuthenticationProperties { IsPersistent = true }, identity);
-
-//            //AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-//            //var identity = await UserManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
-//            //AuthenticationManager.SignIn(new AuthenticationProperties() { IsPersistent = isPersistent }, identity);
-
-
-//        }
-
-//  
-//        public ActionResult NotificationSettings()
-//        {
-//            var vm = new UserEmailNotificationSettingsVM { TeamId = TeamId };
-//            var userSubscriptions = repo.GetUser(UserID).UserNotificationSubscriptions.ToList();
-
-//            var notificationTypes = repo.GetNotificationTypes().ToList();
-//            foreach (var item in notificationTypes)
-//            {
-//                var emailSubscription = new EmailSubscriptionVM { NotificationTypeID = item.ID, Name = item.Name };
-//                emailSubscription.IsSelected = userSubscriptions.Any(s => s.UserID == UserID && s.TeamId == TeamId && s.NotificationTypeID == item.ID && s.Subscribed == true);
-//                vm.EmailSubscriptions.Add(emailSubscription);
-//            }
-
-//            return View(vm);
-//        }
-//        [HttpPost]
-//        public ActionResult NotificationSettings(UserEmailNotificationSettingsVM model)
-//        {
-//            try
-//            {
-//                foreach (var setting in model.EmailSubscriptions)
-//                {
-//                    var userNotification = new UserNotificationSubscription { TeamId = TeamId, UserID = UserID };
-//                    userNotification.Subscribed = setting.IsSelected;
-//                    userNotification.ModifiedDate = DateTime.UtcNow;
-//                    userNotification.NotificationTypeID = setting.NotificationTypeID;
-//                    repo.SaveUserNotificationSubscription(userNotification);
-//                }
-//                var msg = new AlertMessageStore();
-//                msg.AddMessage("success", "Notification Settings updated successfully");
-//                TempData["AlertMessages"] = msg;
-//                return RedirectToAction("NotificationSettings");
-//            }
-//            catch (Exception ex)
-//            {
-//                log.Error(ex);
-//                return View("Error");
-//            }
-//        }
-
-
-//        public ActionResult forgotPasswordEmailSent()
-//        {
-//            return View();
-//        }
-//        [HttpPost]
-//        public ActionResult forgotpassword(ForgotPasswordVM model)
-//        {
-//            try
-//            {
-//                if (ModelState.IsValid)
-//                {
-//                    var result = accountManager.ProcessPasswordRecovery(model.Email);
-//                    if (result != null)
-//                    {
-//                        return RedirectToAction("forgotpasswordemailsent");
-//                    }
-//                    ModelState.AddModelError("", "We do not see an account with that email address!");
-//                    return View();
-//                }
-//            }
-//            catch (Exception ex)
-//            {
-//                ModelState.AddModelError("", "Error in processing the your request");
-//            }
-//            return View(model);
-//        }
-
-//        public ActionResult ResetPassword(string id)
-//        {
-//            var resetPasswordRequest = accountManager.GetResetPaswordRequest(id);
-
-//            if (resetPasswordRequest != null)
-//            {
-//                return View(new ResetPasswordVM { ActivationCode = resetPasswordRequest.ActivationCode });
-//            }
-//            return View("NotFound");
-//        }
-
-//        [HttpPost]
-//        public ActionResult ResetPassword(ResetPasswordVM model)
-//        {
-//            if (ModelState.IsValid)
-//            {
-//                var updatePasswordResult = accountManager.ResetPassword(model.ActivationCode, model.Password);
-//                if (updatePasswordResult)
-//                {
-//                    return RedirectToAction("passwordupdated");
-//                }
-//            }
-//            return View(model);
-
-//        }
-//        public ActionResult PasswordUpdated()
-//        {
-//            return View();
-//        }
-
-
-
-
-//    }
-//}

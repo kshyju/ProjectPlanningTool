@@ -13,7 +13,7 @@ namespace TeamBins6.Infrastrucutre.TagHelpers
         private const string EmailAttributeName = "gravatar-email";
         private const string AltTextAttributeName = "alt";
 
-        const string GravatarBaseUrl = "http://www.gravatar.com/avatar.php?";
+        private const string GravatarBaseUrl = "http://www.gravatar.com/avatar.php?";
 
         [HtmlAttributeName(EmailAttributeName)]
         public string Email { get; set; }
