@@ -10,11 +10,18 @@ var TeamBins;
             this.getActivityStream(this.pageContext.TeamId);
             this.getSummary(this.pageContext.TeamId);
             this.getIssuesGroupedByPriority(this.pageContext.TeamId);
+            this.getIssuesGroupedByProject(this.pageContext.TeamId);
         }
         DashboardController.prototype.getActivityStream = function (teamId) {
             var self = this;
             this.summaryService.getActivityStream(teamId, 10).then(function (data) {
                 self.activities = data;
+            });
+        };
+        DashboardController.prototype.getIssuesGroupedByProject = function (teamId) {
+            var self = this;
+            this.summaryService.getIssuesGroupedByProject(teamId, 10).then(function (data) {
+                self.issuesGroupedByProject = data;
             });
         };
         DashboardController.prototype.getIssuesGroupedByPriority = function (teamId) {

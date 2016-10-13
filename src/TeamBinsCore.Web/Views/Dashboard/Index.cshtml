@@ -11,7 +11,7 @@
     <div>
         <div data-duration="10000" class="alert alert-info" role="alert">You are seeing a view only version of the dashboard because the admin of this dashbaord made it public-readonly visible. </div>
     </div>
-    
+
 }
 
 <div ng-app="teamBins" ng-controller="dashboardCtrl as vm" ng-cloak>
@@ -56,6 +56,17 @@
         @Html.Partial("Partials/_Widget-Projects")
         @Html.Partial("Partials/_Widget-RecentIssues")
         @Html.Partial("Partials/_Widget-IssuesAssignedToMe")
+
+        <div class="dashboardItem">
+            <h4>Issues by Project</h4>
+            <table class="table table-condensed">
+                <tr ng-repeat="item in vm.issuesGroupedByProject">
+                    <td>{{item.itemName}}</td>
+                    <td><b>{{item.count}}</b></td>
+                    <td>{{item.percentage}}%</td>
+                </tr>
+            </table>
+        </div>
 
     </div>
     <div class="dbItemContainer">

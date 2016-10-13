@@ -6,6 +6,7 @@ module TeamBins {
 
      export class DashboardController {
 
+         issuesGroupedByProject: any[];
          issuesGroupedByPriority : any[];
         summaryItems: any[];
         activities: any[];
@@ -16,6 +17,7 @@ module TeamBins {
             this.getActivityStream(this.pageContext.TeamId);
             this.getSummary(this.pageContext.TeamId);
             this.getIssuesGroupedByPriority(this.pageContext.TeamId);
+            this.getIssuesGroupedByProject(this.pageContext.TeamId);
 
         }
         getActivityStream(teamId:any) {
@@ -24,6 +26,14 @@ module TeamBins {
                 self.activities = data;
             });
         }
+
+        getIssuesGroupedByProject(teamId: any) {
+            var self = this;
+            this.summaryService.getIssuesGroupedByProject(teamId, 10).then(function (data) {
+                self.issuesGroupedByProject = data;
+            });
+        }
+
         getIssuesGroupedByPriority(teamId: any) {
             var self = this;
             this.summaryService.getIssuesGroupedByPriority(teamId).then(function (data) {

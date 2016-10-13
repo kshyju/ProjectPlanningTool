@@ -194,6 +194,20 @@ namespace TeamBinsCore.DataAccess
             }
         }
 
+        public async Task<IEnumerable<ItemCount>> GetIssueCountsPerProject(int teamId)
+        {
+            var q = @"SELECT  S.ID ItemId,S.NAME ItemName, COUNT(I.ID) COUNT						 
+                    FROM Project S  WITH (NOLOCK)  
+                    LEFT JOIN (SELECT I.ID,I.ProjectID FROM ISSUE I  WITH (NOLOCK) WHERE I.TeamId=1) I ON I.ProjectID =S.ID
+                    GROUP BY S.ID,S.NAME ORDER BY COUNT DESC";
+
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                return await con.QueryAsync<ChartItem>(q, new { teamId });
+            }
+        }
+
         public async Task<IEnumerable<IssueDetailVM>> GetIssuesAssignedToUser(int userId)
         {
             var q = @"SELECT I.Id,I.Title,
@@ -433,6 +447,7 @@ namespace TeamBinsCore.DataAccess
         Task SaveDueDate(int issueId, DateTime? dueDate, int userId);
 
         Task<IEnumerable<ChartItem>> GetIssueCountsPerPriority(int teamId);
+        Task<IEnumerable<ItemCount>> GetIssueCountsPerProject(int teamId);
 
     }
 }

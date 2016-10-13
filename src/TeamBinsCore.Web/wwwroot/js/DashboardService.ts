@@ -28,6 +28,13 @@
                 });
 
         }
+        getIssuesGroupedByProject(teamId) {
+            return this.$http.get(this.appSettings.urls.baseUrl + "/api/team/IssuesGroupedByProject/" + teamId)
+                .then((response: any): any => {
+                    return response.data;
+                });
+
+        }
 
     }
 }

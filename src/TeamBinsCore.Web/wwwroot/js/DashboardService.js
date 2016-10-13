@@ -23,6 +23,12 @@ var TeamBins;
                 return response.data;
             });
         };
+        DashboardService.prototype.getIssuesGroupedByProject = function (teamId) {
+            return this.$http.get(this.appSettings.urls.baseUrl + "/api/team/IssuesGroupedByProject/" + teamId)
+                .then(function (response) {
+                return response.data;
+            });
+        };
         return DashboardService;
     }());
     TeamBins.DashboardService = DashboardService;

@@ -16,6 +16,7 @@ namespace TeamBins6.Infrastrucutre.Services
 {
     public interface ITeamManager
     {
+        Task<IEnumerable<ItemCount>> GetIssueCountPerProject(int teamId);
         Task<bool> ValidateAndAssociateNewUserToTeam(string activationCode);
         int SaveTeam(TeamDto team);
         TeamDto GetTeam(int id);
@@ -216,6 +217,22 @@ namespace TeamBins6.Infrastrucutre.Services
             var issueCountsByStatus = await issueRepository.GetIssueCountsPerPriority(teamIdtoGetDataFor);
             return issueCountsByStatus;
         }
+
+        public async Task<IEnumerable<ItemCount>> GetIssueCountPerProject(int teamId)
+        {
+            var teamIdtoGetDataFor = GetTeamIdtoGetDataFor(teamId);
+
+            var issueCountsByProject = await issueRepository.GetIssueCountsPerProject(teamIdtoGetDataFor);
+            var totalIssueCount = issueCountsByProject.Sum(g => g.Count);
+            foreach (var project in issueCountsByProject)
+            {
+                var s = ((decimal) project.Count/totalIssueCount)*100;
+                project.Percentage = Convert.ToInt32(s);
+            }
+            return issueCountsByProject;
+        }
+
+
         public IEnumerable<ActivityDto> GeActivityItems(int teamId, int count)
         {
             var activities = activityRepository.GetActivityItems(teamId, count);

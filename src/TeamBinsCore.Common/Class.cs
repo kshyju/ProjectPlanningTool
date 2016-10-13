@@ -60,11 +60,13 @@ namespace TeamBins.Common.ViewModels
         public bool IsDefaultProject { get; set; }
     }
 
+   
     public class ItemCount
     {
         public string ItemName { set; get; }
         public int Count { set; get; }
         public int ItemId { get; set; }
+        public int Percentage { get; set; }
     }
 
     public class ChartItem : ItemCount
