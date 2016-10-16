@@ -198,7 +198,8 @@ namespace TeamBinsCore.DataAccess
         {
             var q = @"SELECT  S.ID ItemId,S.NAME ItemName, COUNT(I.ID) COUNT						 
                     FROM Project S  WITH (NOLOCK)  
-                    LEFT JOIN (SELECT I.ID,I.ProjectID FROM ISSUE I  WITH (NOLOCK) WHERE I.TeamId=1) I ON I.ProjectID =S.ID
+                    LEFT JOIN (SELECT I.ID,I.ProjectID FROM ISSUE I  WITH (NOLOCK) WHERE I.TeamId=@teamId) I ON I.ProjectID =S.ID
+                    WHERE S.TeamId=@teamId
                     GROUP BY S.ID,S.NAME ORDER BY COUNT DESC";
 
             using (var con = new SqlConnection(ConnectionString))
