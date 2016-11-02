@@ -1,8 +1,12 @@
 ﻿using System.Threading.Tasks;
 using TeamBins.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 using TeamBins.Common.ViewModels;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using TeamBins6.Infrastrucutre;
 
 namespace TeamBins6.Controllers
 {
@@ -11,12 +15,12 @@ namespace TeamBins6.Controllers
         private readonly IUserAuthHelper userSessionHelper;
         private readonly IUserAccountManager userAccountManager;
         private readonly ILogger<HomeController> logger;
+       
 
-        public HomeController(IUserAuthHelper userSessionHelper,IUserAccountManager userAccountManager,ILogger<HomeController> logger)
+        public HomeController(IUserAuthHelper userSessionHelper,IUserAccountManager userAccountManager)
         {
             this.userSessionHelper = userSessionHelper;
             this.userAccountManager = userAccountManager;
-            this.logger = logger;
         }
       
         [HttpPost]
@@ -30,6 +34,8 @@ namespace TeamBins6.Controllers
 
         public IActionResult Index()
         {
+            
+
             if (this.userSessionHelper.UserId > 0)
             {
                 return RedirectToAction("Index", "Issues");

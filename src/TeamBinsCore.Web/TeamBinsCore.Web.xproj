@@ -14,6 +14,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <SchemaVersion>2.0</SchemaVersion>
+    <ApplicationInsightsResourceId>/subscriptions/2d5d3f43-7213-40be-b7ee-b292fd4d796f/resourcegroups/TeamBinsMsdnSubscrResGroup/providers/microsoft.insights/components/teambins</ApplicationInsightsResourceId>
   </PropertyGroup>
   <ItemGroup>
     <DnxInvisibleContent Include="bower.json" />

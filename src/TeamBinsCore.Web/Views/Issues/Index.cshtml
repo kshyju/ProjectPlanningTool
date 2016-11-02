@@ -12,7 +12,7 @@
                 @if (!Model.IsReadonlyView)
                 {
                     <div id="quick_create">
-                        <input type="text" ng-keyup="vm.create($event)" ng-model="vm.newIssue" name="NewItemTitle" placeholder="Create Item" id="NewItemTitle"/>
+                        <input type="text" ng-keyup="vm.create($event)" ng-model="vm.newIssue" name="NewItemTitle" placeholder="Type and click enter to quickly create an issue" id="NewItemTitle"/>
                         <div id="default_items">
                             <div class="default_item">
                                 <img class="default_item_img" src="~/Content/images/feature-icon.png"/>
@@ -27,6 +27,8 @@
                         </li>
                     </ul>
                     <div class="spinner" ng-show="loading"></div>
+                    <a id="create-issue" asp-action="add" asp-controller="Issues" class="pull-right popup">Create New </a>
+                  
                 </div>
             </div>
 
@@ -80,10 +82,11 @@ else
 {
     <div class="noProjects">
         <p>No projects ! Please create one to get started</p>
-        @Html.ActionLink("Create Projects", "Index", "Projects")
+        <a asp-controller="Projects" asp-action="Index">Create Projects</a>
     </div>
 }
-<input type="hidden" id="TeamID" value="@Model.TeamID" />
+
+<input type="hidden" asp-for="TeamID" />
 
 @section Scripts
 {
@@ -94,7 +97,7 @@ else
     <script src="~/js/issueList.service.js"></script>
     <script src="~/js/IssueListController.js"></script>
     <script src="~/js/chart.min.js"></script>
-
+<script src="~/js/issue.js"></script>
 
 
 
@@ -103,5 +106,4 @@ else
 <script type="text/javascript">
     var addIssueUrl = "@Url.Action("Add","ISsues")";
     var editIssueUrl = "@Url.Action("edit","issues")";
-    var savePrefUrl = "@Url.Action("SavePreference", "Issues")";
 </script>

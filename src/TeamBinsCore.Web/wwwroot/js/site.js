@@ -23,20 +23,13 @@ window.IssueList = (function() {
 
     $(function () {
 
-        //var popOverSettings = {
-        //    placement: 'bottom',
-        //    container: 'body',
-        //    html: true,
-        //    selector: '[data-toggle="popover"]', //Sepcify the selector here
-        //    content: function () {
-        //        return $('#popover-content').html();
-        //    }
-        //}
+        //$("#create-issue")
+        //    .click(function(e) {
+        //        e.preventDefault();
+        //        console.log('IssueList');
+        //        console.log('IssueList1');
+        //    });
 
-        //$('body').popover(popOverSettings);
-
-
-        //$('[data-toggle="popover"]').popover();
     });
 
 

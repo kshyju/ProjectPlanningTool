@@ -23,7 +23,9 @@
     "TeamBinsCore.Common": "1.0.0",
     "TeamBinsCore.DataAccess": "1.0.0",
     "Microsoft.AspNetCore.Session": "1.0.0",
-    "WindowsAzure.Storage": "7.2.0"
+    "WindowsAzure.Storage": "7.2.0",
+    "system.diagnostics.tracesource": "4.0.0-beta-23123",
+    "Microsoft.ApplicationInsights.AspNetCore": "1.0.0"
   },
 
   "tools": {

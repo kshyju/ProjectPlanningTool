@@ -170,7 +170,7 @@ namespace TeamBins.Services
 
         public async Task<IssueDetailVM> SaveIssue(CreateIssue issue, List<IFormFile> files)
         {
-            if (issue.SelectedProject == 0)
+            if (issue.ProjectId == 0)
             {
                 var defaultProject = await iProjectRepository.GetDefaultProjectForTeamMember(this.userSessionHelper.TeamId,
                      this.userSessionHelper.UserId);
@@ -178,25 +178,25 @@ namespace TeamBins.Services
                 {
                     throw new MissingSettingsException("Missing data", "Default project");
                 }
-                issue.SelectedProject = defaultProject.Id;
+                issue.ProjectId = defaultProject.Id;
 
             }
-            if (issue.SelectedCategory == 0)
+            if (issue.CategoryId == 0)
             {
                 var categories = this.issueRepository.GetCategories();
-                issue.SelectedCategory = categories.First().Id;
+                issue.CategoryId = categories.First().Id;
             }
-            if (issue.SelectedPriority == 0)
+            if (issue.PriorityId == 0)
             {
                 var categories = this.issueRepository.GetPriorities();
-                issue.SelectedPriority = categories.First().Id;
+                issue.PriorityId = categories.First().Id;
             }
-            if (issue.SelectedStatus == 0)
+            if (issue.StatusId == 0)
             {
                 var statuses = this.issueRepository.GetStatuses();
-                issue.SelectedStatus = statuses.First().Id;
+                issue.StatusId = statuses.First().Id;
             }
-            issue.CreatedByID = this.userSessionHelper.UserId;
+            issue.CreatedById = this.userSessionHelper.UserId;
             issue.TeamID = this.userSessionHelper.TeamId;
             var issueId = this.issueRepository.SaveIssue(issue);
 

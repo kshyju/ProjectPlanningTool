@@ -58,7 +58,7 @@ namespace TeamBins.Common.ViewModels
         //    public List<CommentVM> Comments { set; get; }
         public bool IsEditableForCurrentUser { set; get; }
         public int TeamID { set; get; }
-        public int ProjectID { set; get; }
+        public int ProjectId { set; get; }
         public string LastModifiedDate { set; get; }
         public string LastModifiedBy { set; get; }
         public IssueDetailVM()
@@ -104,6 +104,7 @@ namespace TeamBins.Common.ViewModels
     public class IssueVM
     {
         public int Id { set; get; }
+        [Required]
         public string Title { set; get; }
         [DataType(DataType.MultilineText)]
         // [AllowHtml]
@@ -125,46 +126,23 @@ namespace TeamBins.Common.ViewModels
         public bool Active { set; get; }
     }
 
-    //public class DocumentVM
-    //{
-    //    public int ID { set; get; }
-    //    public string FileName { set; get; }
-    //    public string FileKey { set; get; }
-    //    public string FileExtn { set; get; }
-    //}
-    //public class ImageVM : DocumentVM
-    //{
-
-    //}
 
     public class CreateIssue : IssueDetailVM
     {
-        public int CreatedByID;
+        public int CreatedById { set; get; }
         public bool IncludeIssueInResponse { set; get; }
         public bool IsFromModalWindow { set; get; }
-        public int SelectedStatus { set; get; }
-
-        public int SelectedPriority { set; get; }
-
-        public int SelectedProject { set; get; }
-
-        public int SelectedCategory { set; get; }
-
-        public string SelectedIteration { set; get; }
-
-        public int SelectedCycle { set; get; }
+        public int StatusId { set; get; }
+        public int PriorityId { set; get; }
+        public int CategoryId { set; get; }
 
 
         public List<SelectListItem> Statuses { set; get; }
         public List<SelectListItem> Categories { set; get; }
         public List<SelectListItem> Projects { set; get; }
         public List<SelectListItem> Priorities { set; get; }
-        //public List<SelectListItem> Cycles { set; get; }
-        //public List<SelectListItem> Iterations { set; get; }
 
-        public string Version { set; get; }
-
-         public List<IFormFile> Files { set; get; }
+        public List<IFormFile> Files { set; get; }
 
         public CreateIssue()
         {
@@ -173,18 +151,16 @@ namespace TeamBins.Common.ViewModels
             this.Projects = new List<SelectListItem>();
             this.Priorities = new List<SelectListItem>();
 
-
-            //      files = new List<HttpPostedFileBase>();
         }
 
         public CreateIssue(IssueDetailVM issueDetail)
         {
             this.Title = issueDetail.Title;
             this.Description = issueDetail.Description;
-            this.SelectedProject = issueDetail.Project.Id;
-            this.SelectedStatus = issueDetail.Status.Id;
-            this.SelectedCategory = issueDetail.Category.Id;
-            this.SelectedPriority = issueDetail.Priority.Id;
+            this.ProjectId = issueDetail.Project.Id;
+            this.StatusId = issueDetail.Status.Id;
+            this.CategoryId = issueDetail.Category.Id;
+            this.PriorityId = issueDetail.Priority.Id;
 
 
             this.Statuses = new List<SelectListItem>();

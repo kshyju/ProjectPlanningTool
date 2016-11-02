@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TeamBins.Common.ViewModels;
 using TeamBins.Services;
 using TeamBins6.Infrastrucutre.Services;
+using System.Diagnostics;
 
 namespace TeamBins6.Controllers.Web
 {
@@ -63,6 +64,7 @@ namespace TeamBins6.Controllers.Web
             catch (Exception ex)
             {
                 ModelState.AddModelError("", "Oops! Something went wrong :(");
+                Trace.TraceError(ex.Message+ex.StackTrace);
 
             }
             return View(model);

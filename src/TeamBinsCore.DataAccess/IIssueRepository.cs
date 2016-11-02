@@ -190,7 +190,7 @@ namespace TeamBinsCore.DataAccess
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                return await con.QueryAsync<ChartItem>(q, new {  teamId });
+                return await con.QueryAsync<ChartItem>(q, new { teamId });
             }
         }
 
@@ -319,47 +319,26 @@ namespace TeamBinsCore.DataAccess
 
         public int SaveIssue(CreateIssue issue)
         {
-
+            
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
                 if (issue.Id == 0)
                 {
+                    issue.CreatedDate = DateTime.Now;
                     var q =
                         con.Query<int>(
                             @"INSERT INTO Issue(Title,Description,DueDate,CategoryId,StatusID,PriorityID,ProjectID,TeamId,Active,CreatedDate,CreatedByID) 
-                        VALUES(@title,@description,@dueDate,@categoryId,@statusId,@priortiyId,@projectId,@teamId,1,@createdDate,@userId);SELECT CAST(SCOPE_IDENTITY() as int)",
-                            new
-                            {
-                                @title = issue.Title,
-                                @description = issue.Description,
-                                @dueDate = issue.IssueDueDate,
-                                @categoryId = issue.SelectedCategory
-                                ,
-                                @statusId = issue.SelectedStatus,
-                                @priortiyId = issue.SelectedPriority,
-                                @projectId = issue.SelectedProject,
-                                @teamId = issue.TeamID,
-                                @createdDate = DateTime.Now,
-                                @userId = issue.CreatedByID
-                            });
+                        VALUES(@title,@description,@IssueDueDate,@categoryId,@statusId,@priorityId,@projectId,@teamId,1,@createdDate,@createdById);SELECT CAST(SCOPE_IDENTITY() as int)",
+                            issue);
 
                     return q.First();
                 }
                 else
                 {
                     con.Execute(
-                        "UPDATE Issue SET Title=@title,Description=@description,CategoryId=@catId,ProjectId=@projectId,StatusId=@statusId,PriorityId=@priorityId WHERE Id=@id",
-                        new
-                        {
-                            @title = issue.Title,
-                            @description = issue.Description,
-                            @priorityId = issue.SelectedPriority,
-                            @statusId = issue.SelectedStatus,
-                            @catId = issue.SelectedCategory,
-                            @id = issue.Id,
-                            @projectId = issue.SelectedProject
-                        });
+                        "UPDATE Issue SET Title=@title,Description=@description,CategoryId=@CategoryId,ProjectId=@ProjectId,StatusId=@statusId,PriorityId=@priorityId WHERE Id=@id",
+                        issue);
                     return issue.Id;
                 }
 

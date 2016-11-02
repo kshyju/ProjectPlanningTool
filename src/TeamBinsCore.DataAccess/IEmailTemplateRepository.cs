@@ -32,7 +32,8 @@ namespace TeamBins.DataAccessCore
         public IEnumerable<ActivityDto> GetActivityItems(int teamId, int count)
         {
 
-            var q = @"SELECT TOP 1000 A.[Id]
+            var q = @"SELECT TOP "+ count
+                + @" A.[Id]
                     ,[ObjectID]
                     ,[ObjectType]
                     ,[ActivityDesc] as DeSCRIPTION
@@ -46,7 +47,7 @@ namespace TeamBins.DataAccessCore
                     ,U.EmailAddress
                     FROM [Activity] A
                     INNER JOIN [User] U ON A.CreatedByID = U.Id
-                    WHERE A.TeamId=@teamId";
+                    WHERE A.TeamId=@teamId order by CreatedTime desc";
 
             using (var con = new SqlConnection(ConnectionString))
             {

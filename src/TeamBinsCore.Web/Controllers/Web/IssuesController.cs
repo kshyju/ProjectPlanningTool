@@ -2,44 +2,42 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection.Metadata;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using TeamBins.Common;
 using TeamBins.Common.ViewModels;
 using TeamBins.Services;
-
 using TeamBins6.Infrastrucutre;
 using TeamBins6.Infrastrucutre.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 using TeamBinsCore.Common;
-using Microsoft.AspNetCore.Server.Kestrel.Internal.Http;
-using TeamBins.DataAccessCore;
 
-
-// For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace TeamBins6.Controllers.Web
 {
     public class IssuesController : BaseController
     {
-        private ITeamManager teamManager;
-        ICommentManager commentManager;
+        private readonly ITeamManager teamManager;
+       
         private readonly IProjectManager projectManager;
-        private IIssueManager issueManager;
-        //private IssueService issueService;
-        IUserAuthHelper userSessionHelper;
-        private IUploadHandler uploadHandler;
-        private IUploadManager uploadManager;
-        public IssuesController(ICommentManager commentManager, IUserAuthHelper userSessionHelper, IProjectManager projectManager, IIssueManager issueManager, ITeamManager teamManager, IUploadHandler uploadHandler, IUploadManager uploadManager) //: base(repositary)
+        private readonly IIssueManager issueManager;
+        readonly IUserAuthHelper userSessionHelper;
+        private readonly IUploadHandler uploadHandler;
+        private readonly IUploadManager uploadManager;
+        private readonly IUrlHelper urlHelper;
+        public IssuesController(IUserAuthHelper userSessionHelper,
+            IProjectManager projectManager, IIssueManager issueManager,
+            ITeamManager teamManager, IUploadHandler uploadHandler,
+            IUploadManager uploadManager, IUrlHelperFactory urlHelperFactory, IActionContextAccessor actionContextAccessor) //: base(repositary)
         {
             this.issueManager = issueManager;
             this.projectManager = projectManager;
             this.userSessionHelper = userSessionHelper;
-            this.commentManager = commentManager;
             this.teamManager = teamManager;
             this.uploadHandler = uploadHandler;
             this.uploadManager = uploadManager;
+            this.urlHelper = urlHelperFactory.GetUrlHelper(actionContextAccessor.ActionContext);
+
         }
 
         [Route("Issues")]
@@ -127,11 +125,21 @@ namespace TeamBins6.Controllers.Web
             vm = await this.issueManager.GetIssue(id);
             if (vm != null && vm.Active)
             {
-                vm.IsEditableForCurrentUser = this.teamManager.DoesCurrentUserBelongsToTeam(this.userSessionHelper.UserId,this.userSessionHelper.TeamId);
+                vm.IsEditableForCurrentUser = this.teamManager.DoesCurrentUserBelongsToTeam(this.userSessionHelper.UserId, this.userSessionHelper.TeamId);
                 vm.IsReadOnly = this.userSessionHelper.UserId == 0;
                 return View(vm);
             }
             return View("NotFound");
+        }
+
+        [Route("Issues/add")]
+        public async Task<IActionResult> Add()
+        {
+
+            var vm = new CreateIssue();
+            this.issueManager.LoadDropdownData(vm);
+
+            return PartialView("~/Views/Issues/Partial/Edit.cshtml", vm);
         }
 
         [Route("Issues/edit/{id}")]
@@ -165,7 +173,7 @@ namespace TeamBins6.Controllers.Web
             {
                 if (ModelState.IsValid)
                 {
-                    var previousVersion =await  issueManager.GetIssue(model.Id);
+                    var previousVersion = await issueManager.GetIssue(model.Id);
                     var newVersion = await issueManager.SaveIssue(model, null);
                     var issueActivity = issueManager.SaveActivity(model, previousVersion, newVersion);
 
@@ -180,7 +188,7 @@ namespace TeamBins6.Controllers.Web
                             var fileName = Path.GetFileName(file.FileName);
                             using (var s = file.OpenReadStream())
                             {
-                                var uploadResult =await uploadHandler.UploadFile(fileName, MimeMapping.GetMimeMapping(fileName), s);
+                                var uploadResult = await uploadHandler.UploadFile(fileName, MimeMapping.GetMimeMapping(fileName), s);
                                 if (!String.IsNullOrEmpty(uploadResult.Url))
                                 {
                                     uploadResult.ParentId = model.Id;
@@ -190,15 +198,26 @@ namespace TeamBins6.Controllers.Web
                                 }
                             }
                         }
-                        
+
                     }
                     if (model.IncludeIssueInResponse)
                     {
                         var newIssue = issueManager.GetIssue(newVersion.Id);
                         return Json(new { Status = "Success", Data = newIssue });
                     }
-
-                    return Json(new { Status = "Success" });
+                 
+                    var newIssueUrl = this.urlHelper.Action("Details", new {id = newVersion.Id});
+                    return Json(new { Status = "Success" , Url= newIssueUrl });
+                }
+                else
+                {
+                    var validationErrors = new List<string>();
+                    foreach (var modelStateVal in ViewData.ModelState.Values)
+                    {
+                        validationErrors.AddRange(modelStateVal.Errors.Select(error => error.ErrorMessage));
+                    }
+                  
+                    return Json(new { Status = "Error", Message = "Validation failed" ,Errors = validationErrors });
                 }
             }
             catch (MissingSettingsException mex)
@@ -231,13 +250,8 @@ namespace TeamBins6.Controllers.Web
             issue.IsEditableForCurrentUser = this.teamManager.DoesCurrentUserBelongsToTeam(this.userSessionHelper.UserId, this.userSessionHelper.TeamId);
             var members = await issueManager.GetIssueMembers(id);
             issue.Members = members.Select(x => x.Member);
-
-
-
             return PartialView("Partial/Members", issue);
         }
-
-
 
     }
 }

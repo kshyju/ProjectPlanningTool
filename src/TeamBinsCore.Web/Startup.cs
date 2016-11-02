@@ -13,6 +13,9 @@ using TeamBins.DataAccessCore;
 using TeamBins6.Infrastrucutre.Services;
 using TeamBins6.Infrastrucutre.Cache;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 using TeamBins6.Infrastrucutre.Filters;
 using TeamBins.Common.ViewModels;
 using TeamBins6.Infrastrucutre;
@@ -36,6 +39,8 @@ namespace TeamBinsCore.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
             services.AddTransient<ICommentManager, CommentManager>();
             services.AddTransient<IUserAuthHelper, SessionUserAuthHelper>();
             services.AddTransient<IProjectManager, ProjectManager>();
@@ -56,13 +61,13 @@ namespace TeamBinsCore.Web
             //services.AddScoped<>()
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddTransient<ICache, InMemoryCache>();
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            //services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddMemoryCache();
 
             services.Configure<AppSettings>(Configuration.GetSection("TeamBins"));
-
-
             services.AddSession(s => s.IdleTimeout = TimeSpan.FromMinutes(30));
+
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>(); //will work
 
             // Add framework services.
             services.AddMvc(o =>
@@ -74,11 +79,6 @@ namespace TeamBinsCore.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-           // loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            //loggerFactory.AddDebug();
-            //loggerFactory.AddProvider(new MyLoggerProvider());
-            //loggerFactory.AddProvider();
-           // loggerFactory.AddProvider();
 
             if (env.IsDevelopment())
             {

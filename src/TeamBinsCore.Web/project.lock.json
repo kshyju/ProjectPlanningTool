@@ -62,6 +62,55 @@
           }
         }
       },
+      "Microsoft.ApplicationInsights/2.1.0": {
+        "type": "package",
+        "dependencies": {
+          "System.Collections": "4.0.10",
+          "System.Diagnostics.Debug": "4.0.10",
+          "System.Diagnostics.Tools": "4.0.0",
+          "System.Diagnostics.Tracing": "4.0.20",
+          "System.Globalization": "4.0.10",
+          "System.IO": "4.0.10",
+          "System.IO.Compression": "4.0.0",
+          "System.Linq": "4.0.0",
+          "System.Net.Http": "4.0.0",
+          "System.Reflection": "4.0.10",
+          "System.Reflection.Extensions": "4.0.0",
+          "System.Runtime": "4.0.20",
+          "System.Runtime.Extensions": "4.0.10",
+          "System.Text.Encoding": "4.0.10",
+          "System.Text.Encoding.Extensions": "4.0.10",
+          "System.Text.RegularExpressions": "4.0.10",
+          "System.Threading": "4.0.10",
+          "System.Threading.Tasks": "4.0.10",
+          "System.Xml.XDocument": "4.0.10"
+        },
+        "compile": {
+          "lib/dotnet5.4/Microsoft.ApplicationInsights.dll": {}
+        },
+        "runtime": {
+          "lib/dotnet5.4/Microsoft.ApplicationInsights.dll": {}
+        }
+      },
+      "Microsoft.ApplicationInsights.AspNetCore/1.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.ApplicationInsights": "2.1.0",
+          "Microsoft.AspNetCore.Hosting.Abstractions": "1.0.0",
+          "Microsoft.AspNetCore.Http.Abstractions": "1.0.0",
+          "Microsoft.AspNetCore.Mvc.ViewFeatures": "1.0.0",
+          "Microsoft.Extensions.Configuration": "1.0.0",
+          "Microsoft.Extensions.DiagnosticAdapter": "1.0.0",
+          "Microsoft.Extensions.Logging.Abstractions": "1.0.0",
+          "System.Net.NameResolution": "4.0.0"
+        },
+        "compile": {
+          "lib/netstandard1.6/Microsoft.ApplicationInsights.AspNetCore.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard1.6/Microsoft.ApplicationInsights.AspNetCore.dll": {}
+        }
+      },
       "Microsoft.AspNetCore.Antiforgery/1.0.1": {
         "type": "package",
         "dependencies": {
@@ -1263,6 +1312,25 @@
         },
         "runtime": {
           "lib/netstandard1.6/Microsoft.Extensions.DependencyModel.dll": {}
+        }
+      },
+      "Microsoft.Extensions.DiagnosticAdapter/1.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "1.0.0",
+          "System.Collections.Concurrent": "4.0.12",
+          "System.ComponentModel": "4.0.1",
+          "System.Diagnostics.DiagnosticSource": "4.0.0",
+          "System.Reflection.Emit": "4.0.1",
+          "System.Reflection.Emit.Lightweight": "4.0.1",
+          "System.Reflection.Extensions": "4.0.1",
+          "System.Runtime.Extensions": "4.1.0"
+        },
+        "compile": {
+          "lib/netstandard1.1/Microsoft.Extensions.DiagnosticAdapter.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard1.1/Microsoft.Extensions.DiagnosticAdapter.dll": {}
         }
       },
       "Microsoft.Extensions.FileProviders.Abstractions/1.0.0": {
@@ -2528,6 +2596,15 @@
         },
         "runtime": {
           "lib/portable-net45+win8+wp8+wpa81/_._": {}
+        }
+      },
+      "system.diagnostics.tracesource/4.0.0-beta-23123": {
+        "type": "package",
+        "dependencies": {
+          "System.Runtime": "4.0.0"
+        },
+        "compile": {
+          "ref/dotnet/System.Diagnostics.TraceSource.dll": {}
         }
       },
       "System.Diagnostics.Tracing/4.1.0": {
@@ -4216,6 +4293,37 @@
         "runtimes/win7-x86/native/libuv.dll"
       ]
     },
+    "Microsoft.ApplicationInsights/2.1.0": {
+      "sha512": "mviO8PLQd3r22Pmv8JfjYzTCQ9ByhkU9wdC4fwd6WmAARwAMgMw9HEbHeYS3r+8pB3w+fZMi7p4LKijzgNybRQ==",
+      "type": "package",
+      "path": "Microsoft.ApplicationInsights/2.1.0",
+      "files": [
+        "Microsoft.ApplicationInsights.2.1.0.nupkg.sha512",
+        "Microsoft.ApplicationInsights.nuspec",
+        "lib/dotnet5.4/Microsoft.ApplicationInsights.XML",
+        "lib/dotnet5.4/Microsoft.ApplicationInsights.dll",
+        "lib/net40/Microsoft.ApplicationInsights.XML",
+        "lib/net40/Microsoft.ApplicationInsights.dll",
+        "lib/net45/Microsoft.ApplicationInsights.XML",
+        "lib/net45/Microsoft.ApplicationInsights.dll",
+        "lib/net46/Microsoft.ApplicationInsights.XML",
+        "lib/net46/Microsoft.ApplicationInsights.dll",
+        "lib/portable-win81+wpa81/Microsoft.ApplicationInsights.dll",
+        "lib/uap10.0/Microsoft.ApplicationInsights.dll",
+        "lib/wp8/Microsoft.ApplicationInsights.dll"
+      ]
+    },
+    "Microsoft.ApplicationInsights.AspNetCore/1.0.0": {
+      "sha512": "t1O4hbatuHU4BJnuBZ4zmx6fNoTryyZO/NwxwqmMUbuHyvil3elkOZvX3pJWlUTOk6/wyRXItGKBiW4uDET6Kw==",
+      "type": "package",
+      "path": "Microsoft.ApplicationInsights.AspNetCore/1.0.0",
+      "files": [
+        "Microsoft.ApplicationInsights.AspNetCore.1.0.0.nupkg.sha512",
+        "Microsoft.ApplicationInsights.AspNetCore.nuspec",
+        "lib/net451/Microsoft.ApplicationInsights.AspNetCore.dll",
+        "lib/netstandard1.6/Microsoft.ApplicationInsights.AspNetCore.dll"
+      ]
+    },
     "Microsoft.AspNetCore.Antiforgery/1.0.1": {
       "sha512": "MMevi8HnI5GxtNOS9ZqZLuNafltbngXsOrNqyykFveMWFN5a3AfAB7I0qU77tBS9B/N3boRQuyT9AR0BsCQbaw==",
       "type": "package",
@@ -5198,6 +5306,17 @@
         "Microsoft.Extensions.DependencyModel.nuspec",
         "lib/net451/Microsoft.Extensions.DependencyModel.dll",
         "lib/netstandard1.6/Microsoft.Extensions.DependencyModel.dll"
+      ]
+    },
+    "Microsoft.Extensions.DiagnosticAdapter/1.0.0": {
+      "sha512": "GGI4Pp9DpRBFlAXDcZRz5e+R+TqLFBWzToTDXqxPjQiRq6DwPvDYuKD10rlJD4QxxeX8fcjakTlKO1RfC+DmFg==",
+      "type": "package",
+      "path": "Microsoft.Extensions.DiagnosticAdapter/1.0.0",
+      "files": [
+        "Microsoft.Extensions.DiagnosticAdapter.1.0.0.nupkg.sha512",
+        "Microsoft.Extensions.DiagnosticAdapter.nuspec",
+        "lib/netstandard1.1/Microsoft.Extensions.DiagnosticAdapter.dll",
+        "lib/netstandard1.1/Microsoft.Extensions.DiagnosticAdapter.xml"
       ]
     },
     "Microsoft.Extensions.FileProviders.Abstractions/1.0.0": {
@@ -6932,6 +7051,37 @@
         "ref/xamarinmac20/_._",
         "ref/xamarintvos10/_._",
         "ref/xamarinwatchos10/_._"
+      ]
+    },
+    "system.diagnostics.tracesource/4.0.0-beta-23123": {
+      "sha512": "gCIGqlXRGkDG4cP2m1WfQHMnRGJ7tqI5ZuGZAGtr6Kq6XZFTxFpssTYIHCaoQnj7HySu00vgEuq2BqcXSP60VQ==",
+      "type": "package",
+      "path": "system.diagnostics.tracesource/4.0.0-beta-23123",
+      "files": [
+        "lib/DNXCore50/System.Diagnostics.TraceSource.dll",
+        "lib/MonoAndroid10/_._",
+        "lib/MonoTouch10/_._",
+        "lib/net46/System.Diagnostics.TraceSource.dll",
+        "lib/xamarinios10/_._",
+        "lib/xamarinmac20/_._",
+        "ref/MonoAndroid10/_._",
+        "ref/MonoTouch10/_._",
+        "ref/dotnet/System.Diagnostics.TraceSource.dll",
+        "ref/dotnet/System.Diagnostics.TraceSource.xml",
+        "ref/dotnet/de/System.Diagnostics.TraceSource.xml",
+        "ref/dotnet/es/System.Diagnostics.TraceSource.xml",
+        "ref/dotnet/fr/System.Diagnostics.TraceSource.xml",
+        "ref/dotnet/it/System.Diagnostics.TraceSource.xml",
+        "ref/dotnet/ja/System.Diagnostics.TraceSource.xml",
+        "ref/dotnet/ko/System.Diagnostics.TraceSource.xml",
+        "ref/dotnet/ru/System.Diagnostics.TraceSource.xml",
+        "ref/dotnet/zh-hans/System.Diagnostics.TraceSource.xml",
+        "ref/dotnet/zh-hant/System.Diagnostics.TraceSource.xml",
+        "ref/net46/System.Diagnostics.TraceSource.dll",
+        "ref/xamarinios10/_._",
+        "ref/xamarinmac20/_._",
+        "system.diagnostics.tracesource.4.0.0-beta-23123.nupkg.sha512",
+        "system.diagnostics.tracesource.nuspec"
       ]
     },
     "System.Diagnostics.Tracing/4.1.0": {
@@ -10677,6 +10827,7 @@
   },
   "projectFileDependencyGroups": {
     "": [
+      "Microsoft.ApplicationInsights.AspNetCore >= 1.0.0",
       "Microsoft.AspNetCore.Diagnostics >= 1.0.0",
       "Microsoft.AspNetCore.Mvc >= 1.0.0",
       "Microsoft.AspNetCore.Razor.Tools >= 1.0.0-preview2-final",
@@ -10694,7 +10845,8 @@
       "Microsoft.VisualStudio.Web.BrowserLink.Loader >= 14.0.0",
       "TeamBinsCore.Common >= 1.0.0",
       "TeamBinsCore.DataAccess >= 1.0.0",
-      "WindowsAzure.Storage >= 7.2.0"
+      "WindowsAzure.Storage >= 7.2.0",
+      "system.diagnostics.tracesource >= 4.0.0-beta-23123"
     ],
     ".NETCoreApp,Version=v1.0": []
   },

@@ -252,6 +252,12 @@ namespace TeamBins6.Infrastrucutre.Services
 
                         activity.NewState = "from " + activity.OldState + " to " + activity.NewState;
                     }
+                    else if (String.Equals(activity.Description, "Changed category", StringComparison.OrdinalIgnoreCase))
+                    {
+                        activity.Description = "changed category of";
+
+                        activity.NewState = "from " + activity.OldState + " to " + activity.NewState;
+                    }
                     else if (String.Equals(activity.Description, "DUE DATE UPDATED", StringComparison.OrdinalIgnoreCase))
                     {
                         activity.Description = "updated due date of";

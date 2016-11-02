@@ -1,7 +1,5 @@
 ﻿@model TeamBins.Common.ViewModels.CreateIssue
-
-@using (Html.BeginForm("Add", "Issues",FormMethod.Post, new { enctype = "multipart/form-data" }))
-{
+<form asp-action="Add" asp-controller="Issues" method="post" id="createForm" enctype="multipart/form-data">
 
     <div class="modal-dialog">
         <div class="modal-content" style="width:650px;">
@@ -10,12 +8,11 @@
                 <h4 class="modal-title" id="myModalLabel">@Model.Title</h4>
             </div>
             <div class="modal-body">
-
-
-                <table class="tblform sleek" >
+                <table class="tblform sleek">
                     <tr>
                         <td>
-                            @Html.TextBoxFor(x => x.Title, new { @placeholder = "Issue Title", @class = "sleekInput" })
+                            <input type="text" asp-for="Title" />
+                            <span asp-validation-for="Title"></span>
                         </td>
                     </tr>
                     <tr>
@@ -24,21 +21,22 @@
                                 <tr>
                                     <th>Project</th>
                                     <td>
-                                        @Html.DropDownListFor(x => x.SelectedProject, Model.Projects, "Select", new {@class = "kendoDropDown"})
+                                        <select asp-for="ProjectId" asp-items="@Model.Projects" class="kendoDropDown"> 
+                                        </select>
                                     </td>
                                     <th>Category</th>
                                     <td>
-                                        @Html.DropDownListFor(x => x.SelectedCategory, Model.Categories, "Select", new { @class = "kendoDropDown" })
+                                        <select asp-for="CategoryId" asp-items="@Model.Categories" class="kendoDropDown"></select>
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>Priority</th>
                                     <td>
-                                        @Html.DropDownListFor(x => x.SelectedPriority, Model.Priorities, "Select", new { @class = "kendoDropDown" })
+                                        <select asp-for="PriorityId" asp-items="@Model.Priorities" class="kendoDropDown"></select>
                                     </td>
                                     <th>Status</th>
                                     <td>
-                                        @Html.DropDownListFor(x => x.SelectedStatus, Model.Statuses, "Select", new { @class = "kendoDropDown" })
+                                        <select asp-for="StatusId" asp-items="@Model.Statuses" class="kendoDropDown"></select>
                                     </td>
                                 </tr>
                             </table>
@@ -48,7 +46,7 @@
                     </tr>
                     <tr>
                         <td>
-                            @Html.TextAreaFor(x => x.Description, new { @class = "DescrTxtArea" })
+                            <textarea asp-for="Description" class="DescrTxtArea"></textarea>
                         </td>
                     </tr>
                     <tr>
@@ -74,9 +72,8 @@
                         </td>
                     </tr>
                 </table>
-                @Html.HiddenFor(x => x.Id)
-                @Html.HiddenFor(x => x.IsFromModalWindow)
-
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="IsFromModalWindow" />
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -84,12 +81,4 @@
             </div>
         </div>
     </div>
-}
-
-
-
-<script type="text/javascript">
-
-
-
-</script>
+</form>
