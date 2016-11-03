@@ -1,0 +1,64 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+@model TeamBins.Common.ViewModels.TeamListVM
+<h2>Teams</h2>
+<div>
+    <a asp-action="Add" asp-controller="Team" class="popup">Add</a>
+</div>
+<table class="tblGrid table">
+    <tr>
+        <th>Team Name</th>
+        <th>Member type</th>
+        <th>Member count</th>
+        <th></th>
+    </tr>
+    @foreach (var team in Model.Teams)
+    {
+        <tr>
+            <td>
+                <a asp-action="View" asp-controller="Team" asp-route-id="@team.Id">@team.Name</a>
+            </td>
+            <td>
+                @(team.IsRequestingUserTeamOwner ? "Team Admin" : "Team Member")
+            </td>
+            <td>@Html.ActionLink(team.MemberCount.ToString(), "index", "users", null, null)</td>
+            <td>
+                @if (team.IsRequestingUserTeamOwner)
+                {
+                    <a asp-action="edit" class="popup" asp-route-id="@team.Id" asp-controller="Team">Edit</a>
+                    <a asp-action="DeleteConfirm" class="popup deletess" asp-route-id="@team.Id" asp-controller="Team">Delete</a>
+                }
+            </td>
+        </tr>
+    }
+</table>
+@section scripts
+{
+    <script type="text/javascript">
+        $(function () {
+            $(document).on("click", "#btnSaveTeam", function (e) {
+                e.preventDefault();
+                $.post($(this).closest("form").attr("action"), $(this).closest("form").serialize(), function (res) {
+                    if (res.status === "Success")
+                        window.location.href = "@Url.Action("Index")";
+                    else
+                        $("#msg").text(res.message).addClass("error").slideDown(); $("#Name").focus();
+                });
+            });
+
+            $(document).on("click", "#btnDelTeam", function (e) {
+                e.preventDefault();
+                $.post($(this).closest("form").attr("action"), $(this).closest("form").serialize(), function (res) {
+                    if (res.status === "Success") {
+                        window.location.href = window.location.href;
+                    } else {
+                        alert("Error deleting team!");
+                    }
+                });
+            });
+
+
+        });
+    </script>
+}
