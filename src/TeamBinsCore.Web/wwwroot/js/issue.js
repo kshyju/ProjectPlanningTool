@@ -44,7 +44,7 @@
     $(function () {
 
         var membersUrl = teamBins.urls.baseUrl + "/issues/" + $("#Id").val() + "/members";
-        $.get(membersUrl).success(function (data) {
+        $.get(membersUrl).done(function (data) {
             $("#members").html(data).promise().done(function () {
                 bindAssignMembersAutoComplete();
             });
