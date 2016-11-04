@@ -8,7 +8,7 @@ using System.Linq;
 using System;
 using TeamBins.Common.ViewModels;
 
-namespace TeamBinsCore.DataAccess
+namespace TeamBins.DataAccess
 {
     public interface ICommentRepository
     {

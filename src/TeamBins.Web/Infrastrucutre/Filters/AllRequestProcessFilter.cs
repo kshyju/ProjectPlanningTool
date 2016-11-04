@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using TeamBins.Controllers;
-using TeamBins.Controllers.Web;
+
 
 namespace TeamBins.Infrastrucutre.Filters
 {

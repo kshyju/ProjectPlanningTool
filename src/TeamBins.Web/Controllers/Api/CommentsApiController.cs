@@ -38,7 +38,7 @@ namespace TeamBins.Controllers.Api
             if (comment != null && comment.Author.Id == this.userSessionHelper.UserId)
             {
                 this.commentManager.Delete(commentId);
-                return  Json(new { Status = "Success" });
+                return Json(new { Status = "Success" });
 
             }
             return Json(new { Status = "Error", Message = "Can not delete comment!" });

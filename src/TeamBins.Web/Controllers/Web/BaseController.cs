@@ -16,7 +16,7 @@ namespace TeamBins.Controllers
 
         protected void SetMessage(MessageType messageType, string message)
         {
-            TempData["AlertMessages"] = new Dictionary<string, string> { { messageType.ToString().ToLower(), message } }; 
+            TempData["AlertMessages"] = new Dictionary<string, string> { { messageType.ToString().ToLower(), message } };
         }
 
     }

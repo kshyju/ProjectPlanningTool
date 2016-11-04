@@ -10,7 +10,7 @@ using TeamBins.Infrastrucutre.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
-using TeamBinsCore.Common;
+using TeamBins.Common;
 
 
 namespace TeamBins.Controllers.Web
@@ -18,7 +18,7 @@ namespace TeamBins.Controllers.Web
     public class IssuesController : BaseController
     {
         private readonly ITeamManager teamManager;
-       
+
         private readonly IProjectManager projectManager;
         private readonly IIssueManager issueManager;
         readonly IUserAuthHelper userSessionHelper;
@@ -205,9 +205,9 @@ namespace TeamBins.Controllers.Web
                         var newIssue = issueManager.GetIssue(newVersion.Id);
                         return Json(new { Status = "Success", Data = newIssue });
                     }
-                 
-                    var newIssueUrl = this.urlHelper.Action("Details", new {id = newVersion.Id});
-                    return Json(new { Status = "Success" , Url= newIssueUrl });
+
+                    var newIssueUrl = this.urlHelper.Action("Details", new { id = newVersion.Id });
+                    return Json(new { Status = "Success", Url = newIssueUrl });
                 }
                 else
                 {
@@ -216,8 +216,8 @@ namespace TeamBins.Controllers.Web
                     {
                         validationErrors.AddRange(modelStateVal.Errors.Select(error => error.ErrorMessage));
                     }
-                  
-                    return Json(new { Status = "Error", Message = "Validation failed" ,Errors = validationErrors });
+
+                    return Json(new { Status = "Error", Message = "Validation failed", Errors = validationErrors });
                 }
             }
             catch (MissingSettingsException mex)

@@ -7,20 +7,29 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using TeamBins.Services;
-using TeamBinsCore.DataAccess;
-using TeamBins.DataAccessCore;
-using TeamBins.Infrastrucutre.Services;
-using TeamBins.Infrastrucutre.Cache;
+//using TeamBins.Services;
+//using TeamBins.DataAccess;
+//using TeamBins.DataAccessCore;
+//using TeamBins.Infrastrucutre.Services;
+//using TeamBins.Infrastrucutre.Cache;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
-using TeamBins.Infrastrucutre.Filters;
 using TeamBins.Common.ViewModels;
+using TeamBins.DataAccessCore;
 using TeamBins.Infrastrucutre;
+using TeamBins.Infrastrucutre.Cache;
+using TeamBins.Infrastrucutre.Filters;
+using TeamBins.Infrastrucutre.Services;
+using TeamBins.Services;
+using TeamBins.DataAccess;
 
-namespace TeamBinsCore.Web
+//using TeamBins.Infrastrucutre.Filters;
+//using TeamBins.Common.ViewModels;
+//using TeamBins.Infrastrucutre;
+
+namespace TeamBins.Web
 {
     public class Startup
     {
@@ -61,10 +70,10 @@ namespace TeamBinsCore.Web
             //services.AddScoped<>()
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddTransient<ICache, InMemoryCache>();
-            //services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddMemoryCache();
 
-            services.Configure<AppSettings>(Configuration.GetSection("TeamBins"));
+            //services.Configure<AppSettings>(Configuration.GetSection("TeamBins"));
             services.AddSession(s => s.IdleTimeout = TimeSpan.FromMinutes(30));
 
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>(); //will work
@@ -74,6 +83,10 @@ namespace TeamBinsCore.Web
             {
                 o.Filters.Add(new ReqProcessFilter());
             });
+            //services.AddMvc(o =>
+            //{
+               
+            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

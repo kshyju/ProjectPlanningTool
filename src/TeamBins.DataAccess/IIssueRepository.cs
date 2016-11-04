@@ -10,7 +10,7 @@ using TeamBins.Common.ViewModels;
 
 using TeamBins.DataAccessCore;
 
-namespace TeamBinsCore.DataAccess
+namespace TeamBins.DataAccess
 {
 
     public class IssueRepository : BaseRepo, IIssueRepository

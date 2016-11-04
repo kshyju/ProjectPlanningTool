@@ -10,7 +10,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TeamBins.DataAccessCore;
 
-using TeamBinsCore.DataAccess;
+using TeamBins.DataAccess;
 
 namespace TeamBins.Services
 {

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using TeamBins.Common.ViewModels;
 using TeamBins.DataAccessCore;
 
-namespace TeamBinsCore.DataAccess
+namespace TeamBins.DataAccess
 {
     public class TeamRepository : BaseRepo, ITeamRepository
     {

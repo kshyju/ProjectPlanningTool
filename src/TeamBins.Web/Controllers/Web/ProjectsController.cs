@@ -18,23 +18,25 @@ namespace TeamBins.Controllers.Web
     {
         private readonly IProjectManager projectManager;
         private readonly IUserAuthHelper userAuthHelper;
-        public ProjectsController(IProjectManager projectManager,IUserAuthHelper userAuthHelper)
+        public ProjectsController(IProjectManager projectManager, IUserAuthHelper userAuthHelper)
         {
             this.projectManager = projectManager;
             this.userAuthHelper = userAuthHelper;
         }
-      
+
         public async Task<IActionResult> Index()
         {
             var vm = new TeamProjectListVM();
             var defaultProject = await projectManager.GetDefaultProjectForCurrentTeam();
 
-            vm.Projects =  projectManager.GetProjects(this.userAuthHelper.TeamId).Select(s=> new ProjectVM { Id = s.Id,
+            vm.Projects = projectManager.GetProjects(this.userAuthHelper.TeamId).Select(s => new ProjectVM
+            {
+                Id = s.Id,
                 Name = s.Name,
-                IsDefaultProject =  (defaultProject!=null && s.Id== defaultProject.Id)
+                IsDefaultProject = (defaultProject != null && s.Id == defaultProject.Id)
 
             }).ToList();
-            
+
             return View(vm);
         }
 
@@ -45,10 +47,10 @@ namespace TeamBins.Controllers.Web
         }
         public IActionResult Edit(int id)
         {
-            var addVm = new CreateProjectVM {Id = id};
+            var addVm = new CreateProjectVM { Id = id };
             var p = projectManager.GetProject(id);
             addVm.Name = p.Name;
-           
+
             return PartialView("Partial/Add", addVm);
         }
 
@@ -65,13 +67,13 @@ namespace TeamBins.Controllers.Web
                 }
                 else
                 {
-                    var errorMessages=ViewData.ModelState.Values.SelectMany(s => s.Errors.Select(x=>x.ErrorMessage));
-                    return Json(new { Status = "Error",Errors= errorMessages });
+                    var errorMessages = ViewData.ModelState.Values.SelectMany(s => s.Errors.Select(x => x.ErrorMessage));
+                    return Json(new { Status = "Error", Errors = errorMessages });
                 }
             }
             catch (Exception ex)
             {
-                return Json(new { Status = "Error", Errors = new List<string> { "Error in saving project" }});
+                return Json(new { Status = "Error", Errors = new List<string> { "Error in saving project" } });
             }
         }
 
@@ -97,7 +99,7 @@ namespace TeamBins.Controllers.Web
         {
             var vm = new DeleteProjectConfirmVM();
             var issueCount = this.projectManager.GetIssueCountForProject(id);
-            vm.DependableItemsCount =issueCount;
+            vm.DependableItemsCount = issueCount;
             return PartialView("Partial/DeleteConfirm", vm);
         }
         [HttpPost]
@@ -110,7 +112,7 @@ namespace TeamBins.Controllers.Web
             }
             catch (Exception ex)
             {
-                return Json(new { Status = "Error", Errors = new List<string> { "Error deleting project" }});
+                return Json(new { Status = "Error", Errors = new List<string> { "Error deleting project" } });
             }
         }
 

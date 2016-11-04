@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using TeamBins.Common.ViewModels;
 
-namespace TeamBinsCore.DataAccess
+namespace TeamBins.DataAccess
 {
     public interface ITeamRepository
     {

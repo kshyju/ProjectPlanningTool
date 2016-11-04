@@ -22,11 +22,11 @@ namespace TeamBins.Controllers
 
         // GET: Settings
         public async Task<IActionResult> Index()
-        {  
+        {
             var vm = new SettingsVm
             {
                 Profile = await _userAccountManager.GetUserProfile(),
-                NotificationSettings =await _userAccountManager.GetNotificationSettings(),
+                NotificationSettings = await _userAccountManager.GetNotificationSettings(),
                 IssueSettings = await _userAccountManager.GetIssueSettingsForUser()
             };
             return View(vm);
@@ -37,7 +37,7 @@ namespace TeamBins.Controllers
         public async Task<ActionResult> Notifications(UserEmailNotificationSettingsVM model)
         {
             await _userAccountManager.SaveNotificationSettings(model);
-            SetMessage(MessageType.Success,"Settings updated successfully");
+            SetMessage(MessageType.Success, "Settings updated successfully");
             return RedirectToAction("Index", "Settings");
         }
         [HttpPost]

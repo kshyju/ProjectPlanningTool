@@ -12,10 +12,10 @@
                 @if (!Model.IsReadonlyView)
                 {
                     <div id="quick_create">
-                        <input type="text" ng-keyup="vm.create($event)" ng-model="vm.newIssue" name="NewItemTitle" placeholder="Type and click enter to quickly create an issue" id="NewItemTitle"/>
+                        <input type="text" ng-keyup="vm.create($event)" ng-model="vm.newIssue" name="NewItemTitle" placeholder="Type and click enter to quickly create an issue" id="NewItemTitle" />
                         <div id="default_items">
                             <div class="default_item">
-                                <img class="default_item_img" src="~/Content/images/feature-icon.png"/>
+                                <img class="default_item_img" src="~/Content/images/feature-icon.png" />
                             </div>
                         </div>
                     </div>
@@ -27,8 +27,11 @@
                         </li>
                     </ul>
                     <div class="spinner" ng-show="loading"></div>
-                    <a id="create-issue" asp-action="add" asp-controller="Issues" class="pull-right popup">Create New </a>
-                  
+                    @if (!Model.IsReadonlyView)
+                    {
+                        <a id="create-issue" asp-action="add" asp-controller="Issues" class="pull-right popup">Create New </a>
+                    }
+
                 </div>
             </div>
 
@@ -97,7 +100,7 @@ else
     <script src="~/js/issueList.service.js"></script>
     <script src="~/js/IssueListController.js"></script>
     <script src="~/js/chart.min.js"></script>
-<script src="~/js/issue.js"></script>
+    <script src="~/js/issue.js"></script>
 
 
 

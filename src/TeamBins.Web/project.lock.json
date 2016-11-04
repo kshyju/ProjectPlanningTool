@@ -10692,8 +10692,8 @@
       "Microsoft.Extensions.Options.ConfigurationExtensions >= 1.0.0",
       "Microsoft.NETCore.App >= 1.0.0",
       "Microsoft.VisualStudio.Web.BrowserLink.Loader >= 14.0.0",
-      "TeamBins.Common",
-      "TeamBins.DataAccess",
+      "TeamBins.Common >= 1.0.0-*",
+      "TeamBins.DataAccess >= 1.0.0-*",
       "WindowsAzure.Storage >= 7.2.0"
     ],
     ".NETCoreApp,Version=v1.0": []

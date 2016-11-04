@@ -18,7 +18,7 @@ namespace TeamBins.Controllers.Web
     {
         private IUserAuthHelper _userAuthHelper;
         private ITeamManager _teamManager;
-        public TeamController(ITeamManager teamManager,IUserAuthHelper userAuthHelper)
+        public TeamController(ITeamManager teamManager, IUserAuthHelper userAuthHelper)
         {
             this._teamManager = teamManager;
             this._userAuthHelper = userAuthHelper;
@@ -27,7 +27,7 @@ namespace TeamBins.Controllers.Web
         public IActionResult Index()
         {
             var teams = this._teamManager.GetTeams();
-            return View(new TeamListVM {  Teams = teams});
+            return View(new TeamListVM { Teams = teams });
         }
         public ActionResult Add()
         {
@@ -55,13 +55,13 @@ namespace TeamBins.Controllers.Web
                     var teamId = _teamManager.SaveTeam(model);
                     return Json(new { Status = "Success" });
 
-                    
+
                 }
                 return View(model);
             }
             catch (Exception ex)
             {
-               
+
             }
             return Json(new { Status = "Error" });
         }
@@ -72,11 +72,11 @@ namespace TeamBins.Controllers.Web
             var team = _teamManager.GetTeam(id);
             if (team != null && team.IsRequestingUserTeamOwner)
             {
-                
-                return PartialView("Partial/ChangeVisibility",team);
+
+                return PartialView("Partial/ChangeVisibility", team);
             }
             return PartialView();
-            
+
         }
 
         [HttpPost]
@@ -98,7 +98,7 @@ namespace TeamBins.Controllers.Web
         {
             var vm = new DeleteProjectConfirmVM();
             // to do check : based on permission, check member count, issue count etc
-           
+
             return PartialView("Partial/DeleteConfirm", vm);
         }
         [HttpPost]
@@ -121,7 +121,7 @@ namespace TeamBins.Controllers.Web
             var team = this._teamManager.GetTeam(id);
             if (team != null)
             {
-                var vm = new TeamVM {Id = team.Id, Name = team.Name, IsPublic = team.IsPublic, IsRequestingUserTeamOwner = team.IsRequestingUserTeamOwner};
+                var vm = new TeamVM { Id = team.Id, Name = team.Name, IsPublic = team.IsPublic, IsRequestingUserTeamOwner = team.IsRequestingUserTeamOwner };
 
                 return View(vm);
             }

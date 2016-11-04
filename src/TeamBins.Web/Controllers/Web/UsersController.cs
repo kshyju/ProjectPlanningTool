@@ -50,7 +50,7 @@ namespace TeamBins.Controllers.Web
                 //Log
             }
 
-            return Json(new { Status = "Error", Message = "Error adding user to team" });  
+            return Json(new { Status = "Error", Message = "Error adding user to team" });
         }
 
 
@@ -71,7 +71,7 @@ namespace TeamBins.Controllers.Web
             }
             catch (Exception ex)
             {
-               
+
                 return View("Error");
             }
         }

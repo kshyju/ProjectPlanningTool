@@ -14,8 +14,8 @@ using TeamBins.Infrastrucutre;
 using TeamBins.Infrastrucutre.Cache;
 using TeamBins.Infrastrucutre.Extensions;
 using TeamBins.Infrastrucutre.Services;
-using TeamBinsCore.Common;
-using TeamBinsCore.DataAccess;
+using TeamBins.Common;
+using TeamBins.DataAccess;
 
 namespace TeamBins.Services
 {

@@ -1,12 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using TeamBins.Common.ViewModels;
 using TeamBins.Services;
-using TeamBins.Infrastrucutre.Filters;
 using TeamBins.Infrastrucutre.Services;
 
 
@@ -16,15 +12,13 @@ namespace TeamBins.Controllers.Web
     public class DashboardController : BaseController
     {
         private readonly IUserAuthHelper userSessionHelper;
-        private readonly IUserAccountManager userAccountManager;
         private readonly IProjectManager projectManager;
-        private IIssueManager issueManager;
-        private ITeamManager teamManager;
+        private readonly IIssueManager issueManager;
+        private readonly ITeamManager teamManager;
 
-        public DashboardController(IUserAuthHelper userSessionHelper, IUserAccountManager userAccountManager, IIssueManager issueManager, IProjectManager projectManager, ITeamManager teamManager)
+        public DashboardController(IUserAuthHelper userSessionHelper,  IIssueManager issueManager, IProjectManager projectManager, ITeamManager teamManager)
         {
             this.userSessionHelper = userSessionHelper;
-            this.userAccountManager = userAccountManager;
             this.issueManager = issueManager;
             this.projectManager = projectManager;
             this.teamManager = teamManager;
@@ -43,7 +37,7 @@ namespace TeamBins.Controllers.Web
                 if (team != null)
                 {
                     //If the current user who is accessing is already a member of this team,
-                    if (teamManager.DoesCurrentUserBelongsToTeam(this.userSessionHelper.UserId,team.Id))
+                    if (teamManager.DoesCurrentUserBelongsToTeam(this.userSessionHelper.UserId, team.Id))
                     {
                         vm.IsCurrentUserTeamMember = true;
                         //userSessionHelper.SetTeamId(team.Id);
@@ -70,7 +64,7 @@ namespace TeamBins.Controllers.Web
                 }
             }
             vm.TeamId = teamId;
-            if (userSessionHelper.TeamId > 0 )
+            if (userSessionHelper.TeamId > 0)
             {
                 if (teamManager.DoesCurrentUserBelongsToTeam(this.userSessionHelper.UserId, teamId))
                 {
@@ -80,13 +74,10 @@ namespace TeamBins.Controllers.Web
                 }
             }
 
-            var issues = this.issueManager.GetIssuesGroupedByStatusGroup(teamId, 25).SelectMany(f => f.Issues).ToList();
+            var issues = this.issueManager.GetIssuesGroupedByStatusGroup(teamId, 25).SelectMany(f => f.Issues).OrderByDescending(s=>s.CreatedDate).ToList();
             vm.RecentIssues = issues;
 
-
             vm.Projects = this.projectManager.GetProjects(teamId).ToList();
-
-
 
             return View(vm);
         }

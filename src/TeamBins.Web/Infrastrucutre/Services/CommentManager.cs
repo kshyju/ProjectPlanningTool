@@ -6,7 +6,7 @@ using TeamBins.Common.ViewModels;
 using TeamBins.DataAccessCore;
 using TeamBins.Infrastrucutre.Extensions;
 using TeamBins.Infrastrucutre.Services;
-using TeamBinsCore.DataAccess;
+using TeamBins.DataAccess;
 
 namespace TeamBins.Services
 {

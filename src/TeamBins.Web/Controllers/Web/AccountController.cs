@@ -16,7 +16,7 @@ namespace TeamBins.Controllers.Web
         private readonly IUserAuthHelper userSessionHelper;
         private readonly ITeamManager teamManager;
 
-        public AccountController(IUserAccountManager userAccountManager, IUserAuthHelper userSessionHelper,ITeamManager teamManager)
+        public AccountController(IUserAccountManager userAccountManager, IUserAuthHelper userSessionHelper, ITeamManager teamManager)
         {
             this.userAccountManager = userAccountManager;
             this.userSessionHelper = userSessionHelper;
@@ -38,7 +38,7 @@ namespace TeamBins.Controllers.Web
                     var user = await userAccountManager.GetUser(model.Email);
                     if (user != null)
                     {
-                        var appUser = new AppUser {UserName = user.EmailAddress, Id = user.Id.ToString()};
+                        var appUser = new AppUser { UserName = user.EmailAddress, Id = user.Id.ToString() };
                         if (user.Password == model.Password)
                         {
                             await userAccountManager.UpdateLastLoginTime(user.Id);
@@ -46,14 +46,14 @@ namespace TeamBins.Controllers.Web
                             if (user.DefaultTeamId == null)
                             {
                                 // This sould not happen! But if in case
-                               var teams= await userAccountManager.GetTeams(user.Id);
+                                var teams = await userAccountManager.GetTeams(user.Id);
                                 if (teams.Any())
                                 {
                                     user.DefaultTeamId = teams.First().Id;
                                     await this.userAccountManager.SetDefaultTeam(user.Id, user.DefaultTeamId.Value);
                                 }
                             }
-                            
+
                             this.userSessionHelper.SetUserIDToSession(user.Id, user.DefaultTeamId.Value);
                             return RedirectToAction("index", "dashboard");
                         }
@@ -64,7 +64,7 @@ namespace TeamBins.Controllers.Web
             catch (Exception ex)
             {
                 ModelState.AddModelError("", "Oops! Something went wrong :(");
-                
+
 
             }
             return View(model);
@@ -83,7 +83,7 @@ namespace TeamBins.Controllers.Web
 
         public ActionResult Join(string returnurl = "")
         {
-            return View(new AccountSignupVM {ReturnUrl = returnurl});
+            return View(new AccountSignupVM { ReturnUrl = returnurl });
         }
 
         [HttpPost]
@@ -142,11 +142,11 @@ namespace TeamBins.Controllers.Web
         public async Task<JsonResult> SwitchTeam(int id)
         {
             if (!teamManager.DoesCurrentUserBelongsToTeam(this.userSessionHelper.UserId, id))
-                return Json(new {Status = "Error", Message = "You do not belong to this team!"});
+                return Json(new { Status = "Error", Message = "You do not belong to this team!" });
 
             userSessionHelper.SetTeamId(id);
             await userAccountManager.SetDefaultTeam(userSessionHelper.UserId, id);
-            return Json(new {Status = "Success"});
+            return Json(new { Status = "Success" });
         }
     }
 }

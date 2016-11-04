@@ -39,8 +39,8 @@ namespace TeamBins.Controllers
             await issueManager.StarIssue(issueId, 0, !mode);
             if (!mode)
             {
-              
-                return Json(new {Status = "Success", Class = "glyphicon-star", Starred = true});
+
+                return Json(new { Status = "Success", Class = "glyphicon-star", Starred = true });
             }
             else
             {
@@ -50,18 +50,18 @@ namespace TeamBins.Controllers
 
         [HttpGet]
         [Route("~/api/issues/{issueId}/noissuemembers")]
-        public async Task<IActionResult> GetIssueMembers(string term,int issueId)
+        public async Task<IActionResult> GetIssueMembers(string term, int issueId)
         {
-            var list= await issueManager.GetNonIssueMembers(issueId);
+            var list = await issueManager.GetNonIssueMembers(issueId);
             return Json(list);
         }
 
         [HttpPost]
         [Route("~/api/issues/{issueId}/assignteammember/{userId}")]
-        public async Task<IActionResult> GetIssueMembers(int issueId,int userId)
+        public async Task<IActionResult> GetIssueMembers(int issueId, int userId)
         {
-            await this.issueManager.SaveIssueAssignee(issueId,userId);
-            return Json( new { Status="Success"});
+            await this.issueManager.SaveIssueAssignee(issueId, userId);
+            return Json(new { Status = "Success" });
         }
         [HttpPost]
         [Route("~/api/issues/{issueId}/removeissuemember/{userId}")]
@@ -72,10 +72,10 @@ namespace TeamBins.Controllers
         }
         // GET api/values/5
         [HttpGet("{teamId}/{count}")]
-        public ObjectResult Get(int teamId,int count)
+        public ObjectResult Get(int teamId, int count)
         {
 
-            var issues= this.issueManager.GetIssuesGroupedByStatusGroup(teamId,count);
+            var issues = this.issueManager.GetIssuesGroupedByStatusGroup(teamId, count);
 
             return Ok(issues);
         }
@@ -111,7 +111,7 @@ namespace TeamBins.Controllers
                     this.issueManager.Delete(id);
                 }
                 ///return new HttpOkObjectResult();
-                return  Ok(new { Status = "Success" });
+                return Ok(new { Status = "Success" });
             }
             catch (Exception)
             {

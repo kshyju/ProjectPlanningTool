@@ -7,6 +7,8 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using TeamBins.Common.ViewModels;
 
+//using TeamBins.Common.ViewModels;
+
 namespace TeamBins.Infrastrucutre
 {
     public class AzureBlobStorageHandler : IUploadHandler
