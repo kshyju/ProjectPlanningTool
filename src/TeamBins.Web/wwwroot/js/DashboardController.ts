@@ -1,6 +1,7 @@
-﻿
-/// <reference path="../../../teambins.common/scripts/typings/angularjs/angular.d.ts" />
-/// <reference path="../../../TeamBins.Common/Scripts/typings/chartjs/chart.d.ts" />
+﻿/// <reference path="../typings/angular.d.ts" />
+/// <reference path="../typings/chart.d.ts" />
+
+
 module TeamBins {
     
 
@@ -12,7 +13,7 @@ module TeamBins {
         activities: any[];
 
 
-        constructor($scope: ng.IScope, private summaryService: any, private pageContext any) {
+        constructor($scope: ng.IScope, private summaryService: any, private pageContext:any) {
             
             this.getActivityStream(this.pageContext.TeamId);
             this.getSummary(this.pageContext.TeamId);
@@ -44,7 +45,7 @@ module TeamBins {
                     pieChartData2.push(pieChartItem);
                 });
 
-                self.renderPie(pieChartData2,"issuesPriorityPieChart");
+                self.renderPie(pieChartData2,'issuesPriorityPieChart');
 
             });
         }
@@ -58,20 +59,14 @@ module TeamBins {
                     pieChartData.push(pieChartItem);
                 });
 
-                self.renderPie(pieChartData, "myChart");
+                self.renderPie(pieChartData, 'myChart');
 
             });
         }          
-        renderPie(pieChartDataSet: any[],elementId:String) {
-
-            var ctx = document.getElementById(elementId).getContext("2d");
-            new Chart(ctx).Pie(pieChartDataSet);
+        renderPie(pieChartDataSet: any[], elementId: String) {
+            var canvas: any = document.getElementById('' + elementId);
+            var ctx = canvas.getContext('2d');
+           new Chart(ctx).Pie(pieChartDataSet, null);
         }
     }
-    
-    
-
-}
-interface HTMLElement extends Element {
-    getContext(name:string): CanvasRenderingContext2D;
 }

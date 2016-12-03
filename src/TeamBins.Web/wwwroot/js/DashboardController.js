@@ -1,10 +1,9 @@
-/// <reference path="../../../teambins.common/scripts/typings/angularjs/angular.d.ts" />
-/// <reference path="../../../TeamBins.Common/Scripts/typings/chartjs/chart.d.ts" />
+/// <reference path="../typings/angular.d.ts" />
+/// <reference path="../typings/chart.d.ts" />
 var TeamBins;
 (function (TeamBins) {
     var DashboardController = (function () {
         function DashboardController($scope, summaryService, pageContext) {
-            if (pageContext === void 0) { pageContext = any; }
             this.summaryService = summaryService;
             this.pageContext = pageContext;
             this.getActivityStream(this.pageContext.TeamId);
@@ -33,7 +32,7 @@ var TeamBins;
                     var pieChartItem = { value: a.count, color: a.color, highlight: "#FF5A5E", label: a.itemName };
                     pieChartData2.push(pieChartItem);
                 });
-                self.renderPie(pieChartData2, "issuesPriorityPieChart");
+                self.renderPie(pieChartData2, 'issuesPriorityPieChart');
             });
         };
         DashboardController.prototype.getSummary = function (teamId) {
@@ -45,12 +44,13 @@ var TeamBins;
                     var pieChartItem = { value: a.count, color: a.color, highlight: "#FF5A5E", label: a.itemName };
                     pieChartData.push(pieChartItem);
                 });
-                self.renderPie(pieChartData, "myChart");
+                self.renderPie(pieChartData, 'myChart');
             });
         };
         DashboardController.prototype.renderPie = function (pieChartDataSet, elementId) {
-            var ctx = document.getElementById(elementId).getContext("2d");
-            new Chart(ctx).Pie(pieChartDataSet);
+            var canvas = document.getElementById('' + elementId);
+            var ctx = canvas.getContext('2d');
+            new Chart(ctx).Pie(pieChartDataSet, null);
         };
         return DashboardController;
     }());
