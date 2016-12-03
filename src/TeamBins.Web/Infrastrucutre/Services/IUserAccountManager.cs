@@ -53,12 +53,14 @@ namespace TeamBins.Services
 
     public class UserAccountManager : IUserAccountManager
     {
+        private IEmailManager emailManager;
         private IProjectManager projectManager;
         private IUserRepository userRepository;
         private IUserAuthHelper userSessionHelper;
         private ITeamRepository teamRepository;
-        public UserAccountManager(IUserRepository userRepository, IUserAuthHelper userSessionHelper, IProjectManager projectManager,ITeamRepository teamRepository)
+        public UserAccountManager(IUserRepository userRepository, IUserAuthHelper userSessionHelper, IProjectManager projectManager,ITeamRepository teamRepository,IEmailManager emailManager)
         {
+            this.emailManager = emailManager;
             this.userRepository = userRepository;
             this.userSessionHelper = userSessionHelper;
             this.projectManager = projectManager;
@@ -126,6 +128,13 @@ namespace TeamBins.Services
             var teamName = userAccount.Name.Replace(" ", "") + " Team";
             var teamId = await Task.FromResult(teamRepository.SaveTeam(new TeamDto {CreatedById = userId, Name = teamName }));
             await this.userRepository.SetDefaultTeam(userId, teamId);
+
+            await this.emailManager.SendAccountCreatedEmail(new UserDto
+            {
+                Name = userAccount.Name,
+                EmailAddress = userAccount.EmailAddress
+            });
+
             return new LoggedInSessionInfo() {TeamId = teamId, UserId = userId, UserDisplayName = userAccount.Name};
         }
         public async Task UpdateProfile(EditProfileVm model)

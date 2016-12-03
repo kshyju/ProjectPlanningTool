@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
 using TeamBins.Common.ViewModels;
@@ -16,7 +17,8 @@ namespace TeamBins.Controllers.Web
         private readonly IIssueManager issueManager;
         private readonly ITeamManager teamManager;
 
-        public DashboardController(IUserAuthHelper userSessionHelper,  IIssueManager issueManager, IProjectManager projectManager, ITeamManager teamManager)
+        public DashboardController(IUserAuthHelper userSessionHelper, IIssueManager issueManager,
+            IProjectManager projectManager, ITeamManager teamManager)
         {
             this.userSessionHelper = userSessionHelper;
             this.issueManager = issueManager;
@@ -25,12 +27,28 @@ namespace TeamBins.Controllers.Web
 
         }
 
+
+        [Route("dashboard2TestEmail")]
+        public async Task<IActionResult> TestEmail()
+        {
+            try
+            {
+                await this.teamManager.EmailTest();
+                return Content("sent");
+            }
+            catch (Exception ex)
+            {
+                return Content(ex.Message + ex.InnerException);
+            }
+
+        }
+
         [Route("dashboard/{teamName}")]
         [Route("dashboard")]
         public async Task<IActionResult> Index(string teamName)
         {
             var teamId = userSessionHelper.TeamId;
-            var vm = new DashBoardVm { };
+            var vm = new DashBoardVm {};
             if (!string.IsNullOrEmpty(teamName))
             {
                 var team = teamManager.GetTeam(teamName);
@@ -74,12 +92,20 @@ namespace TeamBins.Controllers.Web
                 }
             }
 
-            var issues = this.issueManager.GetIssuesGroupedByStatusGroup(teamId, 25).SelectMany(f => f.Issues).OrderByDescending(s=>s.CreatedDate).ToList();
+            var issues =
+                this.issueManager.GetIssuesGroupedByStatusGroup(teamId, 25)
+                    .SelectMany(f => f.Issues)
+                    .OrderByDescending(s => s.CreatedDate)
+                    .ToList();
             vm.RecentIssues = issues;
 
             vm.Projects = this.projectManager.GetProjects(teamId).ToList();
 
             return View(vm);
         }
+       // [Route("dashboard2/TestEmail")]
+       // [Route("dashboard2/TestEmail")]
+       
+        
     }
 }

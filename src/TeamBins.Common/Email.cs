@@ -13,10 +13,7 @@ public class EmailTemplateDto
 public class Email
 {
     private IConfiguration configuration;
-    public Email(IConfiguration configuration)
-    {
-        this.configuration = configuration;
-    }
+    
 
     public string FromAddress { set; get; }
     public List<string> ToAddress { set; get; }

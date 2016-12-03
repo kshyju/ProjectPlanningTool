@@ -36,6 +36,8 @@ namespace TeamBins.Infrastrucutre.Services
         Task<IEnumerable<ChartItem>> GetIssueCountPerPriority(int teamId);
 
         Task SaveVisibility(int id, bool isPublic);
+
+        Task EmailTest();
     }
     public class TeamManager : ITeamManager
     {
@@ -53,6 +55,16 @@ namespace TeamBins.Infrastrucutre.Services
             this.issueRepository = issueRepository;
             this.userRepository = userRepository;
             this.emailManager = emailManager;
+        }
+
+        public async Task EmailTest()
+        {
+            Email email =new Email();
+            email.ToAddress.Add("kshyju@live.in");
+            email.Subject = "Test at " + DateTime.Now;
+            email.Body = "s";
+            email.FromAddress = "connectshyju@gmail.com";
+            this.emailManager.Send(email);
         }
 
         public async Task<bool> ValidateAndAssociateNewUserToTeam(string activationCode)

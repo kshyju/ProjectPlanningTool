@@ -25,5 +25,13 @@ namespace TeamBins.DataAccess
         Task<AddTeamMemberRequestVM> GetTeamMemberInvitation(string activationCode);
         Task DeleteTeamMemberInvitation(int id);
         Task SaveVisibility(int id, bool isPublic);
+
+        /// <summary>
+        /// Get the list of email subscribers
+        /// </summary>
+        /// <param name="teamId">The teamId</param>
+        /// <param name="notificationtypeCode">The notification type code (Ex : NewIssue) </param>
+        /// <returns></returns>
+        Task<IEnumerable<UserDto>> GetSubscribers(int teamId, string notificationtypeCode);
     }
 }

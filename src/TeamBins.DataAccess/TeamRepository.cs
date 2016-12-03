@@ -12,15 +12,25 @@ namespace TeamBins.DataAccess
 {
     public class TeamRepository : BaseRepo, ITeamRepository
     {
-        public class MyModel
-        {
-            public long ID;
-            public long NUMBER_COLUMN;
-            public long TEXT_COLUMN; //this is an error (since the type in the database is text)
-        }
         public TeamRepository(IConfiguration configuration) : base(configuration)
         {
         }
+
+
+        public async Task<IEnumerable<UserDto>> GetSubscribers(int teamId, string notificationTypeCode)
+        {
+            const string q = @"SELECT U.ID,U.FirstName AS Name,U.EmailAddress 
+                    FROM UserNotificationSubscription UNS WITH (NOLOCK) 
+                    JOIN [User] U  WITH (NOLOCK)  ON U.ID=UNS.UserID
+                    JOIN NotificationType NT WITH (NOLOCK) ON NT.Id=UNS.NotificationTypeID
+                    WHERE NT.Code=@notificationTypeCode AND TeamId=@teamId";
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                return await con.QueryAsync<UserDto>(q, new { notificationTypeCode, teamId });
+            }
+        }
+
 
         public TeamDto GetTeam(int teamId)
         {

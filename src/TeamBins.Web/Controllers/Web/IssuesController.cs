@@ -19,6 +19,7 @@ namespace TeamBins.Controllers.Web
     {
         private readonly ITeamManager teamManager;
 
+
         private readonly IProjectManager projectManager;
         private readonly IIssueManager issueManager;
         readonly IUserAuthHelper userSessionHelper;
@@ -199,6 +200,10 @@ namespace TeamBins.Controllers.Web
                             }
                         }
 
+                    }
+                    if (previousVersion != null)
+                    {
+                        
                     }
                     if (model.IncludeIssueInResponse)
                     {

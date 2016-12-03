@@ -73,7 +73,7 @@ namespace TeamBins.Web
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddMemoryCache();
 
-            //services.Configure<AppSettings>(Configuration.GetSection("TeamBins"));
+            services.Configure<AppSettings>(Configuration.GetSection("TeamBins"));
             services.AddSession(s => s.IdleTimeout = TimeSpan.FromMinutes(30));
 
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>(); //will work

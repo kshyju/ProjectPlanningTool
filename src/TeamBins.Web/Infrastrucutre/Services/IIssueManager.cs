@@ -46,7 +46,9 @@ namespace TeamBins.Services
         private IUploadRepository uploadRepository;
         private IUserAuthHelper userSessionHelper;
         private readonly ICache cache;
-        public IssueManager(IIssueRepository issueRepository, IProjectRepository iProjectRepository, IActivityRepository activityRepository, IUserAuthHelper userSessionHelper, ICache cache,IUploadRepository uploadRepository)
+        private IEmailManager emailManager;
+        public IssueManager(IIssueRepository issueRepository, IProjectRepository iProjectRepository, 
+            IActivityRepository activityRepository, IUserAuthHelper userSessionHelper, ICache cache,IUploadRepository uploadRepository,IEmailManager emailManager)
         {
             this.issueRepository = issueRepository;
             this.iProjectRepository = iProjectRepository;
@@ -54,6 +56,7 @@ namespace TeamBins.Services
             this.userSessionHelper = userSessionHelper;
             this.cache = cache;
             this.uploadRepository = uploadRepository;
+            this.emailManager = emailManager;
         }
         public DashBoardItemSummaryVm GetDashboardSummaryVM(int teamId)
         {
@@ -170,6 +173,7 @@ namespace TeamBins.Services
 
         public async Task<IssueDetailVM> SaveIssue(CreateIssue issue, List<IFormFile> files)
         {
+            bool isNewIssue = issue.Id == 0;
             if (issue.ProjectId == 0)
             {
                 var defaultProject = await iProjectRepository.GetDefaultProjectForTeamMember(this.userSessionHelper.TeamId,
@@ -199,10 +203,12 @@ namespace TeamBins.Services
             issue.CreatedById = this.userSessionHelper.UserId;
             issue.TeamID = this.userSessionHelper.TeamId;
             var issueId = this.issueRepository.SaveIssue(issue);
-
-
-
             var issueDetail = this.issueRepository.GetIssue(issueId, this.userSessionHelper.UserId);
+
+
+            if (isNewIssue)
+                await emailManager.SendIssueCreatedEmail(issueDetail, this.userSessionHelper.TeamId);
+
             return issueDetail;
             
         }
