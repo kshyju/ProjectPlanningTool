@@ -64,7 +64,7 @@ namespace TeamBins.Infrastrucutre.Services
             email.Subject = "Test at " + DateTime.Now;
             email.Body = "s";
             email.FromAddress = "connectshyju@gmail.com";
-            this.emailManager.Send(email);
+            await this.emailManager.Send(email);
         }
 
         public async Task<bool> ValidateAndAssociateNewUserToTeam(string activationCode)

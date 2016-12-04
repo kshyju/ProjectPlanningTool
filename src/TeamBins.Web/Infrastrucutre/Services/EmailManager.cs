@@ -24,7 +24,7 @@ namespace TeamBins.Services
 
         Task SendIssueCreatedEmail(IssueDetailVM issue, int teamId);
 
-        void Send(Email email);
+        Task Send(Email email);
     }
 
 
@@ -59,7 +59,7 @@ namespace TeamBins.Services
                     emailBody = emailBody.Replace("@userName", newUser.Name);
                     email.Body = emailBody;
                     email.Subject = emailSubject;
-                    Send(email);
+                    await Send(email);
                 }
             }
             catch (Exception)
@@ -100,7 +100,7 @@ namespace TeamBins.Services
 
                         email.Body = emailBody;
                         email.Subject = emailSubject;
-                        Send(email);
+                        await Send(email);
                     }
                 }
             }
@@ -129,7 +129,7 @@ namespace TeamBins.Services
                     emailBody = emailBody.Replace("@inviter", teamMemberRequest.CreatedBy.Name);
                     email.Body = emailBody;
                     email.Subject = emailSubject;
-                    Send(email);
+                    await Send(email);
                 }
             }
             catch (Exception)
@@ -139,16 +139,17 @@ namespace TeamBins.Services
 
         }
 
-        public async void Send(Email email)
+        public async Task Send(Email email)
         {
-            await Task.Run(() =>
-            {
-                SendEmail(email);
-            });
+            await SendEmail(email);
+            //await Task.Run(() =>
+            //{
+            //    SendEmail(email);
+            //});
 
         }
 
-        private void SendEmail(Email email)
+        private async Task SendEmail(Email email)
         {
             try
             {
@@ -178,7 +179,8 @@ namespace TeamBins.Services
                     client.AuthenticationMechanisms.Remove("XOAUTH2");
 
                     // Note: only needed if the SMTP server requires authentication
-                    client.Authenticate(this.settings.Email.UserName, this.settings.Email.Password);
+                    await client.AuthenticateAsync(this.settings.Email.UserName, this.settings.Email.Password);
+                    //client.Authenticate("teambinsprojects@gmail.com", "OpenSource123");
 
                     client.Send(message);
                     client.Disconnect(true);
