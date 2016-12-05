@@ -15,6 +15,7 @@ Built with
 * <del>ASP.NET SignalR</del> Needs to be changed to support dot net core.
 * Windows Azure (Blog storage for file upload)
 * Angular JS
+* [MailKit](https://github.com/jstedfast/MailKit)
 * jQuery
 * jQuery UI
 * Chart.Js
