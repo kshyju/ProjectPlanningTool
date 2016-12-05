@@ -1,14 +1,9 @@
 using System;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using MailKit.Net.Smtp;
-using TeamBins.Common;
-
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using MimeKit;
-using Newtonsoft.Json;
 using TeamBins.DataAccessCore;
 using TeamBins.Common.ViewModels;
 using TeamBins.DataAccess;
@@ -30,25 +25,23 @@ namespace TeamBins.Services
 
     public class EmailManager : IEmailManager
     {
-        private IEmailRepository emailRepository;
-        private ITeamRepository teamRepository;
-
-        readonly AppSettings settings;
+        private readonly IEmailRepository _emailRepository;
+        private readonly ITeamRepository _teamRepository;
+        readonly AppSettings _settings;
 
         public EmailManager(IEmailRepository emailRepository, IOptions<AppSettings> settings,
             ITeamRepository teamRepository)
         {
-            this.teamRepository = teamRepository;
-            this.emailRepository = emailRepository;
-
-            this.settings = settings.Value;
+            this._teamRepository = teamRepository;
+            this._emailRepository = emailRepository;
+            this._settings = settings.Value;
         }
 
         public async Task SendAccountCreatedEmail(UserDto newUser)
         {
             try
             {
-                var emailTemplate = await emailRepository.GetEmailTemplate("NewAccount");
+                var emailTemplate = await _emailRepository.GetEmailTemplate("NewAccount");
                 if (emailTemplate != null)
                 {
                     var emailSubject = emailTemplate.Subject;
@@ -66,17 +59,16 @@ namespace TeamBins.Services
             {
                 // Silently fail. We will log this. But we do not want to show an error to user because of this
             }
-
         }
 
         public async Task SendIssueCreatedEmail(IssueDetailVM issue, int teamId)
         {
             try
             {
-                var subscibers = await teamRepository.GetSubscribers(teamId, "NewIssue");
+                var subscibers = await _teamRepository.GetSubscribers(teamId, "NewIssue");
                 if (subscibers.Any())
                 {
-                    var emailTemplate = await emailRepository.GetEmailTemplate("NewIssue");
+                    var emailTemplate = await _emailRepository.GetEmailTemplate("NewIssue");
                     if (emailTemplate != null)
                     {
                         var emailSubject = emailTemplate.Subject;
@@ -88,9 +80,9 @@ namespace TeamBins.Services
                         {
                             email.ToAddress.Add(subsciber.EmailAddress);
                         }
-                        var team = teamRepository.GetTeam(teamId);
+                        var team = _teamRepository.GetTeam(teamId);
 
-                        var issueUrl = this.settings.SiteUrl + "/issues/" + issue.Id;
+                        var issueUrl = this._settings.SiteUrl + "/issues/" + issue.Id;
                         var issueLink = string.Format("<a href='{0}'>" + "#{0} {0}</a>", issueUrl, issue.Id, issue.Title);
 
                         emailBody = emailBody.Replace("@issueAuthor", issue.Author.Name);
@@ -108,19 +100,18 @@ namespace TeamBins.Services
             {
                 // Silently fail. We will log this. But we do not want to show an error to user because of this
             }
-
         }
 
         public async Task SendTeamMemberInvitationEmail(AddTeamMemberRequestVM teamMemberRequest)
         {
             try
             {
-                var emailTemplate = await emailRepository.GetEmailTemplate("JoinMyTeam");
+                var emailTemplate = await _emailRepository.GetEmailTemplate("JoinMyTeam");
                 if (emailTemplate != null)
                 {
                     var emailSubject = emailTemplate.Subject;
                     var emailBody = emailTemplate.EmailBody;
-                    Email email = new Email();
+                    var email = new Email();
                     email.ToAddress.Add(teamMemberRequest.EmailAddress);
 
                     var joinLink = String.Format("{0}Account/Join?returnurl={1}", teamMemberRequest.SiteBaseUrl, teamMemberRequest.ActivationCode);
@@ -141,46 +132,40 @@ namespace TeamBins.Services
 
         public async Task Send(Email email)
         {
-            await SendEmail(email);
-            //await Task.Run(() =>
-            //{
-            //    SendEmail(email);
-            //});
+            await Task.Run(() =>
+            {
+                SendEmail(email);
+            });
 
         }
 
-        private async Task SendEmail(Email email)
+
+       
+
+        private  void SendEmail(Email email)
         {
             try
             {
                 var message = new MimeMessage();
-                message.From.Add(new MailboxAddress("TeamBins", this.settings.Email.FromEmailAddress));
+                message.From.Add(new MailboxAddress("TeamBins", this._settings.Email.FromEmailAddress));
                 foreach (var address in email.ToAddress)
                 {
                     message.To.Add(new MailboxAddress(address, address));
                 }
 
-                if(!String.IsNullOrEmpty(this.settings.Email.BccEmailAddress))
-                    message.Bcc.Add(new MailboxAddress(this.settings.Email.BccEmailAddress, this.settings.Email.BccEmailAddress));
+                if(!String.IsNullOrEmpty(this._settings.Email.BccEmailAddress))
+                    message.Bcc.Add(new MailboxAddress(this._settings.Email.BccEmailAddress, this._settings.Email.BccEmailAddress));
 
                 message.Subject = email.Subject;
                 var builder = new BodyBuilder { HtmlBody = email.Body };
 
                 message.Body = builder.ToMessageBody();
+
                 using (var client = new SmtpClient())
                 {
-                    // For demo-purposes, accept all SSL certificates (in case the server supports STARTTLS)
-                    client.ServerCertificateValidationCallback = (s, c, h, e) => true;
-
-                    client.Connect(this.settings.Email.SmtpServer, 587, false);
-
-                    // Note: since we don't have an OAuth2 token, disable
-                    // the XOAUTH2 authentication mechanism.
+                    client.Connect(this._settings.Email.SmtpServer, this._settings.Email.Port, false);
                     client.AuthenticationMechanisms.Remove("XOAUTH2");
-
-                    // Note: only needed if the SMTP server requires authentication
-                    await client.AuthenticateAsync(this.settings.Email.UserName, this.settings.Email.Password);
-                    //client.Authenticate("teambinsprojects@gmail.com", "OpenSource123");
+                    client.Authenticate(this._settings.Email.UserName, this._settings.Email.Password);
 
                     client.Send(message);
                     client.Disconnect(true);
@@ -192,8 +177,4 @@ namespace TeamBins.Services
             }
         }
     }
-
-
-
-
 }
