@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
 using TeamBins.Common.ViewModels;
@@ -12,34 +11,18 @@ namespace TeamBins.Controllers.Web
     // [LoginCheckFilter]
     public class DashboardController : BaseController
     {
-        private readonly IUserAuthHelper userSessionHelper;
-        private readonly IProjectManager projectManager;
-        private readonly IIssueManager issueManager;
-        private readonly ITeamManager teamManager;
+        private readonly IUserAuthHelper _userSessionHelper;
+        private readonly IProjectManager _projectManager;
+        private readonly IIssueManager _issueManager;
+        private readonly ITeamManager _teamManager;
 
         public DashboardController(IUserAuthHelper userSessionHelper, IIssueManager issueManager,
             IProjectManager projectManager, ITeamManager teamManager)
         {
-            this.userSessionHelper = userSessionHelper;
-            this.issueManager = issueManager;
-            this.projectManager = projectManager;
-            this.teamManager = teamManager;
-
-        }
-
-
-        [Route("dashboard2TestEmail")]
-        public async Task<IActionResult> TestEmail()
-        {
-            try
-            {
-                await this.teamManager.EmailTest();
-                return Content("sent");
-            }
-            catch (Exception ex)
-            {
-                return Content(ex.Message + ex.InnerException);
-            }
+            this._userSessionHelper = userSessionHelper;
+            this._issueManager = issueManager;
+            this._projectManager = projectManager;
+            this._teamManager = teamManager;
 
         }
 
@@ -47,15 +30,15 @@ namespace TeamBins.Controllers.Web
         [Route("dashboard")]
         public async Task<IActionResult> Index(string teamName)
         {
-            var teamId = userSessionHelper.TeamId;
+            var teamId = _userSessionHelper.TeamId;
             var vm = new DashBoardVm {};
             if (!string.IsNullOrEmpty(teamName))
             {
-                var team = teamManager.GetTeam(teamName);
+                var team = _teamManager.GetTeam(teamName);
                 if (team != null)
                 {
                     //If the current user who is accessing is already a member of this team,
-                    if (teamManager.DoesCurrentUserBelongsToTeam(this.userSessionHelper.UserId, team.Id))
+                    if (_teamManager.DoesCurrentUserBelongsToTeam(this._userSessionHelper.UserId, team.Id))
                     {
                         vm.IsCurrentUserTeamMember = true;
                         //userSessionHelper.SetTeamId(team.Id);
@@ -82,30 +65,28 @@ namespace TeamBins.Controllers.Web
                 }
             }
             vm.TeamId = teamId;
-            if (userSessionHelper.TeamId > 0)
+            if (_userSessionHelper.TeamId > 0)
             {
-                if (teamManager.DoesCurrentUserBelongsToTeam(this.userSessionHelper.UserId, teamId))
+                if (_teamManager.DoesCurrentUserBelongsToTeam(this._userSessionHelper.UserId, teamId))
                 {
                     vm.IsCurrentUserTeamMember = true;
-                    var myIssues = await issueManager.GetIssuesAssignedToUser(this.userSessionHelper.UserId);
+                    var myIssues = await _issueManager.GetIssuesAssignedToUser(this._userSessionHelper.UserId);
                     vm.IssuesAssignedToMe = myIssues;
                 }
             }
 
             var issues =
-                this.issueManager.GetIssuesGroupedByStatusGroup(teamId, 25)
+                this._issueManager.GetIssuesGroupedByStatusGroup(teamId, 25)
                     .SelectMany(f => f.Issues)
                     .OrderByDescending(s => s.CreatedDate)
                     .ToList();
             vm.RecentIssues = issues;
 
-            vm.Projects = this.projectManager.GetProjects(teamId).ToList();
+            vm.Projects = this._projectManager.GetProjects(teamId).ToList();
 
             return View(vm);
         }
-       // [Route("dashboard2/TestEmail")]
-       // [Route("dashboard2/TestEmail")]
-       
+      
         
     }
 }
