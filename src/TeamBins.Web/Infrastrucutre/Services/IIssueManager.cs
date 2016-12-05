@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting.Internal;
 using TeamBins.Common;
 using TeamBins.Common.Infrastructure.Enums.TeamBins.Helpers.Enums;
 using TeamBins.Common.ViewModels;
@@ -13,30 +14,11 @@ using TeamBins.DataAccessCore;
 using TeamBins.Infrastrucutre;
 using TeamBins.Infrastrucutre.Cache;
 using TeamBins.Infrastrucutre.Extensions;
-using TeamBins.Infrastrucutre.Services;
-using TeamBins.Common;
 using TeamBins.DataAccess;
 
 namespace TeamBins.Services
 {
-    public interface IUploadManager
-    {
-        Task<int> SaveUpload(UploadDto uploadDto);
-    }
-
-    public class UploadManager : IUploadManager
-    {
-        private IUploadRepository uploadRepository;
-        public UploadManager(IUploadRepository uploadRepository)
-        {
-            this.uploadRepository = uploadRepository;
-        }
-        public async Task<int> SaveUpload(UploadDto uploadDto)
-        {
-            uploadDto.CreatedDate = DateTime.UtcNow;
-            return await uploadRepository.SaveUpload(uploadDto);
-        }
-    }
+   
 
     public class IssueManager : IIssueManager
     {
@@ -207,7 +189,11 @@ namespace TeamBins.Services
 
 
             if (isNewIssue)
+            {
                 await emailManager.SendIssueCreatedEmail(issueDetail, this.userSessionHelper.TeamId);
+                //.QueueBackgroundWorkItem(ct => SendMailAsync(user.Email));
+            }
+               
 
             return issueDetail;
             

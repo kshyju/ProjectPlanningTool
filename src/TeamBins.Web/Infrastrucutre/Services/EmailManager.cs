@@ -19,6 +19,8 @@ namespace TeamBins.Services
 
         Task SendIssueCreatedEmail(IssueDetailVM issue, int teamId);
 
+        // to do : We need to move anything other than Sending emaisl to it's own classes like we did for CommentManager
+
         Task Send(Email email);
     }
 
@@ -83,7 +85,7 @@ namespace TeamBins.Services
                         var team = _teamRepository.GetTeam(teamId);
 
                         var issueUrl = this._settings.SiteUrl + "/issues/" + issue.Id;
-                        var issueLink = string.Format("<a href='{0}'>" + "#{0} {0}</a>", issueUrl, issue.Id, issue.Title);
+                        var issueLink = string.Format("<a href='{0}'>" + "#{1} {2}</a>", issueUrl, issue.Id, issue.Title);
 
                         emailBody = emailBody.Replace("@issueAuthor", issue.Author.Name);
                         emailBody = emailBody.Replace("@teamName", team.Name);
@@ -138,9 +140,7 @@ namespace TeamBins.Services
             });
 
         }
-
-
-       
+        
 
         private  void SendEmail(Email email)
         {

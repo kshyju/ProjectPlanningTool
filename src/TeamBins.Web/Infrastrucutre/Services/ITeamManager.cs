@@ -279,9 +279,9 @@ namespace TeamBins.Infrastrucutre.Services
                 else if (activity.ObjectType == "Comment")
                 {
                     activity.ObjectUrl = "Issues/" + activity.ObjectId;
-                    if (activity.Description.ToUpper() == "COMMENTED")
+                    if (activity.Description.Equals("Commented", StringComparison.OrdinalIgnoreCase))
                     {
-                        activity.NewState = "";
+                        activity.Description = "Commented on ";
                     }
                 }
             }

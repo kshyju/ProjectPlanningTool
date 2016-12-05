@@ -56,20 +56,25 @@ namespace TeamBins.DataAccess
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                con.Query<int>(q, new { @id = id });
+                con.Query<int>(q, new {id });
 
             }
         }
 
         public CommentVM GetComment(int id)
         {
-            var q = @"SELECT C.*,U.Id,U.FIRSTNAME AS NAME,U.EmailAddress FROM COMMENT C WITH (NOLOCK) 
+            var q = @"SELECT C.*,U.Id,
+                    U.FIRSTNAME AS Name,U.EmailAddress,
+                    I.ID, I.Title
+                    FROM COMMENT C WITH (NOLOCK) 
                     INNER JOIN [USER] U WITH (NOLOCK)  ON C.CREATEDBYID=U.Id
+                    INNER JOIN Issue I WITH (NOLOCK) ON I.ID=C.IssueID
                     WHERE C.Id=@id";
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                var com = con.Query<CommentVM, UserDto, CommentVM>(q, (c, a) => { c.Author = a; return c; }, new { @id = id }, null, false).ToList();
+                var com = con.Query<CommentVM, UserDto, IssueVM, CommentVM>(q, (c, a,i) => { c.Author = a;
+                    c.Issue = i; return c; }, new {id }, null, false).ToList();
                 return com.FirstOrDefault();
             }
         }

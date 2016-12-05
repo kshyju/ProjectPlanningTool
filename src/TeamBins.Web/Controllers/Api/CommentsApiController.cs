@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using TeamBins.Common;
+using System.Threading.Tasks;
 using TeamBins.Common.ViewModels;
 using TeamBins.Services;
-using TeamBins.Infrastrucutre.Services;
 
-// For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace TeamBins.Controllers.Api
 {
@@ -51,26 +49,16 @@ namespace TeamBins.Controllers.Api
         // POST api/values
         [HttpPost]
         // [Route("")]
-        public IActionResult Create([FromBody]CommentVM value)
+        public async Task<IActionResult> Create([FromBody]CommentVM value)
         {
             var commentId = this.commentManager.SaveComment(value);
             var c = this.commentManager.GetComment(commentId);
             this.commentManager.SaveActivity(commentId, value.IssueId);
+            await this.commentManager.SendEmailNotificaionForNewComment(c);
             return Json(new { Status = "Success", Data = c });
 
 
         }
-
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+        
     }
 }

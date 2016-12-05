@@ -70,9 +70,9 @@
             <div id="activityStream">
                 <h4>Activity</h4>
                 <div id="activityList">
-                    <div class="activity-item" ng-repeat="activity in vm.activities | orderBy:'CreatedTime':true">
+                    <div class="activity-item" ng-repeat="activity in vm.activities | orderBy:'createdTime':true">
                         <a href="#" class="activity-author">{{activity.actor.name}}</a> {{activity.description}}
-                        <a href="{{activity.objectURL}}" class="activity-name">{{activity.objectTitle}}</a>
+                        <a href="{{activity.objectUrl}}" class="activity-name">{{activity.objectTitle}}</a>
                         <i>{{activity.newState}}</i>
                         <p class="activity-date">{{activity.createdTime | date:'medium'}}</p>
                     </div>
