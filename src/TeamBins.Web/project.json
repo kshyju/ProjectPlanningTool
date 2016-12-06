@@ -25,7 +25,9 @@
     "Microsoft.Extensions.Logging.Debug": "1.1.0",
     "Microsoft.Extensions.Options.ConfigurationExtensions": "1.1.0",
     "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.1.0",
-    "MailKit": "1.10.0"
+    "MailKit": "1.10.0",
+    "Microsoft.AspNetCore.SignalR": "0.0.1-alpha",
+    "Microsoft.Extensions.DependencyInjection": "1.1.0" 
   },
 
   "tools": {

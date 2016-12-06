@@ -10,6 +10,7 @@ using TeamBins.Infrastrucutre.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Server.Kestrel.Internal.Http;
 using TeamBins.Common;
 
 
@@ -178,7 +179,7 @@ namespace TeamBins.Controllers.Web
                     var newVersion = await issueManager.SaveIssue(model, null);
                     var issueActivity = issueManager.SaveActivity(model, previousVersion, newVersion);
 
-                    // ConnectionManager c = new ConnectionManager(new DefaultDependencyResolver());
+                    //ConnectionManager c = new ConnectionManager(new DefaultDependencyResolver());
                     //  var context = c.GetHubContext<IssuesHub>();
                     // context.Clients.All.addNewTeamActivity(issueActivity);
 

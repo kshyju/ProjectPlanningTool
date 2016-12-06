@@ -23,6 +23,10 @@ namespace TeamBins.DataAccessCore
         Task SaveNotificationSettings(UserEmailNotificationSettingsVM model);
 
         Task UpdateLastLoginTime(int userId);
+        Task SavePasswordResetRequest(PasswordResetRequest passwordResetRequest);
+        Task<PasswordResetRequest> GetPasswordResetRequest(string activationCode);
+
+        Task UpdatePassword(string password, int userId);
     }
 
     public class UserRepository : BaseRepo, IUserRepository
@@ -98,6 +102,16 @@ namespace TeamBins.DataAccessCore
 
         }
 
+        public async Task UpdatePassword(string password, int userId)
+        {
+            var q = @"UPDATE [User] SET Password=@password WHERE ID=@userId";
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                await con.ExecuteAsync(q, new { password, userId });
+            }
+        }
+
         public async Task SaveUserProfile(EditProfileVm userProfileVm)
         {
             var q = @"UPDATE [User] SET FirstName=@name WHERE ID=@userId";
@@ -161,6 +175,29 @@ namespace TeamBins.DataAccessCore
             }
         }
 
+        public async Task<PasswordResetRequest> GetPasswordResetRequest(string activationCode)
+        {
+            var q = @"SELECT PR.[ID],[UserID] ,[ActivationCode], U.Id, U.FirstName Name      
+                  FROM [dbo].[PasswordResetRequest] PR WITH (NOLOCK)
+                  JOIN dbo.[User] U  WITH (NOLOCK) ON U.ID =Pr.ID
+                  WHERE PR.ActivationCode=@activationCode";
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                var com = await con.QueryAsync<PasswordResetRequest>(q, new { activationCode });
+                return com.FirstOrDefault();
+            }
+        }
+
+        public async Task SavePasswordResetRequest(PasswordResetRequest passwordResetRequest)
+        {
+            const string q = @"INSERT INTO [dbo].[PasswordResetRequest](UserId,ActivationCode,CreatedDate) VALUES(@UserId,@ActivationCode,@CreatedDate)";
+            passwordResetRequest.CreatedDate = DateTime.UtcNow;
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                await con.ExecuteAsync(q,passwordResetRequest);
+            }
+        }
         public async Task SaveNotificationSettings(UserEmailNotificationSettingsVM model)
         {
             //DELETE EXISTING 

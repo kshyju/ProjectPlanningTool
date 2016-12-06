@@ -134,10 +134,7 @@ namespace TeamBins.Services
 
         public async Task Send(Email email)
         {
-            await Task.Run(() =>
-            {
-                SendEmail(email);
-            });
+            await Task.Run(() => SendEmail(email));
 
         }
         

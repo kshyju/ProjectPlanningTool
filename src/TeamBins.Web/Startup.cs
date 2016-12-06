@@ -24,6 +24,7 @@ using TeamBins.Infrastrucutre.Filters;
 using TeamBins.Infrastrucutre.Services;
 using TeamBins.Services;
 using TeamBins.DataAccess;
+using Microsoft.AspNetCore.Server.Kestrel.Internal.Http;
 
 //using TeamBins.Infrastrucutre.Filters;
 //using TeamBins.Common.ViewModels;
@@ -42,7 +43,7 @@ namespace TeamBins.Web
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
         }
-
+        public static ConnectionManager ConnectionManager;
         public IConfigurationRoot Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -78,6 +79,7 @@ namespace TeamBins.Web
 
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>(); //will work
 
+            
             // Add framework services.
             services.AddMvc(o =>
             {
@@ -104,6 +106,8 @@ namespace TeamBins.Web
             }
             app.UseSession();
             app.UseStaticFiles();
+
+            
 
             app.UseMvc(routes =>
             {

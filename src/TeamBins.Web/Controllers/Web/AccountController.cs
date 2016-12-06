@@ -12,15 +12,15 @@ namespace TeamBins.Controllers.Web
 {
     public class AccountController : BaseController
     {
-        readonly IUserAccountManager userAccountManager;
-        private readonly IUserAuthHelper userSessionHelper;
-        private readonly ITeamManager teamManager;
+        readonly IUserAccountManager _userAccountManager;
+        private readonly IUserAuthHelper _userSessionHelper;
+        private readonly ITeamManager _teamManager;
 
         public AccountController(IUserAccountManager userAccountManager, IUserAuthHelper userSessionHelper, ITeamManager teamManager)
         {
-            this.userAccountManager = userAccountManager;
-            this.userSessionHelper = userSessionHelper;
-            this.teamManager = teamManager;
+            this._userAccountManager = userAccountManager;
+            this._userSessionHelper = userSessionHelper;
+            this._teamManager = teamManager;
         }
 
         public IActionResult Login()
@@ -35,26 +35,26 @@ namespace TeamBins.Controllers.Web
             {
                 if (ModelState.IsValid)
                 {
-                    var user = await userAccountManager.GetUser(model.Email);
+                    var user = await _userAccountManager.GetUser(model.Email);
                     if (user != null)
                     {
-                        var appUser = new AppUser { UserName = user.EmailAddress, Id = user.Id.ToString() };
+                       // var appUser = new AppUser { UserName = user.EmailAddress, Id = user.Id.ToString() };
                         if (user.Password == model.Password)
                         {
-                            await userAccountManager.UpdateLastLoginTime(user.Id);
+                            await _userAccountManager.UpdateLastLoginTime(user.Id);
 
                             if (user.DefaultTeamId == null)
                             {
                                 // This sould not happen! But if in case
-                                var teams = await userAccountManager.GetTeams(user.Id);
+                                var teams = await _userAccountManager.GetTeams(user.Id);
                                 if (teams.Any())
                                 {
                                     user.DefaultTeamId = teams.First().Id;
-                                    await this.userAccountManager.SetDefaultTeam(user.Id, user.DefaultTeamId.Value);
+                                    await this._userAccountManager.SetDefaultTeam(user.Id, user.DefaultTeamId.Value);
                                 }
                             }
 
-                            this.userSessionHelper.SetUserIDToSession(user.Id, user.DefaultTeamId.Value);
+                            this._userSessionHelper.SetUserIDToSession(user.Id, user.DefaultTeamId.Value);
                             return RedirectToAction("index", "dashboard");
                         }
                     }
@@ -70,17 +70,6 @@ namespace TeamBins.Controllers.Web
             return View(model);
         }
 
-        public ActionResult reset(string id)
-        {
-            var vm = new ResetPasswordVM();
-            return View(vm);
-        }
-
-        public ActionResult forgotPassword()
-        {
-            return View("forgotPassword", new ForgotPasswordVM());
-        }
-
         public ActionResult Join(string returnurl = "")
         {
             return View(new AccountSignupVM { ReturnUrl = returnurl });
@@ -93,7 +82,7 @@ namespace TeamBins.Controllers.Web
             {
                 if (ModelState.IsValid)
                 {
-                    var accountExists = await userAccountManager.GetUser(model.Email);
+                    var accountExists = await _userAccountManager.GetUser(model.Email);
                     if (accountExists == null)
                     {
                         var newUser = new UserAccountDto
@@ -102,11 +91,11 @@ namespace TeamBins.Controllers.Web
                             Name = model.Name,
                             Password = model.Password
                         };
-                        var userSession = await userAccountManager.CreateAccount(newUser);
+                        var userSession = await _userAccountManager.CreateAccount(newUser);
 
                         if (userSession.UserId > 0)
                         {
-                            userSessionHelper.SetUserIDToSession(userSession);
+                            _userSessionHelper.SetUserIDToSession(userSession);
                         }
 
                         if (!String.IsNullOrEmpty(model.ReturnUrl))
@@ -136,17 +125,85 @@ namespace TeamBins.Controllers.Web
 
         public ActionResult Logout()
         {
-            this.userSessionHelper.Logout();
+            this._userSessionHelper.Logout();
             return RedirectToAction("login", "account");
         }
         public async Task<JsonResult> SwitchTeam(int id)
         {
-            if (!teamManager.DoesCurrentUserBelongsToTeam(this.userSessionHelper.UserId, id))
+            if (!_teamManager.DoesCurrentUserBelongsToTeam(this._userSessionHelper.UserId, id))
                 return Json(new { Status = "Error", Message = "You do not belong to this team!" });
 
-            userSessionHelper.SetTeamId(id);
-            await userAccountManager.SetDefaultTeam(userSessionHelper.UserId, id);
+            _userSessionHelper.SetTeamId(id);
+            await _userAccountManager.SetDefaultTeam(_userSessionHelper.UserId, id);
             return Json(new { Status = "Success" });
         }
+
+        #region Reset Password
+
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordVm model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userAccountManager.GetUser(model.Email);
+                if (user != null)
+                {
+                    await _userAccountManager.SavePasswordResetRequest(user);
+                    return RedirectToAction("ForgotPasswordEmailSent");
+                }
+                ModelState.AddModelError(string.Empty, "No user account found for this email.");
+            }
+            return View(model);
+        }
+
+        public ActionResult Reset(string id)
+        {
+            var vm = new ResetPasswordVM();
+            return View(vm);
+        }
+
+        public ActionResult ForgotPassword()
+        {
+            return View("forgotPassword", new ForgotPasswordVm());
+        }
+
+        public IActionResult ForgotPasswordEmailSent()
+        {
+            return View();
+        }
+        public async Task<IActionResult> ResetPassword(string id)
+        {
+            //coming from the password reset link received in email
+            var passwordResetRequest = await _userAccountManager.GetPasswordResetRequest(id);
+            if (passwordResetRequest != null)
+            {
+                return View(new ResetPasswordVM { ActivationCode = passwordResetRequest.ActivationCode });
+            }
+            return View("NotFound");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                var passwordResetRequest = await _userAccountManager.GetPasswordResetRequest(model.ActivationCode);
+                if (passwordResetRequest != null)
+                {
+                    await _userAccountManager.UpdatePassword(model.Password, passwordResetRequest.UserId);
+                    // delete the request may be ?
+                    return RedirectToAction("passwordupdated");
+                }
+                return View("NotFound");
+            }
+            return View(model);
+
+        }
+        public ActionResult PasswordUpdated()
+        {
+            return View();
+        }
+
+        #endregion Reset Password
     }
 }

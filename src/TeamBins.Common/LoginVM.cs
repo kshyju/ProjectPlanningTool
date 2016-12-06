@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace TeamBins.Common.ViewModels
@@ -34,12 +35,22 @@ namespace TeamBins.Common.ViewModels
 
         public string ReturnUrl { set; get; }
     }
-    public class ForgotPasswordVM
+    public class ForgotPasswordVm
     {
         [Required]
         [DataType(DataType.EmailAddress)]
         [StringLength(100)]
         public string Email { set; get; }
+    }
+
+    public class PasswordResetRequest
+    {
+        public int Id { set; get; }
+        public int UserId { set; get; }
+        public string ActivationCode { set; get; }
+        public UserDto User { set; get; }
+
+        public DateTime CreatedDate { set; get; }
     }
 
 }
