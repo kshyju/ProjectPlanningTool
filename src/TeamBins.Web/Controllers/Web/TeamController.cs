@@ -16,7 +16,7 @@ namespace TeamBins.Controllers.Web
     [LoginCheckFilter]
     public class TeamController : Controller
     {
-        private ITeamManager _teamManager;
+        private readonly ITeamManager _teamManager;
         public TeamController(ITeamManager teamManager)
         {
             this._teamManager = teamManager;

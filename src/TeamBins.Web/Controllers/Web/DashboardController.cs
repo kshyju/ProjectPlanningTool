@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
 using TeamBins.Common.ViewModels;
@@ -71,6 +72,9 @@ namespace TeamBins.Controllers.Web
                 {
                     vm.IsCurrentUserTeamMember = true;
                     var myIssues = await _issueManager.GetIssuesAssignedToUser(this._userSessionHelper.UserId);
+                    vm.OverDueIssuesAssignedToMe =myIssues
+                        .Where(d => d.DueDate != null && d.DueDate.Value < DateTime.Now)
+                        .Where(c=>c.Status.Code != "Completed" || c.Status.Code != "Closed").OrderBy(f=>f.DueDate);
                     vm.IssuesAssignedToMe = myIssues;
                 }
             }

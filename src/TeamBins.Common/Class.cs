@@ -102,6 +102,8 @@ namespace TeamBins.Common.ViewModels
         public List<ProjectDto> Projects { set; get; }
         public List<IssueDetailVM> RecentIssues { set; get; }
         public IEnumerable<IssueDetailVM> IssuesAssignedToMe { set; get; }
+
+        public IEnumerable<IssueDetailVM> OverDueIssuesAssignedToMe { set; get; }
         public DashBoardVm()
         {
             Projects = new List<ProjectDto>();
