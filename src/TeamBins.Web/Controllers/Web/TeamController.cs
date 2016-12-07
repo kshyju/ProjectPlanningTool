@@ -16,12 +16,10 @@ namespace TeamBins.Controllers.Web
     [LoginCheckFilter]
     public class TeamController : Controller
     {
-        private IUserAuthHelper _userAuthHelper;
         private ITeamManager _teamManager;
-        public TeamController(ITeamManager teamManager, IUserAuthHelper userAuthHelper)
+        public TeamController(ITeamManager teamManager)
         {
             this._teamManager = teamManager;
-            this._userAuthHelper = userAuthHelper;
         }
 
         public IActionResult Index()

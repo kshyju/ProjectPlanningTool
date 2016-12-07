@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 using TeamBins.Common;
 using TeamBins.Common.Infrastructure.Enums.TeamBins.Helpers.Enums;
 using TeamBins.Common.ViewModels;
@@ -36,51 +37,47 @@ namespace TeamBins.Infrastrucutre.Services
         Task<IEnumerable<ChartItem>> GetIssueCountPerPriority(int teamId);
 
         Task SaveVisibility(int id, bool isPublic);
-
-        Task EmailTest();
+        
     }
     public class TeamManager : ITeamManager
     {
-        private readonly IUserRepository userRepository;
-        private readonly IIssueRepository issueRepository;
-        readonly IActivityRepository activityRepository;
-        readonly IUserAuthHelper userSessionHelper;
-        private readonly ITeamRepository teamRepository;
-        private readonly IEmailManager emailManager;
-        public TeamManager(IUserAuthHelper userSessionHelper, IActivityRepository activityRepository, ITeamRepository teamRepository, IIssueRepository issueRepository, IUserRepository userRepository, IEmailManager emailManager)
-        {
-            this.teamRepository = teamRepository;
-            this.userSessionHelper = userSessionHelper;
-            this.activityRepository = activityRepository;
-            this.issueRepository = issueRepository;
-            this.userRepository = userRepository;
-            this.emailManager = emailManager;
-        }
+        readonly AppSettings _settings;
 
-        public async Task EmailTest()
+        private readonly IEmailRepository _emailRepository;
+        private readonly IUserRepository _userRepository;
+        private readonly IIssueRepository _issueRepository;
+        readonly IActivityRepository _activityRepository;
+        readonly IUserAuthHelper _userSessionHelper;
+        private readonly ITeamRepository _teamRepository;
+        private readonly IEmailManager _emailManager;
+        public TeamManager(IUserAuthHelper userSessionHelper, IActivityRepository activityRepository,
+            ITeamRepository teamRepository, IIssueRepository issueRepository, IUserRepository userRepository, 
+            IEmailManager emailManager,IEmailRepository emailRepository, IOptions<AppSettings> settings)
         {
-            Email email =new Email();
-            email.ToAddress.Add("kshyju@live.in");
-            email.Subject = "Test at " + DateTime.Now;
-            email.Body = "s";
-            email.FromAddress = "connectshyju@gmail.com";
-            await this.emailManager.Send(email);
+            this._emailRepository = emailRepository;
+            this._teamRepository = teamRepository;
+            this._userSessionHelper = userSessionHelper;
+            this._activityRepository = activityRepository;
+            this._issueRepository = issueRepository;
+            this._userRepository = userRepository;
+            this._emailManager = emailManager;
+            this._settings = settings.Value;
         }
-
+        
         public async Task<bool> ValidateAndAssociateNewUserToTeam(string activationCode)
         {
 
-            var invitation = await this.teamRepository.GetTeamMemberInvitation(activationCode);
+            var invitation = await this._teamRepository.GetTeamMemberInvitation(activationCode);
             if (invitation != null)
             {
-                var currentUser = await userRepository.GetUser(this.userSessionHelper.UserId);
+                var currentUser = await _userRepository.GetUser(this._userSessionHelper.UserId);
                 if (currentUser != null && currentUser.EmailAddress == invitation.EmailAddress)
                 {
                     // Now asssociate this user to the team.
-                    this.teamRepository.SaveTeamMember(invitation.TeamId, this.userSessionHelper.UserId, this.userSessionHelper.UserId);
-                    this.userSessionHelper.SetTeamId(invitation.TeamId);
+                    this._teamRepository.SaveTeamMember(invitation.TeamId, this._userSessionHelper.UserId, this._userSessionHelper.UserId);
+                    this._userSessionHelper.SetTeamId(invitation.TeamId);
 
-                    await this.teamRepository.DeleteTeamMemberInvitation(invitation.Id);
+                    await this._teamRepository.DeleteTeamMemberInvitation(invitation.Id);
                     return true;
                 }
 
@@ -91,26 +88,54 @@ namespace TeamBins.Infrastrucutre.Services
         public async Task<IEnumerable<AddTeamMemberRequestVM>> GetTeamMemberInvitations()
         {
 
-            return await this.teamRepository.GetTeamMemberInvitations(this.userSessionHelper.TeamId);
+            return await this._teamRepository.GetTeamMemberInvitations(this._userSessionHelper.TeamId);
+        }
+
+        private async Task SendTeamMemberInvitationEmail(AddTeamMemberRequestVM teamMemberRequest)
+        {
+            try
+            {
+                var emailTemplate = await _emailRepository.GetEmailTemplate("JoinMyTeam");
+                if (emailTemplate != null)
+                {
+                    var emailSubject = emailTemplate.Subject;
+                    var emailBody = emailTemplate.EmailBody;
+                    var email = new Email();
+                    email.ToAddress.Add(teamMemberRequest.EmailAddress);
+
+                    var joinLink = String.Format("{0}Account/Join?returnurl={1}", this._settings.SiteUrl, teamMemberRequest.ActivationCode);
+                    emailBody = emailBody.Replace("@teamName", teamMemberRequest.Team.Name);
+                    emailBody = emailBody.Replace("@joinUrl", joinLink);
+                    emailBody = emailBody.Replace("@inviter", teamMemberRequest.CreatedBy.Name);
+                    email.Body = emailBody;
+                    email.Subject = emailSubject;
+                    await this._emailManager.Send(email);
+                }
+            }
+            catch (Exception)
+            {
+                // Silently fail. We will log this. But we do not want to show an error to user because of this
+            }
+
         }
 
         public async Task AddNewTeamMember(AddTeamMemberRequestVM teamMemberRequest)
         {
-            var user = await userRepository.GetUser(teamMemberRequest.EmailAddress);
+            var user = await _userRepository.GetUser(teamMemberRequest.EmailAddress);
             if (user != null)
             {
-                teamRepository.SaveTeamMember(this.userSessionHelper.TeamId, user.Id, this.userSessionHelper.UserId);
+                _teamRepository.SaveTeamMember(this._userSessionHelper.TeamId, user.Id, this._userSessionHelper.UserId);
             }
             else
             {
-                teamMemberRequest.TeamId = this.userSessionHelper.TeamId;
-                teamMemberRequest.CreatedById = this.userSessionHelper.UserId;
-                var id = await teamRepository.SaveTeamMemberRequest(teamMemberRequest);
-                var requests = await teamRepository.GetTeamMemberInvitations(this.userSessionHelper.TeamId)
+                teamMemberRequest.TeamId = this._userSessionHelper.TeamId;
+                teamMemberRequest.CreatedById = this._userSessionHelper.UserId;
+                var id = await _teamRepository.SaveTeamMemberRequest(teamMemberRequest);
+                var requests = await _teamRepository.GetTeamMemberInvitations(this._userSessionHelper.TeamId)
                     ;
                 var r = requests.FirstOrDefault(s => s.Id == id);
 
-                await emailManager.SendTeamMemberInvitationEmail(r);
+                await SendTeamMemberInvitationEmail(r);
             }
         }
 
@@ -118,16 +143,16 @@ namespace TeamBins.Infrastrucutre.Services
         {
             var vm = new TeamVM();
 
-            var team = teamRepository.GetTeam(this.userSessionHelper.TeamId);
+            var team = _teamRepository.GetTeam(this._userSessionHelper.TeamId);
             vm.Name = team.Name;
 
-            var members = await teamRepository.GetTeamMembers(this.userSessionHelper.TeamId);
+            var members = await _teamRepository.GetTeamMembers(this._userSessionHelper.TeamId);
             foreach (var teamMemberDto in members)
             {
                 teamMemberDto.GravatarUrl = teamMemberDto.EmailAddress.ToGravatarUrl();
             }
 
-            var invitations = await teamRepository.GetTeamMemberInvitations(this.userSessionHelper.TeamId);
+            var invitations = await _teamRepository.GetTeamMemberInvitations(this._userSessionHelper.TeamId);
             foreach (var teamMemberDto in invitations)
             {
                 teamMemberDto.GravatarUrl = teamMemberDto.EmailAddress.ToGravatarUrl();
@@ -149,44 +174,44 @@ namespace TeamBins.Infrastrucutre.Services
         }
         public TeamDto GetTeam(int id)
         {
-            var t = this.teamRepository.GetTeam(id);
+            var t = this._teamRepository.GetTeam(id);
             if (t != null)
             {
-                t.IsRequestingUserTeamOwner = t.CreatedById == userSessionHelper.UserId;
+                t.IsRequestingUserTeamOwner = t.CreatedById == _userSessionHelper.UserId;
                 return t;
             }
             return null;
         }
         public TeamDto GetTeam(string name)
         {
-            return this.teamRepository.GetTeam(name);
+            return this._teamRepository.GetTeam(name);
         }
 
         public void Delete(int id)
         {
-            teamRepository.Delete(id);
+            _teamRepository.Delete(id);
         }
 
         public bool DoesCurrentUserBelongsToTeam(int userId, int teamId)
         {
-            var member = this.teamRepository.GetTeamMember(teamId, userId);
+            var member = this._teamRepository.GetTeamMember(teamId, userId);
             return member != null;
 
         }
         public List<TeamDto> GetTeams()
         {
-            var teams = teamRepository.GetTeams(userSessionHelper.UserId);
+            var teams = _teamRepository.GetTeams(_userSessionHelper.UserId);
             foreach (var teamDto in teams)
             {
-                teamDto.IsRequestingUserTeamOwner = teamDto.CreatedById == this.userSessionHelper.UserId;
+                teamDto.IsRequestingUserTeamOwner = teamDto.CreatedById == this._userSessionHelper.UserId;
             }
             return teams;
         }
 
         public int SaveTeam(TeamDto team)
         {
-            team.CreatedById = this.userSessionHelper.UserId;
-            var teamId = teamRepository.SaveTeam(team);
+            team.CreatedById = this._userSessionHelper.UserId;
+            var teamId = _teamRepository.SaveTeam(team);
             return teamId;
         }
 
@@ -195,7 +220,7 @@ namespace TeamBins.Infrastrucutre.Services
             var teamIdtoGetDataFor = GetTeamIdtoGetDataFor(teamId);
             var vm = new DashBoardItemSummaryVm
             {
-                IssueCountsByStatus = await issueRepository.GetIssueCountsPerStatus(teamIdtoGetDataFor)
+                IssueCountsByStatus = await _issueRepository.GetIssueCountsPerStatus(teamIdtoGetDataFor)
             };
             return vm;
         }
@@ -203,7 +228,7 @@ namespace TeamBins.Infrastrucutre.Services
         private int GetTeamIdtoGetDataFor(int teamId)
         {
             var teamIdtoGetDataFor = 0;
-            var team = teamRepository.GetTeam(teamId);
+            var team = _teamRepository.GetTeam(teamId);
             if (team != null)
             {
                 if (team.IsPublic)
@@ -213,7 +238,7 @@ namespace TeamBins.Infrastrucutre.Services
                 else
                 {
                     //May be a valid user requested for his private team
-                    if (team.Id == this.userSessionHelper.TeamId)
+                    if (team.Id == this._userSessionHelper.TeamId)
                     {
                         teamIdtoGetDataFor = team.Id;
                     }
@@ -226,7 +251,7 @@ namespace TeamBins.Infrastrucutre.Services
         {
             var teamIdtoGetDataFor = GetTeamIdtoGetDataFor(teamId);
 
-            var issueCountsByStatus = await issueRepository.GetIssueCountsPerPriority(teamIdtoGetDataFor);
+            var issueCountsByStatus = await _issueRepository.GetIssueCountsPerPriority(teamIdtoGetDataFor);
             return issueCountsByStatus;
         }
 
@@ -234,7 +259,7 @@ namespace TeamBins.Infrastrucutre.Services
         {
             var teamIdtoGetDataFor = GetTeamIdtoGetDataFor(teamId);
 
-            var issueCountsByProject = await issueRepository.GetIssueCountsPerProject(teamIdtoGetDataFor);
+            var issueCountsByProject = await _issueRepository.GetIssueCountsPerProject(teamIdtoGetDataFor);
             var totalIssueCount = issueCountsByProject.Sum(g => g.Count);
             foreach (var project in issueCountsByProject)
             {
@@ -247,7 +272,7 @@ namespace TeamBins.Infrastrucutre.Services
 
         public IEnumerable<ActivityDto> GeActivityItems(int teamId, int count)
         {
-            var activities = activityRepository.GetActivityItems(teamId, count);
+            var activities = _activityRepository.GetActivityItems(teamId, count);
 
             foreach (var activity in activities)
             {
@@ -292,7 +317,7 @@ namespace TeamBins.Infrastrucutre.Services
 
         public async Task SaveVisibility(int id, bool isPublic)
         {
-            await this.teamRepository.SaveVisibility(id, isPublic);
+            await this._teamRepository.SaveVisibility(id, isPublic);
         }
     }
 }

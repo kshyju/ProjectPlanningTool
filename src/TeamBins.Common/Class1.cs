@@ -224,8 +224,7 @@ namespace TeamBins.Common.ViewModels
 
             public DateTime CreatedDate { set; get; }
 
-            public string SiteBaseUrl { set; get; }
-
+           
             public UserDto CreatedBy { set; get; }
 
             public TeamDto Team { set; get; }

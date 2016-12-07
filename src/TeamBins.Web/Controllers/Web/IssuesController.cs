@@ -10,7 +10,6 @@ using TeamBins.Infrastrucutre.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.AspNetCore.Server.Kestrel.Internal.Http;
 using TeamBins.Common;
 
 
@@ -18,27 +17,27 @@ namespace TeamBins.Controllers.Web
 {
     public class IssuesController : BaseController
     {
-        private readonly ITeamManager teamManager;
+        private readonly ITeamManager _teamManager;
 
 
-        private readonly IProjectManager projectManager;
-        private readonly IIssueManager issueManager;
-        readonly IUserAuthHelper userSessionHelper;
-        private readonly IUploadHandler uploadHandler;
-        private readonly IUploadManager uploadManager;
-        private readonly IUrlHelper urlHelper;
+        private readonly IProjectManager _projectManager;
+        private readonly IIssueManager _issueManager;
+        readonly IUserAuthHelper _userSessionHelper;
+        private readonly IUploadHandler _uploadHandler;
+        private readonly IUploadManager _uploadManager;
+        private readonly IUrlHelper _urlHelper;
         public IssuesController(IUserAuthHelper userSessionHelper,
             IProjectManager projectManager, IIssueManager issueManager,
             ITeamManager teamManager, IUploadHandler uploadHandler,
             IUploadManager uploadManager, IUrlHelperFactory urlHelperFactory, IActionContextAccessor actionContextAccessor) //: base(repositary)
         {
-            this.issueManager = issueManager;
-            this.projectManager = projectManager;
-            this.userSessionHelper = userSessionHelper;
-            this.teamManager = teamManager;
-            this.uploadHandler = uploadHandler;
-            this.uploadManager = uploadManager;
-            this.urlHelper = urlHelperFactory.GetUrlHelper(actionContextAccessor.ActionContext);
+            this._issueManager = issueManager;
+            this._projectManager = projectManager;
+            this._userSessionHelper = userSessionHelper;
+            this._teamManager = teamManager;
+            this._uploadHandler = uploadHandler;
+            this._uploadManager = uploadManager;
+            this._urlHelper = urlHelperFactory.GetUrlHelper(actionContextAccessor.ActionContext);
 
         }
 
@@ -49,7 +48,7 @@ namespace TeamBins.Controllers.Web
         {
             try
             {
-                var teamIdToUse = userSessionHelper.TeamId;
+                var teamIdToUse = _userSessionHelper.TeamId;
 
 
                 var bugListVm = new IssueListVM();
@@ -58,7 +57,7 @@ namespace TeamBins.Controllers.Web
                 {
                     teamIdToUse = teamId.Value;
                     // a publicily visible Issue board
-                    var team = this.teamManager.GetTeam(teamId.Value);
+                    var team = this._teamManager.GetTeam(teamId.Value);
                     if (team != null && team.IsPublic)
                     {
                         bugListVm.TeamID = team.Id;
@@ -81,7 +80,7 @@ namespace TeamBins.Controllers.Web
 
                 if (!bugListVm.IsReadonlyView)
                 {
-                    var projectExists = projectManager.DoesProjectsExist();
+                    var projectExists = _projectManager.DoesProjectsExist();
 
                     if (!projectExists)
                     {
@@ -93,7 +92,7 @@ namespace TeamBins.Controllers.Web
 
 
 
-                bool defaultProjectExist = projectManager.GetDefaultProjectForCurrentTeam() != null;
+                bool defaultProjectExist = _projectManager.GetDefaultProjectForCurrentTeam() != null;
                 if (!defaultProjectExist)
                 {
                     var tt = new Dictionary<string, string>
@@ -124,11 +123,11 @@ namespace TeamBins.Controllers.Web
         public async Task<IActionResult> Details(int id)
         {
             var vm = new IssueDetailVM();
-            vm = await this.issueManager.GetIssue(id);
+            vm = await this._issueManager.GetIssue(id);
             if (vm != null && vm.Active)
             {
-                vm.IsEditableForCurrentUser = this.teamManager.DoesCurrentUserBelongsToTeam(this.userSessionHelper.UserId, this.userSessionHelper.TeamId);
-                vm.IsReadOnly = this.userSessionHelper.UserId == 0;
+                vm.IsEditableForCurrentUser = this._teamManager.DoesCurrentUserBelongsToTeam(this._userSessionHelper.UserId, this._userSessionHelper.TeamId);
+                vm.IsReadOnly = this._userSessionHelper.UserId == 0;
                 return View(vm);
             }
             return View("NotFound");
@@ -139,7 +138,7 @@ namespace TeamBins.Controllers.Web
         {
 
             var vm = new CreateIssue();
-            this.issueManager.LoadDropdownData(vm);
+            this._issueManager.LoadDropdownData(vm);
 
             return PartialView("~/Views/Issues/Partial/Edit.cshtml", vm);
         }
@@ -147,13 +146,13 @@ namespace TeamBins.Controllers.Web
         [Route("Issues/edit/{id}")]
         public async Task<IActionResult> Edit(int id)
         {
-            var issue = await this.issueManager.GetIssue(id);
+            var issue = await this._issueManager.GetIssue(id);
             if (issue != null && issue.Active)
             {
                 var vm = new CreateIssue(issue);
-                this.issueManager.LoadDropdownData(vm);
+                this._issueManager.LoadDropdownData(vm);
 
-                vm.IsEditableForCurrentUser = this.teamManager.DoesCurrentUserBelongsToTeam(this.userSessionHelper.UserId, this.userSessionHelper.TeamId);
+                vm.IsEditableForCurrentUser = this._teamManager.DoesCurrentUserBelongsToTeam(this._userSessionHelper.UserId, this._userSessionHelper.TeamId);
                 return PartialView("~/Views/Issues/Partial/Edit.cshtml", vm);
             }
             return PartialView("NotFound");
@@ -175,9 +174,9 @@ namespace TeamBins.Controllers.Web
             {
                 if (ModelState.IsValid)
                 {
-                    var previousVersion = await issueManager.GetIssue(model.Id);
-                    var newVersion = await issueManager.SaveIssue(model, null);
-                    var issueActivity = issueManager.SaveActivity(model, previousVersion, newVersion);
+                    var previousVersion = await _issueManager.GetIssue(model.Id);
+                    var newVersion = await _issueManager.SaveIssue(model, null);
+                    var issueActivity = _issueManager.SaveActivity(model, previousVersion, newVersion);
 
                     //ConnectionManager c = new ConnectionManager(new DefaultDependencyResolver());
                     //  var context = c.GetHubContext<IssuesHub>();
@@ -190,13 +189,13 @@ namespace TeamBins.Controllers.Web
                             var fileName = Path.GetFileName(file.FileName);
                             using (var s = file.OpenReadStream())
                             {
-                                var uploadResult = await uploadHandler.UploadFile(fileName, MimeMapping.GetMimeMapping(fileName), s);
+                                var uploadResult = await _uploadHandler.UploadFile(fileName, MimeMapping.GetMimeMapping(fileName), s);
                                 if (!String.IsNullOrEmpty(uploadResult.Url))
                                 {
                                     uploadResult.ParentId = model.Id;
-                                    uploadResult.CreatedById = this.userSessionHelper.UserId;
+                                    uploadResult.CreatedById = this._userSessionHelper.UserId;
                                     uploadResult.Type = "Issue";
-                                    await this.uploadManager.SaveUpload(uploadResult);
+                                    await this._uploadManager.SaveUpload(uploadResult);
                                 }
                             }
                         }
@@ -208,11 +207,11 @@ namespace TeamBins.Controllers.Web
                     }
                     if (model.IncludeIssueInResponse)
                     {
-                        var newIssue = issueManager.GetIssue(newVersion.Id);
+                        var newIssue = _issueManager.GetIssue(newVersion.Id);
                         return Json(new { Status = "Success", Data = newIssue });
                     }
 
-                    var newIssueUrl = this.urlHelper.Action("Details", new { id = newVersion.Id });
+                    var newIssueUrl = this._urlHelper.Action("Details", new { id = newVersion.Id });
                     return Json(new { Status = "Success", Url = newIssueUrl });
                 }
                 else
@@ -253,8 +252,8 @@ namespace TeamBins.Controllers.Web
         public async Task<IActionResult> Members(int id)
         {
             var issue = new IssueDetailVM();
-            issue.IsEditableForCurrentUser = this.teamManager.DoesCurrentUserBelongsToTeam(this.userSessionHelper.UserId, this.userSessionHelper.TeamId);
-            var members = await issueManager.GetIssueMembers(id);
+            issue.IsEditableForCurrentUser = this._teamManager.DoesCurrentUserBelongsToTeam(this._userSessionHelper.UserId, this._userSessionHelper.TeamId);
+            var members = await _issueManager.GetIssueMembers(id);
             issue.Members = members.Select(x => x.Member);
             return PartialView("Partial/Members", issue);
         }

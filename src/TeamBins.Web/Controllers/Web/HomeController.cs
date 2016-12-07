@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using TeamBins.Common.ViewModels;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using TeamBins.Infrastrucutre;
 
@@ -12,22 +11,21 @@ namespace TeamBins.Controllers
 {
     public class HomeController : BaseController
     {
-        private readonly IUserAuthHelper userSessionHelper;
-        private readonly IUserAccountManager userAccountManager;
-        private readonly ILogger<HomeController> logger;
-       
+        private readonly IUserAuthHelper _userSessionHelper;
+        private readonly IUserAccountManager _userAccountManager;
+
 
         public HomeController(IUserAuthHelper userSessionHelper,IUserAccountManager userAccountManager)
         {
-            this.userSessionHelper = userSessionHelper;
-            this.userAccountManager = userAccountManager;
+            this._userSessionHelper = userSessionHelper;
+            this._userAccountManager = userAccountManager;
         }
       
         [HttpPost]
         public async Task<IActionResult> SwitchTeam(int teamId)
         { 
-            userSessionHelper.SetTeamId(teamId);
-            await userAccountManager.SetDefaultTeam(userSessionHelper.UserId, teamId);
+            _userSessionHelper.SetTeamId(teamId);
+            await _userAccountManager.SetDefaultTeam(_userSessionHelper.UserId, teamId);
 
             return Json("Changed");
         }
@@ -36,7 +34,7 @@ namespace TeamBins.Controllers
         {
             
 
-            if (this.userSessionHelper.UserId > 0)
+            if (this._userSessionHelper.UserId > 0)
             {
                 return RedirectToAction("Index", "Issues");
             }

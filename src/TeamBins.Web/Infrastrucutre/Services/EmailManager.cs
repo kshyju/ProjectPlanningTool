@@ -13,8 +13,6 @@ namespace TeamBins.Services
 {
     public interface IEmailManager
     {
-        Task SendTeamMemberInvitationEmail(AddTeamMemberRequestVM teamMemberRequest);
-
         Task SendAccountCreatedEmail(UserDto newUser);
 
         Task SendIssueCreatedEmail(IssueDetailVM issue, int teamId);
@@ -104,33 +102,7 @@ namespace TeamBins.Services
             }
         }
 
-        public async Task SendTeamMemberInvitationEmail(AddTeamMemberRequestVM teamMemberRequest)
-        {
-            try
-            {
-                var emailTemplate = await _emailRepository.GetEmailTemplate("JoinMyTeam");
-                if (emailTemplate != null)
-                {
-                    var emailSubject = emailTemplate.Subject;
-                    var emailBody = emailTemplate.EmailBody;
-                    var email = new Email();
-                    email.ToAddress.Add(teamMemberRequest.EmailAddress);
-
-                    var joinLink = String.Format("{0}Account/Join?returnurl={1}", teamMemberRequest.SiteBaseUrl, teamMemberRequest.ActivationCode);
-                    emailBody = emailBody.Replace("@teamName", teamMemberRequest.Team.Name);
-                    emailBody = emailBody.Replace("@joinUrl", joinLink);
-                    emailBody = emailBody.Replace("@inviter", teamMemberRequest.CreatedBy.Name);
-                    email.Body = emailBody;
-                    email.Subject = emailSubject;
-                    await Send(email);
-                }
-            }
-            catch (Exception)
-            {
-                // Silently fail. We will log this. But we do not want to show an error to user because of this
-            }
-
-        }
+      
 
         public async Task Send(Email email)
         {

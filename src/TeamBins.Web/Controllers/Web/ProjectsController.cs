@@ -16,20 +16,20 @@ namespace TeamBins.Controllers.Web
     [LoginCheckFilter]
     public class ProjectsController : Controller
     {
-        private readonly IProjectManager projectManager;
-        private readonly IUserAuthHelper userAuthHelper;
+        private readonly IProjectManager _projectManager;
+        private readonly IUserAuthHelper _userAuthHelper;
         public ProjectsController(IProjectManager projectManager, IUserAuthHelper userAuthHelper)
         {
-            this.projectManager = projectManager;
-            this.userAuthHelper = userAuthHelper;
+            this._projectManager = projectManager;
+            this._userAuthHelper = userAuthHelper;
         }
 
         public async Task<IActionResult> Index()
         {
             var vm = new TeamProjectListVM();
-            var defaultProject = await projectManager.GetDefaultProjectForCurrentTeam();
+            var defaultProject = await _projectManager.GetDefaultProjectForCurrentTeam();
 
-            vm.Projects = projectManager.GetProjects(this.userAuthHelper.TeamId).Select(s => new ProjectVM
+            vm.Projects = _projectManager.GetProjects(this._userAuthHelper.TeamId).Select(s => new ProjectVM
             {
                 Id = s.Id,
                 Name = s.Name,
@@ -48,7 +48,7 @@ namespace TeamBins.Controllers.Web
         public IActionResult Edit(int id)
         {
             var addVm = new CreateProjectVM { Id = id };
-            var p = projectManager.GetProject(id);
+            var p = _projectManager.GetProject(id);
             addVm.Name = p.Name;
 
             return PartialView("Partial/Add", addVm);
@@ -61,7 +61,7 @@ namespace TeamBins.Controllers.Web
             {
                 if (ModelState.IsValid)
                 {
-                    projectManager.Save(model);
+                    _projectManager.Save(model);
                     return Json(new { Status = "Success", Message = "Project created successfully" });
 
                 }
@@ -79,7 +79,7 @@ namespace TeamBins.Controllers.Web
 
         public IActionResult Details(int id)
         {
-            var project = projectManager.GetProject(id);
+            var project = _projectManager.GetProject(id);
             if (project != null)
             {
                 var projectVm = new ProjectDetailsVM { Id = id, Name = project.Name };
@@ -98,7 +98,7 @@ namespace TeamBins.Controllers.Web
         public ActionResult DeleteConfirm(int id)
         {
             var vm = new DeleteProjectConfirmVM();
-            var issueCount = this.projectManager.GetIssueCountForProject(id);
+            var issueCount = this._projectManager.GetIssueCountForProject(id);
             vm.DependableItemsCount = issueCount;
             return PartialView("Partial/DeleteConfirm", vm);
         }
@@ -107,7 +107,7 @@ namespace TeamBins.Controllers.Web
         {
             try
             {
-                this.projectManager.Delete(model.Id);
+                this._projectManager.Delete(model.Id);
                 return Json(new { Status = "Success", Message = "Project deleted successfully" });
             }
             catch (Exception ex)

@@ -32,16 +32,18 @@
 <h4>Lazy friends who hasn't joined yet</h4>
 <table class="table table-condensed">
     <thead>
-        <tr>
-            <th>Email</th>
-            <th>Date Invited</th>
-        </tr>
+    <tr>
+        <th></th>
+        <th>Email</th>
+        <th>Date Invited</th>
+    </tr>
     </thead>
     <tbody>
         @foreach (var member in Model.MembersInvited)
         {
             <tr>
                 <td><span gravatar-email="@member.EmailAddress" image-size="30"></span></td>
+                <td>@member.EmailAddress</td>
                 <td><span title="@member.DateInvited (UTC time)" class="relativeTime">@member.DateInvited</span></td>
             </tr>
         }

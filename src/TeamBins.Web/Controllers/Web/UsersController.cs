@@ -12,14 +12,14 @@ namespace TeamBins.Controllers.Web
     [LoginCheckFilter]
     public class UsersController : BaseController
     {
-        readonly ITeamManager teamManager;
+        readonly ITeamManager _teamManager;
         public UsersController(ITeamManager teamManager)
         {
-            this.teamManager = teamManager;
+            this._teamManager = teamManager;
         }
         public async Task<ActionResult> Index()
         {
-            var teamVm = await teamManager.GetTeamInoWithMembers();
+            var teamVm = await _teamManager.GetTeamInoWithMembers();
             return View(teamVm);
         }
 
@@ -35,8 +35,7 @@ namespace TeamBins.Controllers.Web
             {
                 //if (ModelState.IsValid)
                 {
-                    model.SiteBaseUrl = AppBaseUrl;
-                    await teamManager.AddNewTeamMember(model);
+                    await _teamManager.AddNewTeamMember(model);
                     return Json(new { Status = "Success", Message = "Successfully added user to team" });
                 }
                 ////else
@@ -61,7 +60,7 @@ namespace TeamBins.Controllers.Web
 
             try
             {
-                var result = await teamManager.ValidateAndAssociateNewUserToTeam(id);
+                var result = await _teamManager.ValidateAndAssociateNewUserToTeam(id);
                 // TO DO : Add activity item
                 if (result)
                 {
