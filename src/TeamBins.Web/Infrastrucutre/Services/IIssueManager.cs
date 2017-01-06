@@ -134,16 +134,16 @@ namespace TeamBins.Services
         }
 
 
-        public void LoadDropdownData(CreateIssue issue)
+        public async Task LoadDropdownData(CreateIssue issue)
         {
             issue.Projects =this.iProjectRepository.GetProjects(this.userSessionHelper.TeamId)
                        .Select(s => new SelectListItem { Value = s.Id.ToString(), Text = s.Name })
                        .ToList();
 
 
-            var statuses = this.cache.Get(CacheKey.Statuses, () => this.issueRepository.GetStatuses());
-            var priorities = this.cache.Get(CacheKey.Priorities, () => this.issueRepository.GetPriorities());
-            var catagories = this.cache.Get(CacheKey.Categories, () => this.issueRepository.GetCategories());
+            var statuses = await this.cache.Get(CacheKey.Statuses, () =>  this.issueRepository.GetStatuses(),360);
+            var priorities = await this.cache.Get(CacheKey.Priorities, () => this.issueRepository.GetPriorities(), 360);
+            var catagories = await this.cache.Get(CacheKey.Categories, () => this.issueRepository.GetCategories(), 360);
 
             issue.Statuses = statuses.Select(s => new SelectListItem { Value = s.Id.ToString(), Text = s.Name }).ToList();
             issue.Priorities = priorities.Select(s => new SelectListItem { Value = s.Id.ToString(), Text = s.Name }).ToList();
@@ -169,17 +169,17 @@ namespace TeamBins.Services
             }
             if (issue.CategoryId == 0)
             {
-                var categories = this.issueRepository.GetCategories();
+                var categories =await  this.issueRepository.GetCategories();
                 issue.CategoryId = categories.First().Id;
             }
             if (issue.PriorityId == 0)
             {
-                var categories = this.issueRepository.GetPriorities();
+                var categories = await this.issueRepository.GetPriorities();
                 issue.PriorityId = categories.First().Id;
             }
             if (issue.StatusId == 0)
             {
-                var statuses = this.issueRepository.GetStatuses();
+                var statuses = await this.issueRepository.GetStatuses();
                 issue.StatusId = statuses.First().Id;
             }
             issue.CreatedById = this.userSessionHelper.UserId;
@@ -267,7 +267,7 @@ namespace TeamBins.Services
 
         IEnumerable<IssuesPerStatusGroup> GetIssuesGroupedByStatusGroup(int teamId, int count);
         void Delete(int id);
-        void LoadDropdownData(CreateIssue issue);
+        Task LoadDropdownData(CreateIssue issue);
 
         Task StarIssue(int issueId, int userId, bool isRequestForToStar);
 

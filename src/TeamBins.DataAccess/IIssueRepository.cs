@@ -65,34 +65,34 @@ namespace TeamBins.DataAccess
             throw new NotImplementedException();
         }
 
-        public IEnumerable<NameValueItem> GetStatuses()
+        public async Task<IEnumerable<NameValueItem>> GetStatuses()
         {
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                var projects = con.Query<NameValueItem>("SELECT * from Status  WITH (NOLOCK)");
+                var projects = await con.QueryAsync<NameValueItem>("SELECT * from Status  WITH (NOLOCK)");
                 return projects;
             }
 
         }
 
-        public IEnumerable<NameValueItem> GetPriorities()
+        public async Task<IEnumerable<NameValueItem>> GetPriorities()
         {
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                var projects = con.Query<NameValueItem>("SELECT * from Priority  WITH (NOLOCK)");
+                var projects = await con.QueryAsync<NameValueItem>("SELECT * from Priority  WITH (NOLOCK)");
                 return projects;
             }
 
         }
 
-        public IEnumerable<CategoryDto> GetCategories()
+        public async Task<IEnumerable<CategoryDto>> GetCategories()
         {
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                var projects = con.Query<CategoryDto>("SELECT * from Category  WITH (NOLOCK)");
+                var projects = await con.QueryAsync<CategoryDto>("SELECT * from Category  WITH (NOLOCK)");
                 return projects;
             }
         }
@@ -408,9 +408,9 @@ namespace TeamBins.DataAccess
     {
         Task<IEnumerable<IssueDetailVM>> GetIssuesAssignedToUser(int userId);
         Task RemoveIssueMember(int issueId, int userId);
-        IEnumerable<NameValueItem> GetStatuses();
-        IEnumerable<CategoryDto> GetCategories();
-        IEnumerable<NameValueItem> GetPriorities();
+        Task<IEnumerable<NameValueItem>> GetStatuses();
+        Task<IEnumerable<CategoryDto>> GetCategories();
+        Task<IEnumerable<NameValueItem>> GetPriorities();
         IEnumerable<IssueDetailVM> GetIssues(List<int> statusIds, int count);
         IssueDetailVM GetIssue(int id, int requestingUserId);
         int SaveIssue(CreateIssue issue);

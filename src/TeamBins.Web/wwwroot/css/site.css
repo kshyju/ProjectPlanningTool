@@ -920,6 +920,7 @@ a.aIteration:hover
     top:32px;
     left:120px;
     min-height:40px;
+    z-index: 9999;
     background: hsl(202, 10%, 100%);
 -webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
 box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
@@ -935,7 +936,7 @@ border-bottom-left-radius: 0;
      margin:4px; padding:4px; 
      color:black; 
      margin-bottom:1px;  margin-top:1px; 
-
+       z-index: 9990;
 }
 .available-team:hover{
     background: #76a7fa;
