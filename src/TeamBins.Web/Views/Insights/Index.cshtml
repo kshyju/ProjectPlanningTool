@@ -1,4 +1,7 @@
 ﻿@model TeamBins.Common.ViewModels.InsightDashboardVm
+@{
+    ViewBag.Title = "TeamBins Insights";
+}
 <div>
     <h4>@Model.Teams.Count() Teams</h4>
     
@@ -49,6 +52,7 @@
         <tr>
             <th>Title</th>
             <th>Created</th>
+            <th>Author</th>
         </tr>
 
 
@@ -58,6 +62,7 @@
                 <td>@user.Title</td>
               
                 <td>@user.CreatedDate</td>
+                <td>@user.Author.Name</td>
             </tr>
         }
     </table>

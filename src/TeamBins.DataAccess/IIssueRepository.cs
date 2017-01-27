@@ -159,10 +159,17 @@ namespace TeamBins.DataAccess
 
         public IEnumerable<IssueDetailVM> GetIssues()
         {
+            var q = @"SELECT I.Id,Title,Description,I.CreatedDate
+,U.ID,U.FirstName as Name
+ FROM Issue I WITH (NOLOCK) 
+JOIN dbo.[User] U ON U.ID=I.CreatedByID
+ORDER BY I.CreatedDate desc";
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                return con.Query<IssueDetailVM>("SELECT Id,Title,Description,CreatedDate FROM Issue WITH (NOLOCK) ORDER BY CreatedDate desc").ToList();
+                return con.Query<IssueDetailVM,UserDto,IssueDetailVM>(q,(i,a)=> { i.Author = a;
+                    return i;
+                }).ToList();
             }
         }
 
