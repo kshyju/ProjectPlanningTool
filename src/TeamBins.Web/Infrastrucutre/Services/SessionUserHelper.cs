@@ -21,6 +21,7 @@ namespace TeamBins.Infrastrucutre.Services
             _session = _httpContextAccessor.HttpContext.Session;
         }
 
+        private const string emailKey = "TB_Email";
 
         private const string teamIdKey = "TB_TeamId";
         private const string userIdKey = "TB_UserId";
@@ -56,10 +57,11 @@ namespace TeamBins.Infrastrucutre.Services
             _session.SetInt32(teamIdKey, loggedInSessionInfo.TeamId);
 
         }
-        public void SetUserIDToSession(int userId, int teamId)
+        public void SetUserIDToSession(int userId, int teamId,string email)
         {
             _session.SetInt32(userIdKey, userId);
             _session.SetInt32(teamIdKey, teamId);
+            _session.SetString(emailKey,email);
 
         }
         public int UserId

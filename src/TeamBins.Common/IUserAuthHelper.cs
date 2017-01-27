@@ -7,7 +7,7 @@ namespace TeamBins.Common.ViewModels
         int TeamId { get; }
         int UserId { get; }
         void SetTeamId(int teamId);
-        void SetUserIDToSession(int userId, int teamId);
+        void SetUserIDToSession(int userId, int teamId,string email);
         void SetUserId(int userId);
 
         void SetUserIDToSession(LoggedInSessionInfo loggedInSessionInfo);

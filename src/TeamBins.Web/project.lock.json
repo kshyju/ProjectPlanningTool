@@ -777,6 +777,9 @@
           "lib/netstandard1.3/Microsoft.AspNetCore.Session.dll": {}
         }
       },
+      "Microsoft.AspNetCore.SignalR/0.0.1-alpha": {
+        "type": "package"
+      },
       "Microsoft.AspNetCore.StaticFiles/1.1.0": {
         "type": "package",
         "dependencies": {
@@ -5030,6 +5033,16 @@
         "lib/net451/Microsoft.AspNetCore.Session.xml",
         "lib/netstandard1.3/Microsoft.AspNetCore.Session.dll",
         "lib/netstandard1.3/Microsoft.AspNetCore.Session.xml"
+      ]
+    },
+    "Microsoft.AspNetCore.SignalR/0.0.1-alpha": {
+      "sha512": "J8sot9nd+u9Gpd49hT8/W/3nJ9QSDys7KEzyyo2KU53RBiSPyi6L+QWNjCFVEn5M1ZYATIcc2Q/E5rYmdN3+bA==",
+      "type": "package",
+      "path": "Microsoft.AspNetCore.SignalR/0.0.1-alpha",
+      "files": [
+        "Microsoft.AspNetCore.SignalR.0.0.1-alpha.nupkg.sha512",
+        "Microsoft.AspNetCore.SignalR.nuspec",
+        "content/Readme.txt"
       ]
     },
     "Microsoft.AspNetCore.StaticFiles/1.1.0": {
@@ -11358,9 +11371,11 @@
       "Microsoft.AspNetCore.Server.IISIntegration >= 1.1.0",
       "Microsoft.AspNetCore.Server.Kestrel >= 1.1.0",
       "Microsoft.AspNetCore.Session >= 1.1.0",
+      "Microsoft.AspNetCore.SignalR >= 0.0.1-alpha",
       "Microsoft.AspNetCore.StaticFiles >= 1.1.0",
       "Microsoft.Extensions.Configuration.EnvironmentVariables >= 1.1.0",
       "Microsoft.Extensions.Configuration.Json >= 1.1.0",
+      "Microsoft.Extensions.DependencyInjection >= 1.1.0",
       "Microsoft.Extensions.Logging >= 1.1.0",
       "Microsoft.Extensions.Logging.Console >= 1.1.0",
       "Microsoft.Extensions.Logging.Debug >= 1.1.0",

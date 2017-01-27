@@ -24,7 +24,7 @@ namespace TeamBins.Controllers.Web
 
         public IActionResult Index()
         {
-            var teams = this._teamManager.GetTeams();
+            var teams = this._teamManager.GetTeamsForUser();
             return View(new TeamListVM { Teams = teams });
         }
         public ActionResult Add()

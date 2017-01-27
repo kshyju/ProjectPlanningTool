@@ -27,6 +27,8 @@ namespace TeamBins.DataAccessCore
         Task<PasswordResetRequest> GetPasswordResetRequest(string activationCode);
 
         Task UpdatePassword(string password, int userId);
+
+        Task<IEnumerable<UserDto>> GetAllUsers();
     }
 
     public class UserRepository : BaseRepo, IUserRepository
@@ -109,6 +111,18 @@ namespace TeamBins.DataAccessCore
             {
                 con.Open();
                 await con.ExecuteAsync(q, new { password, userId });
+            }
+        }
+
+        public async Task<IEnumerable<UserDto>> GetAllUsers()
+        {
+            var q = @"SELECT [ID],[FirstName] as Name ,[EmailAddress],[Avatar] as GravatarUrl ,[DefaultTeamID],LastLoginDate,CreatedDate
+                    FROM [dbo].[User] WITH (NOLOCK) ORDER BY CreatedDate desc";
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                return await con.QueryAsync<UserAccountDto>(q);
+              
             }
         }
 

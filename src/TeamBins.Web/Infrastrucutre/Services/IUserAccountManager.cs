@@ -7,6 +7,7 @@ using TeamBins.Common.ViewModels;
 using TeamBins.Infrastrucutre.Services;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
 using TeamBins.DataAccessCore;
@@ -19,6 +20,8 @@ namespace TeamBins.Services
 
     public interface IUserAccountManager
     {
+        Task<IEnumerable<UserDto>> GetAllUsers();
+
         Task SaveNotificationSettings(UserEmailNotificationSettingsVM model);
         Task<DefaultIssueSettings> GetIssueSettingsForUser();
         Task<EditProfileVm> GetUserProfile();
@@ -202,6 +205,11 @@ namespace TeamBins.Services
             model.TeamId = userSessionHelper.TeamId;
             await userRepository.SaveNotificationSettings(model);
 
+        }
+
+        public async Task<IEnumerable<UserDto>> GetAllUsers()
+        {
+            return await this.userRepository.GetAllUsers();
         }
     }
 

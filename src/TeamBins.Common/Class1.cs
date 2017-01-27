@@ -93,18 +93,6 @@ namespace TeamBins.Common.ViewModels
         public int? DefaultTeamId { set; get; }
     }
 
-    public class UserDto
-    {
-        public int Id { set; get; }
-        public string EmailAddress { set; get; }
-        public string Name { set; get; }
-        public string GravatarUrl { get; set; }
-
-        public double? TestVal { set; get; }
-
-
-    }
-
     public class IssueMember
     {
         public UserDto Member { set; get; }
@@ -128,6 +116,8 @@ namespace TeamBins.Common.ViewModels
             public int TeamId { set; get; }
             public int UserId { set; get; }
             public string UserDisplayName { set; get; }
+
+        
         }
 
     public class TeamDto : BaseEntityDto

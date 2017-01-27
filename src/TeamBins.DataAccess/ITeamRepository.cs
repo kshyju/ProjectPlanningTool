@@ -6,6 +6,7 @@ namespace TeamBins.DataAccess
 {
     public interface ITeamRepository
     {
+        IEnumerable<TeamDto> GetTeams();
         TeamDto GetTeam(int teamId);
         TeamDto GetTeam(string name);
         int SaveTeam(TeamDto team);

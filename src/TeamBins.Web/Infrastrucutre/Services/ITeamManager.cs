@@ -22,7 +22,9 @@ namespace TeamBins.Infrastrucutre.Services
         int SaveTeam(TeamDto team);
         TeamDto GetTeam(int id);
         TeamDto GetTeam(string name);
-        List<TeamDto> GetTeams();
+        List<TeamDto> GetTeamsForUser();
+
+        IEnumerable<TeamDto> GetTeams();
         IEnumerable<ActivityDto> GeActivityItems(int teamId, int count);
         bool DoesCurrentUserBelongsToTeam(int userId, int teamId);
 
@@ -198,7 +200,7 @@ namespace TeamBins.Infrastrucutre.Services
             return member != null;
 
         }
-        public List<TeamDto> GetTeams()
+        public List<TeamDto> GetTeamsForUser()
         {
             var teams = _teamRepository.GetTeams(_userSessionHelper.UserId);
             foreach (var teamDto in teams)
@@ -208,6 +210,11 @@ namespace TeamBins.Infrastrucutre.Services
             return teams;
         }
 
+        public IEnumerable<TeamDto> GetTeams()
+        {
+            return  _teamRepository.GetTeams();
+           
+        }
         public int SaveTeam(TeamDto team)
         {
             team.CreatedById = this._userSessionHelper.UserId;

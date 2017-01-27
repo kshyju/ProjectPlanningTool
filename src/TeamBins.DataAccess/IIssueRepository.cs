@@ -157,12 +157,12 @@ namespace TeamBins.DataAccess
 
         }
 
-        public IEnumerable<IssueDetailVM> GetIssues(List<int> statusIds, int count)
+        public IEnumerable<IssueDetailVM> GetIssues()
         {
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                return con.Query<IssueDetailVM>("SELECT Id,Title,Description,CreatedDate,DueDate FROM Issue").ToList();
+                return con.Query<IssueDetailVM>("SELECT Id,Title,Description,CreatedDate FROM Issue WITH (NOLOCK) ORDER BY CreatedDate desc").ToList();
             }
         }
 
@@ -411,7 +411,7 @@ namespace TeamBins.DataAccess
         Task<IEnumerable<NameValueItem>> GetStatuses();
         Task<IEnumerable<CategoryDto>> GetCategories();
         Task<IEnumerable<NameValueItem>> GetPriorities();
-        IEnumerable<IssueDetailVM> GetIssues(List<int> statusIds, int count);
+        IEnumerable<IssueDetailVM> GetIssues();
         IssueDetailVM GetIssue(int id, int requestingUserId);
         int SaveIssue(CreateIssue issue);
         DashBoardItemSummaryVm GetDashboardSummaryVM(int teamId);

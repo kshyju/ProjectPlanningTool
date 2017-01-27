@@ -70,9 +70,9 @@ namespace TeamBins.Services
             return issue;
         }
 
-        public IEnumerable<IssueVM> GetIssues(List<int> statusIds, int count)
+        public IEnumerable<IssueVM> GetIssues()
         {
-            throw new NotImplementedException();
+            return this.issueRepository.GetIssues();
         }
 
         public async Task<IEnumerable<IssueDetailVM>> GetIssuesAssignedToUser(int userId)
@@ -259,7 +259,7 @@ namespace TeamBins.Services
         Task SaveIssueAssignee(int issueId, int userId);
         Task<IEnumerable<UserDto>> GetNonIssueMembers(int issueId);
         Task<int> StarIssue(int issueId);
-        IEnumerable<IssueVM> GetIssues(List<int> statusIds, int count);
+        IEnumerable<IssueVM> GetIssues();
         Task<IssueDetailVM> SaveIssue(CreateIssue issue, List<IFormFile> files);
         DashBoardItemSummaryVm GetDashboardSummaryVM(int count);
         Task<IssueDetailVM> GetIssue(int id);

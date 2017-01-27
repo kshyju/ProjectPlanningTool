@@ -54,7 +54,7 @@ namespace TeamBins.Controllers.Web
                                 }
                             }
 
-                            this._userSessionHelper.SetUserIDToSession(user.Id, user.DefaultTeamId.Value);
+                            this._userSessionHelper.SetUserIDToSession(user.Id, user.DefaultTeamId.Value, model.Email);
                             return RedirectToAction("index", "dashboard");
                         }
                     }

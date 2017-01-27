@@ -232,6 +232,28 @@ namespace TeamBins.DataAccess
             }
         }
 
+        public IEnumerable<TeamDto> GetTeams()
+        {
+            var q =
+              @" 
+SELECT  T.Id ,
+        T.Name ,
+        T.CreatedDate ,
+        TeamMemberCount.Count AS MemberCount
+FROM    Team T WITH ( NOLOCK )
+        JOIN ( SELECT   TeamID ,
+                        COUNT(1) Count
+               FROM     TeamMember WITH ( NOLOCK )
+               GROUP BY TeamID
+             ) TeamMemberCount ON TeamMemberCount.TeamID = T.Id  ORDER BY T.CreatedDate desc ; ";
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                con.Open();
+                var projects = con.Query<TeamDto>(q);
+                return projects.ToList();
+            }
+        }
+
         public void SaveDefaultTeamForUser(int userId, int teamId)
         {
             throw new System.NotImplementedException();
