@@ -27,9 +27,9 @@ namespace TeamBins.Services
     {
         private readonly IEmailRepository _emailRepository;
         private readonly ITeamRepository _teamRepository;
-        readonly AppSettings _settings;
+        readonly TeamBinsAppSettings _settings;
 
-        public EmailManager(IEmailRepository emailRepository, IOptions<AppSettings> settings,
+        public EmailManager(IEmailRepository emailRepository, IOptions<TeamBinsAppSettings> settings,
             ITeamRepository teamRepository)
         {
             this._teamRepository = teamRepository;

@@ -16,9 +16,9 @@ namespace TeamBins.Infrastrucutre
 
         private const string UploadContainer = "teambins-issue-uploads";
         private readonly IConfiguration configuration;
-        AppSettings settings;
+        TeamBinsAppSettings settings;
         // private IConfiguration configuration;
-        public AzureBlobStorageHandler(IOptions<AppSettings> settings)
+        public AzureBlobStorageHandler(IOptions<TeamBinsAppSettings> settings)
         {
 
             this.settings = settings.Value;

@@ -74,12 +74,15 @@ namespace TeamBins.Web
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddMemoryCache();
 
-            services.Configure<AppSettings>(Configuration.GetSection("TeamBins"));
+            services.Configure<AppSettings>(Configuration);
+            services.Configure<TeamBinsAppSettings>(Configuration.GetSection("TeamBins"));
             services.AddSession(s => s.IdleTimeout = TimeSpan.FromMinutes(30));
 
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>(); //will work
 
-            
+
+            services.AddApplicationInsightsTelemetry(Configuration);
+
             // Add framework services.
             services.AddMvc(o =>
             {
@@ -94,11 +97,14 @@ namespace TeamBins.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-
+            app.UseApplicationInsightsRequestTelemetry();
+            app.UseApplicationInsightsExceptionTelemetry();
             if (env.IsDevelopment())
             {
+
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
+
             }
             else
             {

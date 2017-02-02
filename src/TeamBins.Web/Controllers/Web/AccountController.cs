@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 using TeamBins.Common.ViewModels;
+using TeamBins.Infrastrucutre;
 using TeamBins.Services;
 using TeamBins.Infrastrucutre.Services;
 
@@ -16,7 +18,7 @@ namespace TeamBins.Controllers.Web
         private readonly IUserAuthHelper _userSessionHelper;
         private readonly ITeamManager _teamManager;
 
-        public AccountController(IUserAccountManager userAccountManager, IUserAuthHelper userSessionHelper, ITeamManager teamManager)
+        public AccountController(IUserAccountManager userAccountManager, IUserAuthHelper userSessionHelper, ITeamManager teamManager, IOptions<AppSettings> settings) : base(settings)
         {
             this._userAccountManager = userAccountManager;
             this._userSessionHelper = userSessionHelper;
@@ -31,6 +33,7 @@ namespace TeamBins.Controllers.Web
         [HttpPost]
         public async Task<ActionResult> Login(LoginVM model)
         {
+            tc.TrackEvent("Login attempt");
             try
             {
                 if (ModelState.IsValid)
@@ -38,13 +41,13 @@ namespace TeamBins.Controllers.Web
                     var user = await _userAccountManager.GetUser(model.Email);
                     if (user != null)
                     {
-                       // var appUser = new AppUser { UserName = user.EmailAddress, Id = user.Id.ToString() };
                         if (user.Password == model.Password)
                         {
                             await _userAccountManager.UpdateLastLoginTime(user.Id);
 
                             if (user.DefaultTeamId == null)
                             {
+                                tc.TrackEvent("User with no default team!"+user.Id);
                                 // This sould not happen! But if in case
                                 var teams = await _userAccountManager.GetTeams(user.Id);
                                 if (teams.Any())
@@ -72,6 +75,7 @@ namespace TeamBins.Controllers.Web
 
         public ActionResult Join(string returnurl = "")
         {
+            tc.TrackEvent("Joining via join link");
             return View(new AccountSignupVM { ReturnUrl = returnurl });
         }
 
@@ -112,7 +116,7 @@ namespace TeamBins.Controllers.Web
             }
             catch (Exception ex)
             {
-
+                tc.TrackException(ex);
             }
             return View(model);
 
@@ -131,7 +135,11 @@ namespace TeamBins.Controllers.Web
         public async Task<JsonResult> SwitchTeam(int id)
         {
             if (!_teamManager.DoesCurrentUserBelongsToTeam(this._userSessionHelper.UserId, id))
+            {
+                tc.TrackEvent("Trying to access some one else's team");
                 return Json(new { Status = "Error", Message = "You do not belong to this team!" });
+            }
+               
 
             _userSessionHelper.SetTeamId(id);
             await _userAccountManager.SetDefaultTeam(_userSessionHelper.UserId, id);

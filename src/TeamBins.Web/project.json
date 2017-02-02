@@ -27,7 +27,8 @@
     "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.1.0",
     "MailKit": "1.10.0",
     "Microsoft.AspNetCore.SignalR": "0.0.1-alpha",
-    "Microsoft.Extensions.DependencyInjection": "1.1.0" 
+    "Microsoft.Extensions.DependencyInjection": "1.1.0",
+    "Microsoft.ApplicationInsights.AspNetCore": "2.0.0" 
   },
 
   "tools": {

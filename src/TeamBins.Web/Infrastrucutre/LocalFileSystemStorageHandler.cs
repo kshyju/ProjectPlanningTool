@@ -9,9 +9,9 @@ namespace TeamBins.Infrastrucutre
 {
     public class LocalFileSystemStorageHandler : IUploadHandler
     {
-        private readonly AppSettings settings;
+        private readonly TeamBinsAppSettings settings;
         private readonly IHostingEnvironment hostingEnvironment;
-        public LocalFileSystemStorageHandler(IOptions<AppSettings> settings, IHostingEnvironment hostingEnvironment)
+        public LocalFileSystemStorageHandler(IOptions<TeamBinsAppSettings> settings, IHostingEnvironment hostingEnvironment)
         {
             this.settings = settings.Value;
             this.hostingEnvironment = hostingEnvironment;

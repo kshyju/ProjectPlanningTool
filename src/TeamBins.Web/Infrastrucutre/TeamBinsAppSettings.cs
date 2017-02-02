@@ -2,7 +2,16 @@
 
 namespace TeamBins.Infrastrucutre
 {
+    public class AppInsightSetting
+    {
+        public string InstrumentationKey { set; get; }
+    }
     public class AppSettings
+    {
+        public AppInsightSetting ApplicationInsights { set; get; }
+        public TeamBinsAppSettings TeamBins { set; get; }
+    }
+    public class TeamBinsAppSettings
     {
         public string LocalFileSystemStorageUriPrefix { set; get; }
         public string LocalFileSystemStoragePath { set; get; }

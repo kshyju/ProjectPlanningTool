@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 using TeamBins.Common.ViewModels;
+using TeamBins.Infrastrucutre;
 using TeamBins.Services;
 using TeamBins.Infrastrucutre.Services;
 
@@ -18,7 +20,7 @@ namespace TeamBins.Controllers.Web
         private readonly ITeamManager _teamManager;
 
         public DashboardController(IUserAuthHelper userSessionHelper, IIssueManager issueManager,
-            IProjectManager projectManager, ITeamManager teamManager)
+            IProjectManager projectManager, ITeamManager teamManager, IOptions<AppSettings> settings) : base(settings)
         {
             this._userSessionHelper = userSessionHelper;
             this._issueManager = issueManager;
@@ -31,6 +33,8 @@ namespace TeamBins.Controllers.Web
         [Route("dashboard")]
         public async Task<IActionResult> Index(string teamName)
         {
+            tc.TrackEvent("Public dashboard view-" + teamName);
+
             var teamId = _userSessionHelper.TeamId;
             var vm = new DashBoardVm {};
             if (!string.IsNullOrEmpty(teamName))
@@ -53,6 +57,9 @@ namespace TeamBins.Controllers.Web
                         {
                             teamId = team.Id;
                             vm.TeamKey = teamId.GetHashCode();
+
+                            
+
                         }
                         else
                         {

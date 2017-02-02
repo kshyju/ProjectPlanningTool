@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.ApplicationInsights;
 using TeamBins.Common.ViewModels;
 using TeamBins.Services;
 using TeamBins.Infrastrucutre;
@@ -10,6 +11,7 @@ using TeamBins.Infrastrucutre.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.Extensions.Options;
 using TeamBins.Common;
 
 
@@ -25,11 +27,13 @@ namespace TeamBins.Controllers.Web
         readonly IUserAuthHelper _userSessionHelper;
         private readonly IUploadHandler _uploadHandler;
         private readonly IUploadManager _uploadManager;
+        
         private readonly IUrlHelper _urlHelper;
+       
         public IssuesController(IUserAuthHelper userSessionHelper,
             IProjectManager projectManager, IIssueManager issueManager,
             ITeamManager teamManager, IUploadHandler uploadHandler,
-            IUploadManager uploadManager, IUrlHelperFactory urlHelperFactory, IActionContextAccessor actionContextAccessor) //: base(repositary)
+            IUploadManager uploadManager, IUrlHelperFactory urlHelperFactory, IActionContextAccessor actionContextAccessor, IOptions<AppSettings> settings) : base(settings)
         {
             this._issueManager = issueManager;
             this._projectManager = projectManager;
@@ -37,8 +41,9 @@ namespace TeamBins.Controllers.Web
             this._teamManager = teamManager;
             this._uploadHandler = uploadHandler;
             this._uploadManager = uploadManager;
+           
             this._urlHelper = urlHelperFactory.GetUrlHelper(actionContextAccessor.ActionContext);
-
+          
         }
 
         [Route("Issues")]
@@ -46,6 +51,9 @@ namespace TeamBins.Controllers.Web
 
         public ActionResult Index(int? teamId, string teamName = "")
         {
+            var tc = new Microsoft.ApplicationInsights.TelemetryClient();
+            tc.TrackEvent("Issue list view");
+
             try
             {
                 var teamIdToUse = _userSessionHelper.TeamId;

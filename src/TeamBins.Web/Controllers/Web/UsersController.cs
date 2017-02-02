@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
-
+using Microsoft.Extensions.Options;
 using TeamBins.Common.ViewModels;
+using TeamBins.Infrastrucutre;
 using TeamBins.Infrastrucutre.Filters;
 using TeamBins.Infrastrucutre.Services;
 
@@ -13,7 +14,7 @@ namespace TeamBins.Controllers.Web
     public class UsersController : BaseController
     {
         readonly ITeamManager _teamManager;
-        public UsersController(ITeamManager teamManager)
+        public UsersController(ITeamManager teamManager, IOptions<AppSettings> settings) : base(settings)
         {
             this._teamManager = teamManager;
         }

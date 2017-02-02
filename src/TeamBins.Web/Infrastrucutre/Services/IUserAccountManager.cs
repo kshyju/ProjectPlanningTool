@@ -44,7 +44,7 @@ namespace TeamBins.Services
 
     public class UserAccountManager : IUserAccountManager
     {
-        readonly AppSettings _settings;
+        readonly TeamBinsAppSettings _settings;
 
         private IEmailRepository emailRepository;
         private IEmailManager emailManager;
@@ -52,7 +52,7 @@ namespace TeamBins.Services
         private IUserRepository userRepository;
         private IUserAuthHelper userSessionHelper;
         private ITeamRepository teamRepository;
-        public UserAccountManager(IUserRepository userRepository, IUserAuthHelper userSessionHelper, IProjectManager projectManager, ITeamRepository teamRepository, IEmailManager emailManager, IEmailRepository emailRepository, IOptions<AppSettings> settings)
+        public UserAccountManager(IUserRepository userRepository, IUserAuthHelper userSessionHelper, IProjectManager projectManager, ITeamRepository teamRepository, IEmailManager emailManager, IEmailRepository emailRepository, IOptions<TeamBinsAppSettings> settings)
         {
             this.emailManager = emailManager;
             this.userRepository = userRepository;

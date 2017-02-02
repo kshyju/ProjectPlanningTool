@@ -43,7 +43,7 @@ namespace TeamBins.Infrastrucutre.Services
     }
     public class TeamManager : ITeamManager
     {
-        readonly AppSettings _settings;
+        readonly TeamBinsAppSettings _settings;
 
         private readonly IEmailRepository _emailRepository;
         private readonly IUserRepository _userRepository;
@@ -54,7 +54,7 @@ namespace TeamBins.Infrastrucutre.Services
         private readonly IEmailManager _emailManager;
         public TeamManager(IUserAuthHelper userSessionHelper, IActivityRepository activityRepository,
             ITeamRepository teamRepository, IIssueRepository issueRepository, IUserRepository userRepository, 
-            IEmailManager emailManager,IEmailRepository emailRepository, IOptions<AppSettings> settings)
+            IEmailManager emailManager,IEmailRepository emailRepository, IOptions<TeamBinsAppSettings> settings)
         {
             this._emailRepository = emailRepository;
             this._teamRepository = teamRepository;

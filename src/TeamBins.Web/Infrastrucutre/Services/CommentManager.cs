@@ -27,7 +27,7 @@ namespace TeamBins.Services
 
     public class CommentManager : ICommentManager
     {
-        readonly AppSettings _settings;
+        readonly TeamBinsAppSettings _settings;
         private ITeamRepository _teamRepository;
         private readonly IEmailRepository _emailRepository;
         private readonly IActivityRepository _activityRepository;
@@ -36,7 +36,7 @@ namespace TeamBins.Services
         private readonly IUserAuthHelper _userSessionHelper;
         private readonly IEmailManager _emailManager;
         public CommentManager(ICommentRepository commentRepository,IUserAuthHelper userSessionHelper,
-            IIssueRepository issueRepository, IActivityRepository activityRepository,IEmailManager emailManager,ITeamRepository teamRepository,IEmailRepository emailRepository, IOptions<AppSettings> settings)
+            IIssueRepository issueRepository, IActivityRepository activityRepository,IEmailManager emailManager,ITeamRepository teamRepository,IEmailRepository emailRepository, IOptions<TeamBinsAppSettings> settings)
         {
             this._settings = settings.Value;
             this._emailRepository = emailRepository;

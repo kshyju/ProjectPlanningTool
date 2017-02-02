@@ -1,11 +1,12 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-
+using Microsoft.Extensions.Options;
 using TeamBins.Common.Infrastructure.Enums.TeamBins.Helpers.Enums;
 using TeamBins.Common.ViewModels;
 using TeamBins.Services;
 using TeamBins.Controllers;
+using TeamBins.Infrastrucutre;
 using TeamBins.Infrastrucutre.Filters;
 
 
@@ -15,7 +16,7 @@ namespace TeamBins.Controllers
     public class SettingsController : BaseController
     {
         readonly IUserAccountManager _userAccountManager;
-        public SettingsController(IUserAccountManager userAccountManager)
+        public SettingsController(IUserAccountManager userAccountManager, IOptions<AppSettings> settings) : base(settings)
         {
             this._userAccountManager = userAccountManager;
         }
