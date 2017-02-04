@@ -33,7 +33,7 @@ namespace TeamBins.Controllers.Web
         [Route("dashboard")]
         public async Task<IActionResult> Index(string teamName)
         {
-            tc.TrackEvent("Public dashboard view-" + teamName);
+            tc.TrackEvent("Dashboard view");
 
             var teamId = _userSessionHelper.TeamId;
             var vm = new DashBoardVm {};
@@ -58,7 +58,7 @@ namespace TeamBins.Controllers.Web
                             teamId = team.Id;
                             vm.TeamKey = teamId.GetHashCode();
 
-                            
+                            tc.TrackEvent("Public dashboard view-" + team.Name.ToLower());
 
                         }
                         else
