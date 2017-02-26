@@ -1,5 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System.IO;
+using System.Threading.Tasks;
 using Microsoft.ApplicationInsights;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.Server;
 using TeamBins.Services;
 using Microsoft.AspNetCore.Mvc;
 using TeamBins.Common.ViewModels;
@@ -10,14 +13,17 @@ namespace TeamBins.Controllers
 {
     public class HomeController : BaseController
     {
+        private IHostingEnvironment _env;
         private readonly IUserAuthHelper _userSessionHelper;
         private readonly IUserAccountManager _userAccountManager;
         
-        public HomeController(IUserAuthHelper userSessionHelper,IUserAccountManager userAccountManager, IOptions<AppSettings> settings) : base(settings)
+        public HomeController(IUserAuthHelper userSessionHelper,IUserAccountManager userAccountManager,
+            IOptions<AppSettings> settings, IHostingEnvironment env) : base(settings)
         {
             this._userSessionHelper = userSessionHelper;
             this._userAccountManager = userAccountManager;
             tc = new TelemetryClient() { InstrumentationKey = settings.Value.ApplicationInsights.InstrumentationKey };
+            this._env = env;
         }
       
         [HttpPost]
@@ -27,6 +33,13 @@ namespace TeamBins.Controllers
             await _userAccountManager.SetDefaultTeam(_userSessionHelper.UserId, teamId);
             tc.TrackEvent("Switching Team");
             return Json("Changed");
+        }
+
+        public ActionResult Track(string id="devstory")
+        {
+            tc.TrackPageView(id);
+            var webRoot = _env.WebRootPath+ "/css/images/bug-icon.png";
+            return PhysicalFile(webRoot, "image/jpeg");
         }
 
         public IActionResult Index()
