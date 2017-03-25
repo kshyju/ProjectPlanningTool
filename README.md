@@ -3,7 +3,7 @@ TeamBins
 
 A Project management/Planning/Customer service tool built with Microsoft technologies.
 
-![https://ci.appveyor.com/project/kshyju/projectplanningtool](https://ci.appveyor.com/api/projects/status/vybu6a3kwi4usjr1?svg=true)
+[![Build status](https://ci.appveyor.com/api/projects/status/vybu6a3kwi4usjr1?svg=true)](https://ci.appveyor.com/project/kshyju/projectplanningtool)
 
 ![alt text](https://f.cloud.github.com/assets/144469/2100571/faf145c4-8f49-11e3-8125-b781b5d4c52f.png "Issue listing")
 
