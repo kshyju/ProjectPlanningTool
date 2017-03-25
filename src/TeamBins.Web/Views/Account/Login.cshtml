@@ -5,52 +5,55 @@
 }
 
 <div class="signUpContainer">
-<h1>Login</h1>
+    <h1>Login</h1>
 
-<div class="divSignUp">
-@using(Html.BeginForm())
+    <div class="divSignUp">
+        @using (Html.BeginForm())
+        {
+            <table class="tblEntry register">
+                <tr>
+                    <td>
+                        @Html.ValidationSummary()
+                    </td>
+                </tr>
+                <tr>
+                    <th>Your Email</th>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.TextBoxFor(x => x.Email)
+                    </td>
+                </tr>
+                <tr>
+                    <th>Password</th>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.PasswordFor(x => x.Password)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="submit" id="btnLogin" value="Login" />
+                    </td>
+                </tr>
+            </table>
+
+        }
+        <div class="registerLinks">
+            @Html.ActionLink("Forgot Password ?", "forgotPassword", "account") |
+            @Html.ActionLink("Register Account", "join", "account")
+        </div>
+    </div>
+</div>
+@section Scripts
 {
-<table class="tblEntry register">
-    <tr>
-        <td>
-            @Html.ValidationSummary()
-        </td>
-    </tr>      
-    <tr>
-        <th>Your Email</th>
-    </tr>
-    <tr>
-        <td>
-            @Html.TextBoxFor(x=>x.Email)
-        </td>
-    </tr>
-    <tr>
-        <th>Password</th>
-    </tr>
-    <tr>
-        <td>
-            @Html.PasswordFor(x=>x.Password)
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <input type="submit" id="btnLogin" value="Login" />          
-        </td>
-    </tr>
-</table>
-
-}
-<div class="registerLinks">
-    @Html.ActionLink("Forgot Password ?", "forgotPassword","account") | 
-    @Html.ActionLink("Register Account", "join", "account")
-</div>
-</div>
-</div>
-<script type="text/javascript">
-    $(function () {
-        $("#btnLogin").click(function (e) {
-            var _this = $(this);
-            _this.attr("value", "Logging in...").addClass("btn-disabled");
+    <script type="text/javascript">
+        $(function () {
+            $("#btnLogin").click(function (e) {
+                var _this = $(this);
+                _this.attr("value", "Logging in...").addClass("btn-disabled");
+            });
         });
-    });
-</script>
+    </script>
+}

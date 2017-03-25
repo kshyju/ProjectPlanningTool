@@ -26,7 +26,7 @@ namespace TeamBins.DataAccessCore
         Task SavePasswordResetRequest(PasswordResetRequest passwordResetRequest);
         Task<PasswordResetRequest> GetPasswordResetRequest(string activationCode);
 
-        Task UpdatePassword(string password, int userId);
+        Task UpdatePassword(string password,byte[] salt, int userId);
 
         Task<IEnumerable<UserDto>> GetAllUsers();
     }
@@ -64,7 +64,7 @@ namespace TeamBins.DataAccessCore
 
         public async Task<UserAccountDto> GetUser(string email)
         {
-            var q = @"SELECT [ID],[FirstName] as Name ,[EmailAddress],Password,[Avatar] as GravatarUrl ,[DefaultTeamID]
+            var q = @"SELECT [ID],[FirstName] as Name ,[EmailAddress],Password,Salt,[Avatar] as GravatarUrl ,[DefaultTeamID]
                     FROM [dbo].[User] 
                     WHERE EmailAddress=@id";
             using (var con = new SqlConnection(ConnectionString))
@@ -104,13 +104,13 @@ namespace TeamBins.DataAccessCore
 
         }
 
-        public async Task UpdatePassword(string password, int userId)
+        public async Task UpdatePassword(string password,byte[] salt, int userId)
         {
-            var q = @"UPDATE [User] SET Password=@password WHERE ID=@userId";
+            var q = @"UPDATE [User] SET Password=@password, Salt=@salt WHERE ID=@userId";
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
-                await con.ExecuteAsync(q, new { password, userId });
+                await con.ExecuteAsync(q, new { password,salt, userId });
             }
         }
 
@@ -152,7 +152,7 @@ namespace TeamBins.DataAccessCore
         public async Task<int> CreateAccount(UserAccountDto userAccount)
         {
             var q =
-                @"INSERT INTO [dbo].[User](FirstName,EmailAddress,Password,CreatedDate) VALUES(@n,@e,@p,@dt);SELECT CAST(SCOPE_IDENTITY() as int)";
+                @"INSERT INTO [dbo].[User](FirstName,EmailAddress,Password,Salt,CreatedDate) VALUES(@n,@e,@p,@s,@dt);SELECT CAST(SCOPE_IDENTITY() as int)";
             using (var con = new SqlConnection(ConnectionString))
             {
                 con.Open();
@@ -165,6 +165,7 @@ namespace TeamBins.DataAccessCore
                                 @n = userAccount.Name,
                                 @e = userAccount.EmailAddress,
                                 @p = userAccount.Password,
+                                @s= userAccount.Salt,
                                 @dt = DateTime.Now
                             });
                 return ss.Single();

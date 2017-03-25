@@ -1,19 +1,16 @@
 using System;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-
-using TeamBins.Common;
 using TeamBins.Common.ViewModels;
-using TeamBins.Infrastrucutre.Services;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
 using TeamBins.DataAccessCore;
 
 using TeamBins.DataAccess;
 using TeamBins.Infrastrucutre;
+using System.Security.Cryptography;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
 namespace TeamBins.Services
 {
@@ -28,7 +25,7 @@ namespace TeamBins.Services
         Task SetDefaultTeam(int userId, int teamId);
         Task<IEnumerable<TeamDto>> GetTeams(int userId);
         Task<UserAccountDto> GetUser(int id);
-        
+
         Task UpdateProfile(EditProfileVm model);
         //void UpdatePassword(ChangePasswordVM model);
         Task SaveDefaultProjectForTeam(DefaultIssueSettings defaultIssueSettings);
@@ -40,6 +37,8 @@ namespace TeamBins.Services
         Task SavePasswordResetRequest(UserAccountDto user);
         Task<PasswordResetRequest> GetPasswordResetRequest(string activationCode);
         Task UpdatePassword(string password, int userId);
+        string GetHash(string input, byte[] salt);
+        
     }
 
     public class UserAccountManager : IUserAccountManager
@@ -52,6 +51,8 @@ namespace TeamBins.Services
         private IUserRepository userRepository;
         private IUserAuthHelper userSessionHelper;
         private ITeamRepository teamRepository;
+
+
         public UserAccountManager(IUserRepository userRepository, IUserAuthHelper userSessionHelper, IProjectManager projectManager, ITeamRepository teamRepository, IEmailManager emailManager, IEmailRepository emailRepository, IOptions<TeamBinsAppSettings> settings)
         {
             this.emailManager = emailManager;
@@ -168,10 +169,42 @@ namespace TeamBins.Services
 
         public async Task UpdatePassword(string password, int userId)
         {
-            await userRepository.UpdatePassword(password, userId);
+            // generate a 128-bit salt using a secure PRNG
+            byte[] salt = new byte[128 / 8];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(salt);
+            }
+            // derive a 256-bit subkey (use HMACSHA1 with 10000 iterations)
+            var hashedPassword = GetHash(password, salt);
+            await userRepository.UpdatePassword(hashedPassword, salt, userId);
+        }
+
+        public string GetHash(string input,byte[] salt)
+        {
+            return Convert.ToBase64String(KeyDerivation.Pbkdf2(
+            password: input,
+            salt: salt,
+            prf: KeyDerivationPrf.HMACSHA1,
+            iterationCount: 10000,
+            numBytesRequested: 256 / 8));
+        }
+        private void SaltCredentials(UserAccountDto userAccount)
+        {
+            // generate a 128-bit salt using a secure PRNG
+            byte[] salt = new byte[128 / 8];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(salt);
+            }
+            // derive a 256-bit subkey (use HMACSHA1 with 10000 iterations)
+            userAccount.Password = GetHash(userAccount.Password, salt);
+            userAccount.Salt = salt;
         }
         public async Task<LoggedInSessionInfo> CreateAccount(UserAccountDto userAccount)
         {
+            SaltCredentials(userAccount);
+
             var userId = await userRepository.CreateAccount(userAccount);
             var teamName = userAccount.Name.Replace(" ", "") + " Team";
             var teamId = await Task.FromResult(teamRepository.SaveTeam(new TeamDto { CreatedById = userId, Name = teamName }));
@@ -207,6 +240,7 @@ namespace TeamBins.Services
 
         }
 
+       
         public async Task<IEnumerable<UserDto>> GetAllUsers()
         {
             return await this.userRepository.GetAllUsers();

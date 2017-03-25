@@ -34,70 +34,76 @@ namespace TeamBins.Controllers.Web
         public async Task<IActionResult> Index(string teamName)
         {
             tc.TrackEvent("Dashboard view");
-
-            var teamId = _userSessionHelper.TeamId;
-            var vm = new DashBoardVm {};
-            if (!string.IsNullOrEmpty(teamName))
+            var vm = new DashBoardVm { };
+            try
             {
-                var team = _teamManager.GetTeam(teamName);
-                if (team != null)
+                var teamId = _userSessionHelper.TeamId;
+
+                if (!string.IsNullOrEmpty(teamName))
                 {
-                    //If the current user who is accessing is already a member of this team,
-                    if (_teamManager.DoesCurrentUserBelongsToTeam(this._userSessionHelper.UserId, team.Id))
+                    var team = _teamManager.GetTeam(teamName);
+                    if (team != null)
                     {
-                        vm.IsCurrentUserTeamMember = true;
-                        //userSessionHelper.SetTeamId(team.Id);
-                        //await userAccountManager.SetDefaultTeam(userSessionHelper.UserId, teamId);
-                    }
-                    else
-                    {
-                        // He is either accessing a public dashboard or TRYING to peep into a private dashboard
-
-                        if (team.IsPublic)
+                        //If the current user who is accessing is already a member of this team,
+                        if (_teamManager.DoesCurrentUserBelongsToTeam(this._userSessionHelper.UserId, team.Id))
                         {
-                            teamId = team.Id;
-                            vm.TeamKey = teamId.GetHashCode();
-
-                            tc.TrackEvent("Public dashboard view-" + team.Name.ToLower());
-
+                            vm.IsCurrentUserTeamMember = true;
+                            //userSessionHelper.SetTeamId(team.Id);
+                            //await userAccountManager.SetDefaultTeam(userSessionHelper.UserId, teamId);
                         }
                         else
                         {
-                            return View("NotFound");
+                            // He is either accessing a public dashboard or TRYING to peep into a private dashboard
+
+                            if (team.IsPublic)
+                            {
+                                teamId = team.Id;
+                                vm.TeamKey = teamId.GetHashCode();
+
+                                tc.TrackEvent("Public dashboard view-" + team.Name.ToLower());
+
+                            }
+                            else
+                            {
+                                return View("NotFound");
+                            }
                         }
                     }
+                    else
+                    {
+                        return View("NotFound");
+                    }
                 }
-                else
+                vm.TeamId = teamId;
+                if (_userSessionHelper.TeamId > 0)
                 {
-                    return View("NotFound");
+                    if (_teamManager.DoesCurrentUserBelongsToTeam(this._userSessionHelper.UserId, teamId))
+                    {
+                        vm.IsCurrentUserTeamMember = true;
+                        var myIssues = await _issueManager.GetIssuesAssignedToUser(this._userSessionHelper.UserId);
+                        vm.OverDueIssuesAssignedToMe = myIssues
+                            .Where(d => d.DueDate != null && d.DueDate.Value < DateTime.Now)
+                            .Where(c => c.Status.Code != "Completed" || c.Status.Code != "Closed").OrderBy(f => f.DueDate);
+                        vm.IssuesAssignedToMe = myIssues;
+                    }
                 }
+
+                var issues =
+                    this._issueManager.GetIssuesGroupedByStatusGroup(teamId, 25)
+                        .SelectMany(f => f.Issues)
+                        .OrderByDescending(s => s.CreatedDate)
+                        .ToList();
+                vm.RecentIssues = issues;
+
+                vm.Projects = this._projectManager.GetProjects(teamId).ToList();
             }
-            vm.TeamId = teamId;
-            if (_userSessionHelper.TeamId > 0)
+            catch (Exception ex)
             {
-                if (_teamManager.DoesCurrentUserBelongsToTeam(this._userSessionHelper.UserId, teamId))
-                {
-                    vm.IsCurrentUserTeamMember = true;
-                    var myIssues = await _issueManager.GetIssuesAssignedToUser(this._userSessionHelper.UserId);
-                    vm.OverDueIssuesAssignedToMe =myIssues
-                        .Where(d => d.DueDate != null && d.DueDate.Value < DateTime.Now)
-                        .Where(c=>c.Status.Code != "Completed" || c.Status.Code != "Closed").OrderBy(f=>f.DueDate);
-                    vm.IssuesAssignedToMe = myIssues;
-                }
+                tc.TrackException(ex);
             }
-
-            var issues =
-                this._issueManager.GetIssuesGroupedByStatusGroup(teamId, 25)
-                    .SelectMany(f => f.Issues)
-                    .OrderByDescending(s => s.CreatedDate)
-                    .ToList();
-            vm.RecentIssues = issues;
-
-            vm.Projects = this._projectManager.GetProjects(teamId).ToList();
-
             return View(vm);
         }
-      
-        
+
+
     }
 }

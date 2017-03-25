@@ -88,7 +88,7 @@ namespace TeamBins.Common.ViewModels
 
     public class UserAccountDto : UserDto
     {
-
+        public byte[] Salt { set; get; }
         public string Password { set; get; }
         public int? DefaultTeamId { set; get; }
     }

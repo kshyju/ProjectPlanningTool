@@ -120,7 +120,7 @@ namespace TeamBins.Controllers.Web
             }
             catch (Exception ex)
             {
-                //ErrorStore.LogException(ex, System.Web.HttpContext.Current);
+                tc.TrackException(ex);
                 return View("Error");
             }
         }
@@ -146,7 +146,7 @@ namespace TeamBins.Controllers.Web
         {
 
             var vm = new CreateIssue();
-            this._issueManager.LoadDropdownData(vm);
+            await this._issueManager.LoadDropdownData(vm);
 
             return PartialView("~/Views/Issues/Partial/Edit.cshtml", vm);
         }
@@ -158,7 +158,7 @@ namespace TeamBins.Controllers.Web
             if (issue != null && issue.Active)
             {
                 var vm = new CreateIssue(issue);
-                this._issueManager.LoadDropdownData(vm);
+                await this._issueManager.LoadDropdownData(vm);
 
                 vm.IsEditableForCurrentUser = this._teamManager.DoesCurrentUserBelongsToTeam(this._userSessionHelper.UserId, this._userSessionHelper.TeamId);
                 return PartialView("~/Views/Issues/Partial/Edit.cshtml", vm);
@@ -239,13 +239,9 @@ namespace TeamBins.Controllers.Web
             }
             catch (Exception ex)
             {
-                //  bErrorStore.LogException(ex, Request.HttpContext);
-
+                tc.TrackException(ex);
                 return Json(new { Status = "Error", Message = "Error saving issue" });
             }
-
-
-            return View(model);
         }
 
         [Route("Issues/delete/{id}")]

@@ -1,15 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1269A34E-0833-4BF9-8C31-455912EE744A}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "TeamBins.Common", "src\TeamBins.Common\TeamBins.Common.xproj", "{0FF54A6B-6124-4692-9360-FE1F6A5A7DF9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeamBins.Common", "src\TeamBins.Common\TeamBins.Common.csproj", "{0FF54A6B-6124-4692-9360-FE1F6A5A7DF9}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "TeamBins.DataAccess", "src\TeamBins.DataAccess\TeamBins.DataAccess.xproj", "{80CBAD60-69C2-4ECD-AFF6-61B8817EFD6D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeamBins.DataAccess", "src\TeamBins.DataAccess\TeamBins.DataAccess.csproj", "{80CBAD60-69C2-4ECD-AFF6-61B8817EFD6D}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "TeamBins.Web", "src\TeamBins.Web\TeamBins.Web.xproj", "{2F22BE8D-ACB8-4F0D-866A-9AAA4EF75542}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeamBins.Web", "src\TeamBins.Web\TeamBins.Web.csproj", "{2F22BE8D-ACB8-4F0D-866A-9AAA4EF75542}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -8,7 +8,7 @@ using TeamBins.Common.ViewModels;
 using TeamBins.Infrastrucutre;
 using TeamBins.Services;
 using TeamBins.Infrastrucutre.Services;
-
+using System.Security.Cryptography;
 
 namespace TeamBins.Controllers.Web
 {
@@ -41,13 +41,15 @@ namespace TeamBins.Controllers.Web
                     var user = await _userAccountManager.GetUser(model.Email);
                     if (user != null)
                     {
-                        if (user.Password == model.Password)
+                        var h = _userAccountManager.GetHash(model.Password, user.Salt);
+
+                        if (user.Password == h)
                         {
                             await _userAccountManager.UpdateLastLoginTime(user.Id);
 
                             if (user.DefaultTeamId == null)
                             {
-                                tc.TrackEvent("User with no default team!"+user.Id);
+                                tc.TrackEvent("User with no default team!" + user.Id);
                                 // This sould not happen! But if in case
                                 var teams = await _userAccountManager.GetTeams(user.Id);
                                 if (teams.Any())
@@ -67,8 +69,7 @@ namespace TeamBins.Controllers.Web
             catch (Exception ex)
             {
                 ModelState.AddModelError("", "Oops! Something went wrong :(");
-
-
+                tc.TrackException(ex);
             }
             return View(model);
         }
@@ -139,7 +140,7 @@ namespace TeamBins.Controllers.Web
                 tc.TrackEvent("Trying to access some one else's team");
                 return Json(new { Status = "Error", Message = "You do not belong to this team!" });
             }
-               
+
 
             _userSessionHelper.SetTeamId(id);
             await _userAccountManager.SetDefaultTeam(_userSessionHelper.UserId, id);
