@@ -3,6 +3,7 @@ TeamBins
 
 A Project management/Planning/Customer service tool built with Microsoft technologies.
 
+![https://ci.appveyor.com/api/projects/status/32r7s2skrgm9ubva?svg=true](https://ci.appveyor.com/api/projects/status/vybu6a3kwi4usjr1?svg=true)
 
 ![alt text](https://f.cloud.github.com/assets/144469/2100571/faf145c4-8f49-11e3-8125-b781b5d4c52f.png "Issue listing")
 
@@ -11,7 +12,7 @@ A Project management/Planning/Customer service tool built with Microsoft technol
 Built with
 -----------
 
-* <del>ASP.NET MVC 6</del> Asp.Net Core 1.0
+* <del>ASP.NET MVC 6</del> Asp.Net Core 1.1
 * <del>ASP.NET SignalR</del> Needs to be changed to support dot net core.
 * Windows Azure (Blog storage for file upload)
 * Angular JS
@@ -22,6 +23,7 @@ Built with
 * Twitter bootstrap
 * Typescript
 * <del>Entity framework</del> Dapper
+* Azure Application Insights
 * Passion for developing something cool and giving to the community
 
 
