@@ -3,17 +3,14 @@
     ViewBag.Title = "Login";
     Layout = "~/Views/Shared/_SignUpLayout.cshtml";
 }
-
 <div class="signUpContainer">
     <h1>Login</h1>
-
     <div class="divSignUp">
-        @using (Html.BeginForm())
-        {
+        <form asp-action="Login" asp-controller="Account" id="loginForm" method="post">
             <table class="tblEntry register">
                 <tr>
                     <td>
-                        @Html.ValidationSummary()
+                        <div asp-validation-summary="All"></div>
                     </td>
                 </tr>
                 <tr>
@@ -21,7 +18,7 @@
                 </tr>
                 <tr>
                     <td>
-                        @Html.TextBoxFor(x => x.Email)
+                        <input type="text" asp-for="Email" />
                     </td>
                 </tr>
                 <tr>
@@ -29,7 +26,7 @@
                 </tr>
                 <tr>
                     <td>
-                        @Html.PasswordFor(x => x.Password)
+                        <input type="password" asp-for="Password" />
                     </td>
                 </tr>
                 <tr>
@@ -38,11 +35,10 @@
                     </td>
                 </tr>
             </table>
-
-        }
+        </form>
         <div class="registerLinks">
-            @Html.ActionLink("Forgot Password ?", "forgotPassword", "account") |
-            @Html.ActionLink("Register Account", "join", "account")
+            <a asp-acion="forgotpassword" asp-controller="account">Forgot Password ?</a>
+            <a asp-acion="join" asp-controller="account">Register Account</a>
         </div>
     </div>
 </div>
@@ -50,9 +46,11 @@
 {
     <script type="text/javascript">
         $(function () {
-            $("#btnLogin").click(function (e) {
-                var _this = $(this);
-                _this.attr("value", "Logging in...").addClass("btn-disabled");
+            $("#loginForm").submit(function (e) {
+                var $form = $(this);
+                if ($form.valid()) {
+                    $("#btnLogin").attr("value", "Logging in...").addClass("btn-disabled");
+                }
             });
         });
     </script>

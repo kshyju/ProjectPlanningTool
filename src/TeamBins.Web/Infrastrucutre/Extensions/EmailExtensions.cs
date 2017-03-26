@@ -1,11 +1,15 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 namespace TeamBins.Infrastrucutre.Extensions
 {
+   
+
     //Not really an extension method on string ! I still prefer to just call it like the ext method style ;)
     public static class EmailExtensions
     {
