@@ -1,21 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-//using TeamBins.Services;
-//using TeamBins.DataAccess;
-//using TeamBins.DataAccessCore;
-//using TeamBins.Infrastrucutre.Services;
-//using TeamBins.Infrastrucutre.Cache;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Routing;
 using TeamBins.Common.ViewModels;
 using TeamBins.DataAccessCore;
 using TeamBins.Infrastrucutre;
@@ -26,9 +16,7 @@ using TeamBins.Services;
 using TeamBins.DataAccess;
 using Microsoft.AspNetCore.Server.Kestrel.Internal.Http;
 
-//using TeamBins.Infrastrucutre.Filters;
-//using TeamBins.Common.ViewModels;
-//using TeamBins.Infrastrucutre;
+
 
 namespace TeamBins.Web
 {
@@ -49,6 +37,7 @@ namespace TeamBins.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddResponseCompression();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddTransient<ICommentManager, CommentManager>();
@@ -97,8 +86,8 @@ namespace TeamBins.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            app.UseApplicationInsightsRequestTelemetry();
-            app.UseApplicationInsightsExceptionTelemetry();
+            app.UseResponseCompression();
+
             if (env.IsDevelopment())
             {
 
@@ -108,6 +97,8 @@ namespace TeamBins.Web
             }
             else
             {
+                app.UseApplicationInsightsRequestTelemetry();
+                app.UseApplicationInsightsExceptionTelemetry();
                 app.UseExceptionHandler("/Home/Error");
             }
             app.UseSession();
