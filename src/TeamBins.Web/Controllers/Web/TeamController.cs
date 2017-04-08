@@ -3,9 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using TeamBins.Common;
 using TeamBins.Common.ViewModels;
+using TeamBins.Infrastrucutre;
 using TeamBins.Infrastrucutre.Filters;
 using TeamBins.Infrastrucutre.Services;
 
@@ -14,10 +16,10 @@ using TeamBins.Infrastrucutre.Services;
 namespace TeamBins.Controllers.Web
 {
     [LoginCheckFilter]
-    public class TeamController : Controller
+    public class TeamController : BaseController
     {
         private readonly ITeamManager _teamManager;
-        public TeamController(ITeamManager teamManager)
+        public TeamController(ITeamManager teamManager, IOptions<AppSettings> settings) :base(settings)
         {
             this._teamManager = teamManager;
         }
@@ -59,7 +61,7 @@ namespace TeamBins.Controllers.Web
             }
             catch (Exception ex)
             {
-
+                tc.TrackException(ex);
             }
             return Json(new { Status = "Error" });
         }

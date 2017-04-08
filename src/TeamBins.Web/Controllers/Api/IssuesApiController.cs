@@ -1,34 +1,24 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Threading.Tasks;
-using TeamBins.Common;
+using Microsoft.AspNetCore.Mvc;
 using TeamBins.Common.ViewModels;
 using TeamBins.Services;
-using TeamBins.Infrastrucutre.Services;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace TeamBins.Controllers
+namespace TeamBins.Web.Controllers.Api
 {
     [Route("api/issues")]
     public class IssuesApiController : Controller
     {
-
-        ICommentManager commentManager;
-        private readonly IProjectManager projectManager;
-        private IIssueManager issueManager;
-        //private IssueService issueService;
-        IUserAuthHelper userSessionHelper;
+        private readonly IIssueManager _issueManager;
+        readonly IUserAuthHelper _userSessionHelper;
 
 
         public IssuesApiController(ICommentManager commentManager, IUserAuthHelper userSessionHelper, IProjectManager projectManager, IIssueManager issueManager) //: base(repositary)
         {
-            this.issueManager = issueManager;
-            this.projectManager = projectManager;
-            this.userSessionHelper = userSessionHelper;
-            this.commentManager = commentManager;
+            this._issueManager = issueManager;
+            this._userSessionHelper = userSessionHelper;
         }
 
 
@@ -36,10 +26,9 @@ namespace TeamBins.Controllers
         [Route("~/api/issues/{issueId}/star/{mode}")]
         public async Task<IActionResult> StarIssue(bool mode, int issueId)
         {
-            await issueManager.StarIssue(issueId, 0, !mode);
+            await _issueManager.StarIssue(issueId, 0, !mode);
             if (!mode)
             {
-
                 return Json(new { Status = "Success", Class = "glyphicon-star", Starred = true });
             }
             else
@@ -52,7 +41,7 @@ namespace TeamBins.Controllers
         [Route("~/api/issues/{issueId}/noissuemembers")]
         public async Task<IActionResult> GetIssueMembers(string term, int issueId)
         {
-            var list = await issueManager.GetNonIssueMembers(issueId);
+            var list = await _issueManager.GetNonIssueMembers(issueId);
             return Json(list);
         }
 
@@ -60,14 +49,14 @@ namespace TeamBins.Controllers
         [Route("~/api/issues/{issueId}/assignteammember/{userId}")]
         public async Task<IActionResult> GetIssueMembers(int issueId, int userId)
         {
-            await this.issueManager.SaveIssueAssignee(issueId, userId);
+            await this._issueManager.SaveIssueAssignee(issueId, userId);
             return Json(new { Status = "Success" });
         }
         [HttpPost]
         [Route("~/api/issues/{issueId}/removeissuemember/{userId}")]
         public async Task<IActionResult> RemoveIssueMembers(int issueId, int userId)
         {
-            await this.issueManager.RemoveIssueMember(issueId, userId);
+            await this._issueManager.RemoveIssueMember(issueId, userId);
             return Json(new { Status = "Success" });
         }
         // GET api/values/5
@@ -75,7 +64,7 @@ namespace TeamBins.Controllers
         public ObjectResult Get(int teamId, int count)
         {
 
-            var issues = this.issueManager.GetIssuesGroupedByStatusGroup(teamId, count);
+            var issues = this._issueManager.GetIssuesGroupedByStatusGroup(teamId, count);
 
             return Ok(issues);
         }
@@ -86,10 +75,10 @@ namespace TeamBins.Controllers
         {
             try
             {
-                var issue = this.issueManager.GetIssue(id);
+                var issue = this._issueManager.GetIssue(id);
                 if (issue != null)
                 {
-                    await this.issueManager.SaveDueDate(id, issueDueDate);
+                    await this._issueManager.SaveDueDate(id, issueDueDate);
                 }
                 return Ok(new { Status = "Success" });
             }
@@ -105,12 +94,11 @@ namespace TeamBins.Controllers
         {
             try
             {
-                var issue = await this.issueManager.GetIssue(id);
-                if (issue != null && issue.Author.Id == this.userSessionHelper.UserId)
+                var issue = await this._issueManager.GetIssue(id);
+                if (issue != null && issue.Author.Id == this._userSessionHelper.UserId)
                 {
-                    this.issueManager.Delete(id);
+                    this._issueManager.Delete(id);
                 }
-                ///return new HttpOkObjectResult();
                 return Ok(new { Status = "Success" });
             }
             catch (Exception)

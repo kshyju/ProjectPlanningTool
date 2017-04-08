@@ -1,15 +1,14 @@
-﻿using System.IO;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Hosting.Server;
-using TeamBins.Services;
 using Microsoft.AspNetCore.Mvc;
-using TeamBins.Common.ViewModels;
 using Microsoft.Extensions.Options;
+using TeamBins.Common.ViewModels;
+using TeamBins.Controllers;
 using TeamBins.Infrastrucutre;
+using TeamBins.Services;
 
-namespace TeamBins.Controllers
+namespace TeamBins.Web.Controllers.Web
 {
     public class HomeController : BaseController
     {

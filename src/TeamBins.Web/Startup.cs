@@ -77,10 +77,7 @@ namespace TeamBins.Web
             {
                 o.Filters.Add(new ReqProcessFilter());
             });
-            //services.AddMvc(o =>
-            //{
-               
-            //});
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

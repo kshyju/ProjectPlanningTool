@@ -3,19 +3,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.ApplicationInsights;
-using TeamBins.Common.ViewModels;
-using TeamBins.Services;
-using TeamBins.Infrastrucutre;
-using TeamBins.Infrastrucutre.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Options;
 using TeamBins.Common;
+using TeamBins.Common.ViewModels;
+using TeamBins.Controllers;
+using TeamBins.Infrastrucutre;
+using TeamBins.Infrastrucutre.Services;
+using TeamBins.Services;
 
-
-namespace TeamBins.Controllers.Web
+namespace TeamBins.Web.Controllers.Web
 {
     public class IssuesController : BaseController
     {

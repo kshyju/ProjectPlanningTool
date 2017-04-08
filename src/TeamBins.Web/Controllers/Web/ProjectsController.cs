@@ -1,24 +1,24 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using TeamBins.Common.ViewModels;
-using TeamBins.Services;
+using TeamBins.Controllers;
+using TeamBins.Infrastrucutre;
 using TeamBins.Infrastrucutre.Filters;
-using TeamBins.Infrastrucutre.Services;
+using TeamBins.Services;
 
-// For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace TeamBins.Controllers.Web
+namespace TeamBins.Web.Controllers.Web
 {
     [LoginCheckFilter]
-    public class ProjectsController : Controller
+    public class ProjectsController : BaseController
     {
         private readonly IProjectManager _projectManager;
         private readonly IUserAuthHelper _userAuthHelper;
-        public ProjectsController(IProjectManager projectManager, IUserAuthHelper userAuthHelper)
+        public ProjectsController(IProjectManager projectManager, IUserAuthHelper userAuthHelper, IOptions<AppSettings> settings) : base(settings)
         {
             this._projectManager = projectManager;
             this._userAuthHelper = userAuthHelper;
@@ -27,15 +27,23 @@ namespace TeamBins.Controllers.Web
         public async Task<IActionResult> Index()
         {
             var vm = new TeamProjectListVM();
-            var defaultProject = await _projectManager.GetDefaultProjectForCurrentTeam();
-
-            vm.Projects = _projectManager.GetProjects(this._userAuthHelper.TeamId).Select(s => new ProjectVM
+            try
             {
-                Id = s.Id,
-                Name = s.Name,
-                IsDefaultProject = (defaultProject != null && s.Id == defaultProject.Id)
+                var defaultProject = await _projectManager.GetDefaultProjectForCurrentTeam();
 
-            }).ToList();
+                vm.Projects = _projectManager.GetProjects(this._userAuthHelper.TeamId).Select(s => new ProjectVM
+                {
+                    Id = s.Id,
+                    Name = s.Name,
+                    IsDefaultProject = (defaultProject != null && s.Id == defaultProject.Id)
+
+                }).ToList();
+
+            }
+            catch (Exception e)
+            {
+                tc.TrackException(e);
+            }
 
             return View(vm);
         }
@@ -73,6 +81,7 @@ namespace TeamBins.Controllers.Web
             }
             catch (Exception ex)
             {
+                tc.TrackException(ex);
                 return Json(new { Status = "Error", Errors = new List<string> { "Error in saving project" } });
             }
         }
@@ -112,6 +121,7 @@ namespace TeamBins.Controllers.Web
             }
             catch (Exception ex)
             {
+                tc.TrackException(ex);
                 return Json(new { Status = "Error", Errors = new List<string> { "Error deleting project" } });
             }
         }

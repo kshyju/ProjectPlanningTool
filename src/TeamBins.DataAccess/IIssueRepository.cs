@@ -176,7 +176,7 @@ ORDER BY I.CreatedDate desc";
 
         public async Task<IEnumerable<ChartItem>> GetIssueCountsPerStatus(int teamId)
         {
-            var q = @"SELECT  S.ID ItemId,S.NAME ItemName,S.Color, COUNT(I.ID) COUNT						 
+            const string q = @"SELECT  S.ID ItemId,S.NAME ItemName,S.Color, COUNT(I.ID) COUNT						 
                         FROM STATUS S  WITH (NOLOCK)  
                         LEFT JOIN (SELECT I.ID,I.STATUSID FROM ISSUE I  WITH (NOLOCK) WHERE I.TeamId=@teamId) I ON I.STATUSID =S.ID
                         GROUP BY S.ID,S.NAME,S.Color";
@@ -189,7 +189,7 @@ ORDER BY I.CreatedDate desc";
         }
         public async Task<IEnumerable<ChartItem>> GetIssueCountsPerPriority(int teamId)
         {
-            var q = @"SELECT  S.ID ItemId,S.NAME ItemName,Color, COUNT(I.ID) COUNT						 
+            const string q = @"SELECT  S.ID ItemId,S.NAME ItemName,Color, COUNT(I.ID) COUNT						 
                     FROM Priority S  WITH (NOLOCK)  
                     LEFT JOIN (SELECT I.ID,I.PriorityID FROM ISSUE I  WITH (NOLOCK) WHERE I.TeamId=@teamId) I ON I.PriorityID =S.ID
                     GROUP BY S.ID,S.NAME,Color";
@@ -203,7 +203,7 @@ ORDER BY I.CreatedDate desc";
 
         public async Task<IEnumerable<ItemCount>> GetIssueCountsPerProject(int teamId)
         {
-            var q = @"SELECT  S.ID ItemId,S.NAME ItemName, COUNT(I.ID) COUNT						 
+            const string q = @"SELECT  S.ID ItemId,S.NAME ItemName, COUNT(I.ID) COUNT						 
                     FROM Project S  WITH (NOLOCK)  
                     LEFT JOIN (SELECT I.ID,I.ProjectID FROM ISSUE I  WITH (NOLOCK) WHERE I.TeamId=@teamId) I ON I.ProjectID =S.ID
                     WHERE S.TeamId=@teamId
@@ -218,7 +218,7 @@ ORDER BY I.CreatedDate desc";
 
         public async Task<IEnumerable<IssueDetailVM>> GetIssuesAssignedToUser(int userId)
         {
-            var q = @"SELECT I.Id,I.Title,
+            const string q = @"SELECT I.Id,I.Title,
                         U.FirstName + + ISNULL(U.LastName,'') as OpenedBy,
                         I.CreatedDate,
                         I.DueDate,
