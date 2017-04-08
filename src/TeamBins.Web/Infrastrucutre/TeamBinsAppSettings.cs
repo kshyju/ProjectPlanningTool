@@ -13,6 +13,10 @@ namespace TeamBins.Infrastrucutre
     }
     public class TeamBinsAppSettings
     {
+        /// <summary>
+        /// Google analytics unique key
+        /// </summary>
+        public string GoogleAnalyticsKey { set; get; }
         public string LocalFileSystemStorageUriPrefix { set; get; }
         public string LocalFileSystemStoragePath { set; get; }
         public string AzureblobStorageConnectionString { set; get; }
