@@ -79,10 +79,6 @@ namespace TeamBins.Services
         {
             comment.Author = new UserDto {Id = this._userSessionHelper.UserId};
             int commentId= this._commentRepository.Save(comment);
-
-            var c = this._commentRepository.GetComment(commentId);
-            this._emailManager.SendNewCommentEmail(c, this._userSessionHelper.TeamId);
-
             return commentId;
         }
 
@@ -118,10 +114,10 @@ namespace TeamBins.Services
         {
             try
             {
-                var subscibers = await _teamRepository.GetSubscribers(_userSessionHelper.TeamId, "NewComment");
+                var subscibers = await _teamRepository.GetSubscribers(_userSessionHelper.TeamId, Web.Infrastrucutre.Constants.NewComment);
                 if (subscibers.Any())
                 {
-                    var emailTemplate = await _emailRepository.GetEmailTemplate("NewComment");
+                    var emailTemplate = await _emailRepository.GetEmailTemplate(Web.Infrastrucutre.Constants.NewComment);
                     if (emailTemplate != null)
                     {
                         var emailSubject = emailTemplate.Subject;

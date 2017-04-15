@@ -12,9 +12,7 @@ using TeamBins.Infrastrucutre;
 namespace TeamBins.Services
 {
     public interface IEmailManager
-    {
-
-        Task SendNewCommentEmail(CommentVM comment, int teamId);
+    {       
 
         Task SendAccountCreatedEmail(UserDto newUser);
 
@@ -105,47 +103,7 @@ namespace TeamBins.Services
             }
         }
 
-
-        public async Task SendNewCommentEmail(CommentVM comment, int teamId)
-        {
-            try
-            {
-                var subscibers = await _teamRepository.GetSubscribers(teamId, Web.Infrastrucutre.Constants.NewComment);
-                if (subscibers.Any())
-                {
-                    var emailTemplate = await _emailRepository.GetEmailTemplate(Web.Infrastrucutre.Constants.NewComment);
-                    if (emailTemplate != null)
-                    {
-                       
-
-                        string emailSubject = emailTemplate.Subject;
-                        string emailBody = emailTemplate.EmailBody;
-                        Email email = new Email();
-
-                        var issueUrl = this._settings.SiteUrl + "/issues/" + comment.IssueId;
-                        var issueLink = string.Format("<a href='{0}'>" + "#{1}</a>", issueUrl, comment.IssueId);
-
-                        emailBody = emailBody.Replace("@author", comment.Author.Name);
-                        emailBody = emailBody.Replace("@link", issueLink);
-                        emailBody = emailBody.Replace("@comment", comment.CommentText);
-                        emailBody = emailBody.Replace("@issueId", comment.IssueId.ToString());
-                        email.Body = emailBody;
-                        emailSubject = emailSubject.Replace("@issueId", comment.IssueId.ToString());
-                        email.Subject = emailSubject;
-
-
-                        email.Body = emailBody;
-                        email.Subject = emailSubject;
-                        await Send(email);
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                // Silently fail. We will log this. But we do not want to show an error to user because of this
-            }
-        }
-
+        
 
         public async Task Send(Email email)
         {
