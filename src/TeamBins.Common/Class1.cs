@@ -162,7 +162,6 @@ namespace TeamBins.Common.ViewModels
 
         public class TeamVM : TeamDto
         {
-            public bool IsPublic { set; get; }
             public IEnumerable<TeamMemberDto> Members { set; get; }
             public List<MemberInvitation> MembersInvited { set; get; }
 

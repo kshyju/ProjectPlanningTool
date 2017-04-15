@@ -17,6 +17,8 @@ namespace TeamBins.DataAccess
 
         IEnumerable<CommentVM> GetComments(int issueId);
         void Delete(int id);
+
+       
     }
     public class CommentRepository : BaseRepo, ICommentRepository
     {

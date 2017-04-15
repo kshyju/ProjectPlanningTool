@@ -20,7 +20,7 @@ var issueDetailsCtrl = function ($http, issue, issueDetailService) {
 
         var yes = window.confirm("Are you sure to delete this comment ? This cannot be undone.");
         if (yes) {
-            issueDetailService.deleteComment(issueId, comment.Id)
+            issueDetailService.deleteComment(issueId, comment.id)
             .then(function (data) {
                 if (data.status === "Success") {
                     vm.comments.splice(vm.comments.indexOf(comment), 1);
@@ -32,25 +32,14 @@ var issueDetailsCtrl = function ($http, issue, issueDetailService) {
     vm.saveComment = function () {
         issueDetailService.saveComment(vm.newComment, vm.issue.Id)
             .then(function (response) {
+               
                 if (response.status === "Success") {
                     vm.comments.push(response.data);
+                    vm.newComment = "";
                 }
             });
     };
-
-
-
-    //vm.deleteIssue = function () {
-    //    issueDetailService.deleteIssue(vm.issue.Id)
-    //        .then(function (response) {
-    //             if (response.Status === "Success") {
-    //                 vm.comments.push(response.Data);
-    //             }
-    //        });
-
-    //};
-
-
+    
 }
 
 

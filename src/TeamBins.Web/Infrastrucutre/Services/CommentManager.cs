@@ -80,7 +80,8 @@ namespace TeamBins.Services
             comment.Author = new UserDto {Id = this._userSessionHelper.UserId};
             int commentId= this._commentRepository.Save(comment);
 
-          
+            var c = this._commentRepository.GetComment(commentId);
+            this._emailManager.SendNewCommentEmail(c, this._userSessionHelper.TeamId);
 
             return commentId;
         }
