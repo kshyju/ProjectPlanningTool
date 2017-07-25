@@ -22,10 +22,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BundlerMinifier.Core" Version="2.2.306" />
+    <PackageReference Include="BundlerMinifier.Core" Version="2.4.337" />
+    <PackageReference Include="Dapper" Version="1.50.2" />
     <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.ResponseCompression" Version="1.0.1" />
-    <PackageReference Include="WindowsAzure.Storage" Version="7.2.1" />
+    <PackageReference Include="StackExchange.Redis" Version="1.2.1" />
+    <PackageReference Include="WindowsAzure.Storage" Version="8.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Server.IISIntegration" Version="1.1.1" />
@@ -39,10 +41,14 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.1" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="1.1.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="1.1.0" />
-    <PackageReference Include="MailKit" Version="1.10.0" />
+    <PackageReference Include="MailKit" Version="1.14.2" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="0.0.1-alpha" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="1.1.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Cache\Infrastrucutre\" />
   </ItemGroup>
 
   <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">

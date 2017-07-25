@@ -26,6 +26,11 @@ namespace TeamBins.Infrastrucutre
         public EmailSetting Email { set; get; }
 
         public string SiteUrl { set; get; }
+
+        /// <summary>
+        /// Redis conn string to be used by StackExchange.Redis
+        /// </summary>
+        public string RedisConnectionString { set; get; }
 }
 
     public class EmailSetting
