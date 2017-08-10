@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace TeamBins.Infrastrucutre
+namespace TeamBins.Common
 {
     public class CacheKey
     {
@@ -11,6 +11,8 @@ namespace TeamBins.Infrastrucutre
         public static readonly string Statuses = "Statuses";
         public static readonly string Priorities = "Priorities";
         public static readonly string Categories = "Categories";
+        public static readonly string ActivityStream = "ActivityStream";
+
 
         public static string GetKey(string key,int teamId)
         {

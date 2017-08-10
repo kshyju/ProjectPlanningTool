@@ -18,7 +18,16 @@ using TeamBins.DataAccess;
 
 namespace TeamBins.Services
 {
-   
+
+    public abstract class CachebleBaseManager
+    {
+        protected readonly ICache Cache;
+
+        protected CachebleBaseManager(ICache cache)
+        {
+            this.Cache = cache;
+        }
+    }
 
     public class IssueManager : IIssueManager
     {

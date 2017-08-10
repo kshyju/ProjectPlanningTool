@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using StackExchange.Redis;
 using TeamBins.Common.ViewModels;
 using TeamBins.Infrastrucutre.Services;
 
@@ -28,8 +25,6 @@ namespace TeamBins.Web.Controllers.Api
         [Route("ActivityStream/{teamid}")]
         public IEnumerable<ActivityDto> GetActivityStream(int count, int? teamId)
         {
-          //  IDatabase cache = Connection.GetDatabase();
-            IEnumerable<ActivityDto> activityList = new List<ActivityDto>();
             var teamIdToUse = this._userSessionHelper.TeamId;
             if (teamId != null)
             {
@@ -39,19 +34,7 @@ namespace TeamBins.Web.Controllers.Api
                     teamIdToUse = t.Id;
                 }
             }
-            var cacheKey = Infrastrucutre.CacheKeys.ActivityStream + teamIdToUse;
-
-            //string value = cache.StringGet(cacheKey);
-            //if (value == null)
-            //{
-            //    activityList = this._teamManager.GeActivityItems(teamIdToUse, count);
-            //   // cache.StringSet(cacheKey, JsonConvert.SerializeObject(activityList));
-            //}
-            //else
-            //{
-            //    activityList = JsonConvert.DeserializeObject<IEnumerable<ActivityDto>>(value);  
-            //}
-            return activityList;
+            return this._teamManager.GeActivityItems(teamIdToUse, count);
         }
 
         [HttpGet]

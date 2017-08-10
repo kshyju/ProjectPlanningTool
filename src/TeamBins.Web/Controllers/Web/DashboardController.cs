@@ -39,6 +39,11 @@ namespace TeamBins.Controllers.Web
             {
                 var teamId = _userSessionHelper.TeamId;
 
+                if (teamId == 0 && string.IsNullOrEmpty(teamName))
+                {
+                    return RedirectToAction("Login", "account");
+                }
+
                 if (!string.IsNullOrEmpty(teamName))
                 {
                     var team = _teamManager.GetTeam(teamName);

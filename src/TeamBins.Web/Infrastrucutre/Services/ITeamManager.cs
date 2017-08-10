@@ -12,6 +12,8 @@ using TeamBins.DataAccessCore;
 using TeamBins.Services;
 using TeamBins.Infrastrucutre.Extensions;
 using TeamBins.DataAccess;
+using TeamBins.Infrastrucutre.Cache;
+using TeamBins.Web.Infrastrucutre;
 
 namespace TeamBins.Infrastrucutre.Services
 {
@@ -41,7 +43,8 @@ namespace TeamBins.Infrastrucutre.Services
         Task SaveVisibility(int id, bool isPublic);
         
     }
-    public class TeamManager : ITeamManager
+
+    public class TeamManager : CachebleBaseManager,ITeamManager
     {
         readonly TeamBinsAppSettings _settings;
 
@@ -54,7 +57,7 @@ namespace TeamBins.Infrastrucutre.Services
         private readonly IEmailManager _emailManager;
         public TeamManager(IUserAuthHelper userSessionHelper, IActivityRepository activityRepository,
             ITeamRepository teamRepository, IIssueRepository issueRepository, IUserRepository userRepository, 
-            IEmailManager emailManager,IEmailRepository emailRepository, IOptions<TeamBinsAppSettings> settings)
+            IEmailManager emailManager,IEmailRepository emailRepository, IOptions<TeamBinsAppSettings> settings,ICache cache):base(cache)
         {
             this._emailRepository = emailRepository;
             this._teamRepository = teamRepository;
@@ -279,46 +282,55 @@ namespace TeamBins.Infrastrucutre.Services
 
         public IEnumerable<ActivityDto> GeActivityItems(int teamId, int count)
         {
-            var activities = _activityRepository.GetActivityItems(teamId, count);
+            var cacheKey = CacheKey.GetKey(CacheKey.ActivityStream, teamId);
 
-            foreach (var activity in activities)
+            return this.Cache.Get(cacheKey, () =>
             {
-                if (activity.ObjectType == "Issue")
+                var activities = _activityRepository.GetActivityItems(teamId, count);
+
+                foreach (var activity in activities)
                 {
-                    activity.ObjectUrl = "Issues/" + activity.ObjectId;
-                    if (String.Equals(activity.Description, "CREATED", StringComparison.OrdinalIgnoreCase))
+                    if (activity.ObjectType == "Issue")
                     {
-                        activity.NewState = "";
-                    }
-                    else if (String.Equals(activity.Description, "CHANGED STATUS", StringComparison.OrdinalIgnoreCase))
-                    {
-                        activity.Description = "changed status of";
+                        activity.ObjectUrl = "Issues/" + activity.ObjectId;
+                        if (String.Equals(activity.Description, "CREATED", StringComparison.OrdinalIgnoreCase))
+                        {
+                            activity.NewState = "";
+                        }
+                        else if (String.Equals(activity.Description, "CHANGED STATUS",
+                            StringComparison.OrdinalIgnoreCase))
+                        {
+                            activity.Description = "changed status of";
 
-                        activity.NewState = "from " + activity.OldState + " to " + activity.NewState;
-                    }
-                    else if (String.Equals(activity.Description, "Changed category", StringComparison.OrdinalIgnoreCase))
-                    {
-                        activity.Description = "changed category of";
+                            activity.NewState = "from " + activity.OldState + " to " + activity.NewState;
+                        }
+                        else if (String.Equals(activity.Description, "Changed category",
+                            StringComparison.OrdinalIgnoreCase))
+                        {
+                            activity.Description = "changed category of";
 
-                        activity.NewState = "from " + activity.OldState + " to " + activity.NewState;
+                            activity.NewState = "from " + activity.OldState + " to " + activity.NewState;
+                        }
+                        else if (String.Equals(activity.Description, "DUE DATE UPDATED",
+                            StringComparison.OrdinalIgnoreCase))
+                        {
+                            activity.Description = "updated due date of";
+                            activity.NewState = "to " + activity.NewState;
+                        }
                     }
-                    else if (String.Equals(activity.Description, "DUE DATE UPDATED", StringComparison.OrdinalIgnoreCase))
+                    else if (activity.ObjectType == "Comment")
                     {
-                        activity.Description = "updated due date of";
-                        activity.NewState = "to " + activity.NewState;
+                        activity.ObjectUrl = "Issues/" + activity.ObjectId;
+                        if (activity.Description.Equals("Commented", StringComparison.OrdinalIgnoreCase))
+                        {
+                            activity.Description = "Commented on ";
+                        }
                     }
                 }
-                else if (activity.ObjectType == "Comment")
-                {
-                    activity.ObjectUrl = "Issues/" + activity.ObjectId;
-                    if (activity.Description.Equals("Commented", StringComparison.OrdinalIgnoreCase))
-                    {
-                        activity.Description = "Commented on ";
-                    }
-                }
-            }
+                return activities;
+            },15);
 
-            return activities;
+
 
         }
 
