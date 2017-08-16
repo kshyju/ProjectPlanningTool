@@ -8,7 +8,14 @@ using System.Threading.Tasks;
 
 namespace TeamBins.Infrastrucutre.Extensions
 {
-   
+
+    public static class StringExtensions
+    {
+        public static string AddTrailingSlash(this string value)
+        {
+            return value.EndsWith("/") ? value : $"{value}/";
+        }
+    }
 
     //Not really an extension method on string ! I still prefer to just call it like the ext method style ;)
     public static class EmailExtensions

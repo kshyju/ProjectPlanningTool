@@ -8,6 +8,7 @@ using TeamBins.DataAccessCore;
 using TeamBins.Common.ViewModels;
 using TeamBins.DataAccess;
 using TeamBins.Infrastrucutre;
+using TeamBins.Infrastrucutre.Extensions;
 
 namespace TeamBins.Services
 {
@@ -83,7 +84,7 @@ namespace TeamBins.Services
                         }
                         var team = _teamRepository.GetTeam(teamId);
 
-                        var issueUrl = this._settings.SiteUrl + "/issues/" + issue.Id;
+                        var issueUrl = this._settings.SiteUrl.AddTrailingSlash() + "/issues/" + issue.Id;
                         var issueLink = string.Format("<a href='{0}'>" + "#{1} {2}</a>", issueUrl, issue.Id, issue.Title);
 
                         emailBody = emailBody.Replace("@issueAuthor", issue.Author.Name);

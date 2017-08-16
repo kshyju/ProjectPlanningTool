@@ -130,7 +130,7 @@ namespace TeamBins.Services
                             email.ToAddress.Add(subsciber.EmailAddress);
                         }
 
-                        var issueUrl = this._settings.SiteUrl + "/issues/" + comment.IssueId;
+                        var issueUrl = this._settings.SiteUrl.AddTrailingSlash() + "/issues/" + comment.IssueId;
                         var issueLink = string.Format("<a href='{0}'>" + "#{1} {2}</a>", issueUrl, comment.IssueId, comment.Issue.Title);
 
                         emailBody = emailBody.Replace("@author", comment.Author.Name);

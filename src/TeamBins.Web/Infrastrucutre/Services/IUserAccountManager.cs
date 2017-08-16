@@ -11,6 +11,7 @@ using TeamBins.DataAccess;
 using TeamBins.Infrastrucutre;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using TeamBins.Infrastrucutre.Extensions;
 
 namespace TeamBins.Services
 {
@@ -149,7 +150,7 @@ namespace TeamBins.Services
 
                     email.ToAddress.Add(passwordResetRequest.User.EmailAddress);
 
-                    var url = this._settings.SiteUrl + "/Account/resetpassword/" + passwordResetRequest.ActivationCode;
+                    var url = this._settings.SiteUrl.AddTrailingSlash() + "/Account/resetpassword/" + passwordResetRequest.ActivationCode;
                     var link = string.Format("<a href='{0}'>{0}</a>", url);
 
                     emailBody = emailBody.Replace("@resetLink", link);

@@ -108,7 +108,7 @@ namespace TeamBins.Infrastrucutre.Services
                     var email = new Email();
                     email.ToAddress.Add(teamMemberRequest.EmailAddress);
 
-                    var joinLink = String.Format("{0}Account/Join?returnurl={1}", this._settings.SiteUrl, teamMemberRequest.ActivationCode);
+                    var joinLink = String.Format("{0}Account/Join?returnurl={1}", this._settings.SiteUrl.AddTrailingSlash(), teamMemberRequest.ActivationCode);
                     emailBody = emailBody.Replace("@teamName", teamMemberRequest.Team.Name);
                     emailBody = emailBody.Replace("@joinUrl", joinLink);
                     emailBody = emailBody.Replace("@inviter", teamMemberRequest.CreatedBy.Name);
