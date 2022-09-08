@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Hosting;
 
 namespace TeamBins.Web
 {
+    /// <summary>
+    /// test suhas
+    /// </summary>
     public class Program
     {
         public static void Main(string[] args)
